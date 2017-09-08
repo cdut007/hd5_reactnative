@@ -359,7 +359,7 @@ export default class HomeView extends Component {
             return(<View style={{flexDirection:"row"}}>
 
             <Image source={item.image} style={{ marginBottom: 6, width: 48, height: 48}} resizeMode={Image.resizeMode.contain} />
-
+            <Badge style={{ marginBottom: 6, width: 7, height: 7}}></Badge>
 
             </View>)
         }else{
