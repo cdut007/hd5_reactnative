@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     Platform,
     ListView,
+    ScrollView,
     ActivityIndicator,
     TouchableNativeFeedback,
     TouchableHighlight,
@@ -218,6 +219,7 @@ export default class PlanListView extends Component {
                tabBarBackgroundColor='#FFFFFF'
                tabBarActiveTextColor='#0755a6'
                tabBarInactiveTextColor='#777777'
+               locked={true}
     >
          {this.renderListView('未施工')}
          {this.renderListView('施工中')}
@@ -249,70 +251,51 @@ export default class PlanListView extends Component {
         itemView = () => {
 
                 return (
+
                        <View style={styles.itemContainer}>
                         <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
-                        <View style={styles.flexContainer}>
 
-                        <Text style={[styles.content,{marginLeft:10}]}>
-                          {rowData.name}
-                        </Text>
-
-                        <View style= {[styles.cellLine,{marginLeft:8,marginRight:8,marginTop:20,marginBottom:20}]}/>
-
-                        <Text style={{color:'#888888',fontSize:14,marginLeft:4,}}>
-                          {rowData.class+" ("+rowData.total+")"}
-                        </Text>
-
-                        </View>
-
-
-                        <View style={styles.divider}/>
 
                         <View style={styles.statisticsflexContainer}>
 
                         <View style={styles.cell}>
 
-                          <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                            未分派
+                          <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                            {rowData.date}
                           </Text>
-                          <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                            {rowData.undelivery}
-                          </Text>
+
                         </View>
 
 
                         <View style={styles.cell}>
 
-                        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          施工中
+                        <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
+                              {rowData.task_no}
                         </Text>
-                        <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                          {rowData.work}
-                        </Text>
+
                         </View>
 
                         <View style={styles.cell}>
 
-                        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          已完成
+                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                           {rowData.classify}
                         </Text>
-                        <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                          {rowData.finish}
-                        </Text>
+
                         </View>
 
                         <View style={styles.cell}>
 
-
-                        <Text style={{color:'#e82628',fontSize:12,marginBottom:2,}}>
-                          停滞中
+                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                           {rowData.task_tyle}
                         </Text>
-                        <Text style={{color:'#e82628',fontSize:14,}}>
-                          {rowData.pause}
-                        </Text>
-                        </View>
 
                         </View>
+
+
+
+
+                        </View>
+
 
                         </TouchableOpacity>
 
@@ -329,14 +312,74 @@ export default class PlanListView extends Component {
     }
     renderListView(label) {
         return (
+            <View  tabLabel={label} style={{marginTop:10,}}>
+
+            <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
+            </View>
+            
+            <ScrollView   horizontal={true}
+                            showsHorizontalScrollIndicator={false}  // 隐藏水平指示器
+                              showsVerticalScrollIndicator={false}    // 隐藏垂直指示器
+            >
+
+            <View style={styles.statisticsflexContainer}>
+
+            <View style={styles.cell}>
+
+              <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+                施工日期
+              </Text>
+
+            </View>
+
+
+            <View style={styles.cell}>
+
+            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+              工程量编号
+            </Text>
+
+            </View>
+
+            <View style={styles.cell}>
+
+            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+              支架/焊口
+            </Text>
+
+            </View>
+
+            <View style={styles.cell}>
+
+            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+              工程量类别
+            </Text>
+
+            </View>
+
+            <View style={styles.cell}>
+
+            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+              作业条目编号
+            </Text>
+
+            </View>
+
+
+            </View>
+
+            </ScrollView>
+            <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
+            </View>
+
             <ListView
-              tabLabel={label}
                 dataSource={this.state.dataSource}
                 renderRow={this.renderRow.bind(this)}
                 renderFooter={this.renderFooter.bind(this)}
                 onEndReached={this.onEndReached.bind(this)}
 
             />
+            </View>
         )
     }
 
@@ -388,7 +431,7 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
             flex:1,
-            marginTop:10,
+            marginTop:0.5,
     },
      statisticsflexContainer: {
               height: 57.5,
@@ -399,6 +442,7 @@ const styles = StyleSheet.create({
     cell: {
         flex: 1,
         height: 57.5,
+        width:width/4,
         justifyContent: "center",
         alignItems: 'center',
          flexDirection: 'column',
