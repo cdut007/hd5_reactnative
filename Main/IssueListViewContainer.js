@@ -21,7 +21,7 @@ import CircleLabelHeadView from '../common/CircleLabelHeadView';
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
-import PlanListView from './PlanListView';
+import IssueListView from './IssueListView';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -34,39 +34,28 @@ var LOADING = {};
 
     var statusDatas = [{
                     index:0,
-                    status:'unbegin',
+                    status:'unresolved',
                     data:[],
                     pageNo:1,
                 },
                 {
                     index:1,
-                    status:'PROGRESSING',
+                    status:'resolved',
                     data:[],
                     pageNo:1,
                 },
-                {
-                    index:2,
-                    status:'PAUSE',
-                    data:[],
-                    pageNo:1,
-                },
-                {
-                    index:3,
-                    status:'COMPLETED',
-                    data:[],
-                    pageNo:1,
-                }
+
 
 ];
 
-export default class PlanListViewContainer extends Component {
+export default class IssueListViewContainer extends Component {
     constructor(props) {
         super(props)
 
 
         this.state = {
 
-            title: this.props.data.class + "任务",
+            title: this.props.data.class + "问题",
         }
 
 
@@ -94,10 +83,8 @@ export default class PlanListViewContainer extends Component {
                tabBarActiveTextColor='#0755a6'
                tabBarInactiveTextColor='#777777'
     >
-         {this.renderListView('未施工',0)}
-         {this.renderListView('施工中',1)}
-         {this.renderListView('停滞中',2)}
-         {this.renderListView('已完成',3)}
+         {this.renderListView('待解决问题',0)}
+         {this.renderListView('已解决问题',1)}
     </ScrollableTabView>
 
         )
@@ -120,65 +107,9 @@ export default class PlanListViewContainer extends Component {
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
 
-            <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
-            </View>
-
-            <ScrollView   horizontal={true}
-                            showsHorizontalScrollIndicator={false}  // 隐藏水平指示器
-                              showsVerticalScrollIndicator={false}    // 隐藏垂直指示器
-            >
-
-            <View style={styles.statisticsflexContainer}>
-
-            <View style={styles.cell}>
-
-              <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                施工日期
-              </Text>
-
-            </View>
 
 
-            <View style={styles.cell}>
-
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              工程量编号
-            </Text>
-
-            </View>
-
-            <View style={styles.cell}>
-
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              支架/焊口
-            </Text>
-
-            </View>
-
-            <View style={styles.cell}>
-
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              工程量类别
-            </Text>
-
-            </View>
-
-            <View style={styles.cell}>
-
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              作业条目编号
-            </Text>
-
-            </View>
-
-
-            </View>
-
-            </ScrollView>
-            <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
-            </View>
-
-            <PlanListView
+            <IssueListView
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.data.type}
              status={statusDatas[index].status}

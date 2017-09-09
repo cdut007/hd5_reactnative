@@ -17,7 +17,6 @@ import px2dp from '../common/util'
 import dateformat from 'dateformat'
 import HttpRequest from '../HttpRequest/HttpRequest'
 import ModuleTabView from './ModuleTabView';
-import PlanListViewContainer from './PlanListViewContainer';
 import Banner from 'react-native-banner';
 import Badge from 'react-native-smart-badge'
 
@@ -29,6 +28,9 @@ yesterday.setTime(yesterday.getTime() - 24 * 60 * 60 * 1000)
 var tomorrow = new Date()
 tomorrow.setTime(tomorrow.getTime() + 24 * 60 * 60 * 1000)
 
+
+import PlanListViewContainer from './PlanListViewContainer';
+import IssueListViewContainer from './IssueListViewContainer';
 
 var moduleData = [
     {
@@ -221,7 +223,7 @@ export default class HomeView extends Component {
         if (true) {
             //test single page.
             this.props.navigator.push({
-                component: PlanListViewContainer,
+                component: IssueListViewContainer,
                 props:{
                     data:{class:'sdd',type:"GDJH"}
                 }

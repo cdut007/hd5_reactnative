@@ -18,7 +18,7 @@ import CircleLabelHeadView from '../common/CircleLabelHeadView';
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
-import PlanListViewContainer from './PlanListViewContainer';
+import IssueListViewContainer from './IssueListViewContainer';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -31,7 +31,7 @@ var resultsCache = {
 };
 var LOADING = {};
 
-export default class PlanStatisticsSubView extends Component {
+export default class IssueStatisticsSubView extends Component {
     constructor(props) {
         super(props)
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -42,7 +42,7 @@ export default class PlanStatisticsSubView extends Component {
             isLoading: false,
             isLoadingTail: false,
             filter: '',
-            title: this.props.data.class + "任务",
+            title: this.props.data.class + "问题",
         }
 
 
@@ -62,13 +62,13 @@ export default class PlanStatisticsSubView extends Component {
         //this.executePlanRequest();
         this.setState({
             dataSource: this.state.dataSource.cloneWithRows(
-                [{name:'刘想',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-            {name:'刘想',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-        {name:'刘想',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'}]),
+                [{name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+            {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+        {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'}]),
             isLoading: false,
         });
     }
@@ -99,7 +99,7 @@ export default class PlanStatisticsSubView extends Component {
 
     onItemPress(itemData){
         this.props.navigator.push({
-            component: PlanListViewContainer,
+            component: IssueListViewContainer,
              props: {
                  data:itemData,
                 }
@@ -232,7 +232,7 @@ export default class PlanStatisticsSubView extends Component {
                         <View style= {[styles.cellLine,{marginLeft:8,marginRight:8,marginTop:20,marginBottom:20}]}/>
 
                         <Text style={{color:'#888888',fontSize:14,marginLeft:4,}}>
-                          {rowData.class+" ("+rowData.total+")"}
+                          {rowData.class}
                         </Text>
 
                         </View>
@@ -245,7 +245,7 @@ export default class PlanStatisticsSubView extends Component {
                         <View style={styles.cell}>
 
                           <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                            未分派
+                            问题总量
                           </Text>
                           <Text style={{color:'#1c1c1c',fontSize:14,}}>
                             {rowData.undelivery}
@@ -256,28 +256,20 @@ export default class PlanStatisticsSubView extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          施工中
+                          已解决
                         </Text>
                         <Text style={{color:'#1c1c1c',fontSize:14,}}>
                           {rowData.work}
                         </Text>
                         </View>
 
-                        <View style={styles.cell}>
 
-                        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          已完成
-                        </Text>
-                        <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                          {rowData.finish}
-                        </Text>
-                        </View>
 
                         <View style={styles.cell}>
 
 
                         <Text style={{color:'#e82628',fontSize:12,marginBottom:2,}}>
-                          停滞中
+                          未解决
                         </Text>
                         <Text style={{color:'#e82628',fontSize:14,}}>
                           {rowData.pause}
