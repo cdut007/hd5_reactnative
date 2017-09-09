@@ -20,7 +20,7 @@ import LoadMoreFooter from '../common/LoadMoreFooter.js'
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
-import SingleWorkRollDetailView from './SingleWorkRollDetailView';
+import PlanDetailView from './PlanDetailView';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -155,7 +155,7 @@ export default class PlanListView extends Component {
 
     onItemPress(itemData){
         this.props.navigator.push({
-            component: SingleWorkRollDetailView,
+            component: PlanDetailView,
              props: {
                  data:itemData,
                 }
@@ -248,7 +248,7 @@ export default class PlanListView extends Component {
 
                         <View style={styles.cell}>
 
-                          <Text numberOfLines={1}  style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                          <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,}}>
                             {rowData.plandate}
                           </Text>
 
@@ -286,6 +286,9 @@ export default class PlanListView extends Component {
 
 
                         </TouchableOpacity>
+                        <View style={{backgroundColor: '#d6d6d6',
+                        width: width,
+                        height: 0.5,}}/>
 
                         </View>
 
@@ -365,7 +368,6 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
             flex:1,
-            marginTop:0.5,
     },
      statisticsflexContainer: {
               height: 57.5,

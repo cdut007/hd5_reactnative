@@ -19,10 +19,11 @@ import DisplayItemView from '../common/DisplayItemView';
 import EnterItemView from '../common/EnterItemView';
 import CommonContentView from './CommonContentView';
 import SingleWorkRollDealBatWitnessView from './SingleWorkRollDealBatWitnessView';
-import PlanIssueListView from './PlanIssueListView';
 import IssueReportView from './IssueReportView'
 import WorkStepDetailView from './WorkStepDetailView';
-import dateformat from 'dateformat'
+import dateformat from 'dateformat';
+import Accordion from 'react-native-collapsible/Accordion';
+
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -30,29 +31,23 @@ var height = Dimensions.get('window').height;
 var account = Object();
 var Global = require('../common/globals');
 
-export default class SingleWorkRollDetailView extends Component {
+export default class PlanDetailView extends Component {
     constructor(props) {
         super(props);
 
         var info = this.isHankou(this.props.data.speciality);
         this.state = {
-            title: info.title,
-            isHankouType:info.isHankou,
+            title: '任务详情',
+            isHankouType:1,
             data:this.props.data,
             isTaskConfirm:this.props.isTaskConfirm,
+            displayMore:false,
         };
     }
 
     isHankou(speciality){
         var name = '焊口明细';
-        var isHankou = false;
-        if (speciality == 'GDHK') {
-            name = '焊口明细';
-            isHankou = true;
-        }else{
-            name = '支架明细';
-        }
-        return {title:name,isHankou:isHankou}
+        return {title:name,isHankou:1}
     }
 
     componentDidMount() {
@@ -114,9 +109,52 @@ export default class SingleWorkRollDetailView extends Component {
             leftIcon={require('../images/back.png')}
             leftPress={this.back.bind(this)}
             />
+            {this.renderTop()}
+            <View style={{backgroundColor:'#f2f2f2',height:10,width:width}}></View>
              {this.renderDetailView()}
             </View>
         )
+    }
+
+    renderTop(){
+        return(<View style={styles.statisticsflexContainer}>
+
+        <View style={styles.cell}>
+
+          <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
+            施工日期
+          </Text>
+          <Text numberOfLines={1} style={{color:'#777777',fontSize:14,}}>
+            {this.props.data.plandate}
+          </Text>
+        </View>
+
+
+        <View style={styles.cell}>
+
+        <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
+          作业组长
+        </Text>
+        <Text style={{color:'#777777',fontSize:14,}}>
+         {this.props.data.welder}
+        </Text>
+        </View>
+
+
+
+        <View style={styles.cell}>
+
+
+        <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
+          当前状态
+        </Text>
+        <Text style={{color:'#e82628',fontSize:14,}}>
+          施工中
+        </Text>
+        </View>
+
+        </View>
+)
     }
 
     renderDetailView(){
@@ -124,7 +162,8 @@ export default class SingleWorkRollDetailView extends Component {
             keyboardDismissMode='on-drag'
             keyboardShouldPersistTaps={false}
             style={styles.mainStyle}>
-                       {this.renderItem()}
+                {this.renderItem()}
+                {this.renderMoreItem()}
                    </ScrollView>);
     }
 
@@ -163,13 +202,13 @@ export default class SingleWorkRollDetailView extends Component {
     }
 
     issueDetail(){
-        this.props.navigator.push({
-            component: PlanIssueListView,
-             props: {
-
-                 data:this.state.data,
-                }
-        })
+        // this.props.navigator.push({
+        //     component: PlanIssueListView,
+        //      props: {
+        //
+        //          data:this.state.data,
+        //         }
+        // })
     }
 
     witnessDealBatTask(){
@@ -198,6 +237,8 @@ export default class SingleWorkRollDetailView extends Component {
             this.go2WorkStepDetail();
         } else if (menu.id == '9a') {
             this.go2ZhijiaUpdate();
+        } else if (menu.id == 'c') {
+            this.setState({displayMore:!this.state.displayMore});
         } else if (menu.id == '10') {
             this.issueFeedBack();
         } else if (menu.id == '-1') {
@@ -220,83 +261,87 @@ export default class SingleWorkRollDetailView extends Component {
     }
 
 
+
+    //display more
+    _renderHeader(section) {
+          return (
+              <EnterItemView
+               title={'查看更多详情'}
+               detail={'查看更多详情'}
+              />
+          );
+        }
+
+        _renderContent(section) {
+          return (
+              <DisplayItemView
+               title={'查看更多详情'}
+               detail={'查看更多详情'}
+              />
+          );
+        }
+
+
+
+    renderMoreItem(){
+        if (!this.state.displayMore) {
+            return;
+        }
+          var itemAry = [];
+        var displayMoreAry=[];
+        displayMoreAry.push({title:'子项',content:this.state.data.worktime,id:'c1'},);
+        displayMoreAry.push({title:'系统号',content:this.state.data.worktime,id:'c2'},);
+        displayMoreAry.push({title:'工程量',content:this.state.data.worktime,id:'c3'},);
+        displayMoreAry.push({title:'规格',content:this.state.data.worktime,id:'c4'},);
+        displayMoreAry.push({title:'材质',content:this.state.data.worktime,id:'c5'},);
+        displayMoreAry.push({title:'核级',content:this.state.data.worktime,id:'c6'},);
+        displayMoreAry.push({title:'单位',content:this.state.data.worktime,id:'c7'},);
+        displayMoreAry.push({title:'点值',content:this.state.data.worktime,id:'c8'},);
+        // 遍历
+        for (var i = 0; i<displayMoreAry.length; i++) {
+            itemAry.push(
+                <DisplayItemView key={displayMoreAry[i].id}
+                 title={displayMoreAry[i].title}
+                 detail={displayMoreAry[i].content}
+                />
+            );
+
+        }
+         return itemAry;
+    }
+
     renderItem() {
                // 数组
                var itemAry = [];
                // 颜色数组
-               var displayAry = [{title:this.state.isHankouType?'焊口号':'支架号',content:this.state.data.weldno,id:'0'},
-               {title:'机组号',content:this.state.data.unitno,id:'1'},
-                {title:'区域号',content:this.state.data.areano,id:'2'},
-                 {title:'图纸号',content:this.state.data.drawno,id:'3'},
+               var displayAry = [{title:'作业条目编号',content:this.state.data.weldno,id:'0'},
+               {title:'点数',content:this.state.data.unitno,id:'1'},
+                {title:'机组号',content:this.state.data.areano,id:'2'},
+                 {title:'质量计划号',content:this.state.data.drawno,id:'3'},
 
            ];
 
-           if (this.state.isHankouType) {
-                 displayAry.push({title:'焊接控制单号',content:this.state.data.weldlistno,id:'4'},);
-           }
-                displayAry.push({title:'RCCM',content:this.state.data.rccm,id:'5'},);
-                displayAry.push({title:'施工班组',content:this.state.data.consteamName,id:'b1'},);
-                displayAry.push({title:'施工组长',content:this.state.data.consendmanName,id:'b2'},);
-                displayAry.push({title:'材质类型',content:this.state.data.materialtype,id:'b3'},);
-                displayAry.push({title:'点值',content:this.state.data.workpoint,id:'b4'},);
-                displayAry.push({title:'工时',content:this.state.data.worktime,id:'b5'},);
-                displayAry.push({title:'工程量',content:this.state.data.qualitynum,id:'b6'},);
-                displayAry.push({title:'质量计划号',content:this.state.data.qualityplanno,id:'6'},);
-                displayAry.push({title:'计划施工日期',content:this.state.data.plandate,id:'7'},);
+
+                displayAry.push({title:'图纸号',content:this.state.data.rccm,id:'5'},);
+                displayAry.push({title:'房间号',content:this.state.data.consteamName,id:'b1'},);
+                displayAry.push({title:'工程量编号',content:this.state.data.consendmanName,id:'b2'},);
+                displayAry.push({title:'工程量类别',content:this.state.data.materialtype,id:'b3'},);
+                displayAry.push({title:'焊口／支架',content:this.state.data.workpoint,id:'b4'},);
+                displayAry.push({title:'备注',content:this.state.data.worktime,id:'b5'},);
                 displayAry.push({type:'devider'},);
 
-                if (this.state.isHankouType) {
-                      displayAry.push({title:'查看工序详情',id:'9',type:'enter'},);
-                }else{
-                    displayAry.push({title:'支架更新',id:'9a',type:'enter'},);
-                }
-
-                  displayAry.push({title:'问题详情',id:'-1',type:'enter'},);
-
-                  if (this.state.isTaskConfirm) {
-                    displayAry.push({title:'问题反馈',id:'10',type:'enter'},);
-                    displayAry.push({title:'批量见证',id:'e9',type:'enter'},);
-                  }
-
-                  if (this.state.data.welder) {
-                      displayAry.push({title:'焊工',content:this.state.data.welder,id:'e1'},);
-                  }
-
-                  if (this.state.data.welddate!=0) {
-                    var welddate = dateformat(this.state.data.welddate, 'yyyy-mm-dd HH:MM:ss')
-                      displayAry.push({title:'焊接完成日期',content:welddate,id:'e2'},);
-                  }
-
-                  if (this.state.data.qcman) {
-                      displayAry.push({title:'QC检查人员',content:this.state.data.qcman,id:'e3'},);
-                  }
-
-                  if (this.state.data.qcsign) {
-
-                      displayAry.push({title:'检查状态',content:this.getQCCheckStatus(this.state.data.qcsign),id:'e4'},);
-                  }
-
-                  if (this.state.data.qcdate!=0) {
-                    var qcdate = dateformat(this.state.data.qcdate, 'yyyy-mm-dd HH:MM:ss')
-                      displayAry.push({title:'检查日期',content:qcdate,id:'e5'},);
-                  }
-
-
-                  displayAry.push({title:'技术要求',id:'11',content:this.state.data.technologyAsk,type:'enter'},);
-                  displayAry.push({title:'质量风险及控制措施',content:this.state.data.qualityRiskCtl,id:'12',type:'enter'},);
-                  displayAry.push({title:'安全风险及控制措施',content:this.state.data.securityRiskCtl,id:'13',type:'enter'},);
-                  displayAry.push({title:'经验反馈',id:'14',content:this.state.data.experienceFeedback,type:'enter'},);
-                  displayAry.push({title:'施工工具',id:'15',content:this.state.data.workTool,type:'enter'},);
+                displayAry.push({title:'查看更多详情',content:this.state.data.worktime,id:'c',type:'displayMore'},);
 
 
 
                // 遍历
                for (var i = 0; i<displayAry.length; i++) {
-                   if (displayAry[i].type == 'enter') {
+                   if (displayAry[i].type == 'displayMore') {
                        itemAry.push(
                            <EnterItemView key={displayAry[i].id}
                             title={displayAry[i].title}
                             onPress = {this.onItemClick.bind(this,displayAry[i])}
+                            flagArrow = {this.state.displayMore}
                            />
                        );
                    } else if (displayAry[i].type == 'devider') {
@@ -329,9 +374,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     divider: {
-    backgroundColor: '#8E8E8E',
+    backgroundColor: '#f2f2f2',
     width: width,
-    height: 8,
+    height: 10,
 },
     mainStyle: {
         width: width,
@@ -365,11 +410,24 @@ const styles = StyleSheet.create({
             justifyContent: "center",
             alignItems: 'center',
     },
+       statisticsflexContainer: {
+                height: 60,
+                backgroundColor: '#ffffff',
+                flexDirection: 'row',
+            },
 
-       itemLine:{
-           width: width,
-           height: 1,
-           backgroundColor: '#cccccc',
-       },
+      cell: {
+          flex: 1,
+          height: 60,
+          justifyContent: "center",
+          alignItems: 'center',
+           flexDirection: 'column',
+      },
+
+      cellLine: {
+          width: 2,
+          height: 14,
+          backgroundColor: '#cccccc',
+      },
 
 });

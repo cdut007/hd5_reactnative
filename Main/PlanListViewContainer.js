@@ -21,7 +21,6 @@ import CircleLabelHeadView from '../common/CircleLabelHeadView';
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
-import SingleWorkRollDetailView from './SingleWorkRollDetailView';
 import PlanListView from './PlanListView';
 
 const isIOS = Platform.OS == "ios"
@@ -184,6 +183,7 @@ export default class PlanListViewContainer extends Component {
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.data.type}
              status={statusDatas[index].status}
+             navigator={this.props.navigator}
              />
             </View>
         )

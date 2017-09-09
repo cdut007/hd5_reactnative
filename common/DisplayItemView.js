@@ -40,21 +40,22 @@ const styles = StyleSheet.create({
         paddingTop:8,
         backgroundColor:'#ffffff',
         paddingBottom:8,
-        height: 50,
+        height: 48,
         alignItems: 'center',
     },
     title: {
         width: width * 0.33,
-        fontSize: 18,
-        color: "#666"
+        fontSize: 14,
+        color: "#1c1c1c"
     },
     detail: {
-        fontSize: 18,
-        color: "#666"
+        fontSize: 14,
+        color: "#777777"
     },
     divider: {
-    backgroundColor: '#8E8E8E',
+    backgroundColor: '#d6d6d6',
     width: width,
-    height: 0.5,
+    height: 1,
+    marginLeft:10,
 },
 });
