@@ -182,8 +182,8 @@ export default class PlanListViewContainer extends Component {
 
             <PlanListView
             style={{alignSelf:'stretch',flex:1}}
-             type='GDJH'
-             status='PROGRESSING'
+             type={this.props.data.type}
+             status={statusDatas[index].status}
              />
             </View>
         )
