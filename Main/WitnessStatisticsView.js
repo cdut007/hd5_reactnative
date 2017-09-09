@@ -18,7 +18,7 @@ import CircleLabelHeadView from '../common/CircleLabelHeadView';
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
-import PlanStatisticsSubView from './PlanStatisticsSubView';
+import WitnessStatisticsSubView from './WitnessStatisticsSubView';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -59,18 +59,8 @@ export default class WitnessStatisticsView extends Component {
 
     componentDidMount() {
 
-        //this.executePlanRequest();
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(
-                [{name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-            {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-        {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'}]),
-            isLoading: false,
-        });
+        this.executeWitnessRequest();
+
     }
 
     onGetDataSuccess(response){
@@ -82,26 +72,23 @@ export default class WitnessStatisticsView extends Component {
 
         var datas = response.responseResult.datas;
 
+        var captain = response.responseResult.captain;
 
-
-        if (this.state.filter !== query) {
-           // do not update state if the query is stale
-           console.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
-           return;
-         }
-
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(datas),
-            isLoading: false,
-        });
+        if (captain) {
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(captain),
+                isLoading: false,
+            });
+        }
 
     }
 
     onItemPress(itemData){
         this.props.navigator.push({
-            component: PlanStatisticsSubView,
+            component: WitnessStatisticsSubView,
              props: {
                  data:itemData,
+                 type:this.props.type,
                 }
         })
     }
@@ -144,7 +131,7 @@ export default class WitnessStatisticsView extends Component {
         onSearchChange(event) {
            var filter = event.nativeEvent.text.toLowerCase();
         //    this.clearTimeout(this.timeoutID);
-        //    this.timeoutID = this.setTimeout(() => this.executePlanRequest(pagesize,1,filter), 100);
+        //    this.timeoutID = this.setTimeout(() => this.executeWitnessRequest(pagesize,1,filter), 100);
         }
 
          renderFooter() {
@@ -156,9 +143,9 @@ export default class WitnessStatisticsView extends Component {
          }
 
 
-    executePlanRequest(){
+    executeWitnessRequest(){
 
-      console.log('executePlanRequest:')
+      console.log('executeWitnessRequest:')
 
                  this.setState({
                    isLoading: true,
@@ -167,9 +154,10 @@ export default class WitnessStatisticsView extends Component {
 
 
                  var paramBody = {
+                      type:this.props.type
                      }
 
-            HttpRequest.get('/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/statistics/witness', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
 
@@ -220,19 +208,19 @@ export default class WitnessStatisticsView extends Component {
                         <View style={styles.flexContainer}>
 
                         <CircleLabelHeadView style={styles.head_cell}
-                            contactName = {rowData.name}
+                            contactName = {rowData.user.realname}
                         >
 
                         </CircleLabelHeadView>
 
                         <Text style={[styles.content,{marginLeft:10}]}>
-                          {rowData.name}
+                          {rowData.user.realname}
                         </Text>
 
                         <View style= {[styles.cellLine,{marginLeft:8,marginRight:8,marginTop:20,marginBottom:20}]}/>
 
                         <Text style={{color:'#888888',fontSize:14,marginLeft:4,}}>
-                          {rowData.class}
+                          {rowData.user.dept.name + rowData.user.roles[0].name}
                         </Text>
 
                         </View>
@@ -248,7 +236,7 @@ export default class WitnessStatisticsView extends Component {
                             已发起的见证
                           </Text>
                           <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                            {rowData.undelivery}
+                            {rowData.statistics.launched}
                           </Text>
                         </View>
 
@@ -259,7 +247,7 @@ export default class WitnessStatisticsView extends Component {
                           已完成的见证
                         </Text>
                         <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                          {rowData.work}
+                          {rowData.statistics.comleted}
                         </Text>
                         </View>
 
@@ -270,7 +258,7 @@ export default class WitnessStatisticsView extends Component {
                           未完成的见证
                         </Text>
                         <Text style={{color:'#e82628',fontSize:14,}}>
-                          {rowData.pause}
+                          {rowData.statistics.uncomplete}
                         </Text>
                         </View>
 

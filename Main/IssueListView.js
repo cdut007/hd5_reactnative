@@ -21,6 +21,7 @@ import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
 import PlanDetailView from './PlanDetailView';
+import CardView from 'react-native-cardview'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -70,13 +71,13 @@ export default class IssueListView extends Component {
             console.log("_onRefresh() --> ");
             this.setState({isRefreshing:true})
 
-            this.executePlanRequest(1);
+            this.executeProblemRequest(1);
         }
 
         _loadMoreData() {
             console.log("_loadMoreData() --> ");
              pageNo = parseInt(20/ pagesize) + 1;
-            this.executePlanRequest(pageNo);
+            this.executeProblemRequest(pageNo);
         }
 
         _toEnd() {
@@ -110,13 +111,13 @@ export default class IssueListView extends Component {
 
     componentDidMount() {
 
-        //this.executePlanRequest(1);
-        this.setState({dataSource:this.state.dataSource.cloneWithRows([
-            {},
-            {},
-            {},
-            {}
-        ])})
+        this.executeProblemRequest(1);
+        // this.setState({dataSource:this.state.dataSource.cloneWithRows([
+        //     {},
+        //     {},
+        //     {},
+        //     {}
+        // ])})
 
     }
 
@@ -136,7 +137,7 @@ export default class IssueListView extends Component {
                 isRefreshing:false,
             });
            // do not update state if the query is stale
-           console.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
+           console.log('executeProblemRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
            return;
          }
 
@@ -178,15 +179,15 @@ export default class IssueListView extends Component {
         onSearchChange(event) {
            var filter = event.nativeEvent.text.toLowerCase();
         //    this.clearTimeout(this.timeoutID);
-        //    this.timeoutID = this.setTimeout(() => this.executePlanRequest(pagesize,1,filter), 100);
+        //    this.timeoutID = this.setTimeout(() => this.executeProblemRequest(pagesize,1,filter), 100);
         }
 
 
 
 
-    executePlanRequest(index){
+    executeProblemRequest(index){
 
-      console.log('executePlanRequest pageNo:'+index)
+      console.log('executeProblemRequest pageNo:'+index)
 
                  this.setState({
                    isLoading: true,
@@ -201,7 +202,7 @@ export default class IssueListView extends Component {
                       status:this.props.status,
                      }
 
-            HttpRequest.get('/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/problem', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
                     this.setState({
@@ -256,6 +257,10 @@ export default class IssueListView extends Component {
         itemView = () => {
 
                 return (
+                    <CardView
+                      cardElevation={2}
+                      cardMaxElevation={2}
+                      cornerRadius={5}>
 
                        <View style={styles.itemContainer}>
                         <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
@@ -309,6 +314,7 @@ export default class IssueListView extends Component {
                         height: 0.5,}}/>
 
                         </View>
+                        </CardView>
 
                 )
 
@@ -386,8 +392,7 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
             flex:1,
-            height:150,
-            marginTop:10,
+            height:160,
             backgroundColor:'#ffffff',
             padding:10,
     },

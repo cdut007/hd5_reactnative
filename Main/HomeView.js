@@ -220,16 +220,16 @@ export default class HomeView extends Component {
 
     onModuleItemClick(index,bottom) {
         console.log('Did click item at:' + index)
-        if (true) {
-            //test single page.
-            this.props.navigator.push({
-                component: IssueListViewContainer,
-                props:{
-                    data:{class:'sdd',type:"GDJH"}
-                }
-            })
-            return
-        }
+        // if (true) {
+        //     //test single page.
+        //     this.props.navigator.push({
+        //         component: IssueListViewContainer,
+        //         props:{
+        //             data:{class:'sdd',type:"GDJH"}
+        //         }
+        //     })
+        //     return
+        // }
             //
             var data = moduleData[index];
             if (bottom) {
@@ -240,7 +240,7 @@ export default class HomeView extends Component {
                 component: ModuleTabView,
                  props: {
                      data:data,
-                     type:this.state.selectedTypeIndex,
+                     type:data.type,
                      typeStr:typeSegArr[this.state.selectedTypeIndex],
                      category:dayCateArr[index],
                     }

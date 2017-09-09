@@ -34,7 +34,7 @@ var LOADING = {};
 
     var statusDatas = [{
                     index:0,
-                    status:'unbegin',
+                    status:'UNASSIGNED',
                     data:[],
                     pageNo:1,
                 },
@@ -66,7 +66,7 @@ export default class PlanListViewContainer extends Component {
 
         this.state = {
 
-            title: this.props.data.class + "任务",
+            title: this.props.data.user.dept.name + "任务",
         }
 
 
@@ -180,7 +180,7 @@ export default class PlanListViewContainer extends Component {
 
             <PlanListView
             style={{alignSelf:'stretch',flex:1}}
-             type={this.props.data.type}
+             type={this.props.type}
              status={statusDatas[index].status}
              navigator={this.props.navigator}
              />

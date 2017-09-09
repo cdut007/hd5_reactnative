@@ -34,13 +34,13 @@ var LOADING = {};
 
     var statusDatas = [{
                     index:0,
-                    status:'unresolved',
+                    status:'NEED_SOLVE',
                     data:[],
                     pageNo:1,
                 },
                 {
                     index:1,
-                    status:'resolved',
+                    status:'SOLVED',
                     data:[],
                     pageNo:1,
                 },
@@ -111,7 +111,7 @@ export default class IssueListViewContainer extends Component {
 
             <IssueListView
             style={{alignSelf:'stretch',flex:1}}
-             type={this.props.data.type}
+             type={this.props.type}
              status={statusDatas[index].status}
              navigator={this.props.navigator}
              />

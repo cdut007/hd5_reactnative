@@ -59,18 +59,18 @@ export default class PlanStatisticsView extends Component {
 
     componentDidMount() {
 
-        //this.executePlanRequest();
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(
-                [{name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-            {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-        {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'}]),
-            isLoading: false,
-        });
+        this.executePlanRequest();
+    //     this.setState({
+    //         dataSource: this.state.dataSource.cloneWithRows(
+    //             [{name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    //         {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    //     {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    // {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    // {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    // {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    // {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'}]),
+    //         isLoading: false,
+    //     });
     }
 
     onGetDataSuccess(response){
@@ -80,20 +80,18 @@ export default class PlanStatisticsView extends Component {
          query = '';
      }
 
-        var datas = response.responseResult.datas;
+        var captain = response.responseResult.captain;
+
+        if (captain) {
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(captain),
+                isLoading: false,
+            });
+        }
 
 
 
-        if (this.state.filter !== query) {
-           // do not update state if the query is stale
-           console.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
-           return;
-         }
 
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(datas),
-            isLoading: false,
-        });
 
     }
 
@@ -102,6 +100,7 @@ export default class PlanStatisticsView extends Component {
             component: PlanStatisticsSubView,
              props: {
                  data:itemData,
+                 type:this.props.type,
                 }
         })
     }
@@ -167,9 +166,10 @@ export default class PlanStatisticsView extends Component {
 
 
                  var paramBody = {
+                     type:this.props.type
                      }
 
-            HttpRequest.get('/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/statistics/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
 
@@ -220,19 +220,19 @@ export default class PlanStatisticsView extends Component {
                         <View style={styles.flexContainer}>
 
                         <CircleLabelHeadView style={styles.head_cell}
-                            contactName = {rowData.name}
+                            contactName = {rowData.user.realname}
                         >
 
                         </CircleLabelHeadView>
 
                         <Text style={[styles.content,{marginLeft:10}]}>
-                          {rowData.name}
+                          {rowData.user.realname}
                         </Text>
 
                         <View style= {[styles.cellLine,{marginLeft:8,marginRight:8,marginTop:20,marginBottom:20}]}/>
 
                         <Text style={{color:'#888888',fontSize:14,marginLeft:4,}}>
-                          {rowData.class+" ("+rowData.total+")"}
+                          {rowData.user.dept.name + rowData.user.roles[0].name+" ("+rowData.statistics.total+")"}
                         </Text>
 
                         </View>
@@ -248,7 +248,7 @@ export default class PlanStatisticsView extends Component {
                             未分派
                           </Text>
                           <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                            {rowData.undelivery}
+                            {rowData.statistics.unassign}
                           </Text>
                         </View>
 
@@ -259,7 +259,7 @@ export default class PlanStatisticsView extends Component {
                           施工中
                         </Text>
                         <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                          {rowData.work}
+                          {rowData.statistics.progressing}
                         </Text>
                         </View>
 
@@ -269,7 +269,7 @@ export default class PlanStatisticsView extends Component {
                           已完成
                         </Text>
                         <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                          {rowData.finish}
+                          {rowData.statistics.completed}
                         </Text>
                         </View>
 
@@ -280,7 +280,7 @@ export default class PlanStatisticsView extends Component {
                           停滞中
                         </Text>
                         <Text style={{color:'#e82628',fontSize:14,}}>
-                          {rowData.pause}
+                          {rowData.statistics.pause}
                         </Text>
                         </View>
 
