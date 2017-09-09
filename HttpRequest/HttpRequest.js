@@ -53,7 +53,7 @@ get(apiName, body,successCallback, failCallback)
         console.log("get request response:"+responseText);
         var response = JSON.parse(responseText);
         if (response.code == 1000) {
-            successCallback(response);
+            successCallback(response,body);
         }else{
             if (response.message) {
                 failCallback(response.message)
@@ -123,7 +123,7 @@ post(apiName, body,successCallback, failCallback)
         console.log(responseText);
         var response = JSON.parse(responseText);
         if (response.code == 1000) {
-            successCallback(response);
+            successCallback(response,body);
         }else{
             if (response.message) {
                 failCallback(response.message)

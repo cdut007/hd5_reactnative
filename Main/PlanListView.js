@@ -7,15 +7,16 @@ import {
     TouchableOpacity,
     Platform,
     ListView,
-    ScrollView,
+    RefreshControl,
     ActivityIndicator,
     TouchableNativeFeedback,
     TouchableHighlight,
+    InteractionManager,
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar'
-import CircleLabelHeadView from '../common/CircleLabelHeadView';
+import LoadMoreFooter from '../common/LoadMoreFooter.js'
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
@@ -23,10 +24,9 @@ import SingleWorkRollDetailView from './SingleWorkRollDetailView';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
+var height = Dimensions.get('window').height;
 var pagesize = 10;
-
-import   ScrollableTabView  from 'react-native-scrollable-tab-view';
-
+var pageNo = 1;
 
 var resultsCache = {
   dataForQuery: {},
@@ -48,7 +48,9 @@ export default class PlanListView extends Component {
             isLoading: false,
             isLoadingTail: false,
             filter: '',
-            title: this.props.data.class + "任务",
+            isRefreshing:false,
+            items:[],
+
         }
 
 
@@ -63,55 +65,90 @@ export default class PlanListView extends Component {
 
     }
 
-    callback(key) {
-          console.log('onChange', key);
+
+        _onRefresh() {
+            console.log("_onRefresh() --> ");
+            this.setState({isRefreshing:true})
+
+            this.executePlanRequest(1);
         }
 
-    handleTabClick(key) {
-          console.log('onTabClick', key);
+        _loadMoreData() {
+            console.log("_loadMoreData() --> ");
+             pageNo = parseInt(20/ pagesize) + 1;
+            this.executePlanRequest(pageNo);
         }
+
+        _toEnd() {
+            console.log("触发加载更多 toEnd() --> ");
+            //console.log("加载更多？ ",userReducer.isLoadingMore, userReducer.products.length, userReducer.totalProductCount,userReducer.isRefreshing);
+            //ListView滚动到底部，根据是否正在加载更多 是否正在刷新 是否已加载全部来判断是否执行加载更多
+            // if (userReducer.isLoadingMore || userReducer.products.length >= userReducer.totalProductCount || userReducer.isRefreshing) {
+            //     return;
+            // };
+            InteractionManager.runAfterInteractions(() => {
+                this._loadMoreData();
+            });
+        }
+
+        _renderFooter(label,index) {
+            //const { userReducer } = this.props;
+            //通过当前product数量和刷新状态（是否正在下拉刷新）来判断footer的显示
+            if (this.state.isRefreshing) {//userReducer.products.length < 1 ||
+                return null
+            };
+            //if (userReducer.products.length < userReducer.totalProductCount) {
+                //还有更多，默认显示‘正在加载更多...’
+                return <LoadMoreFooter />
+            // }else{
+            //     // 加载全部
+            //     return <LoadMoreFooter isLoadAll={true}/>
+            // }
+        }
+
+
 
     componentDidMount() {
 
-        //this.executePlanRequest();
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(
-                [{date:'2017/8/13',task_no:'2CAM0038-2121.4','classify':'A1','task_tyle':'预制','task_item_no':'TM01-2017-08-002'},
-                {date:'2017/8/13',task_no:'2CAM0038-2121.4','classify':'A1','task_tyle':'预制','task_item_no':'TM01-2017-08-002'},
-                {date:'2017/8/13',task_no:'2CAM0038-2121.4','classify':'A1','task_tyle':'预制','task_item_no':'TM01-2017-08-002'},
-                {date:'2017/8/13',task_no:'2CAM0038-2121.4','classify':'A1','task_tyle':'预制','task_item_no':'TM01-2017-08-002'},
-                {date:'2017/8/13',task_no:'2CAM0038-2121.4','classify':'A1','task_tyle':'预制','task_item_no':'TM01-2017-08-002'},
-                {date:'2017/8/13',task_no:'2CAM0038-2121.4','classify':'A1','task_tyle':'预制','task_item_no':'TM01-2017-08-002'},
-                {date:'2017/8/13',task_no:'2CAM0038-2121.4','classify':'A1','task_tyle':'预制','task_item_no':'TM01-2017-08-002'},
-                {date:'2017/8/13',task_no:'2CAM0038-2121.4','classify':'A1','task_tyle':'预制','task_item_no':'TM01-2017-08-002'},
-                {date:'2017/8/13',task_no:'2CAM0038-2121.4','classify':'A1','task_tyle':'预制','task_item_no':'TM01-2017-08-002'},
-                {date:'2017/8/13',task_no:'2CAM0038-2121.4','classify':'A1','task_tyle':'预制','task_item_no':'TM01-2017-08-002'},
-                {date:'2017/8/13',task_no:'2CAM0038-2121.4','classify':'A1','task_tyle':'预制','task_item_no':'TM01-2017-08-002'},
-            ]),
-            isLoading: false,
-        });
+        this.executePlanRequest(1);
+
     }
 
-    onGetDataSuccess(response){
+    onGetDataSuccess(response,paramBody){
          console.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
          query = '';
      }
 
-        var datas = response.responseResult.datas;
+        var datas = response.responseResult.data;
 
 
 
         if (this.state.filter !== query) {
+            this.setState({
+                isRefreshing:false,
+            });
            // do not update state if the query is stale
            console.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
            return;
          }
 
+         var status = paramBody.status
+
+        if (this.state.isRefreshing) {
+            this.state.items = datas;
+            pageNo = 1;
+        }else{
+            for (var i = 0; i < datas.length; i++) {
+                this.state.items.push(datas[i])
+            }
+        }
+
         this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(datas),
+            dataSource:this.state.dataSource.cloneWithRows(this.state.items),
             isLoading: false,
+            isRefreshing:false,
         });
 
     }
@@ -131,34 +168,6 @@ export default class PlanListView extends Component {
 
       }
 
-      onEndReached() {
-              var query = this.state.filter;
-              if (!query) {
-                  query = '';
-              }
-              if (!this.hasMore() || this.state.isLoadingTail) {
-                // We're already fetching or have all the elements so noop
-                console.log('not has more, or load end')
-                this.setState({
-                  isLoadingTail: true,
-                  isLoading: false,
-              });
-                return;
-              }
-
-              if (LOADING[query]) {
-                console.log('query already loading')
-                return;
-              }
-
-              LOADING[query] = true;
-              this.setState({
-                isLoadingTail: true,
-            });
-
-
-
-        }
 
         onSearchChange(event) {
            var filter = event.nativeEvent.text.toLowerCase();
@@ -166,18 +175,12 @@ export default class PlanListView extends Component {
         //    this.timeoutID = this.setTimeout(() => this.executePlanRequest(pagesize,1,filter), 100);
         }
 
-         renderFooter() {
-           if (!this.hasMore() || !this.state.isLoadingTail) {
-             return <View style={styles.scrollSpinner} />;
-           }
-
-           return <ActivityIndicator style={styles.scrollSpinner} />;
-         }
 
 
-    executePlanRequest(){
 
-      console.log('executePlanRequest:')
+    executePlanRequest(index){
+
+      console.log('executePlanRequest pageNo:'+index)
 
                  this.setState({
                    isLoading: true,
@@ -186,15 +189,19 @@ export default class PlanListView extends Component {
 
 
                  var paramBody = {
+                      pagesize:pagesize,
+                      pagenum:index,
+                      type:this.props.type,
+                      status:this.props.status,
                      }
 
             HttpRequest.get('/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
-
                     this.setState({
                       dataSource: this.state.dataSource.cloneWithRows([]),
                       isLoading: false,
+                      isRefreshing:false,
                     });
                     try {
                         var errorInfo = JSON.parse(e);
@@ -213,31 +220,12 @@ export default class PlanListView extends Component {
                 })
     }
 
-    rendTabs(){
-        return( <ScrollableTabView
-            tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
-               tabBarBackgroundColor='#FFFFFF'
-               tabBarActiveTextColor='#0755a6'
-               tabBarInactiveTextColor='#777777'
-               locked={true}
-    >
-         {this.renderListView('未施工')}
-         {this.renderListView('施工中')}
-         {this.renderListView('停滞中')}
-         {this.renderListView('已完成')}
-    </ScrollableTabView>
 
-        )
-    }
 
     render() {
         return (
             <View style={styles.container}>
-                <NavBar
-                title={this.state.title}
-                leftIcon={require('../images/back.png')}
-                leftPress={this.back.bind(this)} />
-                {this.rendTabs()}
+            {this.renderListView()}
             </View>
         )
     }
@@ -260,8 +248,8 @@ export default class PlanListView extends Component {
 
                         <View style={styles.cell}>
 
-                          <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                            {rowData.date}
+                          <Text numberOfLines={1}  style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                            {rowData.plandate}
                           </Text>
 
                         </View>
@@ -270,7 +258,7 @@ export default class PlanListView extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.task_no}
+                              {rowData.weldlistno}
                         </Text>
 
                         </View>
@@ -278,7 +266,7 @@ export default class PlanListView extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.classify}
+                           {rowData.weldno}
                         </Text>
 
                         </View>
@@ -286,7 +274,7 @@ export default class PlanListView extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.task_tyle}
+                           {rowData.speciality}
                         </Text>
 
                         </View>
@@ -310,76 +298,24 @@ export default class PlanListView extends Component {
             </View>
         )
     }
-    renderListView(label) {
+
+    renderListView() {
         return (
-            <View  tabLabel={label} style={{marginTop:10,}}>
-
-            <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
-            </View>
-            
-            <ScrollView   horizontal={true}
-                            showsHorizontalScrollIndicator={false}  // 隐藏水平指示器
-                              showsVerticalScrollIndicator={false}    // 隐藏垂直指示器
-            >
-
-            <View style={styles.statisticsflexContainer}>
-
-            <View style={styles.cell}>
-
-              <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                施工日期
-              </Text>
-
-            </View>
-
-
-            <View style={styles.cell}>
-
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              工程量编号
-            </Text>
-
-            </View>
-
-            <View style={styles.cell}>
-
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              支架/焊口
-            </Text>
-
-            </View>
-
-            <View style={styles.cell}>
-
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              工程量类别
-            </Text>
-
-            </View>
-
-            <View style={styles.cell}>
-
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              作业条目编号
-            </Text>
-
-            </View>
-
-
-            </View>
-
-            </ScrollView>
-            <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
-            </View>
-
             <ListView
                 dataSource={this.state.dataSource}
                 renderRow={this.renderRow.bind(this)}
-                renderFooter={this.renderFooter.bind(this)}
-                onEndReached={this.onEndReached.bind(this)}
-
-            />
-            </View>
+                renderFooter={this._renderFooter.bind(this)}
+            	onEndReached={this._toEnd.bind(this)}
+                onEndReachedThreshold={10}
+                enableEmptySections={true}
+                refreshControl={
+    						<RefreshControl
+    							refreshing={ this.state.isRefreshing }
+    							onRefresh={ this._onRefresh.bind(this) }
+    							tintColor="gray"
+    							colors={['#0755a6', '#0755a6', '#0755a6']}
+    							progressBackgroundColor="#ffffff"/>
+    						}/>
         )
     }
 
@@ -391,10 +327,8 @@ export default class PlanListView extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        backgroundColor: '#f2f2f2',
+        width: width,
+        height:height-200,
     },
     topView: {
         height: 150,

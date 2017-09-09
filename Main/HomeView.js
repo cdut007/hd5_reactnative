@@ -17,7 +17,7 @@ import px2dp from '../common/util'
 import dateformat from 'dateformat'
 import HttpRequest from '../HttpRequest/HttpRequest'
 import ModuleTabView from './ModuleTabView';
-import PlanListView from './PlanListView';
+import PlanListViewContainer from './PlanListViewContainer';
 import Banner from 'react-native-banner';
 import Badge from 'react-native-smart-badge'
 
@@ -221,9 +221,9 @@ export default class HomeView extends Component {
         if (true) {
             //test single page.
             this.props.navigator.push({
-                component: PlanListView,
+                component: PlanListViewContainer,
                 props:{
-                    data:{class:'sdd'}
+                    data:{class:'sdd',type:"GDJH"}
                 }
             })
             return
