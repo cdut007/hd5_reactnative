@@ -8,7 +8,7 @@ import {
 	Modal
 } from 'react-native';
 const { width, height } = Dimensions.get('window')
-import loadingImage from '../images/timg.gif'
+
 class LoadingView extends Component{
 	constructor(props) {
 		super(props);
@@ -26,10 +26,10 @@ class LoadingView extends Component{
 			 		 	{
 			 		 		this.props.closeLoading ?
 	 		 		 		<TouchableOpacity onPress={ this.props.closeLoading }>
-	 			 		    	<Image style={ styles.loadingImage } source={ loadingImage }/>
+	 			 		    	<Image style={ styles.loadingImage } source={ require('../images/loading.gif') }/>
 	 		 		    	</TouchableOpacity>
 	 		 		    	:
-	 		 		    	<Image style={ styles.loadingImage } source={ loadingImage }/>
+	 		 		    	<Image style={ styles.loadingImage } source={ require('../images/loading.gif') }/>
 			 		 	}
 		 			</View>
 			 	</View>

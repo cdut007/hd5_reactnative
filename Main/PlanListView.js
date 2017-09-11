@@ -17,6 +17,7 @@ import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar'
 import LoadMoreFooter from '../common/LoadMoreFooter.js'
+import LoadingView from '../common/LoadingView.js'
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
@@ -46,7 +47,6 @@ export default class PlanListView extends Component {
         this.state = {
             dataSource: ds,
             isLoading: false,
-            isLoadingTail: false,
             filter: '',
             isRefreshing:false,
             items:[],
@@ -56,6 +56,12 @@ export default class PlanListView extends Component {
 
 
     }
+
+    _closeLoading() {
+		this.setState({
+			showLoading: false
+		})
+	}
 
 
         back() {
@@ -183,10 +189,13 @@ export default class PlanListView extends Component {
     executePlanRequest(index){
 
       console.log('executePlanRequest pageNo:'+index)
+                var loading = false;
+                if (this.state.items.length == 0) {
+                        loading = true
+                }
 
                  this.setState({
-                   isLoading: true,
-                   isLoadingTail: false,
+                   isLoading: loading,
                  });
 
 
@@ -228,6 +237,7 @@ export default class PlanListView extends Component {
         return (
             <View style={styles.container}>
             {this.renderListView()}
+            <LoadingView showLoading={ this.state.isLoading } closeLoading={ this._closeLoading.bind(this)}></LoadingView>
             </View>
         )
     }
