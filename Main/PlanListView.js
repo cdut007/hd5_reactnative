@@ -50,6 +50,7 @@ export default class PlanListView extends Component {
             filter: '',
             isRefreshing:false,
             items:[],
+            totalCount:0,
 
         }
 
@@ -75,7 +76,7 @@ export default class PlanListView extends Component {
 
         _loadMoreData() {
             console.log("_loadMoreData() --> ");
-             pageNo = parseInt(20/ pagesize) + 1;
+             pageNo = parseInt(this.state.items.length / pagesize) + 1;
             this.executePlanRequest(pageNo);
         }
 
@@ -83,9 +84,9 @@ export default class PlanListView extends Component {
             console.log("触发加载更多 toEnd() --> ");
             //console.log("加载更多？ ",userReducer.isLoadingMore, userReducer.products.length, userReducer.totalProductCount,userReducer.isRefreshing);
             //ListView滚动到底部，根据是否正在加载更多 是否正在刷新 是否已加载全部来判断是否执行加载更多
-            // if (userReducer.isLoadingMore || userReducer.products.length >= userReducer.totalProductCount || userReducer.isRefreshing) {
-            //     return;
-            // };
+            if (this.state.items.length >= this.state.totalCount || this.state.isRefreshing) {//userReducer.isLoadingMore ||
+                return;
+            };
             InteractionManager.runAfterInteractions(() => {
                 this._loadMoreData();
             });
@@ -94,16 +95,16 @@ export default class PlanListView extends Component {
         _renderFooter(label,index) {
             //const { userReducer } = this.props;
             //通过当前product数量和刷新状态（是否正在下拉刷新）来判断footer的显示
-            if (this.state.isRefreshing) {//userReducer.products.length < 1 ||
+            if (this.state.isRefreshing || this.state.items.length < 1) {
                 return null
             };
-            //if (userReducer.products.length < userReducer.totalProductCount) {
+            if (this.state.items.length < this.state.totalCount) {
                 //还有更多，默认显示‘正在加载更多...’
                 return <LoadMoreFooter />
-            // }else{
-            //     // 加载全部
-            //     return <LoadMoreFooter isLoadAll={true}/>
-            // }
+            }else{
+                // 加载全部
+                return <LoadMoreFooter isLoadAll={true}/>
+            }
         }
 
 
@@ -149,6 +150,7 @@ export default class PlanListView extends Component {
             dataSource:this.state.dataSource.cloneWithRows(this.state.items),
             isLoading: false,
             isRefreshing:false,
+            totalCount:response.responseResult.totalCounts
         });
 
     }
