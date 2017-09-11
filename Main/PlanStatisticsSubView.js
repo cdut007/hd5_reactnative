@@ -187,10 +187,7 @@ export default class PlanStatisticsSubView extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <NavBar
-                title={this.state.title}
-                leftIcon={require('../images/back.png')}
-                leftPress={this.back.bind(this)} />
+                
                {this.renderListView()}
             </View>
         )

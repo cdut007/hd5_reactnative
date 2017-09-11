@@ -18,7 +18,7 @@ import CircleLabelHeadView from '../common/CircleLabelHeadView';
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
-import PlanStatisticsSubView from './PlanStatisticsSubView';
+import PlanStatisticsSubViewContainer from './PlanStatisticsSubViewContainer';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -97,7 +97,7 @@ export default class PlanStatisticsView extends Component {
 
     onItemPress(itemData){
         this.props.navigator.push({
-            component: PlanStatisticsSubView,
+            component: PlanStatisticsSubViewContainer,
              props: {
                  data:itemData,
                  type:this.props.type,
