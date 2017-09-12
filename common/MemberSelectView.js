@@ -3,143 +3,94 @@ import {
     StyleSheet,
     Text,
     View,
+    TouchableHighlight,
+    TouchableOpacity
 } from 'react-native';
 
-import ModalDropdown from 'react-native-modal-dropdown'
-import HttpRequest from '../HttpRequest/HttpRequest'
-import Dimensions from 'Dimensions'
+ import Picker from 'react-native-picker';
 
-var width = Dimensions.get('window').width;
-const REQUST_TEAMMEMBER_URL = '/hdxt/api/baseservice/witness/team'
-
-var memberArr = []
-var allUserDic = {}
 
 export default class MemberSelectView extends Component {
     static propTypes =
     {
-        title: PropTypes.string,
-        type: PropTypes.string,
-        defaultMember: PropTypes.object,
-        onSelected: PropTypes.func
+        type: PropTypes.string,  //'date', 'time', 'datetime'
+        onSelected: PropTypes.func,
+        title:PropTypes.string,
     }
 
     constructor(props) {
         super(props)
 
-        let member = this.props.defaultMember
-        if (!member || !member.realname) {
-            member = { "id": -1, "realname": "选择人员"}
-        }
-
+        // if (!this.props.type) {
+        //     this.props.type = 'date'
+        // }
 
         this.state = {
-            selectedMember: member,
-            memberNameArr: []
+            currentDate: '选择人员',
+            isDateTimePickerVisible: false
         }
     }
 
-    componentDidMount() {
-        if (memberArr.length == 0) {
-            this.getTeamMember()
-        }
-        else
-        {
-            this.updateMemberPicker()
-        }
-    }
 
-    getTeamMember() {
-        HttpRequest.get(REQUST_TEAMMEMBER_URL, {}, this.onGetMemberSuccess.bind(this),
-            (e) => {
-                try {
-                    alert(e)
-                }
-                catch (err) {
-                    console.log(err)
-                }
-            })
-    }
+    onSelectedData(data) {
+        console.log('A data has been picked: ', data);
 
-    onGetMemberSuccess(response) {
-        console.log('onGetMemberSuccess:' + JSON.stringify(response))
+        this.props.onSelected(data)
 
-        let tempDic = {}
-        if (response['code'] == '1000') {
-            response['responseResult'].map((item, i) => {
-                tempDic[item.type] = item.users
-            })
-        }
-
-        allUserDic = tempDic
-        memberArr  = tempDic[this.props.type]
-
-        this.updateMemberPicker()
-    }
-
-
-    updateMemberPicker()
-    {
-        var nameArr = []
-        memberArr.map((item, i) => {
-            nameArr.push(item.realname)
-        })
 
         this.setState({
-            memberNameArr: nameArr
+            currentData: data,
+            isPickerVisible: false
         })
     }
 
+    onPickClick(){
+        if (!this.props.data) {
+            return
+        }
+        this.setState({ isPickerVisible: true })
 
-    onSelectDropDown(idx, value) {
-        this.setState({ selectedMember: memberArr[idx] })
-        this.props.onSelected(memberArr[idx])
+        Picker.init({
+       pickerData: this.props.data,
+       pickerTitleText:'选择人员',
+       pickerConfirmBtnText:'保存',
+       pickerCancelBtnText:'取消',
+       onPickerConfirm: data => {
+           console.log(data);
+           this.onSelectedData(data);
+       },
+       onPickerCancel: data => {
+           console.log(data);
+       },
+       onPickerSelect: data => {
+           console.log(data);
+       }
+   });
+   Picker.show();
     }
 
     render() {
+        // if (this.props.visible) {
+        //     this.setState({ isDateTimePickerVisible: true })
+        //
+        // }
         return (
-            <View style={styles.container}>
-                <Text  style={styles.title}>{this.props.title}:</Text>
-                <ModalDropdown
-                    options={this.state.memberNameArr}
-                    textStyle={{ alignSelf: 'stretch', paddingLeft: 5 }}
-                    dropdownStyle={styles.dropDownList}
-                    style={styles.dropDown}
-                    defaultValue={this.state.selectedMember['realname']}
-                    onSelect={(idx, value) => this.onSelectDropDown(idx, value)} >
-                </ModalDropdown>
+            <View style={[styles.container]}>
+                <TouchableOpacity style = {{alignItems: 'center', justifyContent: 'center'}} onPress={this.onPickClick.bind(this)}>
+                    <Text style={[this.props.style]}>{this.props.title}</Text>
+                </TouchableOpacity>
+
             </View>
         )
     }
+
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        flexDirection: 'row',
-        backgroundColor:'#ffffff',
-        height: 50
-    },
-    dropDown: {
         justifyContent: 'center',
-        // flex: 1,
-        width: 120,
-        height: 36,
-        backgroundColor: 'lightgrey',
-        marginLeft: 20,
-        borderColor: 'lightgray',
-        borderWidth: 0.5,
+        alignItems: 'center',
+        alignSelf:'stretch',
+        flex:1
     },
-    title: {
-        margin:8,
-        fontSize: 18,
-        color: "#666"
-    },
-    dropDownList: {
-        width: 119,
-        borderColor: 'lightgray',
-        borderWidth: 0.5,
-    },
-});
+})

@@ -24,6 +24,7 @@ import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
 import PlanDetailView from './PlanDetailView';
 import CommitButton from '../common/CommitButton'
+import CheckBox from 'react-native-checkbox'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -39,6 +40,11 @@ var resultsCache = {
 var LOADING = {};
 import Global from '../common/globals.js'
 
+import DateTimePickerView from '../common/DateTimePickerView'
+
+import MemberSelectView from '../common/MemberSelectView'
+
+
 
 export default class PlanListDeliveryView extends Component {
     constructor(props) {
@@ -46,6 +52,7 @@ export default class PlanListDeliveryView extends Component {
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
        LOADING = {};
+       var data = ['张三','李四']
         this.state = {
             dataSource: ds,
             isLoading: false,
@@ -53,6 +60,11 @@ export default class PlanListDeliveryView extends Component {
             isRefreshing:false,
             items:[],
             totalCount:0,
+            choose_date:null,
+            choose_member:null,
+            displayDate:'选择施工日期',
+            displayMember:'选择作业组长',
+            members:data,
 
         }
 
@@ -122,6 +134,42 @@ export default class PlanListDeliveryView extends Component {
         this.executePlanRequest(1);
 
     }
+
+    renderCheckBox(item,rowID) {
+    if (!item) {
+        return ({})
+    }
+
+    return (<CheckBox
+        label=''
+        checkedImage={require('../images/choose_icon_click.png')}
+        uncheckedImage={require('../images/choose_icon.png')}
+        checked={item.selected == null ? false : item.selected}
+        onChange={(checked) => {
+            console.log(checked+'check item=='+item.id+';selected='+item.selected)
+            item.selected = !checked
+
+            let newArray = this.state.items.slice();
+                for (var i = 0; i < this.state.items.length; i++) {
+                    if(item.id == this.state.items[i].id){
+                        newArray[i] = {
+                          ...item,
+                        };
+                        break
+                    }
+                }
+
+
+
+                let newDataSource = this.state.dataSource.cloneWithRows(newArray);
+                this.setState({
+                  dataSource: newDataSource
+                });
+
+        }
+        }
+    />)
+}
 
     onGetDataSuccess(response,paramBody){
          console.log('onGetDataSuccess@@@@')
@@ -205,7 +253,7 @@ export default class PlanListDeliveryView extends Component {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
-                      status:this.props.status,
+                      status:'PROGRESSING'//this.props.status,
                      }
 
             HttpRequest.get('/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
@@ -247,6 +295,27 @@ export default class PlanListDeliveryView extends Component {
         )
     }
 
+    onSelectedDate(date){
+     console.log("date=="+date.getTime());
+     this.state.choose_date = date.getTime();
+     this.setState({displayDate:Global.formatDate(this.state.choose_date)})
+    // this.setState({...this.state});
+    }
+
+    onSelectedMember(member){
+        console.log(JSON.stringify(member)+"member====");
+        this.state.choose_member = member;
+
+        this.setState({displayMember:member});
+    }
+
+    onDateClick(){
+        if (!this.state.time_visible) {
+            this.state.time_visible = false
+        }
+        this.setState({time_visible:false})
+    }
+
     renderChooseOptions(){
         if (Global.isMonitor(Global.UserInfo)){
             return(
@@ -254,14 +323,21 @@ export default class PlanListDeliveryView extends Component {
 
                 <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
-                <TouchableOpacity style={{borderWidth:0.5,
+                <TouchableOpacity
+
+                style={{borderWidth:0.5,
                       alignItems:'center',
                       borderColor : '#f77935',
                       backgroundColor : 'white',
                       borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
-                <Text style={{color:'#f77935',fontSize:14,flex:1}}>
-                                      选择施工日期
-                </Text>
+
+                <DateTimePickerView
+                    type={'date'}
+                    title={this.state.displayDate}
+                    visible={this.state.time_visible}
+                    style={{color:'#f77935',fontSize:14,flex:1}}
+                    onSelected={this.onSelectedDate.bind(this)}
+                />
                                     <Image
                                     style={{width:20,height:20}}
                                     source={require('../images/unfold.png')}/>
@@ -277,9 +353,13 @@ export default class PlanListDeliveryView extends Component {
                       borderColor : '#f77935',
                       backgroundColor : 'white',
                       borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
-                <Text style={{color:'#f77935',fontSize:14,flex:1}}>
-                                      选择作业组长
-                </Text>
+
+                <MemberSelectView
+                style={{color:'#f77935',fontSize:14,flex:1}}
+                title={this.state.displayMember}
+                data={this.state.members}
+
+                onSelected={this.onSelectedMember.bind(this)} />
                                     <Image
                                     style={{width:20,height:20,}}
                                     source={require('../images/unfold.png')}/>
@@ -295,7 +375,7 @@ export default class PlanListDeliveryView extends Component {
 
     renderCommitBtn(){
         if (Global.isMonitor(Global.UserInfo)){
-            return(<View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}><CommitButton title={'确认分派'}
+            return(<View style={{height:50,}}><CommitButton title={'确认分派'}
                     onPress={this.startDelivery.bind(this)}></CommitButton></View>
         )
         }
@@ -303,6 +383,27 @@ export default class PlanListDeliveryView extends Component {
 
     startDelivery(){
 
+        var selectItems = []
+        this.state.items.map((item, i) => {
+                        if (item.selected) {
+                            selectItems.push(item.id)
+                            console.log('selected==='+item.id)
+                        }
+                    })
+        if (selectItems.length == 0) {
+            alert('请选择任务')
+            return
+        }
+
+        if (!this.state.choose_date) {
+            alert('请选择施工日期')
+            return
+        }
+
+        if (!this.state.choose_member) {
+            alert('请选择作业组长')
+            return
+        }
     }
 
     renderTitleCols(){
@@ -311,12 +412,12 @@ export default class PlanListDeliveryView extends Component {
         <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
         </View>
 
-        <ScrollView   horizontal={true}
-                        showsHorizontalScrollIndicator={false}  // 隐藏水平指示器
-                          showsVerticalScrollIndicator={false}    // 隐藏垂直指示器
-        >
+
 
         <View style={styles.statisticsflexContainer}>
+
+        <View style={[styles.cell,{flex:0.5}]}>
+        </View>
 
         <View style={styles.cell}>
 
@@ -343,26 +444,18 @@ export default class PlanListDeliveryView extends Component {
 
         </View>
 
-        <View style={styles.cell}>
+        {/* <View style={styles.cell}>
 
         <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
           工程量类别
         </Text>
 
-        </View>
+        </View> */}
 
-        <View style={styles.cell}>
 
-        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-          作业条目编号
-        </Text>
-
-        </View>
 
 
         </View>
-
-        </ScrollView>
         <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
         </View>
 
@@ -375,56 +468,51 @@ export default class PlanListDeliveryView extends Component {
     }
 
     renderRow(rowData, sectionID, rowID) {
+
         itemView = () => {
 
                 return (
 
                        <View style={styles.itemContainer}>
-                        <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
+
 
 
                         <View style={styles.statisticsflexContainer}>
 
-                        <View style={styles.cell}>
+                        <View style={[styles.cell,{flex:0.5,}]}>
+                        <View style={{  alignItems: 'center', justifyContent: 'center', }}>
+                                    {this.renderCheckBox(rowData,rowID)}
+                                                </View>
+                        </View>
+
+                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
                         <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
                           {Global.formatDate(rowData.planStartDate)}{'\n'}～{'\n'}{Global.formatDate(rowData.planEndDate)}
                         </Text>
 
-                      </View>
+                      </TouchableOpacity>
 
 
-                      <View style={styles.cell}>
-
+                      <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
                           <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
                                 {rowData.projectNo}
                           </Text>
+                        </TouchableOpacity>
 
-                        </View>
-
-                        <View style={styles.cell}>
+                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
                            {rowData.weldno}
                         </Text>
 
-                        </View>
-
-                        <View style={styles.cell}>
-
-                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.speciality}
-                        </Text>
-
-                        </View>
-
-
-
-
-                        </View>
-
-
                         </TouchableOpacity>
+
+
+
+                        </View>
+
+
                         <View style={{backgroundColor: '#d6d6d6',
                         width: width,
                         height: 0.5,}}/>

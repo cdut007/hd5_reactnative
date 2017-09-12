@@ -15,7 +15,8 @@ export default class DateTimePickerView extends Component {
     static propTypes =
     {
         type: PropTypes.string,  //'date', 'time', 'datetime'
-        onSelected: PropTypes.func
+        onSelected: PropTypes.func,
+        title:PropTypes.string,
     }
 
     constructor(props) {
@@ -56,10 +57,14 @@ export default class DateTimePickerView extends Component {
 
 
     render() {
+        // if (this.props.visible) {
+        //     this.setState({ isDateTimePickerVisible: true })
+        //
+        // }
         return (
-            <View style={styles.container}>
-                <TouchableOpacity style = {{width:160, height: 36, backgroundColor: 'lightgrey', alignItems: 'center', justifyContent: 'center'}} onPress={() => this.setState({ isDateTimePickerVisible: true })}>
-                    <Text>{this.state.currentDate}</Text>
+            <View style={[styles.container]}>
+                <TouchableOpacity style = {{alignItems: 'center', justifyContent: 'center'}} onPress={() => this.setState({ isDateTimePickerVisible: true })}>
+                    <Text style={[this.props.style]}>{this.props.title}</Text>
                 </TouchableOpacity>
                 <DateTimePicker
                     cancelTextIOS={'取消'}
@@ -81,6 +86,7 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
         alignItems: 'center',
-        height: 50
+        alignSelf:'stretch',
+        flex:1
     },
 })

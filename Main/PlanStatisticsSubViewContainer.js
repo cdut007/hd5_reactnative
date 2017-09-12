@@ -44,7 +44,7 @@ var LOADING = {};
                 },
             {
                     index:1,
-                    status:'NOT_BEGIN',
+                    status:'UNASSIGNED',
                     data:[],
                 }
 

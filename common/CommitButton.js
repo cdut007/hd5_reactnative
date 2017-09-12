@@ -20,11 +20,9 @@ var width = Dimensions.get('window').width;
     render()
     {
         return(
-            <View>
             <TouchableHighlight style= {styles.container} onPress = {this.props.onPress} >
                 <Text style= {styles.title}>{this.props.title}</Text>
             </TouchableHighlight>
-            </View>
         )
     }
  }
@@ -38,6 +36,7 @@ const styles = StyleSheet.create({
         paddingRight:10,
         paddingTop:8,
         backgroundColor:'#ea6b10',
+        alignSelf:'stretch',
         paddingBottom:8,
         height: 49,
         alignItems: 'center',
