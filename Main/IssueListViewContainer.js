@@ -55,7 +55,7 @@ export default class IssueListViewContainer extends Component {
 
         this.state = {
 
-            title: this.props.data.class + "问题",
+            title: this.props.data.user.dept.name + "问题",
         }
 
 

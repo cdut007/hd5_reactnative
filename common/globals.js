@@ -46,6 +46,13 @@ module.exports = {
         }
         var roleType = user.roles[0].roleType[0]
         return roleType == 'captain'
+    },isGroup(user){
+        if (!user) {
+            console.log('maybe crash recycle from the memery cache, can read data again ??')
+            return false
+        }
+        var roleType = user.roles[0].roleType[0]
+        return roleType == 'group'
     },
 
 };

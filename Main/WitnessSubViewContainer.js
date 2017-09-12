@@ -22,7 +22,7 @@ import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
 import PlanListDeliveryView from './PlanListDeliveryView';
-import PlanStatisticsSubView from './PlanStatisticsSubView';
+import WitnessStatisticsSubView from './WitnessStatisticsSubView';
 import PlanListView from './PlanListView';
 import Global from '../common/globals.js';
 
@@ -69,14 +69,14 @@ var groupStatusDatas = [{
 ];
 
 
-export default class PlanStatisticsSubViewContainer extends Component {
+export default class WitnessSubViewContainer extends Component {
     constructor(props) {
         super(props)
 
 
         this.state = {
 
-            title: this.props.data.user.dept.name + "任务",
+            title: this.props.data.user.dept.name + "见证",
         }
 
 
@@ -189,8 +189,8 @@ export default class PlanStatisticsSubViewContainer extends Component {
                    tabBarActiveTextColor='#f77935'
                    tabBarInactiveTextColor='#777777'
         >
-             {this.renderAssignedListView('已分派任务',0)}
-             {this.renderUnassignedView('待分配任务',1)}
+             {this.renderUnCommitWitnessListView('待提交的见证',0)}
+             {this.renderLunchedWitessListView('已发起的见证',1)}
         </ScrollableTabView>
 
             )
@@ -211,7 +211,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
     }
 
 
-     renderUnassignedView(label,index) {
+     renderUnCommitWitnessListView(label,index) {
         return (
 
             <PlanListDeliveryView
@@ -225,9 +225,9 @@ export default class PlanStatisticsSubViewContainer extends Component {
         )
     }
 
-    renderAssignedListView(label,index) {
+    renderLunchedWitessListView(label,index) {
         return (
-            <PlanStatisticsSubView
+            <WitnessStatisticsSubView
             tabLabel={label}
              style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}

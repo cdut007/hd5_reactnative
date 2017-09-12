@@ -18,6 +18,8 @@ import CircleLabelHeadView from '../common/CircleLabelHeadView';
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
+import WitnessListViewContainer from './WitnessListViewContainer.js'
+import Global from '../common/globals.js'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -29,6 +31,7 @@ var resultsCache = {
   totalForQuery: {},
 };
 var LOADING = {};
+import PlanListViewContainer from './PlanListViewContainer';
 
 export default class WitnessStatisticsSubView extends Component {
     constructor(props) {
@@ -83,7 +86,13 @@ export default class WitnessStatisticsSubView extends Component {
     }
 
     onItemPress(itemData){
-    
+        this.props.navigator.push({
+            component: WitnessListViewContainer,
+             props: {
+                 data:itemData,
+                 type:this.props.type,
+                }
+        })
     }
 
 
@@ -179,13 +188,19 @@ export default class WitnessStatisticsSubView extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <NavBar
-                title={this.state.title}
-                leftIcon={require('../images/back.png')}
-                leftPress={this.back.bind(this)} />
+               {this.showNavView()}
                {this.renderListView()}
             </View>
         )
+    }
+
+    showNavView(){
+        if (!Global.isMonitor(Global.UserInfo)) {
+            return(<NavBar
+            title={this.state.title}
+            leftIcon={require('../images/back.png')}
+            leftPress={this.back.bind(this)} />)
+        }
     }
 
     index(rowID){
