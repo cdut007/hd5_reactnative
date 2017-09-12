@@ -80,9 +80,9 @@ export default class PlanStatisticsSubViewContainer extends Component {
 
     rendTabs(){
         return( <ScrollableTabView
-            tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
+            tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
                tabBarBackgroundColor='#FFFFFF'
-               tabBarActiveTextColor='#0755a6'
+               tabBarActiveTextColor='#f77935'
                tabBarInactiveTextColor='#777777'
     >
          {this.renderAssignedListView('已分派任务',0)}

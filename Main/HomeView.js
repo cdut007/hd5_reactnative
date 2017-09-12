@@ -27,7 +27,7 @@ var yesterday = new Date()
 yesterday.setTime(yesterday.getTime() - 24 * 60 * 60 * 1000)
 var tomorrow = new Date()
 tomorrow.setTime(tomorrow.getTime() + 24 * 60 * 60 * 1000)
-
+import Global from '../common/globals.js';
 
 import PlanListViewContainer from './PlanListViewContainer';
 import IssueListViewContainer from './IssueListViewContainer';
@@ -236,15 +236,36 @@ export default class HomeView extends Component {
                 data = bottomModuleData[index];
             }
 
-            this.props.navigator.push({
-                component: ModuleTabView,
-                 props: {
-                     data:data,
-                     type:data.type,
-                     typeStr:typeSegArr[this.state.selectedTypeIndex],
-                     category:dayCateArr[index],
-                    }
-            })
+            if (Global.isCaptain(Global.UserInfo)) {
+                this.props.navigator.push({
+                    component: ModuleTabView,
+                     props: {
+                         data:data,
+                         type:data.type,
+                         typeStr:typeSegArr[this.state.selectedTypeIndex],
+                         category:dayCateArr[index],
+                        }
+                })
+            }else if (Global.isMonitor(Global.UserInfo)) {
+                data.user = new Object();
+                data.user.id = Global.UserInfo.id;
+                data.user.dept = new Object();
+                data.user.dept.name = data.title;//change later. for dept 
+
+
+                this.props.navigator.push({
+                    component: ModuleTabView,
+                     props: {
+                         data:data,
+                         type:data.type,
+                         typeStr:typeSegArr[this.state.selectedTypeIndex],
+                         category:dayCateArr[index],
+                        }
+                })
+            }else {
+                console.log('unkonwn roles ....')
+            }
+
 
     }
 

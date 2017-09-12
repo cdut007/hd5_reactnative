@@ -32,7 +32,7 @@ get(apiName, body,successCallback, failCallback)
 
     var url = apiAddr + apiName
     var param = ""
-
+  //body.loginId=256
     if (Global.UserInfo)
     {
         body.loginId = Global.UserInfo.id

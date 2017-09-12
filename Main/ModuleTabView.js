@@ -12,9 +12,14 @@ import {
 import WitnessStatisticsView from './WitnessStatisticsView';
 import PlanStatisticsView from './PlanStatisticsView';
 import IssueStatisticsView from './IssueStatisticsView';
+
+import WitnessStatisticsSubView from './WitnessStatisticsSubView';
+import PlanStatisticsSubViewContainer from './PlanStatisticsSubViewContainer';
+import IssueStatisticsSubView from './IssueStatisticsSubView';
+
 import Navigation from '../common/Navigation';
 import TabNavigator from 'react-native-tab-navigator';
-
+import Global from '../common/globals.js'
 export default class ModuleTabView extends Component
 {
     state =
@@ -50,6 +55,43 @@ export default class ModuleTabView extends Component
 
     render()
     {
+        if (Global.isMonitor(Global.UserInfo)){
+            return(
+                <TabNavigator>
+                    <TabNavigator.Item
+                        selected={this.state.selectedTab === 'tab1'}
+                        title="任务"
+                        renderIcon={() => <Image style={{width:24,height:24,}} source={require('../images/task_icon.png')} />}
+                        renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../images/task_icon_click.png')} />}
+                        badgeText=""
+                        selectedTitleStyle={styles.tabBarTintColor}
+                        onPress={() => this.setState({ selectedTab: 'tab1' })}>
+                        {<PlanStatisticsSubViewContainer {...this.props}/>}
+                    </TabNavigator.Item>
+                    <TabNavigator.Item
+                        selected={this.state.selectedTab === 'tab2'}
+                        title="问题"
+                        renderIcon={() => <Image style={{width:24,height:24,}} source={require('../images/problem_icon.png')} />}
+                        renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../images/problem_icon_click.png')} />}
+                        selectedTitleStyle={styles.tabBarTintColor}
+                        onPress={() => this.setState({ selectedTab: 'tab2' })}>
+                        {<IssueStatisticsSubView {...this.props}/>}
+                    </TabNavigator.Item>
+
+                    <TabNavigator.Item
+                        selected={this.state.selectedTab === 'tab3'}
+                        title="见证"
+                        renderIcon={() => <Image style={{width:24,height:24,}} source={require('../images/witness_icon.png')} />}
+                        renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../images/witness_icon_click.png')} />}
+                        selectedTitleStyle={styles.tabBarTintColor}
+                        onPress={() => this.setState({ selectedTab: 'tab3' })}>
+                        {<WitnessStatisticsSubView {...this.props}/>}
+                    </TabNavigator.Item>
+
+                </TabNavigator>
+            )
+
+        }else{
 
         return (
             <TabNavigator>
@@ -84,8 +126,9 @@ export default class ModuleTabView extends Component
                 </TabNavigator.Item>
 
             </TabNavigator>
-
         )
+            }
+
     }
 }
 

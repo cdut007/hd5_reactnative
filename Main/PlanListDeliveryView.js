@@ -23,6 +23,7 @@ import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
 import PlanDetailView from './PlanDetailView';
+import CommitButton from '../common/CommitButton'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -36,7 +37,7 @@ var resultsCache = {
   totalForQuery: {},
 };
 var LOADING = {};
-
+import Global from '../common/globals.js'
 
 
 export default class PlanListDeliveryView extends Component {
@@ -237,11 +238,71 @@ export default class PlanListDeliveryView extends Component {
     render() {
         return (
             <View style={styles.container}>
+            {this.renderChooseOptions()}
             {this.renderTitleCols()}
             {this.renderListView()}
+            {this.renderCommitBtn()}
             <LoadingView showLoading={ this.state.isLoading } closeLoading={ this._closeLoading.bind(this)}></LoadingView>
             </View>
         )
+    }
+
+    renderChooseOptions(){
+        if (Global.isMonitor(Global.UserInfo)){
+            return(
+                <View style={[{marginTop:10,alignItems:'center',},styles.statisticsflexContainer]}>
+
+                <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+
+                <TouchableOpacity style={{borderWidth:0.5,
+                      alignItems:'center',
+                      borderColor : '#f77935',
+                      backgroundColor : 'white',
+                      borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+                <Text style={{color:'#f77935',fontSize:14,flex:1}}>
+                                      选择施工日期
+                </Text>
+                                    <Image
+                                    style={{width:20,height:20}}
+                                    source={require('../images/password_icon.png')}/>
+                </TouchableOpacity>
+
+                </View>
+
+
+                <View TouchableOpacity style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+
+                <TouchableOpacity style={{borderWidth:0.5,
+                      alignItems:'center',
+                      borderColor : '#f77935',
+                      backgroundColor : 'white',
+                      borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+                <Text style={{color:'#f77935',fontSize:14,flex:1}}>
+                                      选择作业组长
+                </Text>
+                                    <Image
+                                    style={{width:20,height:20,}}
+                                    source={require('../images/password_icon.png')}/>
+                </TouchableOpacity>
+
+                </View>
+
+                </View>
+
+            )
+        }
+    }
+
+    renderCommitBtn(){
+        if (Global.isMonitor(Global.UserInfo)){
+            return(<View style={{ position: 'absolute', left: 0, right: 0, bottom: 0 }}><CommitButton title={'确认分派'}
+                    onPress={this.startDelivery.bind(this)}></CommitButton></View>
+        )
+        }
+    }
+
+    startDelivery(){
+
     }
 
     renderTitleCols(){
@@ -326,18 +387,18 @@ export default class PlanListDeliveryView extends Component {
 
                         <View style={styles.cell}>
 
-                          <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                            {rowData.plandate}
-                          </Text>
-
-                        </View>
-
-
-                        <View style={styles.cell}>
-
-                        <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.weldlistno}
+                        <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
+                          {Global.formatDate(rowData.planStartDate)}{'\n'}～{'\n'}{Global.formatDate(rowData.planEndDate)}
                         </Text>
+
+                      </View>
+
+
+                      <View style={styles.cell}>
+
+                          <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
+                                {rowData.projectNo}
+                          </Text>
 
                         </View>
 
@@ -409,7 +470,7 @@ export default class PlanListDeliveryView extends Component {
 const styles = StyleSheet.create({
     container: {
         width: width,
-        height:height-200,
+        height:height-169,
     },
     topView: {
         height: 150,

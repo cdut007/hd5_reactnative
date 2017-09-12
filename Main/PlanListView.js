@@ -22,6 +22,7 @@ import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
 import PlanDetailView from './PlanDetailView';
+import Global from '../common/globals.js';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -247,6 +248,8 @@ export default class PlanListView extends Component {
         return index;
     }
 
+
+
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
 
@@ -260,8 +263,8 @@ export default class PlanListView extends Component {
 
                         <View style={styles.cell}>
 
-                          <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                            {rowData.plandate}
+                          <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
+                            {Global.formatDate(rowData.planStartDate)}{'\n'}～{'\n'}{Global.formatDate(rowData.planEndDate)}
                           </Text>
 
                         </View>
@@ -270,7 +273,7 @@ export default class PlanListView extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.weldlistno}
+                              {rowData.projectNo}
                         </Text>
 
                         </View>
