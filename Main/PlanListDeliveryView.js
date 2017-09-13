@@ -26,6 +26,7 @@ import PlanDetailView from './PlanDetailView';
 import CommitButton from '../common/CommitButton'
 import CheckBox from 'react-native-checkbox'
 
+
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -52,7 +53,15 @@ export default class PlanListDeliveryView extends Component {
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
        LOADING = {};
-       var data = ['张三','李四']
+       if (Global.UserInfo.monitor) {
+            var data = []
+            for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
+                data.push(Global.UserInfo.monitor[i].user.realname)
+            }
+       }else{
+           console.log('can not find the monitor class info.')
+       }
+
         this.state = {
             dataSource: ds,
             isLoading: false,
@@ -136,9 +145,16 @@ export default class PlanListDeliveryView extends Component {
     }
 
     renderCheckBox(item,rowID) {
+
+    if (Global.isCaptain(Global.UserInfo)) {
+            return
+        }
+
     if (!item) {
         return ({})
     }
+
+
 
     return (<CheckBox
         label=''
@@ -253,7 +269,7 @@ export default class PlanListDeliveryView extends Component {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
-                      status:'PROGRESSING'//this.props.status,
+                      status:this.props.status,
                      }
 
             HttpRequest.get('/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
@@ -303,10 +319,16 @@ export default class PlanListDeliveryView extends Component {
     }
 
     onSelectedMember(member){
+        for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
+            if (Global.UserInfo.monitor[i].user.realname == member) {
+                this.state.choose_member = Global.UserInfo.monitor[i].user.id;
+                this.setState({displayMember:member});
+                    console.log(JSON.stringify(member)+"member===="+";id="+this.state.choose_member);
+                break;
+            }
+        }
         console.log(JSON.stringify(member)+"member====");
-        this.state.choose_member = member;
 
-        this.setState({displayMember:member});
     }
 
     onDateClick(){
@@ -384,9 +406,11 @@ export default class PlanListDeliveryView extends Component {
     startDelivery(){
 
         var selectItems = []
+        var ids='';
         this.state.items.map((item, i) => {
                         if (item.selected) {
                             selectItems.push(item.id)
+                            ids+=item.id+',';
                             console.log('selected==='+item.id)
                         }
                     })
@@ -394,6 +418,7 @@ export default class PlanListDeliveryView extends Component {
             alert('请选择任务')
             return
         }
+        ids = ids.substr(0,ids.length-1)
 
         if (!this.state.choose_date) {
             alert('请选择施工日期')
@@ -404,6 +429,47 @@ export default class PlanListDeliveryView extends Component {
             alert('请选择作业组长')
             return
         }
+
+        var paramBody = {
+                 type:this.props.type,
+                'method': 'ASSIGN',
+                'ids': ids,
+                'userId':this.state.choose_member,
+                'consDate':Global.formatFullDate(this.state.choose_date),
+            }
+
+        HttpRequest.post('/rollingplan_op', paramBody, this.onDeliverySuccess.bind(this),
+            (e) => {
+                this.setState({
+                    loadingVisible: false
+                });
+                try {
+                    var errorInfo = JSON.parse(e);
+                }
+                catch(err)
+                {
+                    console.log("error======"+err)
+                }
+                    if (errorInfo != null) {
+                        if (errorInfo.code == -1002||
+                         errorInfo.code == -1001) {
+                        alert(errorInfo.message);
+                    }else {
+                        alert(e)
+                    }
+
+                    } else {
+                        alert(e)
+                    }
+
+
+                console.log('Login error:' + e)
+            })
+    }
+
+    onDeliverySuccess(response){
+        Global.showToast(response.message)
+        this._onRefresh();
     }
 
     renderTitleCols(){

@@ -24,6 +24,8 @@ const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var pagesize = 10;
 
+import Global from '../common/globals.js'
+
 var resultsCache = {
   dataForQuery: {},
   nextPageNumberForQuery: {},
@@ -76,6 +78,7 @@ export default class PlanStatisticsSubView extends Component {
         var monitor = response.responseResult.monitor;
 
         if (monitor) {
+            Global.UserInfo.monitor = monitor;
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(monitor),
                 isLoading: false,
@@ -187,7 +190,7 @@ export default class PlanStatisticsSubView extends Component {
     render() {
         return (
             <View style={styles.container}>
-                
+
                {this.renderListView()}
             </View>
         )
@@ -200,7 +203,9 @@ export default class PlanStatisticsSubView extends Component {
 
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
-
+            if (!rowData.statistics) {
+                rowData.statistics=new Object()
+            }
                 return (
                        <View style={styles.itemContainer}>
                         <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>

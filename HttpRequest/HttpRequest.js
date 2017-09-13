@@ -94,7 +94,7 @@ post(apiName, body,successCallback, failCallback)
     if (Global.UserInfo)
     {
         logind = Global.UserInfo.id;
-        body.append('loginId', Global.UserInfo.id)
+        
     }
 
 

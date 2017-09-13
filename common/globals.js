@@ -1,4 +1,6 @@
 
+import Toast from 'react-native-root-toast';
+
 var currentRole;
 var UserInfo;
 
@@ -30,7 +32,10 @@ module.exports = {
         var curTime = new Date(time).format("yyyy/MM/dd");
         return curTime
     },
-
+    formatFullDate(time){
+        var curTime = new Date(time).format("yyyy-MM-dd hh:mm:ss");
+        return curTime
+    },
     isMonitor(user){
         if (!user) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
@@ -53,6 +58,32 @@ module.exports = {
         }
         var roleType = user.roles[0].roleType[0]
         return roleType == 'group'
+    },
+    showToast(content){
+        // Add a Toast on screen.
+    let toast = Toast.show(content, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+        onShow: () => {
+            // calls on toast\`s appear animation start
+        },
+        onShown: () => {
+            // calls on toast\`s appear animation end.
+        },
+        onHide: () => {
+            // calls on toast\`s hide animation start.
+        },
+        onHidden: () => {
+            // calls on toast\`s hide animation end.
+        }
+    });
+    },
+    clearCache(){
+    UserInfo=null;
     },
 
 };
