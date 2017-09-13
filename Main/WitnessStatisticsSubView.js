@@ -210,7 +210,9 @@ export default class WitnessStatisticsSubView extends Component {
 
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
-
+                if (!rowData.statistics) {
+                    rowData.statistics = new Object()
+                }
                 return (
                        <View style={styles.itemContainer}>
                         <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>

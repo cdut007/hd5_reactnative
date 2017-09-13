@@ -52,10 +52,13 @@ export default class IssueListViewContainer extends Component {
     constructor(props) {
         super(props)
 
-
+        var title=this.props.data.class//队长才能取得到
+         if (!title) {
+             title = this.props.data.user.dept.name//否则班长
+         }
         this.state = {
 
-            title: this.props.data.user.dept.name + "问题",
+            title: title + "问题",
         }
 
 

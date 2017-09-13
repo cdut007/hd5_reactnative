@@ -98,6 +98,7 @@ export default class IssueStatisticsSubView extends Component {
     }
 
     onItemPress(itemData){
+        console.log('item info=='+JSON.stringify(itemData))
         this.props.navigator.push({
             component: IssueListViewContainer,
              props: {

@@ -57,7 +57,7 @@ module.exports = {
             return false
         }
         var roleType = user.roles[0].roleType[0]
-        return roleType == 'group'
+        return roleType == 'team'
     },
     showToast(content){
         // Add a Toast on screen.
