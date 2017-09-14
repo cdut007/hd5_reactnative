@@ -14,6 +14,7 @@ var width = Dimensions.get('window').width;
      {
         title: PropTypes.string,
         detail: PropTypes.string,
+        noLine:PropTypes.bool,
     }
 
     render()
@@ -24,9 +25,17 @@ var width = Dimensions.get('window').width;
                 <Text style= {styles.title}>{this.props.title} : </Text>
                 <Text style= {styles.detail}>{this.props.detail}</Text>
             </View>
-            <View style={styles.divider}/>
+            {this.rendLine()}
             </View>
         )
+    }
+
+    rendLine(){
+        if (!this.props.noLine) {
+            return(<View style={styles.divider}/>)
+        }else{
+            return(<View style={styles.no_divider}/>)
+        }
     }
  }
 
@@ -42,6 +51,7 @@ const styles = StyleSheet.create({
         paddingBottom:8,
         height: 48,
         alignItems: 'center',
+
     },
     title: {
         width: width * 0.33,
@@ -57,5 +67,10 @@ const styles = StyleSheet.create({
     width: width,
     height: 1,
     marginLeft:10,
+},no_divider: {
+backgroundColor: '#00000000',
+width: width,
+height: 1,
+marginLeft:10,
 },
 });

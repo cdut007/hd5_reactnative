@@ -20,16 +20,18 @@ import EnterItemView from '../common/EnterItemView';
 import CommonContentView from './CommonContentView';
 import SingleWorkRollDealBatWitnessView from './SingleWorkRollDealBatWitnessView';
 import IssueReportView from './IssueReportView'
-import WorkStepDetailView from './WorkStepDetailView';
+import WorkStepListView from './WorkStepListView';
+
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
 
+import Global from '../common/globals.js'
+import CommitButton from '../common/CommitButton'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var account = Object();
-var Global = require('../common/globals');
 
 export default class PlanDetailView extends Component {
     constructor(props) {
@@ -71,7 +73,7 @@ export default class PlanDetailView extends Component {
          var paramBody = {
              }
 
-    HttpRequest.get('/hdxt/api/baseservice/rollingplan/'+id, paramBody, this.onGetDataSuccess.bind(this),
+    HttpRequest.get('/rollingplan/'+id, paramBody, this.onGetDataSuccess.bind(this),
         (e) => {
 
             try {
@@ -112,8 +114,43 @@ export default class PlanDetailView extends Component {
             {this.renderTop()}
             <View style={{backgroundColor:'#f2f2f2',height:10,width:width}}></View>
              {this.renderDetailView()}
+             {this.renderFormView()}
             </View>
         )
+    }
+
+    startWitness(){
+        this.props.navigator.push({
+            component: WorkStepListView,
+             props: {
+                 data:this.state.data,
+                }
+        })
+    }
+
+    startProblem(){
+
+    }
+
+    renderFormView(){
+            //1  fininshed retun, jsut san
+
+            if (Global.isGroup(Global.UserInfo)) {
+
+                return(<View style={{height:50,width:width,flexDirection:'row'}}>
+                <View style={{height:50,flex:1}}><CommitButton title={'问题创建'}
+                        onPress={this.startProblem.bind(this)}></CommitButton></View>
+                        <View style={{height:50,flex:1}}><CommitButton title={'发起见证'}
+                                onPress={this.startWitness.bind(this)}></CommitButton></View>
+                                </View>)
+
+            }else if (Global.isCaptain(Global.UserInfo)) {
+
+
+            }else if (Global.isMonitor(Global.UserInfo)) {
+
+            }
+
     }
 
     renderTop(){
@@ -179,13 +216,7 @@ export default class PlanDetailView extends Component {
     }
 
     go2WorkStepDetail(){
-        this.props.navigator.push({
-            component: WorkStepDetailView,
-             props: {
-                 data:this.state.data,
-                 isTaskConfirm:this.state.isTaskConfirm,
-                }
-        })
+
     }
 
     go2ZhijiaUpdate(){
@@ -380,6 +411,7 @@ const styles = StyleSheet.create({
 },
     mainStyle: {
         width: width,
+        flex:1,
     },
     item: {
     width: width,

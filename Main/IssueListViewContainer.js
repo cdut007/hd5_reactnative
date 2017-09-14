@@ -40,6 +40,12 @@ var LOADING = {};
                 },
                 {
                     index:1,
+                    status:'RAISED_PROBLEM',
+                    data:[],
+                    pageNo:1,
+                },
+                {
+                    index:2,
                     status:'SOLVED',
                     data:[],
                     pageNo:1,
@@ -86,8 +92,9 @@ export default class IssueListViewContainer extends Component {
                tabBarActiveTextColor='#0755a6'
                tabBarInactiveTextColor='#777777'
     >
-         {this.renderListView('待解决问题',0)}
-         {this.renderListView('已解决问题',1)}
+         {this.renderListView('待解决的问题',0)}
+         {this.renderListView('待确认的问题',1)}
+         {this.renderListView('已解决的问题',2)}
     </ScrollableTabView>
 
         )
