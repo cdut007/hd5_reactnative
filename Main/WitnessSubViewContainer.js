@@ -21,7 +21,7 @@ import CircleLabelHeadView from '../common/CircleLabelHeadView';
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
-import PlanListDeliveryView from './PlanListDeliveryView';
+import WitnessListDeliveryView from './WitnessListDeliveryView';
 import WitnessStatisticsSubView from './WitnessStatisticsSubView';
 import PlanListView from './PlanListView';
 import Global from '../common/globals.js';
@@ -214,7 +214,7 @@ export default class WitnessSubViewContainer extends Component {
      renderUnCommitWitnessListView(label,index) {
         return (
 
-            <PlanListDeliveryView
+            <WitnessListDeliveryView
             tabLabel={label}
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
