@@ -26,6 +26,9 @@ import Accordion from 'react-native-collapsible/Accordion';
 import Global from '../common/globals.js'
 import CommitButton from '../common/CommitButton'
 
+
+import CheckBox from 'react-native-checkbox'
+
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -53,7 +56,6 @@ export default class WorkStepListView extends Component {
          console.log('onGetDataSuccess@@@@')
 
          this.setState({
-             title: info.title,
              data:response.responseResult,
          });
      }
@@ -196,11 +198,6 @@ export default class WorkStepListView extends Component {
 
            ];
 
-           displayAry.push({type:'devider'},);
-
-            for (var i = 0; i < this.state.data.length; i++) {
-                //displayAry.pushdata[i]
-            }
 
                // 遍历
                for (var i = 0; i<displayAry.length; i++) {
@@ -219,11 +216,65 @@ export default class WorkStepListView extends Component {
                    }
 
                }
+               displayAry.push({type:'devider'},);
+               itemAry.push(
+                  <View style={styles.divider}/>
+               );
+
+               for (var i = 0; i < this.state.data.length; i++) {
+                   itemAry.push(this.renderWorkStepItem(i,this.state.data[i]))
+               }
+
                return itemAry;
            }
 
+           renderWorkStepItem(index,data){
+               return(
+
+                   <View>
+                   <View style= {styles.item_container}>
+                       <Text style= {styles.title}>{data.stepno}{'、'}+{data.stepname}</Text>
+                       <Text style= {styles.detail}>QC1(W)</Text>
+                       {this.renderCheckBox(data)}
+                   </View>
+                   <View style={styles.divider_line}/>
+                   </View>
+
+
+               )
+           }
+
+        renderCheckBox(item) {
+
+           if (Global.isCaptain(Global.UserInfo)) {
+                   return
+               }
+
+           if (item.stepflag == 'DONE' && item.stepno %2 == 0) {
+               return (<Text style= {styles.desc}>合格</Text>)
+           }
+
+
+
+           return (<View style= {styles.desc_check}><CheckBox
+               label=''
+               checkedImage={require('../images/choose_icon_click.png')}
+               uncheckedImage={require('../images/choose_icon.png')}
+               checked={item.selected == null ? false : item.selected}
+               onChange={(checked) => {
+                   console.log(checked+'check item=='+item.id+';selected='+item.selected)
+                   item.selected = !checked
+                   this.setState({ ...this.state })
+
+               }
+               }
+           /></View>)
+       }
 
 }
+
+
+
 
 
 const styles = StyleSheet.create({
@@ -238,6 +289,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#f2f2f2',
     width: width,
     height: 10,
+},item_container: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    paddingLeft:10,
+    paddingRight:10,
+    paddingTop:8,
+    backgroundColor:'#ffffff',
+    paddingBottom:8,
+    height: 48,
+    alignItems: 'center',
+
 },
     mainStyle: {
         width: width,
@@ -265,7 +328,12 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
 
-
+    divider_line: {
+    backgroundColor: '#d6d6d6',
+    width: width,
+    height: 1,
+    marginLeft:10,
+},
     defaultText:{
             color: '#000000',
             fontSize:16,
@@ -275,6 +343,25 @@ const styles = StyleSheet.create({
        statisticsflexContainer: {
                 width: width,
                 backgroundColor: '#ffffff',
+            },
+            title: {
+                width: width * 0.45,
+                fontSize: 14,
+                color: "#1c1c1c"
+            },
+            detail: {
+                fontSize: 14,
+                color: "#777777"
+            },
+            desc: {
+                fontSize: 14,
+                color: "#777777",
+                flex:1,
+                textAlign:'right',
+            },desc_check: {
+                alignItems:'flex-end',
+                flex:1,
+                justifyContent:'center'
             },
 
       cell: {
