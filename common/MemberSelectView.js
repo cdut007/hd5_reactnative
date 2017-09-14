@@ -26,7 +26,6 @@ export default class MemberSelectView extends Component {
         // }
 
         this.state = {
-            currentDate: '选择人员',
             isDateTimePickerVisible: false
         }
     }
@@ -52,7 +51,7 @@ export default class MemberSelectView extends Component {
 
         Picker.init({
        pickerData: this.props.data,
-       pickerTitleText:'选择人员',
+       pickerTitleText:this.props.pickerTitle,
        pickerConfirmBtnText:'保存',
        pickerCancelBtnText:'取消',
        onPickerConfirm: data => {

@@ -380,7 +380,7 @@ export default class PlanListDeliveryView extends Component {
                 style={{color:'#f77935',fontSize:14,flex:1}}
                 title={this.state.displayMember}
                 data={this.state.members}
-
+                 pickerTitle={'选择人员'}
                 onSelected={this.onSelectedMember.bind(this)} />
                                     <Image
                                     style={{width:20,height:20,}}

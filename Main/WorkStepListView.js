@@ -18,7 +18,7 @@ import HttpRequest from '../HttpRequest/HttpRequest'
 import DisplayItemView from '../common/DisplayItemView';
 import EnterItemView from '../common/EnterItemView';
 import CommonContentView from './CommonContentView';
-import SingleWorkRollDealBatWitnessView from './SingleWorkRollDealBatWitnessView';
+import WorkStepWitnessBatchView from './WorkStepWitnessBatchView';
 import IssueReportView from './IssueReportView'
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
@@ -111,7 +111,26 @@ export default class WorkStepListView extends Component {
     }
 
     startCommitWitness(){
+        var selectItems = []
 
+        this.state.data.map((item, i) => {
+                        if (item.selected) {
+                            selectItems.push(item)
+
+                            console.log('selected==='+item.id)
+                        }
+                    })
+        if (selectItems.length == 0) {
+            alert('请选择工序见证')
+            return
+        }
+
+        this.props.navigator.push({
+            component: WorkStepWitnessBatchView,
+             props: {
+                 data:selectItems,
+                }
+        })
     }
 
 
@@ -153,32 +172,9 @@ export default class WorkStepListView extends Component {
         return '';
     }
 
-    go2WorkStepDetail(){
-
-    }
-
-    go2ZhijiaUpdate(){
-
-    }
-
-    issueFeedBack(){
-         this.props.navigator.push({
-            component: IssueReportView,
-             props: {
-                 data:this.state.data,
-                }
-        })
-    }
 
 
-    witnessDealBatTask(){
-        this.props.navigator.push({
-            component: SingleWorkRollDealBatWitnessView,
-             props: {
-                 data:this.state.data,
-                }
-        })
-    }
+
 
 
 
@@ -233,8 +229,8 @@ export default class WorkStepListView extends Component {
 
                    <View>
                    <View style= {styles.item_container}>
-                       <Text style= {styles.title}>{data.stepno}{'、'}+{data.stepname}</Text>
-                       <Text style= {styles.detail}>QC1(W)</Text>
+                       <Text style= {styles.title}>{data.stepno}{'、'} {data.stepname}</Text>
+                       <Text style= {styles.detail}>QC1(W) QC2(W)</Text>
                        {this.renderCheckBox(data)}
                    </View>
                    <View style={styles.divider_line}/>
