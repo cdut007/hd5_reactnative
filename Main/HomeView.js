@@ -278,6 +278,27 @@ export default class HomeView extends Component {
                          category:dayCateArr[index],
                         }
                 })
+            }else if (Global.isQCTeam(Global.UserInfo)) {
+
+                //show main view
+                this.props.navigator.resetTo({
+                    component: TabView,
+                    name: 'MainPage'
+                })
+            }else if (Global.isQC1Member(Global.UserInfo)) {
+
+                //show main view
+                this.props.navigator.resetTo({
+                    component: TabView,
+                    name: 'MainPage'
+                })
+            }else if (Global.isQC2Member(Global.UserInfo)) {
+
+                //show main view
+                this.props.navigator.resetTo({
+                    component: TabView,
+                    name: 'MainPage'
+                })
             }else {
                 console.log('unkonwn roles ....')
             }

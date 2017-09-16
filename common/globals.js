@@ -51,13 +51,34 @@ module.exports = {
         }
         var roleType = user.roles[0].roleType[0]
         return roleType == 'captain'
-    },isGroup(user){
+    },isQCTeam(user){
         if (!user) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
         var roleType = user.roles[0].roleType[0]
-        return roleType == 'team'
+        return roleType == 'qcteam'
+    },isQC1Member(user){
+        if (!user) {
+            console.log('maybe crash recycle from the memery cache, can read data again ??')
+            return false
+        }
+        var roleType = user.roles[0].roleType[0]
+        return roleType == 'qc1'
+    },isQC2Member(user){
+        if (!user) {
+            console.log('maybe crash recycle from the memery cache, can read data again ??')
+            return false
+        }
+        var roleType = user.roles[0].roleType[0]
+        return roleType == 'qc2'
+    },isSolverMember(user){
+        if (!user) {
+            console.log('maybe crash recycle from the memery cache, can read data again ??')
+            return false
+        }
+        var roleType = user.roles[0].roleType[0]
+        return roleType == 'solver'
     },
     showToast(content){
         // Add a Toast on screen.

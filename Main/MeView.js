@@ -14,8 +14,8 @@ import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar';
 import px2dp from '../common/util';
 import HttpRequest from '../HttpRequest/HttpRequest'
-import CircleImage from '../common/CircleImage';
-import SettingView from './SettingView';
+
+import LoginView from '../Login/LoginView'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -63,28 +63,80 @@ export default class MeView extends Component {
 
     }
 
+    _logout_function(){
+
+        //logout here
+        this._removeStorage();
+        //logout success go 2 call page
+        // var routes = this.props.navigator.state.routeStack;
+        // for (var i = routes.length - 1; i >= 0; i--) {
+        //     if(routes[i].name === "MyDestinationRoute"){
+        //     var destinationRoute = this.props.navigator.getCurrentRoutes()[i]
+        //     this.props.navigator.popToRoute(destinationRoute);
+        //
+        //     }
+        // }
+        this.props.navigator.resetTo({
+            component: LoginView,
+            name: 'LoginView'
+        })
+    };
+    async _removeStorage() {
+        Global.UserInfo = null;
+            AsyncStorage.removeItem('k_login_info').then((value) => {
+
+            }
+            ).done();
+
+        }
+
     render() {
+        var name = '';
+        var first_name_char = '';
+        if (Global.UserInfo.realname) {
+            name = Global.UserInfo.realname;
+            first_name_char = name.substring(0,1)
+        }
         return (
             <View style={styles.container}>
-            <NavBar title={this.state.name}
-            rightIcon={require('../images/setting_icon.png')}
-            rightPress={this.setting.bind(this)}
-            />
+            <View style={styles.headView}>
+                    <Image style={[styles.headView, { position: 'absolute', left: 0, right: 0, }]}
+                           source={require('../images/me_bj.jpg')}
+                    />
 
-            <TouchableOpacity style={styles.item}  onPress={this.onMineIssuePress.bind(this)}>
-            <Text style={styles.defaultText}>我的问题</Text>
-            </TouchableOpacity>
-            <View style={styles.divider}/>
+                    <View style ={[styles.circle_outter,{marginTop:54,alignSelf: 'center',alignItems:'center',justifyContent:'center'}]}>
+                    <View style ={[styles.circle,{marginLeft:2.5,position: 'absolute', left: 0, right: 0,alignSelf: 'center',backgroundColor:'#ffffff'}]}></View>
+                        <Text style={{marginLeft:14,
+                        position: 'absolute', left: 0, right: 0,
+                        color:'#fbac2a',
+                        alignSelf: 'center',
+                        fontSize:30,}}>
+                        {first_name_char}
+                        </Text>
+                    </View>
 
-            <TouchableOpacity style={styles.item} onPress={this.onMinePlanPress.bind(this)}>
-            <Text style={styles.defaultText}>我的计划</Text>
-            </TouchableOpacity>
-            <View style={styles.divider}/>
+                    <Text style={{
+                    color:'#ffffff',
+                    alignSelf: 'center',
+                    marginTop:4,
+                    fontSize:18,}}>
+                    {name}
+                    </Text>
 
-            <TouchableOpacity style={styles.item} onPress={this.onMineWitnessPress.bind(this)}>
-            <Text style={styles.defaultText}>我的见证</Text>
-            </TouchableOpacity>
-            <View style={styles.divider}/>
+                </View>
+
+                <View style={styles.centerLayout}>
+                        <Text style={styles.defaultText}>{Global.UserInfo.realnamename}</Text>
+                </View>
+
+                <View style={{flex:1,marginTop: 100 }}>
+                <TouchableOpacity
+                    style={[styles.loginButton,]}
+                    onPress={this._logout_function.bind(this)}
+                    ><Text style={styles.loginText}>退出登录</Text>
+                </TouchableOpacity>
+                </View>
+
 
             </View>
         )
@@ -101,6 +153,34 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         backgroundColor: '#F5FCFF',
+    },
+    headView: {
+    height: 200,
+    width: width,
+    backgroundColor: '#ffffff',
+    },
+    circle:{
+      borderWidth:1,
+      borderColor : 'white',
+      backgroundColor : '#00000000',
+      padding: 0,
+      borderRadius : 100,
+      height:58,
+      width:58,
+      textAlign:'center',
+      alignSelf:'center',
+
+    },
+    circle_outter:{
+      borderWidth:4,
+      borderColor : 'white',
+      backgroundColor : '#00000000',
+      borderRadius : 100,
+      padding: 0,
+      height:72,
+      width:72,
+      alignSelf:'center',
+
     },
     item: {
     width: width,
@@ -129,11 +209,21 @@ const styles = StyleSheet.create({
     },
 
 
-    defaultText:{
-            color: '#000000',
-            fontSize:16,
-            justifyContent: "center",
-            alignItems: 'center',
+    loginText:
+    {
+        color: '#ffffff',
+        fontSize: 24,
+    },
+    loginButton:
+    {
+        marginTop: 50,
+        height: 50,
+        width: width - 20,
+        backgroundColor: '#fbac2a',
+        borderRadius: 26,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 
        itemLine:{
