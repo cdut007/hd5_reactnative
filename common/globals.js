@@ -51,27 +51,34 @@ module.exports = {
         }
         var roleType = user.roles[0].roleType[0]
         return roleType == 'captain'
+    },isGroup(user){
+        if (!user) {
+            console.log('maybe crash recycle from the memery cache, can read data again ??')
+            return false
+        }
+        var roleType = user.roles[0].roleType[0]
+        return roleType == 'team'
     },isQCTeam(user){
         if (!user) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
         var roleType = user.roles[0].roleType[0]
-        return roleType == 'qcteam'
+        return roleType == 'witness_team'
     },isQC1Member(user){
         if (!user) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
         var roleType = user.roles[0].roleType[0]
-        return roleType == 'qc1'
+        return roleType == 'witness_member_qc1'
     },isQC2Member(user){
         if (!user) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
         var roleType = user.roles[0].roleType[0]
-        return roleType == 'qc2'
+        return roleType == 'witness_member_qc2'
     },isSolverMember(user){
         if (!user) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')

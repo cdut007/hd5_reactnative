@@ -17,6 +17,7 @@ import px2dp from '../common/util'
 import dateformat from 'dateformat'
 import HttpRequest from '../HttpRequest/HttpRequest'
 import ModuleTabView from './ModuleTabView';
+import QCTabView from './QC/QCTabView';
 import Banner from 'react-native-banner';
 import Badge from 'react-native-smart-badge'
 
@@ -280,11 +281,22 @@ export default class HomeView extends Component {
                 })
             }else if (Global.isQCTeam(Global.UserInfo)) {
 
-                //show main view
-                this.props.navigator.resetTo({
-                    component: TabView,
-                    name: 'MainPage'
+                data.user = new Object();
+                data.user.id = Global.UserInfo.id;
+                data.user.dept = new Object();
+                data.user.dept.name = data.title;//change later. for dept
+
+
+                this.props.navigator.push({
+                    component: QCTabView,
+                     props: {
+                         data:data,
+                         type:data.type,
+                         typeStr:typeSegArr[this.state.selectedTypeIndex],
+                         category:dayCateArr[index],
+                        }
                 })
+
             }else if (Global.isQC1Member(Global.UserInfo)) {
 
                 //show main view
