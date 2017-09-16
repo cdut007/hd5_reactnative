@@ -11,7 +11,8 @@ import {
 
 import Global from '../../common/globals.js'
 
-import QCWitnessListViewContainer from './QCWitnessListViewContainer.js'
+import QCWitnessListDeliveryView from './QCWitnessListDeliveryView.js'
+import QCWitnessStatisticsView from './QCWitnessStatisticsView.js'
 
 
 import TabNavigator from 'react-native-tab-navigator';
@@ -62,7 +63,7 @@ export default class QCTabView extends Component
                         badgeText=""
                         selectedTitleStyle={styles.tabBarTintColor}
                         onPress={() => this.setState({ selectedTab: 'tab1' })}>
-                        {<QCWitnessListViewContainer {...this.props}/>}
+                        {<QCWitnessListDeliveryView {...this.props}/>}
                     </TabNavigator.Item>
                     <TabNavigator.Item
                         selected={this.state.selectedTab === 'tab2'}
@@ -71,7 +72,7 @@ export default class QCTabView extends Component
                         renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/problem_icon_click.png')} />}
                         selectedTitleStyle={styles.tabBarTintColor}
                         onPress={() => this.setState({ selectedTab: 'tab2' })}>
-                        {<View {...this.props}/>}
+                        {<QCWitnessStatisticsView {...this.props}/>}
                     </TabNavigator.Item>
 
 

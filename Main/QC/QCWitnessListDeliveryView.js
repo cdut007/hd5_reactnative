@@ -302,6 +302,10 @@ export default class QCWitnessListDeliveryView extends Component {
     render() {
         return (
             <View style={styles.container}>
+            <NavBar
+            title={'施工见证'}
+            leftIcon={require('../../images/back.png')}
+            leftPress={this.back.bind(this)} />
             {this.renderChooseOptions()}
             {this.renderTitleCols()}
             {this.renderListView()}
@@ -629,7 +633,7 @@ export default class QCWitnessListDeliveryView extends Component {
 const styles = StyleSheet.create({
     container: {
         width: width,
-        height:height-238,
+        height:height-74,
     },
     topView: {
         height: 150,

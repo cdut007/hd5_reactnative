@@ -37,7 +37,6 @@ export default class PlanDetailView extends Component {
     constructor(props) {
         super(props);
 
-        var info = this.isHankou(this.props.data.speciality);
         this.state = {
             title: '任务详情',
             isHankouType:1,
@@ -47,10 +46,6 @@ export default class PlanDetailView extends Component {
         };
     }
 
-    isHankou(speciality){
-        var name = '焊口明细';
-        return {title:name,isHankou:1}
-    }
 
     componentDidMount() {
 
@@ -59,11 +54,9 @@ export default class PlanDetailView extends Component {
 
      onGetDataSuccess(response){
          console.log('onGetDataSuccess@@@@')
-         var info = this.isHankou(response.responseResult.speciality);
 
          this.setState({
              title: info.title,
-             isHankouType:info.isHankou,
              data:response.responseResult,
          });
      }
@@ -320,13 +313,13 @@ export default class PlanDetailView extends Component {
         }
           var itemAry = [];
         var displayMoreAry=[];
-        displayMoreAry.push({title:'子项',content:this.state.data.worktime,id:'c1'},);
-        displayMoreAry.push({title:'系统号',content:this.state.data.worktime,id:'c2'},);
-        displayMoreAry.push({title:'工程量',content:this.state.data.worktime,id:'c3'},);
-        displayMoreAry.push({title:'规格',content:this.state.data.worktime,id:'c4'},);
-        displayMoreAry.push({title:'材质',content:this.state.data.worktime,id:'c5'},);
-        displayMoreAry.push({title:'核级',content:this.state.data.worktime,id:'c6'},);
-        displayMoreAry.push({title:'单位',content:this.state.data.worktime,id:'c7'},);
+        displayMoreAry.push({title:'子项',content:this.state.data.subItem,id:'c1'},);
+        displayMoreAry.push({title:'系统号',content:this.state.data.systemNo,id:'c2'},);
+        displayMoreAry.push({title:'工程量',content:this.state.data.projectCost,id:'c3'},);
+        displayMoreAry.push({title:'规格',content:this.state.data.speification,id:'c4'},);
+        displayMoreAry.push({title:'材质',content:this.state.data.matelial,id:'c5'},);
+        displayMoreAry.push({title:'核级',content:this.state.data.croeLevel,id:'c6'},);
+        displayMoreAry.push({title:'单位',content:this.state.data.projectUnit,id:'c7'},);
         displayMoreAry.push({title:'点值',content:this.state.data.worktime,id:'c8'},);
         // 遍历
         for (var i = 0; i<displayMoreAry.length; i++) {
@@ -345,20 +338,21 @@ export default class PlanDetailView extends Component {
                // 数组
                var itemAry = [];
                // 颜色数组
-               var displayAry = [{title:'作业条目编号',content:this.state.data.weldno,id:'0'},
-               {title:'点数',content:this.state.data.unitno,id:'1'},
-                {title:'机组号',content:this.state.data.areano,id:'2'},
+               var displayAry = [{title:'作业条目编号',content:this.state.data.workListNo,id:'0'},
+               {title:'点数',content:this.state.data.points,id:'1'},
+                {title:'机组号',content:this.state.data.unitNo,id:'2'},
+
                  {title:'质量计划号',content:this.state.data.drawno,id:'3'},
 
            ];
 
 
-                displayAry.push({title:'图纸号',content:this.state.data.rccm,id:'5'},);
-                displayAry.push({title:'房间号',content:this.state.data.consteamName,id:'b1'},);
+                displayAry.push({title:'图纸号',content:this.state.data.drawingNo,id:'5'},);
+                displayAry.push({title:'房间号',content:this.state.data.roomNo,id:'b1'},);
                 displayAry.push({title:'工程量编号',content:this.state.data.consendmanName,id:'b2'},);
-                displayAry.push({title:'工程量类别',content:this.state.data.materialtype,id:'b3'},);
-                displayAry.push({title:'焊口／支架',content:this.state.data.workpoint,id:'b4'},);
-                displayAry.push({title:'备注',content:this.state.data.worktime,id:'b5'},);
+                displayAry.push({title:'工程量类别',content:this.state.data.projectType,id:'b3'},);
+                displayAry.push({title:'焊口／支架',content:this.state.data.weldno,id:'b4'},);
+                displayAry.push({title:'备注',content:this.state.data.remarks,id:'b5'},);
                 displayAry.push({type:'devider'},);
 
                 displayAry.push({title:'查看更多详情',content:this.state.data.worktime,id:'c',type:'displayMore'},);
