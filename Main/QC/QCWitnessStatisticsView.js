@@ -18,8 +18,10 @@ import CircleLabelHeadView from '../../common/CircleLabelHeadView';
 import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
-//import WitnessListViewContainer from './WitnessListViewContainer.js'
 import Global from '../../common/globals.js'
+
+
+import QCMyWitnessContainer from './QCMyWitnessContainer.js'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -85,13 +87,13 @@ export default class QCWitnessStatisticsView extends Component {
     }
 
     onItemPress(itemData){
-        // this.props.navigator.push({
-        //     component: WitnessListViewContainer,
-        //      props: {
-        //          data:itemData,
-        //          type:this.props.type,
-        //         }
-        // })
+        this.props.navigator.push({
+            component: QCMyWitnessContainer,
+             props: {
+                 data:itemData,
+                 type:this.props.type,
+                }
+        })
     }
 
 
