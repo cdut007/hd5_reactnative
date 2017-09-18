@@ -70,9 +70,7 @@ export default class QCWitnessListDeliveryView extends Component {
             items:[],
             totalCount:0,
             choose_memberQC1:null,
-            choose_memberQC2:null,
-            displayMemberQC1:'QC1组长',
-            displayMemberQC2:'QC2组长',
+            displayMemberQC1:'选择QC1',
             members:data,
 
         }
@@ -343,7 +341,7 @@ export default class QCWitnessListDeliveryView extends Component {
     }
 
     renderChooseOptions(){
-        if (Global.isMonitor(Global.UserInfo)){
+
             return(
                 <View style={[{marginTop:10,alignItems:'center',},styles.statisticsflexContainer]}>
 
@@ -353,12 +351,12 @@ export default class QCWitnessListDeliveryView extends Component {
 
                 style={{borderWidth:0.5,
                       alignItems:'center',
-                      borderColor : '#6d9ee1',
+                      borderColor : '#f77935',
                       backgroundColor : 'white',
                       borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
 
                       <MemberSelectView
-                      style={{color:'#6d9ee1',fontSize:14,flex:1}}
+                      style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
                       title={this.state.displayMemberQC1}
                       data={this.state.membersQC1}
                       pickerTitle={'选择QC1'}
@@ -371,31 +369,11 @@ export default class QCWitnessListDeliveryView extends Component {
                 </View>
 
 
-                <View TouchableOpacity style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
-
-                <TouchableOpacity style={{borderWidth:0.5,
-                      alignItems:'center',
-                      borderColor : '#6d9ee1',
-                      backgroundColor : 'white',
-                      borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
-
-                <MemberSelectView
-                style={{color:'#6d9ee1',fontSize:14,flex:1}}
-                title={this.state.displayMemberQC2}
-                data={this.state.members}
-                 pickerTitle={'选择QC2'}
-                onSelected={this.onSelectedMember.bind(this)} />
-                                    <Image
-                                    style={{width:20,height:20,}}
-                                    source={require('../../images/unfold.png')}/>
-                </TouchableOpacity>
-
-                </View>
 
                 </View>
 
             )
-        }
+
     }
 
     renderCommitBtn(){

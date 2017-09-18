@@ -69,6 +69,7 @@ export default class WitnessListDeliveryView extends Component {
             isRefreshing:false,
             items:[],
             totalCount:0,
+            selectIndex:0,
             choose_memberQC1:null,
             choose_memberQC2:null,
             displayMemberQC1:'QC1组长',
@@ -338,6 +339,40 @@ export default class WitnessListDeliveryView extends Component {
         this.setState({time_visible:false})
     }
 
+    QCSelectedPress(index){
+        this.setState({selectIndex:index})
+    }
+
+    slectItem(isSeleted,title,index){
+        if (isSeleted) {
+            return(<TouchableOpacity
+            onPress={this.QCSelectedPress.bind(this,index)}
+            style={{borderWidth:0.5,
+                  alignItems:'center',
+                  borderColor : '#6d9ee1',
+                  height:34,
+                  backgroundColor : '#6d9ee1',
+                  borderRadius : 20,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+
+                  <Text
+                  style={{color:'#ffffff',fontSize:16,flex:1,textAlign:'center'}}>{title}</Text>
+            </TouchableOpacity>)
+        }else{
+            return(<TouchableOpacity
+            onPress={this.QCSelectedPress.bind(this,index)}
+            style={{borderWidth:0.5,
+                  alignItems:'center',
+                  borderColor : '#6d9ee1',
+                  height:34,
+                  backgroundColor : 'white',
+                  borderRadius : 20,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+
+                  <Text
+                  style={{color:'#6d9ee1',fontSize:16,flex:1,textAlign:'center'}}>{title}</Text>
+            </TouchableOpacity>)
+        }
+    }
+
     renderChooseOptions(){
         if (Global.isMonitor(Global.UserInfo)){
             return(
@@ -345,46 +380,14 @@ export default class WitnessListDeliveryView extends Component {
 
                 <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
-                <TouchableOpacity
-
-                style={{borderWidth:0.5,
-                      alignItems:'center',
-                      borderColor : '#6d9ee1',
-                      backgroundColor : 'white',
-                      borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
-
-                      <MemberSelectView
-                      style={{color:'#6d9ee1',fontSize:14,flex:1}}
-                      title={this.state.displayMemberQC1}
-                      data={this.state.membersQC1}
-                      pickerTitle={'选择QC1'}
-                      onSelected={this.onSelectedMember.bind(this)} />
-                                    <Image
-                                    style={{width:20,height:20}}
-                                    source={require('../images/unfold.png')}/>
-                </TouchableOpacity>
+                 {this.slectItem(this.state.selectIndex == 0,'QC1组长',0)}
 
                 </View>
 
 
                 <View TouchableOpacity style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
-                <TouchableOpacity style={{borderWidth:0.5,
-                      alignItems:'center',
-                      borderColor : '#6d9ee1',
-                      backgroundColor : 'white',
-                      borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
-
-                <MemberSelectView
-                style={{color:'#6d9ee1',fontSize:14,flex:1}}
-                title={this.state.displayMemberQC2}
-                data={this.state.members}
-                 pickerTitle={'选择QC2'}
-                onSelected={this.onSelectedMember.bind(this)} />
-                                    <Image
-                                    style={{width:20,height:20,}}
-                                    source={require('../images/unfold.png')}/>
-                </TouchableOpacity>
+                {this.slectItem(this.state.selectIndex == 1,'QC2组长',1)}
 
                 </View>
 

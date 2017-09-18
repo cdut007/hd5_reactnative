@@ -194,12 +194,10 @@ export default class QCWitnessStatisticsView extends Component {
     }
 
     showNavView(){
-        if (!Global.isMonitor(Global.UserInfo)) {
-            return(<NavBar
-            title={this.state.title}
-            leftIcon={require('../../images/back.png')}
-            leftPress={this.back.bind(this)} />)
-        }
+        return(<NavBar
+        title={this.state.title}
+        leftIcon={require('../../images/back.png')}
+        leftPress={this.back.bind(this)} />)
     }
 
     index(rowID){
