@@ -39,12 +39,12 @@ var LOADING = {};
 
                 {
                     index:0,
-                    status:'BEGIN',
+                    status:'UNASSIGN',
                     data:[],
                 },
             {
                     index:1,
-                    status:'NOT_BEGIN',
+                    status:'COMPLETED',
                     data:[],
                 }
 

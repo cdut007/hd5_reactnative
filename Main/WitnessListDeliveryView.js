@@ -45,7 +45,7 @@ import DateTimePickerView from '../common/DateTimePickerView'
 
 import MemberSelectView from '../common/MemberSelectView'
 
-
+var  noticePointType =['QC1','QC2'];
 
 export default class WitnessListDeliveryView extends Component {
     constructor(props) {
@@ -70,11 +70,11 @@ export default class WitnessListDeliveryView extends Component {
             items:[],
             totalCount:0,
             selectIndex:0,
-            choose_memberQC1:null,
-            choose_memberQC2:null,
+            QCTeam:null,
             displayMemberQC1:'QC1组长',
             displayMemberQC2:'QC2组长',
             members:data,
+
 
         }
 
@@ -142,7 +142,38 @@ export default class WitnessListDeliveryView extends Component {
     componentDidMount() {
 
         this.executePlanRequest(1);
+        this.getWitnessTeam();
 
+    }
+
+    onGetWitnessTeamDataSuccess(response){
+      this.state.QCTeam = response;
+    }
+    getWitnessTeam(){
+
+        var paramBody = {
+            teamType:'WITNESS_TEAM'
+        }
+
+        HttpRequest.get('/team/witness', paramBody, this.onGetWitnessTeamDataSuccess.bind(this),
+            (e) => {
+
+
+                try {
+                    var errorInfo = JSON.parse(e);
+                    if (errorInfo != null) {
+                     console.log(errorInfo)
+                    } else {
+                        console.log(e)
+                    }
+                }
+                catch(err)
+                {
+                    console.log(err)
+                }
+
+                console.log('Task error:' + e)
+            })
     }
 
     renderCheckBox(item,rowID) {
@@ -271,6 +302,7 @@ export default class WitnessListDeliveryView extends Component {
                       pagenum:index,
                       type:this.props.type,
                       status:this.props.status,
+                      noticePointType:noticePointType[this.state.selectIndex],
                      }
 
             HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),
@@ -312,35 +344,20 @@ export default class WitnessListDeliveryView extends Component {
         )
     }
 
-    onSelectedDate(date){
-     console.log("date=="+date.getTime());
-     this.state.choose_date = date.getTime();
-     this.setState({displayDate:Global.formatDate(this.state.choose_date)})
-    // this.setState({...this.state});
-    }
 
-    onSelectedMember(member){
-        for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
-            if (Global.UserInfo.monitor[i].user.realname == member) {
-                this.state.choose_member = Global.UserInfo.monitor[i].user.id;
-                this.setState({displayMember:member});
-                    console.log(JSON.stringify(member)+"member===="+";id="+this.state.choose_member);
-                break;
-            }
-        }
-        console.log(JSON.stringify(member)+"member====");
 
-    }
 
-    onDateClick(){
-        if (!this.state.time_visible) {
-            this.state.time_visible = false
-        }
-        this.setState({time_visible:false})
-    }
 
     QCSelectedPress(index){
+        if (this.state.selectIndex == index) {
+            return
+        }
+
+        this.state.selectIndex = index ;
         this.setState({selectIndex:index})
+
+        this.executePlanRequest(1);
+
     }
 
     slectItem(isSeleted,title,index){
@@ -422,25 +439,28 @@ export default class WitnessListDeliveryView extends Component {
         }
         ids = ids.substr(0,ids.length-1)
 
-        if (!this.state.choose_date) {
-            alert('请选择施工日期')
-            return
-        }
-
-        if (!this.state.choose_member) {
-            alert('请选择作业组长')
-            return
-        }
-
+        var teamId = ''
+        var roleType = ''
+         if (this.state.QCTeam) {
+             if (this.state.selectIndex == 0) {//qc1
+                 roleType = 'witness_team_qc1'
+             }else{
+                 roleType = 'witness_team_qc2'
+             }
+             var data = this.state.QCTeam.responseResult
+             for (var i = 0; i < data.length; i++) {
+                   if (data[i].roles[0].roleType[0] == roleType) {
+                       teamId = data[i].id;
+                        break
+                   }
+             }
+         }
         var paramBody = {
-                 type:this.props.type,
-                'method': 'ASSIGN',
                 'ids': ids,
-                'userId':this.state.choose_member,
-                'consDate':Global.formatFullDate(this.state.choose_date),
+                'teamId':teamId,
             }
 
-        HttpRequest.post('/rollingplan_op', paramBody, this.onDeliverySuccess.bind(this),
+        HttpRequest.post('/witness/monitor', paramBody, this.onDeliverySuccess.bind(this),
             (e) => {
                 this.setState({
                     loadingVisible: false
@@ -552,7 +572,7 @@ export default class WitnessListDeliveryView extends Component {
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
                         <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                          {Global.formatDate(rowData.planStartDate)}{'\n'}～{'\n'}{Global.formatDate(rowData.planEndDate)}
+                          {Global.formatDate(rowData.createDate)}
                         </Text>
 
                       </TouchableOpacity>
@@ -560,14 +580,14 @@ export default class WitnessListDeliveryView extends Component {
 
                       <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
                           <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                                {rowData.projectNo}
+                                {rowData.workStepName}
                           </Text>
                         </TouchableOpacity>
 
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.weldno}
+                           {rowData.noticeType}
                         </Text>
 
                         </TouchableOpacity>
@@ -575,7 +595,7 @@ export default class WitnessListDeliveryView extends Component {
                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                          {rowData.weldno}
+                          {rowData.launcherName}
                        </Text>
 
                        </TouchableOpacity>
