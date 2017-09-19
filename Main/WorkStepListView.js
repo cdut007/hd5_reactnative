@@ -187,10 +187,10 @@ export default class WorkStepListView extends Component {
                var itemAry = [];
                // 颜色数组
                var displayAry = [{title:'施工日期',content:this.state.data.weldno,id:'0',noLine:true},
-               {title:'工程量编号',content:this.state.data.unitno,id:'1',noLine:true},
-                {title:'焊口/支架',content:this.state.data.areano,id:'2',noLine:true},
-                 {title:'工程量类别',content:this.state.data.drawno,id:'3',noLine:true},
-                {title:'作业条目编号',content:this.state.data.drawno,id:'4',noLine:true},
+               {title:'工程量编号',content:this.state.data.projectNo,id:'1',noLine:true},
+                {title:'焊口/支架',content:this.state.data.weldno,id:'2',noLine:true},
+                 {title:'工程量类别',content:this.state.data.projectType,id:'3',noLine:true},
+                {title:'作业条目编号',content:this.state.data.workListNo,id:'4',noLine:true},
 
            ];
 
@@ -230,7 +230,7 @@ export default class WorkStepListView extends Component {
                    <View>
                    <View style= {styles.item_container}>
                        <Text style= {styles.title}>{data.stepno}{'、'} {data.stepname}</Text>
-                       <Text style= {styles.detail}>QC1(W) QC2(W)</Text>
+                        {this.renderQC(data)}
                        {this.renderCheckBox(data)}
                    </View>
                    <View style={styles.divider_line}/>
@@ -240,14 +240,36 @@ export default class WorkStepListView extends Component {
                )
            }
 
+           renderQC(item){
+              if (item.noticeQC1 == null && item.noticeQC2 == null){
+                   return
+               }
+
+               if (item.noticeQC1 && item.noticeQC2) {
+                   return(<Text style= {styles.detail}>QC1({item.noticeQC1}) QC2({item.noticeQC2})</Text>)
+               }
+
+               if (item.noticeQC1 && !item.noticeQC2) {
+                   return(<Text style= {styles.detail}>QC1({item.noticeQC1})</Text>)
+               }
+
+               if (!item.noticeQC1 && item.noticeQC2) {
+                   return(<Text style= {styles.detail}>QC2({item.noticeQC2})</Text>)
+               }
+
+
+           }
+
         renderCheckBox(item) {
 
            if (Global.isCaptain(Global.UserInfo)) {
                    return
                }
 
-           if (item.stepflag == 'DONE' && item.stepno %2 == 0) {
+           if (item.stepflag == 'DONE') {
                return (<Text style= {styles.desc}>合格</Text>)
+           }else if (item.noticeQC1 == null && item.noticeQC2 == null){
+               return
            }
 
 

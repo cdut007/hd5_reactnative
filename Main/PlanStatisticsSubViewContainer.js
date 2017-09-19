@@ -54,7 +54,7 @@ var LOADING = {};
 
 var groupStatusDatas = [{
                 index:0,
-                status:'UNASSIGNED',
+                status:'PROGRESSING',
                 data:[],
                 pageNo:1,
             },

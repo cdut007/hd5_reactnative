@@ -349,7 +349,7 @@ export default class PlanDetailView extends Component {
 
                 displayAry.push({title:'图纸号',content:this.state.data.drawingNo,id:'5'},);
                 displayAry.push({title:'房间号',content:this.state.data.roomNo,id:'b1'},);
-                displayAry.push({title:'工程量编号',content:this.state.data.consendmanName,id:'b2'},);
+                displayAry.push({title:'工程量编号',content:this.state.data.projectNo,id:'b2'},);
                 displayAry.push({title:'工程量类别',content:this.state.data.projectType,id:'b3'},);
                 displayAry.push({title:'焊口／支架',content:this.state.data.weldno,id:'b4'},);
                 displayAry.push({title:'备注',content:this.state.data.remarks,id:'b5'},);

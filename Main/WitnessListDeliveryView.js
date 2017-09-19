@@ -417,7 +417,7 @@ export default class WitnessListDeliveryView extends Component {
                         }
                     })
         if (selectItems.length == 0) {
-            alert('请选择任务')
+            alert('请选择见证')
             return
         }
         ids = ids.substr(0,ids.length-1)

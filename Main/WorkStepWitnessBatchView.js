@@ -243,6 +243,26 @@ export default class WorkStepWitnessBatchView extends Component {
                return itemAry;
            }
 
+           renderQC(item){
+              if (item.noticeQC1 == null && item.noticeQC2 == null){
+                   return
+               }
+
+               if (item.noticeQC1 && item.noticeQC2) {
+                   return(<Text style= {styles.detail}>QC1({item.noticeQC1}) QC2({item.noticeQC2})</Text>)
+               }
+
+               if (item.noticeQC1 && !item.noticeQC2) {
+                   return(<Text style= {styles.detail}>QC1({item.noticeQC1})</Text>)
+               }
+
+               if (!item.noticeQC1 && item.noticeQC2) {
+                   return(<Text style= {styles.detail}>QC2({item.noticeQC2})</Text>)
+               }
+
+
+           }
+
            renderWorkStepItem(index,data){
 
                if (!data.choose_date) {
@@ -251,10 +271,15 @@ export default class WorkStepWitnessBatchView extends Component {
 
                if (!data.choose_address) {
                    data.displayAddress='选择见证地点';
-                   data.addressList=['地点1','地点2','地点3','地点4',]
                }
 
                return(
+                   <View>
+                   <View style= {styles.item_container}>
+                       <Text style= {styles.title}>{data.stepname}</Text>
+                        {this.renderQC(data)}
+
+                   </View>
 
                    <View style={[{alignItems:'center',},styles.statisticsflexContainer]}>
 
@@ -294,7 +319,7 @@ export default class WorkStepWitnessBatchView extends Component {
                    <MemberSelectView
                    style={{color:'#f77935',fontSize:14,flex:1}}
                    title={data.displayAddress}
-                   data={data.addressList}
+                   data={data.witnessAddresses}
                    pickerTitle={'选择见证地点'}
                    onSelected={this.onSelectedAddress.bind(this,data)} />
                                        <Image
@@ -306,7 +331,7 @@ export default class WorkStepWitnessBatchView extends Component {
 
                    </View>
 
-
+                   </View>
 
                )
            }
@@ -421,5 +446,6 @@ const styles = StyleSheet.create({
           height: 14,
           backgroundColor: '#cccccc',
       },
+
 
 });
