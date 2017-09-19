@@ -264,7 +264,7 @@ export default class WitnessListView extends Component {
                         <View style={styles.cell}>
 
                           <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                            {Global.formatDate(rowData.planStartDate)}{'\n'}～{'\n'}{Global.formatDate(rowData.planEndDate)}
+                          {Global.formatDate(rowData.createDate)}
                           </Text>
 
                         </View>
@@ -273,7 +273,7 @@ export default class WitnessListView extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.projectNo}
+                                {rowData.workStepName}
                         </Text>
 
                         </View>
