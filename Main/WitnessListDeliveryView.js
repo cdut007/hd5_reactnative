@@ -354,9 +354,9 @@ export default class WitnessListDeliveryView extends Component {
         }
 
         this.state.selectIndex = index ;
-        this.setState({selectIndex:index})
+        this.setState({selectIndex:index,dataSource:this.state.dataSource.cloneWithRows([])})
 
-        this.executePlanRequest(1);
+        this._onRefresh();
 
     }
 
