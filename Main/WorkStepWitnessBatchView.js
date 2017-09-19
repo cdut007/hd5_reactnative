@@ -63,30 +63,6 @@ export default class WorkStepWitnessBatchView extends Component {
          });
      }
 
-    witnessCommitRequest(ids){
-         console.log('witnessCommitRequest:work ids = ' + ids);
-         var paramBody = {
-             }
-
-    HttpRequest.post('/workstep/rollingplan/'+id, paramBody, this.onGetDataSuccess.bind(this),
-        (e) => {
-
-            try {
-                var errorInfo = JSON.parse(e);
-                if (errorInfo != null) {
-                 console.log(errorInfo)
-                } else {
-                    console.log(e)
-                }
-            }
-            catch(err)
-            {
-                console.log(err)
-            }
-
-            console.log('witnessCommitRequest error:' + e)
-        })
-    }
 
 
     componentWillMount(){
@@ -118,6 +94,11 @@ export default class WorkStepWitnessBatchView extends Component {
 
     }
 
+    onDeliverySuccess(response){
+        Global.showToast(response.message)
+        
+    }
+
     startCommitWitness(){
         for (var i = 0; i < this.state.data.length; i++) {
             if (!this.state.data[i].choose_date) {
@@ -135,11 +116,12 @@ export default class WorkStepWitnessBatchView extends Component {
                 //  type:this.props.type,
                 // 'method': 'ASSIGN',
                 // 'ids': ids,
-                // 'userId':this.state.choose_member,
-                // 'consDate':Global.formatFullDate(this.state.choose_date),
+                'id':this.state.data[0].id,
+                'witnessaddress':this.state.data[0].choose_address,
+                'witnessdate':Global.formatFullDate(this.state.data[0].choose_date),
             }
 
-        HttpRequest.post('/witness_op', paramBody, this.onDeliverySuccess.bind(this),
+        HttpRequest.post('/workstep_op/witness', paramBody, this.onDeliverySuccess.bind(this),
             (e) => {
                 this.setState({
                     loadingVisible: false
