@@ -41,7 +41,8 @@ export default class WorkStepListView extends Component {
 
         this.state = {
             title: '选择工序',
-            data:this.props.data,
+            plan_data:this.props.data,
+            data:[],
         };
     }
 
@@ -49,7 +50,7 @@ export default class WorkStepListView extends Component {
 
     componentDidMount() {
 
-        this.executeNetWorkRequest(this.props.data.id);
+        this.executeNetWorkRequest(this.state.plan_data.id);
     }
 
      onGetDataSuccess(response){
@@ -186,11 +187,11 @@ export default class WorkStepListView extends Component {
                // 数组
                var itemAry = [];
                // 颜色数组
-               var displayAry = [{title:'施工日期',content:this.state.data.weldno,id:'0',noLine:true},
-               {title:'工程量编号',content:this.state.data.projectNo,id:'1',noLine:true},
-                {title:'焊口/支架',content:this.state.data.weldno,id:'2',noLine:true},
-                 {title:'工程量类别',content:this.state.data.projectType,id:'3',noLine:true},
-                {title:'作业条目编号',content:this.state.data.workListNo,id:'4',noLine:true},
+               var displayAry = [{title:'施工日期',content:this.state.plan_data.weldno,id:'0',noLine:true},
+               {title:'工程量编号',content:this.state.plan_data.projectNo,id:'1',noLine:true},
+                {title:'焊口/支架',content:this.state.plan_data.weldno,id:'2',noLine:true},
+                 {title:'工程量类别',content:this.state.plan_data.projectType,id:'3',noLine:true},
+                {title:'作业条目编号',content:this.state.plan_data.workListNo,id:'4',noLine:true},
 
            ];
 

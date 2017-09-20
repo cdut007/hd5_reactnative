@@ -34,7 +34,7 @@ var LOADING = {};
 
     var statusDatas = [{
                     index:0,
-                    status:'UNASSIGNED',
+                    status:'UNPROGRESS',
                     data:[],
                     pageNo:1,
                 },

@@ -56,7 +56,6 @@ export default class PlanDetailView extends Component {
          console.log('onGetDataSuccess@@@@')
 
          this.setState({
-             title: info.title,
              data:response.responseResult,
          });
      }
@@ -155,7 +154,7 @@ export default class PlanDetailView extends Component {
             施工日期
           </Text>
           <Text numberOfLines={1} style={{color:'#777777',fontSize:14,}}>
-            {this.props.data.plandate}
+            {Global.formatDate(this.props.data.planStartDate)}
           </Text>
         </View>
 
@@ -166,7 +165,7 @@ export default class PlanDetailView extends Component {
           作业组长
         </Text>
         <Text style={{color:'#777777',fontSize:14,}}>
-         {this.props.data.welder}
+         {this.props.data.consteam.realname}
         </Text>
         </View>
 

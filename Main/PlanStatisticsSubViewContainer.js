@@ -39,7 +39,7 @@ var LOADING = {};
 
                 {
                     index:0,
-                    status:'BEGIN',
+                    status:'ASSIGNED',//not use
                     data:[],
                 },
             {
@@ -54,7 +54,7 @@ var LOADING = {};
 
 var groupStatusDatas = [{
                 index:0,
-                status:'PROGRESSING',
+                status:'UNCOMPLETE',
                 data:[],
                 pageNo:1,
             },
