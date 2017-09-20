@@ -96,7 +96,7 @@ export default class WorkStepWitnessBatchView extends Component {
 
     onDeliverySuccess(response){
         Global.showToast(response.message)
-        
+
     }
 
     startCommitWitness(){
@@ -111,14 +111,17 @@ export default class WorkStepWitnessBatchView extends Component {
                 return
             }
         }
+        var bodyArray=[]
+        for (var i = 0; i < this.state.data.length; i++) {
+            var elemnt = new Object()
 
+            elemnt.id = this.state.data[i].id
+            elemnt.witnessaddress = this.state.data[i].choose_address
+            elemnt.witnessdate = Global.formatFullDate(this.state.data[i].choose_date)
+            bodyArray.push(elemnt)
+        }
         var paramBody = {
-                //  type:this.props.type,
-                // 'method': 'ASSIGN',
-                // 'ids': ids,
-                'id':this.state.data[0].id,
-                'witnessaddress':this.state.data[0].choose_address,
-                'witnessdate':Global.formatFullDate(this.state.data[0].choose_date),
+                 jsonBody:bodyArray
             }
 
         HttpRequest.post('/workstep_op/witness', paramBody, this.onDeliverySuccess.bind(this),
@@ -202,8 +205,8 @@ export default class WorkStepWitnessBatchView extends Component {
         console.log(JSON.stringify(address)+"address====");
 
         console.log("address=="+';last data.choose_address='+data.choose_address);
-        data.choose_address = address;
-        data.displayAddress = address;
+        data.choose_address = address[0];
+        data.displayAddress = address[0];
         this.setState({...this.state});
 
     }

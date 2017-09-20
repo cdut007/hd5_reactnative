@@ -94,7 +94,7 @@ post(apiName, body,successCallback, failCallback)
     if (Global.UserInfo)
     {
         logind = Global.UserInfo.id;
-        
+
     }
 
 
@@ -116,27 +116,59 @@ post(apiName, body,successCallback, failCallback)
 
      }
 
-    fetch(url, {
-        method: 'POST',})
-      .then((response) => response.text())
-      .then((responseText) => {
-        console.log(responseText);
-        var response = JSON.parse(responseText);
-        if (response.code == 1000) {
-            successCallback(response,body);
-        }else{
-            if (response.message) {
-                failCallback(response.message)
-                    console.log('Post requesr error:' + url +":response.message="+response.message)
+if (body.jsonBody) {
+        fetch(url, {
+            method: 'POST',
+                headers: new Headers({
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': httpToken
+                }),
+                body: JSON.stringify(body.jsonBody)})
+          .then((response) => response.text())
+          .then((responseText) => {
+            console.log(responseText);
+            var response = JSON.parse(responseText);
+            if (response.code == 1000) {
+                successCallback(response,body);
             }else{
+                if (response.message) {
+                    failCallback(response.message)
+                        console.log('Post requesr error:' + url +":response.message="+response.message)
+                }else{
 
-                failCallback(response.responseText)
+                    failCallback(response.responseText)
+                }
             }
-        }
 
-      })
-      .catch(function(err){
-        failCallback(err);
-      });
+          })
+          .catch(function(err){
+            failCallback(err);
+          });
+    }else{
+        fetch(url, {
+            method: 'POST',})
+          .then((response) => response.text())
+          .then((responseText) => {
+            console.log(responseText);
+            var response = JSON.parse(responseText);
+            if (response.code == 1000) {
+                successCallback(response,body);
+            }else{
+                if (response.message) {
+                    failCallback(response.message)
+                        console.log('Post requesr error:' + url +":response.message="+response.message)
+                }else{
+
+                    failCallback(response.responseText)
+                }
+            }
+
+          })
+          .catch(function(err){
+            failCallback(err);
+          });
+    }
+
   }
 }
