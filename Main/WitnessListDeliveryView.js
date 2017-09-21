@@ -228,7 +228,9 @@ export default class WitnessListDeliveryView extends Component {
 
         var datas = response.responseResult.data;
 
-
+        if (!datas) {
+            datas = []
+        }
 
         if (this.state.filter !== query) {
             this.setState({

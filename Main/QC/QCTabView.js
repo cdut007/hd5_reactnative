@@ -10,7 +10,7 @@ import {
 
 
 import Global from '../../common/globals.js'
-
+import QCWitnessStatisticsView from './QCWitnessStatisticsView.js'
 import QCWitnessListDeliveryView from './QCWitnessListDeliveryView.js'
 import QCWitnessListViewContainer from './QCWitnessListViewContainer.js'
 import QCMyWitnessContainer from './QCMyWitnessContainer.js'

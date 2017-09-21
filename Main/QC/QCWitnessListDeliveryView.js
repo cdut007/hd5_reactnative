@@ -68,6 +68,7 @@ export default class QCWitnessListDeliveryView extends Component {
             filter: '',
             isRefreshing:false,
             items:[],
+            QCTeamMember:null,
             totalCount:0,
             choose_memberQC1:null,
             displayMemberQC1:'选择QC1',
@@ -87,6 +88,40 @@ export default class QCWitnessListDeliveryView extends Component {
 
         back() {
             this.props.navigator.pop()
+        }
+
+
+        onGetWitnessTeamMemberDataSuccess(response){
+          this.state.QCTeamMember = response.responseResult;
+          this.setState({QCTeamMember:  this.state.QCTeamMember})
+
+        }
+        getWitnessTeamMember(){
+
+            var paramBody = {
+                teamType:'WITNESS_MEMBER',
+                userId:Global.UserInfo.id,
+            }
+
+            HttpRequest.get('/team/witness', paramBody, this.onGetWitnessTeamMemberDataSuccess.bind(this),
+                (e) => {
+
+
+                    try {
+                        var errorInfo = JSON.parse(e);
+                        if (errorInfo != null) {
+                         console.log(errorInfo)
+                        } else {
+                            console.log(e)
+                        }
+                    }
+                    catch(err)
+                    {
+                        console.log(err)
+                    }
+
+                    console.log('Task error:' + e)
+                })
         }
 
     search() {
@@ -139,6 +174,7 @@ export default class QCWitnessListDeliveryView extends Component {
     componentDidMount() {
 
         this.executePlanRequest(1);
+        this.getWitnessTeamMember();
 
     }
 
@@ -267,7 +303,7 @@ export default class QCWitnessListDeliveryView extends Component {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
-                      status:this.props.status,
+                      status:'UNASSIGN',
                      }
 
             HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),
@@ -321,15 +357,9 @@ export default class QCWitnessListDeliveryView extends Component {
     }
 
     onSelectedMember(member){
-        for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
-            if (Global.UserInfo.monitor[i].user.realname == member) {
-                this.state.choose_member = Global.UserInfo.monitor[i].user.id;
-                this.setState({displayMember:member});
-                    console.log(JSON.stringify(member)+"member===="+";id="+this.state.choose_member);
-                break;
-            }
-        }
+
         console.log(JSON.stringify(member)+"member====");
+         this.setState({displayMemberQC1:member[0]})
 
     }
 
@@ -341,6 +371,13 @@ export default class QCWitnessListDeliveryView extends Component {
     }
 
     renderChooseOptions(){
+
+        var membersQC1 = []
+        if (this.state.QCTeamMember) {
+            for (var i = 0; i < this.state.QCTeamMember.length; i++) {
+                membersQC1.push(this.state.QCTeamMember[i].realname)
+            }
+        }
 
             return(
                 <View style={[{marginTop:10,alignItems:'center',},styles.statisticsflexContainer]}>
@@ -358,7 +395,7 @@ export default class QCWitnessListDeliveryView extends Component {
                       <MemberSelectView
                       style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
                       title={this.state.displayMemberQC1}
-                      data={this.state.membersQC1}
+                      data={membersQC1}
                       pickerTitle={'选择QC1'}
                       onSelected={this.onSelectedMember.bind(this)} />
                                     <Image
