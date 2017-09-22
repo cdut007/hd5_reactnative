@@ -223,6 +223,10 @@ export default class IssueListViewContainer extends Component {
 
 
     renderListView(label,index,status) {
+        var userId = '';
+        if (this.props.data.user) {
+            userId = this.props.data.user.id
+        }
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
 
@@ -231,6 +235,7 @@ export default class IssueListViewContainer extends Component {
             <IssueListView
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
+             userId = {userId}
              status={status}
              navigator={this.props.navigator}
              />

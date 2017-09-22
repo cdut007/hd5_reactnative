@@ -194,23 +194,25 @@ export default class IssueListView extends Component {
          isLoading: loading,
        });
 
+       var api = '';
+       if (Global.isGroup(Global.UserInfo)) {
+           api = '/question/teamList'
+       }else if (Global.isMonitor(Global.UserInfo)) {
+           api = '/question/monitorList'
+       }else if (Global.isSolverMember(Global.UserInfo)) {
+           api = '/question/technicianList'
+       }else if (Global.isCaptain(Global.UserInfo)) {
+           api = '/question/captainList'
+       }
 
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
                       questionStatus:this.props.status,
+                      userId:this.props.userId,
                      }
-            var api = '';
-            if (Global.isGroup(Global.UserInfo)) {
-                api = '/question/teamList'
-            }else if (Global.isMonitor(Global.UserInfo)) {
-                api = '/question/monitorList'
-            }else if (Global.isSolverMember(Global.UserInfo)) {
-                api = '/question/technicianList'
-            }else if (Global.isCaptain(Global.UserInfo)) {
-                api = '/question/captainList'
-            }
+
 
             HttpRequest.get(api, paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
@@ -254,7 +256,7 @@ export default class IssueListView extends Component {
 
     renderImages(item){
         var itemsArray = [];
-        var len = 3;
+        var len = 1;
         for (var i = 0; i < len; i++) {
             itemsArray.push(<Image style={{width:24,height:24,marginLeft:10}} source={require('../images/problem_icon_click.png')} />)
         }
@@ -265,7 +267,13 @@ export default class IssueListView extends Component {
 
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
-
+            var info = '未指派'
+            //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
+            var color = '#e82628'
+            if (rowData.status!='pre') {
+                info = '指派给:'+rowData.designee.realname
+                color = '#0755a6'
+            }
                 return (
                     <CardView
                       cardElevation={2}
@@ -275,20 +283,20 @@ export default class IssueListView extends Component {
                        <View style={styles.itemContainer}>
                         <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <View style={styles.statisticsflexContainer}>
-                        <Text numberOfLines={2} style={{color:'#282828',fontSize:14}}>
-                        焊口对接出现裂缝，如何修复焊口对接出现裂缝，如何修复焊口对接出现裂缝，如何修复裂缝，如何修复修…
+                        <View style={[styles.statisticsflexContainer,]}>
+                        <Text numberOfLines={2} style={{flex:1,color:'#282828',fontSize:14}}>
+                        {rowData.describe}
                         </Text>
 
-                        <View style={{flexDirection: 'row',justifyContent:'flex-start',alignItems:'center'}}>
+                        <View style={{paddingBottom:4,flexDirection: 'row',justifyContent:'flex-start',alignItems:'center'}}>
 
-                        <Text numberOfLines={1} style={{color:'#888888',fontSize:12}}>
-                        提问时间：2017/8/12 11:05 am
+                        <Text numberOfLines={1} style={{flex:1,color:'#888888',fontSize:12}}>
+                        提问时间：{rowData.questionTime}
                         </Text>
 
 
-                        <Text numberOfLines={1} style={{color:'#e82628',fontSize:12}}>
-                        解决人：李技术
+                        <Text numberOfLines={1} style={{color:color,fontSize:12}}>
+                        {info}
                         </Text>
 
 
@@ -405,6 +413,7 @@ const styles = StyleSheet.create({
             height:160,
             backgroundColor:'#ffffff',
             padding:10,
+            paddingRight:20,
     },
      statisticsflexContainer: {
               height: 80,
