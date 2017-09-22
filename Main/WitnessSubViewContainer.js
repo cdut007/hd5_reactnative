@@ -35,11 +35,12 @@ import   ScrollableTabView  from 'react-native-scrollable-tab-view';
 
 var LOADING = {};
 
+//banzhang scan
     var statusDatas = [
 
                 {
                     index:0,
-                    status:'UNASSIGN',
+                    status:'PENDING',
                     data:[],
                 },
             {
@@ -51,10 +52,10 @@ var LOADING = {};
 
 ];
 
-
+//zuzhang scan
 var groupStatusDatas = [{
                 index:0,
-                status:'UNASSIGNED',
+                status:'UNCOMPLETED',
                 data:[],
                 pageNo:1,
             },

@@ -40,7 +40,7 @@ var LOADING = {};
                 },
                 {
                     index:1,
-                    status:'RAISED_PROBLEM',
+                    status:'NEED_CONFIRM',
                     data:[],
                     pageNo:1,
                 },
@@ -53,6 +53,7 @@ var LOADING = {};
 
 
 ];
+
 
 export default class IssueListViewContainer extends Component {
     constructor(props) {
@@ -83,7 +84,11 @@ export default class IssueListViewContainer extends Component {
 
     }
 
-
+    //captainList
+    //duizhang NEED_SOLVED,SOLVED
+    //banzhang NEED_ASSIGN,NEED_SOLVE,SOLVED
+    //zuzhang NEED_SOLVE,NEED_CONFIRM,SOLVED
+    //solve PRE ,DONE
 
     rendTabs(){
         return( <ScrollableTabView
