@@ -21,7 +21,7 @@ import LoadingView from '../../common/LoadingView.js'
 import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
-//import PlanDetailView from './PlanDetailView';
+import QCWitnessDetailView from './QCWitnessDetailView';
 import Global from '../../common/globals.js';
 
 const isIOS = Platform.OS == "ios"
@@ -165,12 +165,12 @@ export default class QCWitnessListView extends Component {
     }
 
     onItemPress(itemData){
-        // this.props.navigator.push({
-        //     component: PlanDetailView,
-        //      props: {
-        //          data:itemData,
-        //         }
-        // })
+        this.props.navigator.push({
+            component: QCWitnessDetailView,
+             props: {
+                 data:itemData,
+                }
+        })
     }
 
 

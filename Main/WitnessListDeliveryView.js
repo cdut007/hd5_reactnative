@@ -41,9 +41,7 @@ var resultsCache = {
 var LOADING = {};
 import Global from '../common/globals.js'
 
-import DateTimePickerView from '../common/DateTimePickerView'
 
-import MemberSelectView from '../common/MemberSelectView'
 
 var  noticePointType =['QC1','QC2'];
 
