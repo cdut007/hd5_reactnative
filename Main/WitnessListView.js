@@ -283,7 +283,7 @@ export default class WitnessListView extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.weldno}
+                           {rowData.noticeType}
                         </Text>
 
                         </View>
