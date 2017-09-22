@@ -35,7 +35,7 @@ var resultsCache = {
   totalForQuery: {},
 };
 var LOADING = {};
-
+import Global from '../common/globals.js'
 
 
 export default class IssueListView extends Component {
@@ -112,12 +112,7 @@ export default class IssueListView extends Component {
     componentDidMount() {
 
         this.executeProblemRequest(1);
-        // this.setState({dataSource:this.state.dataSource.cloneWithRows([
-        //     {},
-        //     {},
-        //     {},
-        //     {}
-        // ])})
+
 
     }
 
@@ -199,10 +194,20 @@ export default class IssueListView extends Component {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
-                      status:this.props.status,
+                      questionStatus:this.props.status,
                      }
+            var api = '';
+            if (Global.isGroup(Global.UserInfo)) {
+                api = '/question/teamList'
+            }else if (Global.isMonitor(Global.UserInfo)) {
+                api = '/question/monitorList'
+            }else if (Global.isSolverMember(Global.UserInfo)) {
+                api = '/question/technicianList'
+            }else if (Global.isCaptain(Global.UserInfo)) {
+                api = '/question/captainList'
+            }
 
-            HttpRequest.get('/problem', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get(api, paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
                     this.setState({

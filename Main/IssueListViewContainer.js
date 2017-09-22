@@ -22,7 +22,7 @@ import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
 import IssueListView from './IssueListView';
-
+import Global from '../common/globals.js'
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 
@@ -32,7 +32,48 @@ import   ScrollableTabView  from 'react-native-scrollable-tab-view';
 
 var LOADING = {};
 
-    var statusDatas = [{
+//captainList
+//duizhang NEED_SOLVED,SOLVED
+//banzhang NEED_ASSIGN,NEED_SOLVE,SOLVED
+//zuzhang NEED_SOLVE,NEED_CONFIRM,SOLVED
+//solve PRE ,DONE
+var captionstatusDatas = [{
+                index:0,
+                status:'NEED_SOLVED',
+                data:[],
+                pageNo:1,
+            },
+            {
+                index:1,
+                status:'SOLVED',
+                data:[],
+                pageNo:1,
+            },
+
+
+];
+    var monitorstatusDatas = [{
+                    index:0,
+                    status:'NEED_ASSIGN',
+                    data:[],
+                    pageNo:1,
+                },
+                {
+                    index:1,
+                    status:'NEED_SOLVE',
+                    data:[],
+                    pageNo:1,
+                },
+                {
+                    index:2,
+                    status:'SOLVED',
+                    data:[],
+                    pageNo:1,
+                },
+
+
+];
+    var groupstatusDatas = [{
                     index:0,
                     status:'NEED_SOLVE',
                     data:[],
@@ -53,6 +94,23 @@ var LOADING = {};
 
 
 ];
+    var solvestatusDatas = [{
+                    index:0,
+                    status:'PRE',
+                    data:[],
+                    pageNo:1,
+                },
+                {
+                    index:1,
+                    status:'DONE',
+                    data:[],
+                    pageNo:1,
+                },
+
+
+
+];
+
 
 
 export default class IssueListViewContainer extends Component {
@@ -89,20 +147,66 @@ export default class IssueListViewContainer extends Component {
     //banzhang NEED_ASSIGN,NEED_SOLVE,SOLVED
     //zuzhang NEED_SOLVE,NEED_CONFIRM,SOLVED
     //solve PRE ,DONE
+    //
 
     rendTabs(){
-        return( <ScrollableTabView
-            tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
-               tabBarBackgroundColor='#FFFFFF'
-               tabBarActiveTextColor='#0755a6'
-               tabBarInactiveTextColor='#777777'
-    >
-         {this.renderListView('待解决的问题',0)}
-         {this.renderListView('待确认的问题',1)}
-         {this.renderListView('已解决的问题',2)}
-    </ScrollableTabView>
 
-        )
+        if (Global.isGroup(Global.UserInfo)) {
+
+            return( <ScrollableTabView
+                tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
+                   tabBarBackgroundColor='#FFFFFF'
+                   tabBarActiveTextColor='#0755a6'
+                   tabBarInactiveTextColor='#777777'
+        >
+             {this.renderListView('待解决的问题',0,groupstatusDatas[0].status)}
+             {this.renderListView('待确认的问题',1,groupstatusDatas[1].status)}
+             {this.renderListView('已解决的问题',2,groupstatusDatas[2].status)}
+        </ScrollableTabView>
+
+            )
+        }else  if (Global.isCaptain(Global.UserInfo)) {
+
+                return( <ScrollableTabView
+                    tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
+                       tabBarBackgroundColor='#FFFFFF'
+                       tabBarActiveTextColor='#0755a6'
+                       tabBarInactiveTextColor='#777777'
+            >
+                 {this.renderListView('待解决的问题',0,captionstatusDatas[0].status)}
+                 {this.renderListView('已解决的问题',1,captionstatusDatas[1].status)}
+            </ScrollableTabView>
+
+                )
+            }else  if (Global.isMonitor(Global.UserInfo)) {
+
+                    return( <ScrollableTabView
+                        tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
+                           tabBarBackgroundColor='#FFFFFF'
+                           tabBarActiveTextColor='#0755a6'
+                           tabBarInactiveTextColor='#777777'
+                >
+                {this.renderListView('待指派的问题',0,monitorstatusDatas[0].status)}
+                {this.renderListView('未解决的问题',1,monitorstatusDatas[1].status)}
+                {this.renderListView('已解决的问题',2,monitorstatusDatas[2].status)}
+                </ScrollableTabView>
+
+                    )
+                }else  if (Global.isSolverMember(Global.UserInfo)) {
+
+                        return( <ScrollableTabView
+                            tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
+                               tabBarBackgroundColor='#FFFFFF'
+                               tabBarActiveTextColor='#0755a6'
+                               tabBarInactiveTextColor='#777777'
+                    >
+                         {this.renderListView('待处理的问题',0,solvestatusDatas[0].status)}
+                         {this.renderListView('已反馈的问题',1,solvestatusDatas[1].status)}
+                    </ScrollableTabView>
+
+                        )
+                    }
+
     }
 
     render() {
@@ -118,7 +222,7 @@ export default class IssueListViewContainer extends Component {
     }
 
 
-    renderListView(label,index) {
+    renderListView(label,index,status) {
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
 
@@ -127,7 +231,7 @@ export default class IssueListViewContainer extends Component {
             <IssueListView
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
-             status={statusDatas[index].status}
+             status={status}
              navigator={this.props.navigator}
              />
             </View>
