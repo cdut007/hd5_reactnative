@@ -368,7 +368,7 @@ export default class PlanListDeliveryView extends Component {
                 </View>
 
 
-                <View TouchableOpacity style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+                <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
                 <TouchableOpacity style={{borderWidth:0.5,
                       alignItems:'center',

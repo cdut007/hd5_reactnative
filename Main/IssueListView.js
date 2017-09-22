@@ -20,7 +20,7 @@ import LoadMoreFooter from '../common/LoadMoreFooter.js'
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
-import PlanDetailView from './PlanDetailView';
+import IssueDetailView from './IssueDetailView';
 import CardView from 'react-native-cardview'
 
 const isIOS = Platform.OS == "ios"
@@ -159,7 +159,7 @@ export default class IssueListView extends Component {
 
     onItemPress(itemData){
         this.props.navigator.push({
-            component: PlanDetailView,
+            component: IssueDetailView,
              props: {
                  data:itemData,
                 }
