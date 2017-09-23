@@ -16,6 +16,7 @@ import MainView from './Main/MainView'
 
 export default class hd_app extends Component {
     render() {
+
             return (<MainView index={this} />);
         }
 }

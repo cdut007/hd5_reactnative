@@ -35,10 +35,13 @@ export default class Welcome extends Component
             index: this.props.index
         })
     }
+
     componentDidMount() {
         setTimeout(() => {//logout timeout  15s
             //if (this.state.loadingVisible == true) {
+            //
               this.onLoginPress();
+          // this.onRegiserPress();
         //   }else{
         //
         //   }
