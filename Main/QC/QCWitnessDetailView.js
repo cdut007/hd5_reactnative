@@ -39,11 +39,12 @@ var account = Object();
 export default class QCWitnessDetailView extends Component {
     constructor(props) {
         super(props);
-
+        var data = this.props.data
+        data.rollingPlan = new Object()
         this.state = {
             title: '见证详情',
             isHankouType:1,
-            data:this.props.data,
+            data:data,
             choose_address:null,
             choose_date:null,
             input_witnessdesc:null,
@@ -58,14 +59,14 @@ export default class QCWitnessDetailView extends Component {
 
     componentDidMount() {
 
-        //this.executeNetWorkRequest(this.props.data.id);
+        this.executeNetWorkRequest(this.props.data.rollingPlanId);
     }
 
      onGetDataSuccess(response){
          console.log('onGetDataSuccess@@@@')
-
+         this.state.data.rollingPlan = response.responseResult
          this.setState({
-             data:response.responseResult,
+             data:this.state.data,
          });
      }
 
@@ -476,19 +477,20 @@ export default class QCWitnessDetailView extends Component {
            ];
 
 
-                displayAry.push({title:'计划用量',content:this.state.data.drawingNo,id:'b1'},);
-                displayAry.push({title:'物项名称',content:this.state.data.roomNo,id:'b2'},);
-                displayAry.push({title:'物项编号',content:this.state.data.projectNo,id:'b3'},);
-                displayAry.push({title:'规格型号',content:this.state.data.projectType,id:'b4'},);
-                displayAry.push({title:'单位',content:this.state.data.weldno,id:'b5'},);
+                displayAry.push({title:'计划用量',content:this.state.data.rollingPlan.planAmount,id:'b1'},);
+                displayAry.push({title:'物项名称',content:this.state.data.rollingPlan.itemName,id:'b2'},);
+                displayAry.push({title:'物项编号',content:this.state.data.rollingPlan.itemNo,id:'b3'},);
+
+                displayAry.push({title:'规格型号',content:this.state.data.rollingPlan.speification,id:'b4'},);
+                displayAry.push({title:'单位',content:this.state.data.rollingPlan.projectUnit,id:'b5'},);
                 displayAry.push({type:'devider'},);
 
-                displayAry.push({title:'作业条目编号',content:this.state.data.remarks,id:'b6'},);
-                displayAry.push({title:'ITP编号',content:this.state.data.remarks,id:'b7'},);
-                displayAry.push({title:'工程量编号',content:this.state.data.remarks,id:'b8'},);
-                displayAry.push({title:'工程量名称',content:this.state.data.remarks,id:'b9'},);
-                displayAry.push({title:'焊口/支架',content:this.state.data.remarks,id:'b10'},);
-                displayAry.push({title:'工序名／编号',content:this.state.data.remarks,id:'b11'},);
+                displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'b6'},);
+                displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'b7'},);
+                displayAry.push({title:'工程量编号',content:this.state.data.rollingPlan.projectNo,id:'b8'},);
+                displayAry.push({title:'工程量名称',content:this.state.data.rollingPlan.projectName,id:'b9'},);
+                displayAry.push({title:'焊口/支架',content:this.state.data.rollingPlan.weldno,id:'b10'},);
+                displayAry.push({title:'工序名／编号',content:this.state.data.workStepName,id:'b11'},);
 
 
                // 遍历

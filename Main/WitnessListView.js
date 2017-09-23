@@ -207,6 +207,7 @@ export default class WitnessListView extends Component {
                       pagenum:index,
                       type:this.props.type,
                       status:this.props.status,
+                      userId:this.props.userId,
                      }
 
             HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),

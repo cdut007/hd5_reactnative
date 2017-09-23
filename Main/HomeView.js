@@ -18,6 +18,7 @@ import dateformat from 'dateformat'
 import HttpRequest from '../HttpRequest/HttpRequest'
 import ModuleTabView from './ModuleTabView';
 import QCTabView from './QC/QCTabView';
+import SolverTabView from './Problem/SolverTabView';
 import Banner from 'react-native-banner';
 import Badge from 'react-native-smart-badge'
 
@@ -325,6 +326,21 @@ export default class HomeView extends Component {
                 //     name: 'MainPage'
                 // })
             }else {
+                data.user = new Object();
+                data.user.id = Global.UserInfo.id;
+                data.user.dept = new Object();
+                data.user.dept.name = data.title;//change later. for dept
+
+
+                this.props.navigator.push({
+                    component: SolverTabView,
+                     props: {
+                         data:data,
+                         type:data.type,
+                         typeStr:typeSegArr[this.state.selectedTypeIndex],
+                         category:dayCateArr[index],
+                        }
+                })
                 console.log('unkonwn roles ....')
             }
 

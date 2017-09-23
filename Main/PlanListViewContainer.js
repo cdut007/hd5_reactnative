@@ -117,6 +117,10 @@ export default class PlanListViewContainer extends Component {
 
 
     renderListView(label,index) {
+        var userId = '';
+        if (this.props.data.user) {
+            userId = this.props.data.user.id
+        }
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
 
@@ -180,6 +184,7 @@ export default class PlanListViewContainer extends Component {
 
             <PlanListView
             style={{alignSelf:'stretch',flex:1}}
+            userId = {userId}
              type={this.props.type}
              status={statusDatas[index].status}
              navigator={this.props.navigator}

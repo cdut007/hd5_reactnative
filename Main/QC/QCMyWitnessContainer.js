@@ -133,6 +133,11 @@ export default class QCMyWitnessContainer extends Component {
 
 
     renderListView(label,index,status) {
+        var userId = '';
+        if (this.props.data && this.props.data.user) {
+            userId = this.props.data.user.id
+        }
+
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
 
@@ -220,6 +225,7 @@ export default class QCMyWitnessContainer extends Component {
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
              status={status}
+             userId={userId}
              navigator={this.props.navigator}
              />
             </View>

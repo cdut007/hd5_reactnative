@@ -110,6 +110,22 @@ var captionstatusDatas = [{
 
 
 ];
+var mysolvestatusDatas = [{
+                index:0,
+                status:'NEED_SOLVE',
+                data:[],
+                pageNo:1,
+            },
+            {
+                index:1,
+                status:'SOLVED',
+                data:[],
+                pageNo:1,
+            },
+
+
+
+];
 
 
 
@@ -194,17 +210,31 @@ export default class IssueListViewContainer extends Component {
                     )
                 }else  if (Global.isSolverMember(Global.UserInfo)) {
 
-                        return( <ScrollableTabView
-                            tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
-                               tabBarBackgroundColor='#FFFFFF'
-                               tabBarActiveTextColor='#0755a6'
-                               tabBarInactiveTextColor='#777777'
-                    >
-                         {this.renderListView('待处理的问题',0,solvestatusDatas[0].status)}
-                         {this.renderListView('已反馈的问题',1,solvestatusDatas[1].status)}
-                    </ScrollableTabView>
+                            if (this.props.isMyIssue) {
+                                return( <ScrollableTabView
+                                    tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
+                                       tabBarBackgroundColor='#FFFFFF'
+                                       tabBarActiveTextColor='#0755a6'
+                                       tabBarInactiveTextColor='#777777'
+                            >
+                                 {this.renderListView('未解决的问题',0,mysolvestatusDatas[0].status)}
+                                 {this.renderListView('已解决的问题',1,mysolvestatusDatas[1].status)}
+                            </ScrollableTabView>
 
-                        )
+                                )
+                            }else{
+                                return( <ScrollableTabView
+                                    tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
+                                       tabBarBackgroundColor='#FFFFFF'
+                                       tabBarActiveTextColor='#0755a6'
+                                       tabBarInactiveTextColor='#777777'
+                            >
+                                 {this.renderListView('待处理的问题',0,solvestatusDatas[0].status)}
+                                 {this.renderListView('已反馈的问题',1,solvestatusDatas[1].status)}
+                            </ScrollableTabView>
+
+                                )
+                            }
                     }
 
     }
@@ -229,9 +259,6 @@ export default class IssueListViewContainer extends Component {
         }
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
-
-
-
             <IssueListView
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}

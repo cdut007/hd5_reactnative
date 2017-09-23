@@ -201,12 +201,16 @@ export default class QCWitnessListView extends Component {
                    isLoading: loading,
                  });
 
-
+                 var userId = ''
+                 if (this.props.userId) {
+                     userId = this.props.userId
+                 }
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
                       status:this.props.status,
+                      userId:userId,
                      }
 
             HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),
@@ -275,7 +279,7 @@ export default class QCWitnessListView extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.projectNo}
+                              {rowData.witnessAddress}
                         </Text>
 
                         </View>
