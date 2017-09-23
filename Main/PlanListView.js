@@ -203,12 +203,17 @@ export default class PlanListView extends Component {
                    isLoading: loading,
                  });
 
+                 var userId= ''
+                 if (this.props.userId) {
+                     userId = this.props.userId;
+                 }
 
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
                       status:this.props.status,
+                      userId:userId,
                      }
 
             HttpRequest.get('/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
