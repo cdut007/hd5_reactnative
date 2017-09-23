@@ -32,15 +32,30 @@ import   ScrollableTabView  from 'react-native-scrollable-tab-view';
 
 var LOADING = {};
 
-    var statusDatas = [{
+var qcteamstatusDatas = [{
+                index:0,
+                status:'UNCOMPLETED',
+                data:[],
+                pageNo:1,
+            },
+            {
+                index:1,
+                status:'COMPLETED',
+                data:[],
+                pageNo:1,
+            }
+
+];
+
+    var qc1statusDatas = [{
                     index:0,
-                    status:'COMPLETED',
+                    status:'QUALIFIED',
                     data:[],
                     pageNo:1,
                 },
                 {
                     index:1,
-                    status:'UNCOMPLETED',
+                    status:'UNQUALIFIED',
                     data:[],
                     pageNo:1,
                 }
@@ -83,8 +98,8 @@ export default class QCMyWitnessContainer extends Component {
                        tabBarActiveTextColor='#f77935'
                        tabBarInactiveTextColor='#777777'
             >
-                 {this.renderListView('未完成的见证',0)}
-                 {this.renderListView('已完成的见证',1)}
+                 {this.renderListView('未完成的见证',0,qcteamstatusDatas[0].status)}
+                 {this.renderListView('已完成的见证',1,qcteamstatusDatas[1].status)}
 
             </ScrollableTabView>
                 )
@@ -95,8 +110,8 @@ export default class QCMyWitnessContainer extends Component {
                        tabBarActiveTextColor='#f77935'
                        tabBarInactiveTextColor='#777777'
             >
-                 {this.renderListView('已合格的见证',0)}
-                 {this.renderListView('未合格的见证',1)}
+                 {this.renderListView('已合格的见证',0,qc1statusDatas[0].status)}
+                 {this.renderListView('未合格的见证',1,qc1statusDatas[1].status)}
 
             </ScrollableTabView>
                 )
@@ -117,7 +132,12 @@ export default class QCMyWitnessContainer extends Component {
     }
 
 
-    renderListView(label,index) {
+    renderListView(label,index,status) {
+        var userId = '';
+        if (this.props.data && this.props.data.user) {
+            userId = this.props.data.user.id
+        }
+
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
 
@@ -204,7 +224,8 @@ export default class QCMyWitnessContainer extends Component {
             <QCWitnessListView
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
-             status={statusDatas[index].status}
+             status={status}
+             userId={userId}
              navigator={this.props.navigator}
              />
             </View>

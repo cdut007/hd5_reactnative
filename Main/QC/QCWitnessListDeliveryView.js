@@ -53,14 +53,7 @@ export default class QCWitnessListDeliveryView extends Component {
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
        LOADING = {};
-       if (Global.UserInfo.monitor) {
-            var data = []
-            for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
-                data.push(Global.UserInfo.monitor[i].user.realname)
-            }
-       }else{
-           console.log('can not find the monitor class info.')
-       }
+
 
         this.state = {
             dataSource: ds,
@@ -68,10 +61,11 @@ export default class QCWitnessListDeliveryView extends Component {
             filter: '',
             isRefreshing:false,
             items:[],
+            QCTeamMember:null,
             totalCount:0,
             choose_memberQC1:null,
             displayMemberQC1:'选择QC1',
-            members:data,
+            members:[],
 
         }
 
@@ -87,6 +81,40 @@ export default class QCWitnessListDeliveryView extends Component {
 
         back() {
             this.props.navigator.pop()
+        }
+
+
+        onGetWitnessTeamMemberDataSuccess(response){
+          this.state.QCTeamMember = response.responseResult;
+          this.setState({QCTeamMember:  this.state.QCTeamMember})
+
+        }
+        getWitnessTeamMember(){
+
+            var paramBody = {
+                teamType:'WITNESS_MEMBER',
+                userId:Global.UserInfo.id,
+            }
+
+            HttpRequest.get('/team/witness', paramBody, this.onGetWitnessTeamMemberDataSuccess.bind(this),
+                (e) => {
+
+
+                    try {
+                        var errorInfo = JSON.parse(e);
+                        if (errorInfo != null) {
+                         console.log(errorInfo)
+                        } else {
+                            console.log(e)
+                        }
+                    }
+                    catch(err)
+                    {
+                        console.log(err)
+                    }
+
+                    console.log('Task error:' + e)
+                })
         }
 
     search() {
@@ -139,6 +167,7 @@ export default class QCWitnessListDeliveryView extends Component {
     componentDidMount() {
 
         this.executePlanRequest(1);
+        this.getWitnessTeamMember();
 
     }
 
@@ -267,7 +296,7 @@ export default class QCWitnessListDeliveryView extends Component {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
-                      status:this.props.status,
+                      status:'UNASSIGN',
                      }
 
             HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),
@@ -321,15 +350,10 @@ export default class QCWitnessListDeliveryView extends Component {
     }
 
     onSelectedMember(member){
-        for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
-            if (Global.UserInfo.monitor[i].user.realname == member) {
-                this.state.choose_member = Global.UserInfo.monitor[i].user.id;
-                this.setState({displayMember:member});
-                    console.log(JSON.stringify(member)+"member===="+";id="+this.state.choose_member);
-                break;
-            }
-        }
+
         console.log(JSON.stringify(member)+"member====");
+         this.state.choose_memberQC1 = member[0]
+         this.setState({displayMemberQC1:member[0]})
 
     }
 
@@ -341,6 +365,13 @@ export default class QCWitnessListDeliveryView extends Component {
     }
 
     renderChooseOptions(){
+
+        var membersQC1 = []
+        if (this.state.QCTeamMember) {
+            for (var i = 0; i < this.state.QCTeamMember.length; i++) {
+                membersQC1.push(this.state.QCTeamMember[i].realname)
+            }
+        }
 
             return(
                 <View style={[{marginTop:10,alignItems:'center',},styles.statisticsflexContainer]}>
@@ -358,7 +389,7 @@ export default class QCWitnessListDeliveryView extends Component {
                       <MemberSelectView
                       style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
                       title={this.state.displayMemberQC1}
-                      data={this.state.membersQC1}
+                      data={membersQC1}
                       pickerTitle={'选择QC1'}
                       onSelected={this.onSelectedMember.bind(this)} />
                                     <Image
@@ -393,30 +424,33 @@ export default class QCWitnessListDeliveryView extends Component {
                         }
                     })
         if (selectItems.length == 0) {
-            alert('请选择任务')
+            alert('请选择见证')
             return
         }
         ids = ids.substr(0,ids.length-1)
 
-        if (!this.state.choose_date) {
-            alert('请选择施工日期')
+
+        if (!this.state.choose_memberQC1) {
+            alert('请选择见证员')
             return
         }
 
-        if (!this.state.choose_member) {
-            alert('请选择作业组长')
-            return
-        }
+        var qcId = ''
+
+             var data = this.state.QCTeamMember
+             for (var i = 0; i < data.length; i++) {
+                   if (data[i].realname == this.state.choose_memberQC1) {
+                       qcId = data[i].id;
+                        break
+                   }
+             }
 
         var paramBody = {
-                 type:this.props.type,
-                'method': 'ASSIGN',
                 'ids': ids,
-                'userId':this.state.choose_member,
-                'consDate':Global.formatFullDate(this.state.choose_date),
+                'memberId':qcId,
             }
 
-        HttpRequest.post('/rollingplan_op', paramBody, this.onDeliverySuccess.bind(this),
+        HttpRequest.post('/witness_op', paramBody, this.onDeliverySuccess.bind(this),
             (e) => {
                 this.setState({
                     loadingVisible: false
@@ -441,7 +475,7 @@ export default class QCWitnessListDeliveryView extends Component {
                     }
 
 
-                console.log('Login error:' + e)
+                console.log('onDelivery error:' + e)
             })
     }
 
@@ -528,7 +562,7 @@ export default class QCWitnessListDeliveryView extends Component {
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
                         <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                          {Global.formatDate(rowData.planStartDate)}{'\n'}～{'\n'}{Global.formatDate(rowData.planEndDate)}
+                           {Global.formatDate(rowData.createDate)}
                         </Text>
 
                       </TouchableOpacity>
@@ -536,14 +570,14 @@ export default class QCWitnessListDeliveryView extends Component {
 
                       <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
                           <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                                {rowData.projectNo}
+                            {rowData.workStepName}
                           </Text>
                         </TouchableOpacity>
 
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.weldno}
+                           {rowData.noticeType}
                         </Text>
 
                         </TouchableOpacity>
@@ -551,7 +585,7 @@ export default class QCWitnessListDeliveryView extends Component {
                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                          {rowData.weldno}
+                           {rowData.launcherName}
                        </Text>
 
                        </TouchableOpacity>

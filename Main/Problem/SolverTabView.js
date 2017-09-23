@@ -10,15 +10,13 @@ import {
 
 
 import Global from '../../common/globals.js'
-import QCWitnessStatisticsView from './QCWitnessStatisticsView.js'
-import QCWitnessListDeliveryView from './QCWitnessListDeliveryView.js'
-import QCWitnessListViewContainer from './QCWitnessListViewContainer.js'
-import QCMyWitnessContainer from './QCMyWitnessContainer.js'
+import IssueListView from '../IssueListView.js'
+import IssueListViewContainer from '../IssueListViewContainer.js'
 
 
 import TabNavigator from 'react-native-tab-navigator';
 
-export default class QCTabView extends Component
+export default class SolverTabView extends Component
 {
     state =
     {
@@ -53,27 +51,29 @@ export default class QCTabView extends Component
 
     render()
     {
-        if (Global.isQCTeam(Global.UserInfo)) {
+        if (Global.isSolverMember(Global.UserInfo)) {
             return(
                     <TabNavigator>
                         <TabNavigator.Item
                             selected={this.state.selectedTab === 'tab1'}
-                            title="见证分派"
+                            title="问题处理"
                             renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/task_icon.png')} />}
                             renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/task_icon_click.png')} />}
                             badgeText=""
                             selectedTitleStyle={styles.tabBarTintColor}
                             onPress={() => this.setState({ selectedTab: 'tab1' })}>
-                            {<QCWitnessListDeliveryView {...this.props}/>}
+                            {<IssueListViewContainer {...this.props}/>}
                         </TabNavigator.Item>
                         <TabNavigator.Item
                             selected={this.state.selectedTab === 'tab2'}
-                            title="我的见证"
+                            title="我的问题"
                             renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/problem_icon.png')} />}
                             renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/problem_icon_click.png')} />}
                             selectedTitleStyle={styles.tabBarTintColor}
                             onPress={() => this.setState({ selectedTab: 'tab2' })}>
-                            {<QCWitnessStatisticsView {...this.props}/>}
+                            {<IssueListViewContainer
+                                isMyIssue = {true}
+                                {...this.props}/>}
                         </TabNavigator.Item>
 
 
@@ -81,33 +81,34 @@ export default class QCTabView extends Component
                     </TabNavigator>
                 )
         } else{
-            //QC1
-            return(
-                    <TabNavigator>
-                        <TabNavigator.Item
-                            selected={this.state.selectedTab === 'tab1'}
-                            title="待见证"
-                            renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/task_icon.png')} />}
-                            renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/task_icon_click.png')} />}
-                            badgeText=""
-                            selectedTitleStyle={styles.tabBarTintColor}
-                            onPress={() => this.setState({ selectedTab: 'tab1' })}>
-                            {<QCWitnessListViewContainer {...this.props}/>}
-                        </TabNavigator.Item>
-                        <TabNavigator.Item
-                            selected={this.state.selectedTab === 'tab2'}
-                            title="我的见证"
-                            renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/problem_icon.png')} />}
-                            renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/problem_icon_click.png')} />}
-                            selectedTitleStyle={styles.tabBarTintColor}
-                            onPress={() => this.setState({ selectedTab: 'tab2' })}>
-                            {<QCMyWitnessContainer {...this.props}/>}
-                        </TabNavigator.Item>
-
-
-
-                    </TabNavigator>
-                )
+            return(<View></View>)
+            //问题领导
+            // return(
+            //         <TabNavigator>
+            //             <TabNavigator.Item
+            //                 selected={this.state.selectedTab === 'tab1'}
+            //                 title="待见证"
+            //                 renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/task_icon.png')} />}
+            //                 renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/task_icon_click.png')} />}
+            //                 badgeText=""
+            //                 selectedTitleStyle={styles.tabBarTintColor}
+            //                 onPress={() => this.setState({ selectedTab: 'tab1' })}>
+            //                 {<QCWitnessListViewContainer {...this.props}/>}
+            //             </TabNavigator.Item>
+            //             <TabNavigator.Item
+            //                 selected={this.state.selectedTab === 'tab2'}
+            //                 title="我的见证"
+            //                 renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/problem_icon.png')} />}
+            //                 renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/problem_icon_click.png')} />}
+            //                 selectedTitleStyle={styles.tabBarTintColor}
+            //                 onPress={() => this.setState({ selectedTab: 'tab2' })}>
+            //                 {<QCMyWitnessContainer {...this.props}/>}
+            //             </TabNavigator.Item>
+            //
+            //
+            //
+            //         </TabNavigator>
+            //     )
         }
 
 

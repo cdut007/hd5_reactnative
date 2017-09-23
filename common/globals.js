@@ -64,7 +64,7 @@ module.exports = {
             return false
         }
         var roleType = user.roles[0].roleType[0]
-        return roleType == 'witness_team'
+        return roleType == 'witness_team_qc1'
     },isQC1Member(user){
         if (!user) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')

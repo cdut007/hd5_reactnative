@@ -41,9 +41,7 @@ var resultsCache = {
 var LOADING = {};
 import Global from '../common/globals.js'
 
-import DateTimePickerView from '../common/DateTimePickerView'
 
-import MemberSelectView from '../common/MemberSelectView'
 
 var  noticePointType =['QC1','QC2'];
 
@@ -228,7 +226,9 @@ export default class WitnessListDeliveryView extends Component {
 
         var datas = response.responseResult.data;
 
-
+        if (!datas) {
+            datas = []
+        }
 
         if (this.state.filter !== query) {
             this.setState({

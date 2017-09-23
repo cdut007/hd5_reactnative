@@ -19,7 +19,7 @@ import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
 import IssueListViewContainer from './IssueListViewContainer';
-
+import Global from '../common/globals.js'
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var pagesize = 10;
@@ -59,18 +59,18 @@ export default class IssueStatisticsSubView extends Component {
 
     componentDidMount() {
 
-        //this.executePlanRequest();
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(
-                [{name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-            {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-        {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'}]),
-            isLoading: false,
-        });
+        this.executeProblemRequest();
+    //     this.setState({
+    //         dataSource: this.state.dataSource.cloneWithRows(
+    //             [{name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    //         {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    //     {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    // {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    // {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    // {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
+    // {name:'刘想222',class:'一组组长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'}]),
+    //         isLoading: false,
+    //     });
     }
 
     onGetDataSuccess(response){
@@ -84,16 +84,18 @@ export default class IssueStatisticsSubView extends Component {
 
 
 
-        if (this.state.filter !== query) {
-           // do not update state if the query is stale
-           console.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
-           return;
-         }
+        var datas = response.responseResult.datas;
 
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(datas),
-            isLoading: false,
-        });
+
+        var monitor = response.responseResult.monitor;
+
+        if (monitor) {
+            Global.UserInfo.monitor = monitor;
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(monitor),
+                isLoading: false,
+            });
+        }
 
     }
 
@@ -146,7 +148,7 @@ export default class IssueStatisticsSubView extends Component {
         onSearchChange(event) {
            var filter = event.nativeEvent.text.toLowerCase();
         //    this.clearTimeout(this.timeoutID);
-        //    this.timeoutID = this.setTimeout(() => this.executePlanRequest(pagesize,1,filter), 100);
+        //    this.timeoutID = this.setTimeout(() => this.executeProblemRequest(pagesize,1,filter), 100);
         }
 
          renderFooter() {
@@ -158,9 +160,9 @@ export default class IssueStatisticsSubView extends Component {
          }
 
 
-    executePlanRequest(){
+    executeProblemRequest(){
 
-      console.log('executePlanRequest:')
+      console.log('executeProblemRequest:')
 
                  this.setState({
                    isLoading: true,
@@ -169,9 +171,11 @@ export default class IssueStatisticsSubView extends Component {
 
 
                  var paramBody = {
+                       userId:this.props.data.user.id,
+                       type:this.props.type
                      }
 
-            HttpRequest.get('/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/statistics/problem', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
 
@@ -222,19 +226,19 @@ export default class IssueStatisticsSubView extends Component {
                         <View style={styles.flexContainer}>
 
                         <CircleLabelHeadView style={styles.head_cell}
-                            contactName = {rowData.name}
+                            contactName = {rowData.user.realname}
                         >
 
                         </CircleLabelHeadView>
 
                         <Text style={[styles.content,{marginLeft:10}]}>
-                          {rowData.name}
+                          {rowData.user.realname}
                         </Text>
 
                         <View style= {[styles.cellLine,{marginLeft:8,marginRight:8,marginTop:20,marginBottom:20}]}/>
 
                         <Text style={{color:'#888888',fontSize:14,marginLeft:4,}}>
-                          {rowData.class}
+                           {rowData.user.dept.name + rowData.user.roles[0].name}
                         </Text>
 
                         </View>
@@ -250,7 +254,7 @@ export default class IssueStatisticsSubView extends Component {
                             问题总量
                           </Text>
                           <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                            {rowData.undelivery}
+                            {rowData.statistics.total}
                           </Text>
                         </View>
 
@@ -261,7 +265,7 @@ export default class IssueStatisticsSubView extends Component {
                           已解决
                         </Text>
                         <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                          {rowData.work}
+                          {rowData.statistics.solved}
                         </Text>
                         </View>
 
@@ -274,7 +278,7 @@ export default class IssueStatisticsSubView extends Component {
                           未解决
                         </Text>
                         <Text style={{color:'#e82628',fontSize:14,}}>
-                          {rowData.pause}
+                         {rowData.statistics.unsolved}
                         </Text>
                         </View>
 

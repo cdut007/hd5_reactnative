@@ -129,7 +129,11 @@ export default class PlanListView extends Component {
          query = '';
      }
 
-        var datas = response.responseResult.data;
+         var datas = [];
+        if(response.responseResult){
+            datas = response.responseResult.data
+        }
+
 
 
 

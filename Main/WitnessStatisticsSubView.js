@@ -289,6 +289,11 @@ export default class WitnessStatisticsSubView extends Component {
         )
     }
     renderListView() {
+        var userId = '';
+        if (this.props.data.user) {
+            userId = this.props.data.user.id
+        }
+
         return (
             <ListView
                 style={{ }}
@@ -297,6 +302,7 @@ export default class WitnessStatisticsSubView extends Component {
                 renderFooter={this.renderFooter.bind(this)}
                 onEndReached={this.onEndReached.bind(this)}
                automaticallyAdjustContentInsets={false}
+               userId = {userId}
                keyboardDismissMode="on-drag"
                keyboardShouldPersistTaps={true}
                showsVerticalScrollIndicator={false}

@@ -31,20 +31,6 @@ import Global from '../../common/globals.js'
 
 var LOADING = {};
 
-    var statusDatas = [{
-                    index:0,
-                    status:'COMPLETED',
-                    data:[],
-                    pageNo:1,
-                },
-                {
-                    index:1,
-                    status:'UNCOMPLETED',
-                    data:[],
-                    pageNo:1,
-                }
-
-];
 
 export default class QCWitnessListViewContainer extends Component {
     constructor(props) {
@@ -176,7 +162,7 @@ export default class QCWitnessListViewContainer extends Component {
             <QCWitnessListView
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
-             status={'undelery'}
+             status={'UNCOMPLETED'}
              navigator={this.props.navigator}
              />
             </View>

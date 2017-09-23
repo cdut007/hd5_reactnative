@@ -26,6 +26,8 @@ var width = Dimensions.get('window').width;
                 <Text style= {styles.title}>{this.props.topic} : </Text>
                 <TextInput style= {styles.detail}
                 onChangeText={this.props.onChangeText}
+                underlineColorAndroid={'transparent'}
+                 underlineColorAndroid='transparent'
                 value={this.props.content}
                 ></TextInput>
             </View>
@@ -42,19 +44,19 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         paddingLeft:10,
         paddingRight:10,
-        paddingTop:8,
+        paddingTop:6,
         backgroundColor:'#ffffff',
-        paddingBottom:8,
+        paddingBottom:6,
         height: 50,
         alignItems: 'center',
     },
     title: {
         width: width * 0.33,
-        fontSize: 18,
-        color: "#666"
+        fontSize: 14,
+        color: "#1c1c1c"
     },
     detail: {
-        fontSize: 18,
+        fontSize: 14,
         color: "#666",
         borderColor: 'lightgray', borderWidth: 0.5, flex: 1, paddingLeft: 5, backgroundColor: 'white'
     },

@@ -190,6 +190,7 @@ export default class WitnessListViewContainer extends Component {
             <WitnessListView
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
+             userId={this.props.data.user.id}
              status={statusDatas[index].status}
              navigator={this.props.navigator}
              />

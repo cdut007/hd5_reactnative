@@ -31,7 +31,7 @@ var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var account = Object();
 
-export default class IssueDetailView extends Component {
+export default class SolverIssueDetailView extends Component {
     constructor(props) {
         super(props);
         var data = this.props.data

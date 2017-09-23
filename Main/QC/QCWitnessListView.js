@@ -21,7 +21,7 @@ import LoadingView from '../../common/LoadingView.js'
 import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
-//import PlanDetailView from './PlanDetailView';
+import QCWitnessDetailView from './QCWitnessDetailView';
 import Global from '../../common/globals.js';
 
 const isIOS = Platform.OS == "ios"
@@ -130,7 +130,9 @@ export default class QCWitnessListView extends Component {
      }
 
         var datas = response.responseResult.data;
-
+        if (!datas) {
+            datas = []
+        }
 
 
         if (this.state.filter !== query) {
@@ -163,12 +165,12 @@ export default class QCWitnessListView extends Component {
     }
 
     onItemPress(itemData){
-        // this.props.navigator.push({
-        //     component: PlanDetailView,
-        //      props: {
-        //          data:itemData,
-        //         }
-        // })
+        this.props.navigator.push({
+            component: QCWitnessDetailView,
+             props: {
+                 data:itemData,
+                }
+        })
     }
 
 
@@ -199,12 +201,16 @@ export default class QCWitnessListView extends Component {
                    isLoading: loading,
                  });
 
-
+                 var userId = ''
+                 if (this.props.userId) {
+                     userId = this.props.userId
+                 }
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
                       status:this.props.status,
+                      userId:userId,
                      }
 
             HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),
@@ -264,7 +270,7 @@ export default class QCWitnessListView extends Component {
                         <View style={styles.cell}>
 
                           <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                            {Global.formatDate(rowData.planStartDate)}{'\n'}～{'\n'}{Global.formatDate(rowData.planEndDate)}
+                              {Global.formatDate(rowData.createDate)}
                           </Text>
 
                         </View>
@@ -273,7 +279,7 @@ export default class QCWitnessListView extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.projectNo}
+                              {rowData.witnessAddress}
                         </Text>
 
                         </View>
@@ -281,7 +287,7 @@ export default class QCWitnessListView extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.weldno}
+                          {rowData.workStepName}
                         </Text>
 
                         </View>
@@ -289,7 +295,7 @@ export default class QCWitnessListView extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.speciality}
+                           {rowData.noticeType}
                         </Text>
 
                         </View>

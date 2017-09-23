@@ -73,13 +73,12 @@ export default class QCWitnessStatisticsView extends Component {
          query = '';
      }
 
-        var datas = response.responseResult.datas;
 
-        var monitor = response.responseResult.monitor;
+        var witmess_team = response.responseResult.witmess_team;
 
-        if (monitor) {
+        if (witmess_team) {
             this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(monitor),
+                dataSource: this.state.dataSource.cloneWithRows(witmess_team),
                 isLoading: false,
             });
         }
@@ -230,7 +229,7 @@ export default class QCWitnessStatisticsView extends Component {
                         <View style= {[styles.cellLine,{marginLeft:8,marginRight:8,marginTop:20,marginBottom:20}]}/>
 
                         <Text style={{color:'#888888',fontSize:14,marginLeft:4,}}>
-                          {rowData.user.dept.name + rowData.user.roles[0].name}
+                          {rowData.user.roles[0].name}
                         </Text>
 
                         </View>

@@ -131,7 +131,9 @@ export default class WitnessListView extends Component {
 
         var datas = response.responseResult.data;
 
-
+        if (!datas) {
+            datas = []
+        }
 
         if (this.state.filter !== query) {
             this.setState({
@@ -205,6 +207,7 @@ export default class WitnessListView extends Component {
                       pagenum:index,
                       type:this.props.type,
                       status:this.props.status,
+                      userId:this.props.userId,
                      }
 
             HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),
@@ -281,7 +284,7 @@ export default class WitnessListView extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.weldno}
+                           {rowData.noticeType}
                         </Text>
 
                         </View>

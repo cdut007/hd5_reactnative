@@ -20,7 +20,7 @@ import LoadMoreFooter from '../common/LoadMoreFooter.js'
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
-import PlanDetailView from './PlanDetailView';
+import IssueDetailView from './IssueDetailView';
 import CardView from 'react-native-cardview'
 
 const isIOS = Platform.OS == "ios"
@@ -35,7 +35,7 @@ var resultsCache = {
   totalForQuery: {},
 };
 var LOADING = {};
-
+import Global from '../common/globals.js'
 
 
 export default class IssueListView extends Component {
@@ -51,6 +51,7 @@ export default class IssueListView extends Component {
             filter: '',
             isRefreshing:false,
             items:[],
+            totalCount:0,
 
         }
 
@@ -84,9 +85,9 @@ export default class IssueListView extends Component {
             console.log("触发加载更多 toEnd() --> ");
             //console.log("加载更多？ ",userReducer.isLoadingMore, userReducer.products.length, userReducer.totalProductCount,userReducer.isRefreshing);
             //ListView滚动到底部，根据是否正在加载更多 是否正在刷新 是否已加载全部来判断是否执行加载更多
-            // if (userReducer.isLoadingMore || userReducer.products.length >= userReducer.totalProductCount || userReducer.isRefreshing) {
-            //     return;
-            // };
+            if (this.state.items.length >= this.state.totalCount || this.state.isRefreshing) {//userReducer.isLoadingMore ||
+                return;
+            };
             InteractionManager.runAfterInteractions(() => {
                 this._loadMoreData();
             });
@@ -98,13 +99,13 @@ export default class IssueListView extends Component {
             if (this.state.isRefreshing) {//userReducer.products.length < 1 ||
                 return null
             };
-            //if (userReducer.products.length < userReducer.totalProductCount) {
+            if (this.state.items.length < this.state.totalCount) {
                 //还有更多，默认显示‘正在加载更多...’
                 return <LoadMoreFooter />
-            // }else{
-            //     // 加载全部
-            //     return <LoadMoreFooter isLoadAll={true}/>
-            // }
+            }else{
+                // 加载全部
+                return <LoadMoreFooter isLoadAll={true}/>
+            }
         }
 
 
@@ -112,12 +113,7 @@ export default class IssueListView extends Component {
     componentDidMount() {
 
         this.executeProblemRequest(1);
-        // this.setState({dataSource:this.state.dataSource.cloneWithRows([
-        //     {},
-        //     {},
-        //     {},
-        //     {}
-        // ])})
+
 
     }
 
@@ -156,13 +152,14 @@ export default class IssueListView extends Component {
             dataSource:this.state.dataSource.cloneWithRows(this.state.items),
             isLoading: false,
             isRefreshing:false,
+            totalCount:response.responseResult.totalCounts
         });
 
     }
 
     onItemPress(itemData){
         this.props.navigator.push({
-            component: PlanDetailView,
+            component: IssueDetailView,
              props: {
                  data:itemData,
                 }
@@ -188,21 +185,36 @@ export default class IssueListView extends Component {
     executeProblemRequest(index){
 
       console.log('executeProblemRequest pageNo:'+index)
+      var loading = false;
+      if (this.state.items.length == 0) {
+              loading = true
+      }
 
-                 this.setState({
-                   isLoading: true,
-                   isLoadingTail: false,
-                 });
+       this.setState({
+         isLoading: loading,
+       });
 
+       var api = '';
+       if (Global.isGroup(Global.UserInfo)) {
+           api = '/question/teamList'
+       }else if (Global.isMonitor(Global.UserInfo)) {
+           api = '/question/monitorList'
+       }else if (Global.isSolverMember(Global.UserInfo)) {
+           api = '/question/technicianList'
+       }else if (Global.isCaptain(Global.UserInfo)) {
+           api = '/question/captainList'
+       }
 
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
-                      status:this.props.status,
+                      questionStatus:this.props.status,
+                      userId:this.props.userId,
                      }
 
-            HttpRequest.get('/problem', paramBody, this.onGetDataSuccess.bind(this),
+
+            HttpRequest.get(api, paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
                     this.setState({
@@ -244,7 +256,7 @@ export default class IssueListView extends Component {
 
     renderImages(item){
         var itemsArray = [];
-        var len = 3;
+        var len = 1;
         for (var i = 0; i < len; i++) {
             itemsArray.push(<Image style={{width:24,height:24,marginLeft:10}} source={require('../images/problem_icon_click.png')} />)
         }
@@ -255,7 +267,13 @@ export default class IssueListView extends Component {
 
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
-
+            var info = '未指派'
+            //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
+            var color = '#e82628'
+            if (rowData.status!='pre') {
+                info = '指派给:'+rowData.designee.realname
+                color = '#0755a6'
+            }
                 return (
                     <CardView
                       cardElevation={2}
@@ -265,20 +283,20 @@ export default class IssueListView extends Component {
                        <View style={styles.itemContainer}>
                         <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <View style={styles.statisticsflexContainer}>
-                        <Text numberOfLines={2} style={{color:'#282828',fontSize:14}}>
-                        焊口对接出现裂缝，如何修复焊口对接出现裂缝，如何修复焊口对接出现裂缝，如何修复裂缝，如何修复修…
+                        <View style={[styles.statisticsflexContainer,]}>
+                        <Text numberOfLines={2} style={{flex:1,color:'#282828',fontSize:14}}>
+                        {rowData.describe}
                         </Text>
 
-                        <View style={{flexDirection: 'row',justifyContent:'flex-start',alignItems:'center'}}>
+                        <View style={{paddingBottom:4,flexDirection: 'row',justifyContent:'flex-start',alignItems:'center'}}>
 
-                        <Text numberOfLines={1} style={{color:'#888888',fontSize:12}}>
-                        提问时间：2017/8/12 11:05 am
+                        <Text numberOfLines={1} style={{flex:1,color:'#888888',fontSize:12}}>
+                        提问时间：{rowData.questionTime}
                         </Text>
 
 
-                        <Text numberOfLines={1} style={{color:'#e82628',fontSize:12}}>
-                        解决人：李技术
+                        <Text numberOfLines={1} style={{color:color,fontSize:12}}>
+                        {info}
                         </Text>
 
 
@@ -395,6 +413,7 @@ const styles = StyleSheet.create({
             height:160,
             backgroundColor:'#ffffff',
             padding:10,
+            paddingRight:20,
     },
      statisticsflexContainer: {
               height: 80,

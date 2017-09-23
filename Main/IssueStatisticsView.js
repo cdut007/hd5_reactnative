@@ -23,7 +23,7 @@ import IssueStatisticsSubView from './IssueStatisticsSubView';
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var pagesize = 10;
-
+import Global from '../common/globals.js'
 var resultsCache = {
   dataForQuery: {},
   nextPageNumberForQuery: {},
