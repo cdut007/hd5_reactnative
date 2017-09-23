@@ -154,7 +154,7 @@ export default class WitnessListViewContainer extends Component {
                   backgroundColor : 'white',
                   borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:4,paddingRight:4,paddingTop:8,paddingBottom:8}}>
             <Text style={{color:'#f77935',fontSize:10,flex:1}}>
-                                  见证点
+                                  见证点类型
             </Text>
                                 <Image
                                 style={{width:20,height:20}}
