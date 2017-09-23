@@ -51,7 +51,7 @@ export default class QCWitnessDetailView extends Component {
             input_dosage:null,
             choose_result:null,
             remark:null,
-            witnessAddresses:['地点1','地点2','地点3','地点4'],
+            witnessAddresses:data.witnessAddresses,
             witness_resules:['合格','不合格'],
         };
     }

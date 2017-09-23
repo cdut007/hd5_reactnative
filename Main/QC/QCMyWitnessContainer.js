@@ -34,13 +34,13 @@ var LOADING = {};
 
 var qcteamstatusDatas = [{
                 index:0,
-                status:'UNCOMPLETED',
+                status:'UNHANDLED',
                 data:[],
                 pageNo:1,
             },
             {
                 index:1,
-                status:'COMPLETED',
+                status:'HANDLED',
                 data:[],
                 pageNo:1,
             }
