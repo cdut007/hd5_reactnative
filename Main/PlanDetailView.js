@@ -178,7 +178,7 @@ export default class PlanDetailView extends Component {
           当前状态
         </Text>
         <Text style={{color:'#e82628',fontSize:14,}}>
-          施工中
+          {this.props.data.status}
         </Text>
         </View>
 
@@ -319,7 +319,7 @@ export default class PlanDetailView extends Component {
         displayMoreAry.push({title:'材质',content:this.state.data.matelial,id:'c5'},);
         displayMoreAry.push({title:'核级',content:this.state.data.croeLevel,id:'c6'},);
         displayMoreAry.push({title:'单位',content:this.state.data.projectUnit,id:'c7'},);
-        displayMoreAry.push({title:'点值',content:this.state.data.worktime,id:'c8'},);
+        displayMoreAry.push({title:'点值',content:this.state.data.spot,id:'c8'},);
         // 遍历
         for (var i = 0; i<displayMoreAry.length; i++) {
             itemAry.push(
@@ -341,7 +341,7 @@ export default class PlanDetailView extends Component {
                {title:'点数',content:this.state.data.points,id:'1'},
                 {title:'机组号',content:this.state.data.unitNo,id:'2'},
 
-                 {title:'质量计划号',content:this.state.data.drawno,id:'3'},
+                 {title:'质量计划号',content:this.state.data.qualityplanno,id:'3'},
 
            ];
 

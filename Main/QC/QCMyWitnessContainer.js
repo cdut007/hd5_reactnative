@@ -98,8 +98,8 @@ export default class QCMyWitnessContainer extends Component {
                        tabBarActiveTextColor='#f77935'
                        tabBarInactiveTextColor='#777777'
             >
-                 {this.renderListView('未处理的见证',0,qcteamstatusDatas[0].status)}
-                 {this.renderListView('已处理的见证',1,qcteamstatusDatas[1].status)}
+                 {this.renderListView('未完成的见证',0,qcteamstatusDatas[0].status)}
+                 {this.renderListView('已完成的见证',1,qcteamstatusDatas[1].status)}
 
             </ScrollableTabView>
                 )

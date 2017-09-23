@@ -256,7 +256,7 @@ export default class QCWitnessDetailView extends Component {
           当前状态
         </Text>
         <Text style={{color:'#e82628',fontSize:14,}}>
-          待见证
+          {this.props.data.status}
         </Text>
         </View>
 
