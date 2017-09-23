@@ -21,13 +21,13 @@ import CircleLabelHeadView from '../common/CircleLabelHeadView';
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
-import WitnessListView from './WitnessListView.js';
+import WorkStepWitnessListView from './WorkStepWitnessListView.js';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 
 import   ScrollableTabView  from 'react-native-scrollable-tab-view';
-
+import Global from '../common/globals.js';
 
 
 var LOADING = {};
@@ -187,17 +187,28 @@ export default class WitnessListViewContainer extends Component {
             <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
             </View>
 
-            <WitnessListView
-            style={{alignSelf:'stretch',flex:1}}
-             type={this.props.type}
-             userId={this.props.data.user.id}
-             status={statusDatas[index].status}
-             navigator={this.props.navigator}
-             />
+             {this.renderListInfo(index)}
             </View>
         )
     }
 
+  renderListInfo(index){
+      if (Global.isCaptain(Global.UserInfo)||Global.isMonitor(Global.UserInfo)||Global.isGroup(Global.UserInfo)) {
+          return(
+              <WorkStepWitnessListView
+              style={{alignSelf:'stretch',flex:1}}
+               type={this.props.type}
+               userId={this.props.data.user.id}
+               status={statusDatas[index].status}
+               navigator={this.props.navigator}
+               />
+          )
+      }else {
+          console.log('tttttttttttttttttttttttttttt unkone....');
+          return
+
+      }
+  }
 
 
 

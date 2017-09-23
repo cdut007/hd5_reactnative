@@ -39,7 +39,7 @@ var LOADING = {};
 
 
 
-export default class WitnessListView extends Component {
+export default class WorkStepWitnessListView extends Component {
     constructor(props) {
         super(props)
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -210,7 +210,7 @@ export default class WitnessListView extends Component {
                       userId:this.props.userId,
                      }
 
-            HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/workstep', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
                     this.setState({
@@ -267,7 +267,7 @@ export default class WitnessListView extends Component {
                         <View style={styles.cell}>
 
                           <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                          {Global.formatDate(rowData.createDate)}
+                          {Global.formatDate(rowData.launchData)}
                           </Text>
 
                         </View>
@@ -276,7 +276,7 @@ export default class WitnessListView extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                                {rowData.workStepName}
+                                {rowData.stepno}/{rowData.stepname}
                         </Text>
 
                         </View>
@@ -284,7 +284,7 @@ export default class WitnessListView extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.noticeType}
+                           {rowData.noticeQC1} {rowData.noticeQC2}
                         </Text>
 
                         </View>
