@@ -292,7 +292,7 @@ export default class WorkStepWitnessListView extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.weldno}
+                           {rowData.weldNo}
                         </Text>
 
                         </View>
