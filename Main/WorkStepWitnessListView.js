@@ -23,6 +23,7 @@ import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
 import PlanDetailView from './PlanDetailView';
 import Global from '../common/globals.js';
+import WitnessDetailView from './WitnessDetailView.js'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -166,7 +167,7 @@ export default class WorkStepWitnessListView extends Component {
 
     onItemPress(itemData){
         this.props.navigator.push({
-            component: PlanDetailView,
+            component: WitnessDetailView,
              props: {
                  data:itemData,
                 }
@@ -292,7 +293,7 @@ export default class WorkStepWitnessListView extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.weldNo}
+                           {rowData.weldno}
                         </Text>
 
                         </View>

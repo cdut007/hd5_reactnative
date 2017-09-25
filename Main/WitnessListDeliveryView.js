@@ -22,7 +22,7 @@ import LoadingView from '../common/LoadingView.js'
 import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
-import PlanDetailView from './PlanDetailView';
+import WitnessDetailView from './WitnessDetailView';
 import CommitButton from '../common/CommitButton'
 import CheckBox from 'react-native-checkbox'
 
@@ -261,7 +261,7 @@ export default class WitnessListDeliveryView extends Component {
 
     onItemPress(itemData){
         this.props.navigator.push({
-            component: PlanDetailView,
+            component: WitnessDetailView,
              props: {
                  data:itemData,
                 }

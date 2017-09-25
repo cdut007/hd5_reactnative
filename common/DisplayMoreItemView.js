@@ -51,15 +51,14 @@ const styles = StyleSheet.create({
     },
     title: {
         width: width * 0.33,
-        fontSize: 18,
+        fontSize: 14,
         justifyContent:'flex-start',
-        color: "#666"
+        color: "#1c1c1c"
     },
     detail: {
         marginTop:10,
-        fontSize: 18,
-        backgroundColor:'#ffffff',
-        color: "#8E8E8E"
+        fontSize: 14,
+        color: "#777777"
     },
     divider: {
     backgroundColor: '#8E8E8E',

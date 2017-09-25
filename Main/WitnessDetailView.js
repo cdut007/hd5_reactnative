@@ -18,60 +18,53 @@ import HttpRequest from '../HttpRequest/HttpRequest'
 import DisplayItemView from '../common/DisplayItemView';
 import EnterItemView from '../common/EnterItemView';
 import CommonContentView from './CommonContentView';
-
+import SingleWorkRollDealBatWitnessView from './SingleWorkRollDealBatWitnessView';
+import IssueReportView from './IssueReportView'
+import WorkStepListView from './WorkStepListView';
+import WitnessFailResultView from './WitnessFailResultView'
 
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
 
 import Global from '../common/globals.js'
 import CommitButton from '../common/CommitButton'
-import MemberSelectView from '../common/MemberSelectView'
+
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var account = Object();
 
-export default class SolverIssueDetailView extends Component {
+export default class WitnessDetailView extends Component {
     constructor(props) {
         super(props);
         var data = this.props.data
         data.rollingPlan = new Object()
         this.state = {
-            title: '问题详情',
+            title: '见证详情',
             data:data,
-            rolve_member:null,
-            members:[],
-
         };
     }
 
 
     componentDidMount() {
 
-        this.executeNetWorkRequest(this.props.data.id);
+        this.executeNetWorkRequest(this.props.data.rollingPlanId);
     }
 
      onGetDataSuccess(response){
          console.log('onGetDataSuccess@@@@')
-         var membersArray = []
-         if (response.responseResult.userList) {
-             for (var i = 0; i < response.responseResult.userList.length; i++) {
-                 membersArray.push(response.responseResult.userList[i].realname)
-             }
-         }
+         this.state.data.rollingPlan = response.responseResult
          this.setState({
-             data:response.responseResult,
-             members:membersArray
+             data:this.state.data,
          });
      }
 
     executeNetWorkRequest(id){
          console.log('executeNetWorkRequest:work id = ' + id);
          var paramBody = {
-             questionId:id
              }
 
-    HttpRequest.get('/question/assignUI', paramBody, this.onGetDataSuccess.bind(this),
+    HttpRequest.get('/rollingplan/'+id, paramBody, this.onGetDataSuccess.bind(this),
         (e) => {
 
             try {
@@ -117,49 +110,54 @@ export default class SolverIssueDetailView extends Component {
         )
     }
 
+    startWitness(){
+        this.props.navigator.push({
+            component: WorkStepListView,
+             props: {
+                 data:this.state.data,
+                }
+        })
+    }
 
+    startProblem(){
 
-startProblem(){
+    }
 
-}
     renderFormView(){
             //1  fininshed retun, jsut san
 
-            if (Global.isMonitor(Global.UserInfo)) {
+            if (Global.isGroup(Global.UserInfo)) {
 
                 return(<View style={{height:50,width:width,flexDirection:'row'}}>
-                        <View style={{height:50,flex:1}}><CommitButton title={'提交'}
-                                onPress={this.startProblem.bind(this)}></CommitButton></View>
+                <View style={{height:50,flex:1}}><CommitButton title={'问题创建'}
+                        onPress={this.startProblem.bind(this)}></CommitButton></View>
+                        <View style={{height:50,flex:1}}><CommitButton title={'发起见证'}
+                                onPress={this.startWitness.bind(this)}></CommitButton></View>
                                 </View>)
 
             }else if (Global.isCaptain(Global.UserInfo)) {
 
+
+            }else if (Global.isMonitor(Global.UserInfo)) {
 
             }
 
     }
 
     renderTop(){
-        if(Global.isMonitor(Global.UserInfo) || Global.isSolverMember(Global.UserInfo) ){
-            return
+        var date = this.props.data.createDate;
+        if (!date) {
+            date = this.props.data.launchData
         }
-        var info = '未指派'
-        //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
-        var color = '#777777'
-        if (this.props.data.status!='pre') {
-            info = '指派给:'+rowData.designee.realname
-            color = '#777777'
-        }
-
         return(<View style={styles.statisticsflexContainer}>
 
         <View style={styles.cell}>
 
-          <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
-            提问时间
+          <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
+            申请时间
           </Text>
-          <Text numberOfLines={1} style={{color:'#777777',fontSize:14,}}>
-            {this.props.data.questionTime}
+          <Text numberOfLines={2} style={{color:'#777777',fontSize:14,}}>
+            {Global.formatDate(date)}
           </Text>
         </View>
 
@@ -167,10 +165,10 @@ startProblem(){
         <View style={styles.cell}>
 
         <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
-          指派给
+          申请地点
         </Text>
-        <Text style={{color:color,fontSize:14,}}>
-        {info}
+        <Text style={{color:'#777777',fontSize:14,}}>
+         {this.props.data.witnessAddress}
         </Text>
         </View>
 
@@ -183,7 +181,7 @@ startProblem(){
           当前状态
         </Text>
         <Text style={{color:'#e82628',fontSize:14,}}>
-          待解决
+          {this.props.data.status}
         </Text>
         </View>
 
@@ -219,7 +217,14 @@ startProblem(){
 
     }
 
-
+    issueFeedBack(){
+         this.props.navigator.push({
+            component: IssueReportView,
+             props: {
+                 data:this.state.data,
+                }
+        })
+    }
 
     issueDetail(){
         // this.props.navigator.push({
@@ -231,17 +236,40 @@ startProblem(){
         // })
     }
 
+    witnessDealBatTask(){
+        this.props.navigator.push({
+            component: SingleWorkRollDealBatWitnessView,
+             props: {
+                 data:this.state.data,
+                }
+        })
+    }
+
+    go2ItemDetail(menu){
+        this.props.navigator.push({
+            component: CommonContentView,
+             props: {
+                 title:menu.title,
+                 content:menu.content,
+                }
+        })
+    }
 
 
     onItemClick(menu){
          console.log('menu:work id = ' + menu.id);
         if (menu.id == '9') {
-
-        } if (menu.id == 'c') {
+            this.go2WorkStepDetail();
+        } else if (menu.id == '9a') {
+            this.go2ZhijiaUpdate();
+        } else if (menu.id == 'c') {
             this.setState({displayMore:!this.state.displayMore});
         } else if (menu.id == '10') {
+            this.issueFeedBack();
         } else if (menu.id == '-1') {
+            this.issueDetail();
         } else if (menu.id == 'e9') {
+            this.witnessDealBatTask();
         } else {
             try {
                 var  index = parseInt(menu.id);
@@ -258,67 +286,127 @@ startProblem(){
     }
 
 
-        onSelectedMember(member){
-            this.state.rolve_member = member[0]
-            this.setState({...this.state});
-            console.log(JSON.stringify(member)+"member====");
+onWitnessPress(witnessInfo){
+    this.props.navigator.push({
+        component: WitnessFailResultView,
+         props: {
+             data:witnessInfo,
+            }
+    })
+}
+
+        witnessItemInfo(witnessInfo){
+
+            //witnessInfo.result = '不合格'
+
+            if (witnessInfo.result == '合格') {
+                return(
+                    <View style={styles.statisticsflexContainer}>
+
+                    <View style={styles.cell}>
+
+                      <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
+                        {witnessInfo.witnesser.realname}
+                      </Text>
+                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
+                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                      </Text>
+                    </View>
+
+
+                    <View style={styles.cell}>
+
+                    <Text style={{textAlign:'right',color:'#0755a6',fontSize:14,marginBottom:4,}}>
+                      合格
+                    </Text>
+                    <Text style={{color:'#777777',fontSize:12,}}>
+                     见证地点： {witnessInfo.realWitnessAddress}
+                    </Text>
+                    </View>
+
+                    </View>
+                )
+            }else if (witnessInfo.result == '不合格'){
+                return(
+                    <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onWitnessPress.bind(this,witnessInfo)}>
+
+                    <View style={styles.cell}>
+
+                      <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
+                        {witnessInfo.witnesser.realname}
+                      </Text>
+                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
+                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                      </Text>
+                    </View>
+
+
+                    <View style={styles.cell}>
+
+                    <Text style={{textAlign:'right',color:'#0755a6',fontSize:14,marginBottom:4,}}>
+                      不合格
+                    </Text>
+                    <Text style={{color:'#777777',fontSize:12,}}>
+                     见证地点： {witnessInfo.realWitnessAddress}
+                    </Text>
+                    </View>
+
+                    <Image style={{alignSelf:'center',marginRight:10}} source={require('../images/right_enter_blue.png')}></Image>
+
+                    </TouchableOpacity>
+                )
+            }else{
+                return(
+                    <View style={styles.statisticsflexContainer}>
+
+                    <View style={styles.cell}>
+
+                      <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
+                        {witnessInfo.witnesser.realname}
+                      </Text>
+                    </View>
+
+
+                    <View style={styles.cell}>
+
+                    <Text style={{color:'#e82628',fontSize:14,marginBottom:4,}}>
+                      待见证
+                    </Text>
+
+                    </View>
+
+                    </View>
+                )
+            }
 
         }
 
-    renderMemberItem(displayItem){
-        var displayMember = displayItem.content
-        if (!displayItem.content) {
-            displayMember = '选择问题解决人'
-        }
-        return(<View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
-            <TouchableOpacity style={{borderWidth:0.5,
-                  alignItems:'center',
-                  borderColor : '#f77935',
-                  backgroundColor : 'white',
-                  borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
-
-            <MemberSelectView
-            style={{color:'#f77935',fontSize:14,flex:1}}
-            title={displayMember}
-            data={this.state.members}
-             pickerTitle={'选择人员'}
-            onSelected={this.onSelectedMember.bind(this)} />
-                                <Image
-                                style={{width:20,height:20,}}
-                                source={require('../images/unfold.png')}/>
-            </TouchableOpacity>
-
-            </View>)
-    }
 
     renderItem() {
                // 数组
                var itemAry = [];
                // 颜色数组
-               var problem_type = '技术问题'
-               if (this.state.data.questionType == 'tecknicalMatters') {
-                   problem_type = '技术问题'
-               }else{
-                   problem_type = '协调问题'
+               var displayAry = [];
+
+               if (this.state.data.witnessInfo) {
+                   for (var i = 0; i < this.state.data.witnessInfo.length; i++) {
+                         var witnessInfo = this.state.data.witnessInfo[i]
+                         if (!witnessInfo.witnesser) {
+                             continue
+                         }
+                         displayAry.push({data:witnessInfo,id:'m'+i,type:'witness'})
+                   }
+                   displayAry.push({type:'line'},);
                }
-               var displayAry = [
-                       {title:'问题描述',content:this.state.data.describe,id:'a1'},
-                        // {title:'附件',content:this.state.data.files,id:'a2',type:'file'},
-                      {type:'devider'},
 
-           ];
-
-           if (Global.isMonitor(Global.UserInfo)) {
-                   displayAry.push({title:'选择问题解决人',content:this.state.rolve_member,id:'a3',type:'problem_member'})
-           }
-
-                displayAry.push({title:'问题类型',content:problem_type,id:'a3'})
-                displayAry.push({type:'devider'},);
-                displayAry.push( {title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'0'})
-                displayAry.push( {title:'点数',content:this.state.data.rollingPlan.points,id:'1'})
+                displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'7'})
+                displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'0'})
+                displayAry.push({title:'点数',content:this.state.data.rollingPlan.points,id:'1'})
                 displayAry.push({title:'机组号',content:this.state.data.rollingPlan.unitNo,id:'2'})
-                displayAry.push( {title:'质量计划号',content:this.state.data.rollingPlan.qualityplanno,id:'3'})
+                displayAry.push({title:'质量计划号',content:this.state.data.qualityplanno,id:'3'})
+
+
                 displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'},);
                 displayAry.push({title:'房间号',content:this.state.data.rollingPlan.roomNo,id:'b1'},);
                 displayAry.push({title:'工程量编号',content:this.state.data.rollingPlan.projectNo,id:'b2'},);
@@ -326,16 +414,17 @@ startProblem(){
                 displayAry.push({title:'焊口／支架',content:this.state.data.rollingPlan.weldno,id:'b4'},);
                 displayAry.push({type:'devider'},);
 
-
                // 遍历
                for (var i = 0; i<displayAry.length; i++) {
-                   if (displayAry[i].type == 'problem_member') {
-                       itemAry.push(
-                          this.renderMemberItem(displayAry[i])
-                       );
+                   if (displayAry[i].type == 'witness') {
+                       itemAry.push(this.witnessItemInfo(displayAry[i].data));
                    } else if (displayAry[i].type == 'devider') {
                        itemAry.push(
                           <View style={styles.divider}/>
+                       );
+                   } else if (displayAry[i].type == 'line') {
+                       itemAry.push(
+                          <View style={[styles.divider,{height:1}]}/>
                        );
                    }else{
                        itemAry.push(
