@@ -21,6 +21,8 @@ import QCTabView from './QC/QCTabView';
 import SolverTabView from './Problem/SolverTabView';
 import Banner from 'react-native-banner';
 import Badge from 'react-native-smart-badge'
+import SafeWorkHomeView from './SafeWork/SafeWorkHomeView'
+
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -236,6 +238,19 @@ export default class HomeView extends Component {
             var data = moduleData[index];
             if (bottom) {
                 data = bottomModuleData[index];
+            }
+
+            if (data.type == 'WMSG') {
+              this.props.navigator.push({
+                  component: SafeWorkHomeView,
+                   props: {
+                       data:data,
+                       type:data.type,
+                       typeStr:typeSegArr[this.state.selectedTypeIndex],
+                       category:dayCateArr[index],
+                      }
+              })
+              return;
             }
 
             if (Global.isCaptain(Global.UserInfo)) {
