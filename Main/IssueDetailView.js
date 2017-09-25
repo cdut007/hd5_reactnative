@@ -120,6 +120,9 @@ export default class IssueDetailView extends Component {
     }
 
 
+startFeedbackProblem(){
+
+}
 
 startProblem(){
     if (!this.state.rolve_member) {
@@ -184,8 +187,11 @@ onDeliverySuccess(response){
                                 onPress={this.startProblem.bind(this)}></CommitButton></View>
                                 </View>)
 
-            }else if (Global.isCaptain(Global.UserInfo)) {
-
+            }else if (Global.isSolverMember(Global.UserInfo)) {
+                return(<View style={{height:50,width:width,flexDirection:'row'}}>
+                        <View style={{height:50,flex:1}}><CommitButton title={'提交'}
+                                onPress={this.startFeedbackProblem.bind(this)}></CommitButton></View>
+                                </View>)
 
             }
 
@@ -344,6 +350,14 @@ onDeliverySuccess(response){
             </View>)
     }
 
+
+    renderFile(files){
+        if (!files) {
+            return
+        }
+
+    }
+
     renderItem() {
                // 数组
                var itemAry = [];
@@ -356,14 +370,19 @@ onDeliverySuccess(response){
                }
                var displayAry = [
                        {title:'问题描述',content:this.state.data.describe,id:'a1'},
-                        // {title:'附件',content:this.state.data.files,id:'a2',type:'file'},
+                    {title:'附件',data:this.state.data.files,id:'a2',type:'file'},
                       {type:'devider'},
 
            ];
 
            if (Global.isMonitor(Global.UserInfo)) {
-                   displayAry.push({title:'选择问题解决人',content:this.state.rolve_member,id:'a3',type:'problem_member'})
+                   displayAry.push({title:'选择问题解决人',content:this.state.rolve_member,id:'c7',type:'problem_member'})
            }
+
+           if (Global.isSolverMember(Global.UserInfo)) {
+               displayAry.push({title:'提问时间',content:this.state.data.questionTime,id:'c9'})
+           }
+
 
                 displayAry.push({title:'问题类型',content:problem_type,id:'a3'})
                 displayAry.push({type:'devider'},);
@@ -388,6 +407,10 @@ onDeliverySuccess(response){
                    } else if (displayAry[i].type == 'devider') {
                        itemAry.push(
                           <View style={styles.divider}/>
+                       );
+                   } else if (displayAry[i].type == 'file') {
+                       itemAry.push(
+                         this.renderFile(displayAry[i].data)
                        );
                    }else{
                        itemAry.push(
