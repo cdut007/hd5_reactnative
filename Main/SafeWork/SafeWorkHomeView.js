@@ -9,6 +9,9 @@ import {
     BackAndroid,
     ListView,
     TouchableOpacity,
+    NavigatorIOS,
+    AlertIOS
+
 } from 'react-native';
 
 import Dimensions from 'Dimensions'
@@ -21,21 +24,25 @@ var safeModule = [
     'title':"报告问题",
     'image': require('../../images/construction_icon.png'),
     'index': 0,
+    "type":"BGWT",
   },
   {
     'title':"问题审核",
     'image': require('../../images/construction_icon.png'),
     'index': 1,
+    "type":"WTSH",
   },
   {
     'title':"问题整改",
     'image': require('../../images/construction_icon.png'),
     'index': 2,
+    "type":"WTZG",
   },
   {
     'title':"问题查阅",
     'image': require('../../images/construction_icon.png'),
     'index': 3,
+    "type":"WTCY",
   },
 ]
 
@@ -115,13 +122,15 @@ export  default class SafeWorkHomeView extends Component {
 
   _itemClick(item){
 
+AlertIOS.alert(item.type,item.title);
 
   }
 
   renderDot(item){
 
     return(
-      <TouchableOpacity style={{alignSelf:'center'}}>
+      <TouchableOpacity style={{alignSelf:'center'}}
+        onPress={this._itemClick.bind(this,item)}>
           <Image source={item.image} style={styles.circle_outter} resizeMode={Image.resizeMode.contain}></Image>
            <Text style={styles.item}> {item.title} </Text>
       </TouchableOpacity>
