@@ -9,47 +9,31 @@ import {
     BackAndroid,
     ListView,
     TouchableOpacity,
-    // AlertIOS,
 
 } from 'react-native';
 
 import Dimensions from 'Dimensions'
 import NavBar from '../../common/NavBar';
-import ProblemReview from '../SafeWork/ProblemReview'
-import ProblemRectification from '../SafeWork/ProbleRectification'
-import ProblemAceess from '../SafeWork/ProblemAccess'
-import ProblemReport from '../SafeWork/ProblemReport'
 
 var width = Dimensions.get('window').width;
 
 var safeModule = [
   {
-    'title':"报告问题",
+    'title':"待处理",
     'image': require('../../images/construction_icon.png'),
     'index': 0,
-    "type":"BGWT",
+    "type":"DCL",
   },
   {
-    'title':"问题审核",
+    'title':"已完成",
     'image': require('../../images/construction_icon.png'),
     'index': 1,
-    "type":"WTSH",
+    "type":"YWC",
   },
-  {
-    'title':"问题整改",
-    'image': require('../../images/construction_icon.png'),
-    'index': 2,
-    "type":"WTZG",
-  },
-  {
-    'title':"问题查阅",
-    'image': require('../../images/construction_icon.png'),
-    'index': 3,
-    "type":"WTCY",
-  },
+
 ]
 
-export  default class SafeWorkHomeView extends Component {
+export  default class ProblemRectification extends Component {
 
   constructor(props) {
       super(props)
@@ -57,7 +41,7 @@ export  default class SafeWorkHomeView extends Component {
       var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
       this.state = {
-          title: "安全文明任务",
+          title: "问题整改",
           dataSource: ds,
       }
 
@@ -124,47 +108,6 @@ export  default class SafeWorkHomeView extends Component {
   }
 
   _itemClick(item){
-
-// AlertIOS.alert(item.type,item.title);
-
-var Component;
-
-  switch (item.type) {
-    case "BGWT":
-    {
-     Component =   ProblemReport;
-    }
-    break;
-
-      break;
-    case "WTSH":
-      {
-         Component = ProblemReview;
-      }
-      break;
-      case "WTZG":
-      {
-        Component = ProblemRectification;
-      }
-          break;
-      case "WTCY":
-          {
-        Component = ProblemAceess;
-          }
-          break;
-
-  }
-
-  if (Component) {
-    this.props.navigator.push({
-        component: Component,
-
-    })
-  }
-
-
-
-
 
 
   }
