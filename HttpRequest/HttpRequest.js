@@ -130,7 +130,7 @@ if (body.jsonBody) {
             console.log(responseText);
             var response = JSON.parse(responseText);
             if (response.code == 1000) {
-                successCallback(response,body);
+                successCallback(response,param);
             }else{
                 if (response.message) {
                     failCallback(response.message)
@@ -170,5 +170,46 @@ if (body.jsonBody) {
           });
     }
 
-  }
+  },
+
+  uploadImage(apiName ,formData,successCallback, failCallback ) {
+    var logind = '';
+    if (Global.UserInfo)
+    {
+        logind = Global.UserInfo.id;
+
+    }
+
+
+    var url = apiAddr + apiName +"?loginId="+logind
+    fetch(url,{
+        method:'POST',
+        headers:{
+            'Content-Type':'multipart/form-data',
+        },
+        body:formData,
+    })
+       .then((response) => response.text())
+          .then((responseText) => {
+            console.log(responseText);
+            var response = JSON.parse(responseText);
+            if (response.code == 1000) {
+                successCallback(response,formData);
+            }else{
+                if (response.message) {
+                    failCallback(response.message)
+                        console.log('Post requesr error:' + url +":response.message="+response.message)
+                }else{
+
+                    failCallback(response.responseText)
+                }
+            }
+
+          })
+          .catch(function(err){
+            failCallback(err);
+          });
 }
+}
+
+

@@ -121,7 +121,12 @@ export default class PlanDetailView extends Component {
     }
 
     startProblem(){
-
+        this.props.navigator.push({
+            component: IssueReportView,
+             props: {
+                 data:this.state.data,
+                }
+        })
     }
 
     renderFormView(){
@@ -131,7 +136,7 @@ export default class PlanDetailView extends Component {
 
                 return(<View style={{height:50,width:width,flexDirection:'row'}}>
                 <View style={{height:50,flex:1}}><CommitButton title={'问题创建'}
-                        onPress={this.startProblem.bind(this)}></CommitButton></View>
+                        onPress={this.startProblem.bind(this)} containerStyle={{backgroundColor:'#ffffff'}} titleStyle={{color: '#f77935'}}></CommitButton></View>
                         <View style={{height:50,flex:1}}><CommitButton title={'发起见证'}
                                 onPress={this.startWitness.bind(this)}></CommitButton></View>
                                 </View>)
