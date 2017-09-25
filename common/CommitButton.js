@@ -3,7 +3,7 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableHighlight
+    TouchableOpacity
  } from 'react-native';
 
 import Dimensions from 'Dimensions'
@@ -15,14 +15,16 @@ var width = Dimensions.get('window').width;
      {
         title: PropTypes.string,
         onPress: PropTypes.func,
+        containerStyle: PropTypes.object,
+        titleStyle: PropTypes.object,
     }
 
     render()
     {
         return(
-            <TouchableHighlight style= {styles.container} onPress = {this.props.onPress} >
-                <Text style= {styles.title}>{this.props.title}</Text>
-            </TouchableHighlight>
+            <TouchableOpacity style= {[styles.container,this.props.containerStyle]} onPress = {this.props.onPress} activeOpacity={0.8}>
+                <Text style= {[styles.title, this.props.titleStyle]}>{this.props.title}</Text>
+            </TouchableOpacity>
         )
     }
  }
