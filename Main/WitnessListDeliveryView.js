@@ -460,7 +460,7 @@ export default class WitnessListDeliveryView extends Component {
                 'teamId':teamId,
             }
 
-        HttpRequest.post('/witness/monitor', paramBody, this.onDeliverySuccess.bind(this),
+        HttpRequest.post('/witness_op/monitor', paramBody, this.onDeliverySuccess.bind(this),
             (e) => {
                 this.setState({
                     loadingVisible: false

@@ -22,7 +22,7 @@ import LoadingView from '../../common/LoadingView.js'
 import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
-import PlanDetailView from './../PlanDetailView';
+import QCWitnessTeamDetailView from './QCWitnessTeamDetailView';
 import CommitButton from '../../common/CommitButton'
 import CheckBox from 'react-native-checkbox'
 
@@ -256,9 +256,11 @@ export default class QCWitnessListDeliveryView extends Component {
 
     onItemPress(itemData){
         this.props.navigator.push({
-            component: PlanDetailView,
+            component: QCWitnessTeamDetailView,
              props: {
                  data:itemData,
+                 QCTeamMember:this.state.QCTeamMember,
+                 delivery:true,
                 }
         })
     }

@@ -12,29 +12,27 @@ import {
     AsyncStorage
 } from 'react-native';
 import Dimensions from 'Dimensions';
-import NavBar from '../common/NavBar';
-import px2dp from '../common/util';
-import HttpRequest from '../HttpRequest/HttpRequest'
-import DisplayItemView from '../common/DisplayItemView';
-import EnterItemView from '../common/EnterItemView';
-import CommonContentView from './CommonContentView';
-import SingleWorkRollDealBatWitnessView from './SingleWorkRollDealBatWitnessView';
-import IssueReportView from './IssueReportView'
-import WorkStepListView from './WorkStepListView';
-import WitnessFailResultView from './WitnessFailResultView'
+import NavBar from '../../common/NavBar';
+import px2dp from '../../common/util';
+import HttpRequest from '../../HttpRequest/HttpRequest'
+import DisplayItemView from '../../common/DisplayItemView';
+import EnterItemView from '../../common/EnterItemView';
 
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
 
-import Global from '../common/globals.js'
-import CommitButton from '../common/CommitButton'
+import Global from '../../common/globals.js'
+import CommitButton from '../../common/CommitButton'
+
+
+import MemberSelectView from '../../common/MemberSelectView'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var account = Object();
 
-export default class WitnessDetailView extends Component {
+export default class QCWitnessTeamDetailView extends Component {
     constructor(props) {
         super(props);
         var data = this.props.data
@@ -42,6 +40,9 @@ export default class WitnessDetailView extends Component {
         this.state = {
             title: '见证详情',
             data:data,
+            QCTeamMember:this.props.QCTeamMember,
+            choose_memberQC1:null,
+            displayMemberQC1:'选择QC1',
         };
     }
 
@@ -49,7 +50,43 @@ export default class WitnessDetailView extends Component {
     componentDidMount() {
 
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
+        this.getWitnessTeamMember();
     }
+
+
+    onGetWitnessTeamMemberDataSuccess(response){
+      this.state.QCTeamMember = response.responseResult;
+      this.setState({QCTeamMember:  this.state.QCTeamMember})
+
+    }
+    getWitnessTeamMember(){
+
+        var paramBody = {
+            teamType:'WITNESS_MEMBER',
+            userId:Global.UserInfo.id,
+        }
+
+        HttpRequest.get('/team/witness', paramBody, this.onGetWitnessTeamMemberDataSuccess.bind(this),
+            (e) => {
+
+
+                try {
+                    var errorInfo = JSON.parse(e);
+                    if (errorInfo != null) {
+                     console.log(errorInfo)
+                    } else {
+                        console.log(e)
+                    }
+                }
+                catch(err)
+                {
+                    console.log(err)
+                }
+
+                console.log('Task error:' + e)
+            })
+    }
+
 
      onGetDataSuccess(response){
          console.log('onGetDataSuccess@@@@')
@@ -99,7 +136,7 @@ export default class WitnessDetailView extends Component {
 
             <View style={styles.container}>
             <NavBar title={this.state.title}
-            leftIcon={require('../images/back.png')}
+            leftIcon={require('../../images/back.png')}
             leftPress={this.back.bind(this)}
             />
             {this.renderTop()}
@@ -110,35 +147,76 @@ export default class WitnessDetailView extends Component {
         )
     }
 
-    startWitness(){
-        this.props.navigator.push({
-            component: WorkStepListView,
-             props: {
-                 data:this.state.data,
-                }
-        })
+    onDeliverySuccess(response){
+        Global.showToast(response.message)
+        this.back();
     }
 
-    startProblem(){
+    startWitness(){
 
+        var ids=this.props.data.id;
+
+
+
+        if (!this.state.choose_memberQC1) {
+            alert('请选择见证员')
+            return
+        }
+
+        var qcId = ''
+
+             var data = this.state.QCTeamMember
+
+             for (var i = 0; i < data.length; i++) {
+                   if (data[i].realname == this.state.choose_memberQC1) {
+                       qcId = data[i].id;
+                        break
+                   }
+             }
+
+        var paramBody = {
+                'ids': ids,
+                'memberId':qcId,
+            }
+
+        HttpRequest.post('/witness_op', paramBody, this.onDeliverySuccess.bind(this),
+            (e) => {
+                this.setState({
+                    loadingVisible: false
+                });
+                try {
+                    var errorInfo = JSON.parse(e);
+                }
+                catch(err)
+                {
+                    console.log("error======"+err)
+                }
+                    if (errorInfo != null) {
+                        if (errorInfo.code == -1002||
+                         errorInfo.code == -1001) {
+                        alert(errorInfo.message);
+                    }else {
+                        alert(e)
+                    }
+
+                    } else {
+                        alert(e)
+                    }
+
+
+                console.log('onDelivery error:' + e)
+            })
     }
 
     renderFormView(){
             //1  fininshed retun, jsut san
 
-            if (Global.isGroup(Global.UserInfo)) {
+            if (this.props.delivery) {
 
                 return(<View style={{height:50,width:width,flexDirection:'row'}}>
-                <View style={{height:50,flex:1}}><CommitButton title={'问题创建'}
-                        onPress={this.startProblem.bind(this)}></CommitButton></View>
-                        <View style={{height:50,flex:1}}><CommitButton title={'发起见证'}
-                                onPress={this.startWitness.bind(this)}></CommitButton></View>
+                <View style={{height:50,flex:1}}><CommitButton title={'确认分派'}
+                        onPress={this.startWitness.bind(this)}></CommitButton></View>
                                 </View>)
-
-            }else if (Global.isCaptain(Global.UserInfo)) {
-
-
-            }else if (Global.isMonitor(Global.UserInfo)) {
 
             }
 
@@ -194,8 +272,62 @@ export default class WitnessDetailView extends Component {
             keyboardDismissMode='on-drag'
             keyboardShouldPersistTaps={false}
             style={styles.mainStyle}>
+            {this.renderChooseOptions()}
                 {this.renderItem()}
                    </ScrollView>);
+    }
+
+    onSelectedMember(member){
+
+        console.log(JSON.stringify(member)+"member====");
+         this.state.choose_memberQC1 = member[0]
+         this.setState({displayMemberQC1:member[0]})
+
+    }
+
+    renderChooseOptions(){
+        if (!this.props.delivery) {
+            return
+        }
+        var membersQC1 = []
+        if (this.state.QCTeamMember) {
+            for (var i = 0; i < this.state.QCTeamMember.length; i++) {
+                membersQC1.push(this.state.QCTeamMember[i].realname)
+            }
+        }
+
+            return(
+                <View style={[{marginTop:10,alignItems:'center',},styles.statisticsflexContainer]}>
+
+                <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+
+                <TouchableOpacity
+
+                style={{borderWidth:0.5,
+                      alignItems:'center',
+                      borderColor : '#f77935',
+                      backgroundColor : 'white',
+                      borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+
+                      <MemberSelectView
+                      style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
+                      title={this.state.displayMemberQC1}
+                      data={membersQC1}
+                      pickerTitle={'选择QC1'}
+                      onSelected={this.onSelectedMember.bind(this)} />
+                                    <Image
+                                    style={{width:20,height:20}}
+                                    source={require('../../images/unfold.png')}/>
+                </TouchableOpacity>
+
+                </View>
+
+
+
+                </View>
+
+            )
+
     }
 
     getQCCheckStatus(sign){
@@ -213,46 +345,10 @@ export default class WitnessDetailView extends Component {
 
     }
 
-    go2ZhijiaUpdate(){
 
-    }
-
-    issueFeedBack(){
-         this.props.navigator.push({
-            component: IssueReportView,
-             props: {
-                 data:this.state.data,
-                }
-        })
-    }
-
-    issueDetail(){
-        // this.props.navigator.push({
-        //     component: PlanIssueListView,
-        //      props: {
-        //
-        //          data:this.state.data,
-        //         }
-        // })
-    }
-
-    witnessDealBatTask(){
-        this.props.navigator.push({
-            component: SingleWorkRollDealBatWitnessView,
-             props: {
-                 data:this.state.data,
-                }
-        })
-    }
 
     go2ItemDetail(menu){
-        this.props.navigator.push({
-            component: CommonContentView,
-             props: {
-                 title:menu.title,
-                 content:menu.content,
-                }
-        })
+
     }
 
 
@@ -260,16 +356,6 @@ export default class WitnessDetailView extends Component {
          console.log('menu:work id = ' + menu.id);
         if (menu.id == '9') {
             this.go2WorkStepDetail();
-        } else if (menu.id == '9a') {
-            this.go2ZhijiaUpdate();
-        } else if (menu.id == 'c') {
-            this.setState({displayMore:!this.state.displayMore});
-        } else if (menu.id == '10') {
-            this.issueFeedBack();
-        } else if (menu.id == '-1') {
-            this.issueDetail();
-        } else if (menu.id == 'e9') {
-            this.witnessDealBatTask();
         } else {
             try {
                 var  index = parseInt(menu.id);
@@ -287,12 +373,7 @@ export default class WitnessDetailView extends Component {
 
 
 onWitnessPress(witnessInfo){
-    this.props.navigator.push({
-        component: WitnessFailResultView,
-         props: {
-             data:witnessInfo,
-            }
-    })
+
 }
 
         witnessItemInfo(witnessInfo){
@@ -351,7 +432,7 @@ onWitnessPress(witnessInfo){
                     </Text>
                     </View>
 
-                    <Image style={{alignSelf:'center',marginRight:10}} source={require('../images/right_enter_blue.png')}></Image>
+                    <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/right_enter_blue.png')}></Image>
 
                     </TouchableOpacity>
                 )
@@ -400,7 +481,7 @@ onWitnessPress(witnessInfo){
                    displayAry.push({type:'line'},);
                }
 
-               if (Global.isQCTeam(Global.UserInfo)) {
+
                    //if not ok add info.
                    displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'7'})
                    displayAry.push({title:'工序编号/名称',content:this.state.data.workStepName,id:'0'})
@@ -408,21 +489,6 @@ onWitnessPress(witnessInfo){
                    displayAry.push({title:'焊口／支架',content:this.state.data.rollingPlan.weldno,id:'2'},);
                    displayAry.push({title:'选点类型',content:this.state.data.noticeType,id:'3'})
 
-               }else{
-                   displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'7'})
-                   displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'0'})
-                   displayAry.push({title:'点数',content:this.state.data.rollingPlan.points,id:'1'})
-                   displayAry.push({title:'机组号',content:this.state.data.rollingPlan.unitNo,id:'2'})
-                   displayAry.push({title:'质量计划号',content:this.state.data.qualityplanno,id:'3'})
-
-
-                   displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'},);
-                   displayAry.push({title:'房间号',content:this.state.data.rollingPlan.roomNo,id:'b1'},);
-                   displayAry.push({title:'工程量编号',content:this.state.data.rollingPlan.projectNo,id:'b2'},);
-                   displayAry.push({title:'工程量类别',content:this.state.data.rollingPlan.projectType,id:'b3'},);
-                   displayAry.push({title:'焊口／支架',content:this.state.data.rollingPlan.weldno,id:'b4'},);
-
-               }
 
                 displayAry.push({type:'devider'},);
 

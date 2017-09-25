@@ -23,6 +23,7 @@ import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 import QCWitnessDetailView from './QCWitnessDetailView';
 import Global from '../../common/globals.js';
+import QCWitnessTeamDetailView from './QCWitnessTeamDetailView';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -165,12 +166,22 @@ export default class QCWitnessListView extends Component {
     }
 
     onItemPress(itemData){
+    if (Global.isQCTeam(Global.UserInfo)) {
+        this.props.navigator.push({
+            component: QCWitnessTeamDetailView,
+             props: {
+                 data:itemData,
+                 delivery:false,
+                }
+        })
+    }else{
         this.props.navigator.push({
             component: QCWitnessDetailView,
              props: {
                  data:itemData,
                 }
         })
+    }
     }
 
 
