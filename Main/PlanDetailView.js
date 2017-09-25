@@ -121,7 +121,12 @@ export default class PlanDetailView extends Component {
     }
 
     startProblem(){
-
+        this.props.navigator.push({
+            component: IssueReportView,
+             props: {
+                 data:this.state.data,
+                }
+        })
     }
 
     renderFormView(){
