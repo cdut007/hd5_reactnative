@@ -21,6 +21,7 @@ import CommonContentView from './CommonContentView';
 import SingleWorkRollDealBatWitnessView from './SingleWorkRollDealBatWitnessView';
 import IssueReportView from './IssueReportView'
 import WorkStepListView from './WorkStepListView';
+import WitnessFailResultView from './WitnessFailResultView'
 
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
@@ -33,30 +34,28 @@ var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var account = Object();
 
-export default class PlanDetailView extends Component {
+export default class WitnessDetailView extends Component {
     constructor(props) {
         super(props);
-
+        var data = this.props.data
+        data.rollingPlan = new Object()
         this.state = {
-            title: '任务详情',
-            isHankouType:1,
-            data:this.props.data,
-            isTaskConfirm:this.props.isTaskConfirm,
-            displayMore:false,
+            title: '见证详情',
+            data:data,
         };
     }
 
 
     componentDidMount() {
 
-        this.executeNetWorkRequest(this.props.data.id);
+        this.executeNetWorkRequest(this.props.data.rollingPlanId);
     }
 
      onGetDataSuccess(response){
          console.log('onGetDataSuccess@@@@')
-
+         this.state.data.rollingPlan = response.responseResult
          this.setState({
-             data:response.responseResult,
+             data:this.state.data,
          });
      }
 
@@ -121,12 +120,7 @@ export default class PlanDetailView extends Component {
     }
 
     startProblem(){
-        this.props.navigator.push({
-            component: IssueReportView,
-             props: {
-                 data:this.state.data,
-                }
-        })
+
     }
 
     renderFormView(){
@@ -136,7 +130,7 @@ export default class PlanDetailView extends Component {
 
                 return(<View style={{height:50,width:width,flexDirection:'row'}}>
                 <View style={{height:50,flex:1}}><CommitButton title={'问题创建'}
-                        onPress={this.startProblem.bind(this)} containerStyle={{backgroundColor:'#ffffff'}} titleStyle={{color: '#f77935'}}></CommitButton></View>
+                        onPress={this.startProblem.bind(this)}></CommitButton></View>
                         <View style={{height:50,flex:1}}><CommitButton title={'发起见证'}
                                 onPress={this.startWitness.bind(this)}></CommitButton></View>
                                 </View>)
@@ -151,15 +145,19 @@ export default class PlanDetailView extends Component {
     }
 
     renderTop(){
+        var date = this.props.data.createDate;
+        if (!date) {
+            date = this.props.data.launchData
+        }
         return(<View style={styles.statisticsflexContainer}>
 
         <View style={styles.cell}>
 
-          <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
-            施工日期
+          <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
+            申请时间
           </Text>
-          <Text numberOfLines={1} style={{color:'#777777',fontSize:14,}}>
-            {Global.formatDate(this.props.data.planStartDate)}
+          <Text numberOfLines={2} style={{color:'#777777',fontSize:14,}}>
+            {Global.formatDate(date)}
           </Text>
         </View>
 
@@ -167,10 +165,10 @@ export default class PlanDetailView extends Component {
         <View style={styles.cell}>
 
         <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
-          作业组长
+          申请地点
         </Text>
         <Text style={{color:'#777777',fontSize:14,}}>
-         {this.props.data.consteam.realname}
+         {this.props.data.witnessAddress}
         </Text>
         </View>
 
@@ -197,7 +195,6 @@ export default class PlanDetailView extends Component {
             keyboardShouldPersistTaps={false}
             style={styles.mainStyle}>
                 {this.renderItem()}
-                {this.renderMoreItem()}
                    </ScrollView>);
     }
 
@@ -289,93 +286,145 @@ export default class PlanDetailView extends Component {
     }
 
 
+onWitnessPress(witnessInfo){
+    this.props.navigator.push({
+        component: WitnessFailResultView,
+         props: {
+             data:witnessInfo,
+            }
+    })
+}
 
-    //display more
-    _renderHeader(section) {
-          return (
-              <EnterItemView
-               title={'查看更多详情'}
-               detail={'查看更多详情'}
-              />
-          );
+        witnessItemInfo(witnessInfo){
+
+            //witnessInfo.result = '不合格'
+
+            if (witnessInfo.result == '合格') {
+                return(
+                    <View style={styles.statisticsflexContainer}>
+
+                    <View style={styles.cell}>
+
+                      <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
+                        {witnessInfo.witnesser.realname}
+                      </Text>
+                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
+                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                      </Text>
+                    </View>
+
+
+                    <View style={styles.cell}>
+
+                    <Text style={{textAlign:'right',color:'#0755a6',fontSize:14,marginBottom:4,}}>
+                      合格
+                    </Text>
+                    <Text style={{color:'#777777',fontSize:12,}}>
+                     见证地点： {witnessInfo.realWitnessAddress}
+                    </Text>
+                    </View>
+
+                    </View>
+                )
+            }else if (witnessInfo.result == '不合格'){
+                return(
+                    <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onWitnessPress.bind(this,witnessInfo)}>
+
+                    <View style={styles.cell}>
+
+                      <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
+                        {witnessInfo.witnesser.realname}
+                      </Text>
+                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
+                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                      </Text>
+                    </View>
+
+
+                    <View style={styles.cell}>
+
+                    <Text style={{textAlign:'right',color:'#0755a6',fontSize:14,marginBottom:4,}}>
+                      不合格
+                    </Text>
+                    <Text style={{color:'#777777',fontSize:12,}}>
+                     见证地点： {witnessInfo.realWitnessAddress}
+                    </Text>
+                    </View>
+
+                    <Image style={{alignSelf:'center',marginRight:10}} source={require('../images/right_enter_blue.png')}></Image>
+
+                    </TouchableOpacity>
+                )
+            }else{
+                return(
+                    <View style={styles.statisticsflexContainer}>
+
+                    <View style={styles.cell}>
+
+                      <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
+                        {witnessInfo.witnesser.realname}
+                      </Text>
+                    </View>
+
+
+                    <View style={styles.cell}>
+
+                    <Text style={{color:'#e82628',fontSize:14,marginBottom:4,}}>
+                      待见证
+                    </Text>
+
+                    </View>
+
+                    </View>
+                )
+            }
+
         }
 
-        _renderContent(section) {
-          return (
-              <DisplayItemView
-               title={'查看更多详情'}
-               detail={'查看更多详情'}
-              />
-          );
-        }
 
-
-
-    renderMoreItem(){
-        if (!this.state.displayMore) {
-            return;
-        }
-          var itemAry = [];
-        var displayMoreAry=[];
-        displayMoreAry.push({title:'子项',content:this.state.data.subItem,id:'c1'},);
-        displayMoreAry.push({title:'系统号',content:this.state.data.systemNo,id:'c2'},);
-        displayMoreAry.push({title:'工程量',content:this.state.data.projectCost,id:'c3'},);
-        displayMoreAry.push({title:'规格',content:this.state.data.speification,id:'c4'},);
-        displayMoreAry.push({title:'材质',content:this.state.data.matelial,id:'c5'},);
-        displayMoreAry.push({title:'核级',content:this.state.data.croeLevel,id:'c6'},);
-        displayMoreAry.push({title:'单位',content:this.state.data.projectUnit,id:'c7'},);
-        displayMoreAry.push({title:'点值',content:this.state.data.spot,id:'c8'},);
-        // 遍历
-        for (var i = 0; i<displayMoreAry.length; i++) {
-            itemAry.push(
-                <DisplayItemView key={displayMoreAry[i].id}
-                 title={displayMoreAry[i].title}
-                 detail={displayMoreAry[i].content}
-                />
-            );
-
-        }
-         return itemAry;
-    }
 
     renderItem() {
                // 数组
                var itemAry = [];
                // 颜色数组
-               var displayAry = [{title:'作业条目编号',content:this.state.data.workListNo,id:'0'},
-               {title:'点数',content:this.state.data.points,id:'1'},
-                {title:'机组号',content:this.state.data.unitNo,id:'2'},
+               var displayAry = [];
 
-                 {title:'质量计划号',content:this.state.data.qualityplanno,id:'3'},
+               if (this.state.data.witnessInfo) {
+                   for (var i = 0; i < this.state.data.witnessInfo.length; i++) {
+                         var witnessInfo = this.state.data.witnessInfo[i]
+                         if (!witnessInfo.witnesser) {
+                             continue
+                         }
+                         displayAry.push({data:witnessInfo,id:'m'+i,type:'witness'})
+                   }
+                   displayAry.push({type:'line'},);
+               }
 
-           ];
+                displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'7'})
+                displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'0'})
+                displayAry.push({title:'点数',content:this.state.data.rollingPlan.points,id:'1'})
+                displayAry.push({title:'机组号',content:this.state.data.rollingPlan.unitNo,id:'2'})
+                displayAry.push({title:'质量计划号',content:this.state.data.qualityplanno,id:'3'})
 
 
-                displayAry.push({title:'图纸号',content:this.state.data.drawingNo,id:'5'},);
-                displayAry.push({title:'房间号',content:this.state.data.roomNo,id:'b1'},);
-                displayAry.push({title:'工程量编号',content:this.state.data.projectNo,id:'b2'},);
-                displayAry.push({title:'工程量类别',content:this.state.data.projectType,id:'b3'},);
-                displayAry.push({title:'焊口／支架',content:this.state.data.weldno,id:'b4'},);
-                displayAry.push({title:'备注',content:this.state.data.remarks,id:'b5'},);
+                displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'},);
+                displayAry.push({title:'房间号',content:this.state.data.rollingPlan.roomNo,id:'b1'},);
+                displayAry.push({title:'工程量编号',content:this.state.data.rollingPlan.projectNo,id:'b2'},);
+                displayAry.push({title:'工程量类别',content:this.state.data.rollingPlan.projectType,id:'b3'},);
+                displayAry.push({title:'焊口／支架',content:this.state.data.rollingPlan.weldno,id:'b4'},);
                 displayAry.push({type:'devider'},);
-
-                displayAry.push({title:'查看更多详情',content:this.state.data.worktime,id:'c',type:'displayMore'},);
-
-
 
                // 遍历
                for (var i = 0; i<displayAry.length; i++) {
-                   if (displayAry[i].type == 'displayMore') {
-                       itemAry.push(
-                           <EnterItemView key={displayAry[i].id}
-                            title={displayAry[i].title}
-                            onPress = {this.onItemClick.bind(this,displayAry[i])}
-                            flagArrow = {this.state.displayMore}
-                           />
-                       );
+                   if (displayAry[i].type == 'witness') {
+                       itemAry.push(this.witnessItemInfo(displayAry[i].data));
                    } else if (displayAry[i].type == 'devider') {
                        itemAry.push(
                           <View style={styles.divider}/>
+                       );
+                   } else if (displayAry[i].type == 'line') {
+                       itemAry.push(
+                          <View style={[styles.divider,{height:1}]}/>
                        );
                    }else{
                        itemAry.push(

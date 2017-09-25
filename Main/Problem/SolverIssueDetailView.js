@@ -318,7 +318,7 @@ startProblem(){
                 displayAry.push( {title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'0'})
                 displayAry.push( {title:'点数',content:this.state.data.rollingPlan.points,id:'1'})
                 displayAry.push({title:'机组号',content:this.state.data.rollingPlan.unitNo,id:'2'})
-                displayAry.push( {title:'质量计划号',content:this.state.data.rollingPlan.drawno,id:'3'})
+                displayAry.push( {title:'质量计划号',content:this.state.data.rollingPlan.qualityplanno,id:'3'})
                 displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'},);
                 displayAry.push({title:'房间号',content:this.state.data.rollingPlan.roomNo,id:'b1'},);
                 displayAry.push({title:'工程量编号',content:this.state.data.rollingPlan.projectNo,id:'b2'},);
