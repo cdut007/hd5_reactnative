@@ -41,6 +41,7 @@ export default class IssueDetailView extends Component {
             data:data,
             rolve_member:null,
             members:[],
+            memberIds:[],
 
         };
     }
@@ -55,6 +56,7 @@ export default class IssueDetailView extends Component {
          console.log('onGetDataSuccess@@@@')
          var membersArray = []
          if (response.responseResult.userList) {
+             this.state.memberIds = response.responseResult.userList
              for (var i = 0; i < response.responseResult.userList.length; i++) {
                  membersArray.push(response.responseResult.userList[i].realname)
              }
@@ -120,6 +122,56 @@ export default class IssueDetailView extends Component {
 
 
 startProblem(){
+    if (!this.state.rolve_member) {
+        alert('请选择问题解决人')
+        return
+    }
+    var id = ''
+    for (var i = 0; i < this.state.memberIds.length; i++) {
+        if (this.state.memberIds[i].realname == this.state.rolve_member) {
+            id = this.state.memberIds[i].id;
+            break
+        }
+    }
+
+    var paramBody = {
+            'questionId':this.props.data.id,
+            'designatedUserId': id,
+
+        }
+
+    HttpRequest.post('/question/assign', paramBody, this.onDeliverySuccess.bind(this),
+        (e) => {
+            this.setState({
+                loadingVisible: false
+            });
+            try {
+                var errorInfo = JSON.parse(e);
+            }
+            catch(err)
+            {
+                console.log("error======"+err)
+            }
+                if (errorInfo != null) {
+                    if (errorInfo.code == -1002||
+                     errorInfo.code == -1001) {
+                    alert(errorInfo.message);
+                }else {
+                    alert(e)
+                }
+
+                } else {
+                    alert(e)
+                }
+
+
+            console.log('Login error:' + e)
+        })
+
+}
+
+onDeliverySuccess(response){
+    Global.showToast(response.message)
 
 }
     renderFormView(){
