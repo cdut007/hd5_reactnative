@@ -252,6 +252,17 @@ export default class HomeView extends Component {
               })
               return;
             }
+            if (data.type == 'ZLGL') {
+             Global.showToast('正在开发')
+              return;
+            }
+
+            if (data.type == 'WZGL') {
+              Global.showToast('正在开发')
+              return;
+            }
+
+
 
             if (Global.isCaptain(Global.UserInfo)) {
                 this.props.navigator.push({

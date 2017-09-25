@@ -41,6 +41,7 @@ export default class IssueDetailView extends Component {
             data:data,
             rolve_member:null,
             members:[],
+            memberIds:[],
 
         };
     }
@@ -55,6 +56,7 @@ export default class IssueDetailView extends Component {
          console.log('onGetDataSuccess@@@@')
          var membersArray = []
          if (response.responseResult.userList) {
+             this.state.memberIds = response.responseResult.userList
              for (var i = 0; i < response.responseResult.userList.length; i++) {
                  membersArray.push(response.responseResult.userList[i].realname)
              }
@@ -118,8 +120,61 @@ export default class IssueDetailView extends Component {
     }
 
 
+startFeedbackProblem(){
+
+}
 
 startProblem(){
+    if (!this.state.rolve_member) {
+        alert('请选择问题解决人')
+        return
+    }
+    var id = ''
+    for (var i = 0; i < this.state.memberIds.length; i++) {
+        if (this.state.memberIds[i].realname == this.state.rolve_member) {
+            id = this.state.memberIds[i].id;
+            break
+        }
+    }
+
+    var paramBody = {
+            'questionId':this.props.data.id,
+            'designatedUserId': id,
+
+        }
+
+    HttpRequest.post('/question/assign', paramBody, this.onDeliverySuccess.bind(this),
+        (e) => {
+            this.setState({
+                loadingVisible: false
+            });
+            try {
+                var errorInfo = JSON.parse(e);
+            }
+            catch(err)
+            {
+                console.log("error======"+err)
+            }
+                if (errorInfo != null) {
+                    if (errorInfo.code == -1002||
+                     errorInfo.code == -1001) {
+                    alert(errorInfo.message);
+                }else {
+                    alert(e)
+                }
+
+                } else {
+                    alert(e)
+                }
+
+
+            console.log('Login error:' + e)
+        })
+
+}
+
+onDeliverySuccess(response){
+    Global.showToast(response.message)
 
 }
     renderFormView(){
@@ -132,8 +187,11 @@ startProblem(){
                                 onPress={this.startProblem.bind(this)}></CommitButton></View>
                                 </View>)
 
-            }else if (Global.isCaptain(Global.UserInfo)) {
-
+            }else if (Global.isSolverMember(Global.UserInfo)) {
+                return(<View style={{height:50,width:width,flexDirection:'row'}}>
+                        <View style={{height:50,flex:1}}><CommitButton title={'提交'}
+                                onPress={this.startFeedbackProblem.bind(this)}></CommitButton></View>
+                                </View>)
 
             }
 
@@ -292,6 +350,14 @@ startProblem(){
             </View>)
     }
 
+
+    renderFile(files){
+        if (!files) {
+            return
+        }
+
+    }
+
     renderItem() {
                // 数组
                var itemAry = [];
@@ -304,14 +370,19 @@ startProblem(){
                }
                var displayAry = [
                        {title:'问题描述',content:this.state.data.describe,id:'a1'},
-                        // {title:'附件',content:this.state.data.files,id:'a2',type:'file'},
+                    {title:'附件',data:this.state.data.files,id:'a2',type:'file'},
                       {type:'devider'},
 
            ];
 
            if (Global.isMonitor(Global.UserInfo)) {
-                   displayAry.push({title:'选择问题解决人',content:this.state.rolve_member,id:'a3',type:'problem_member'})
+                   displayAry.push({title:'选择问题解决人',content:this.state.rolve_member,id:'c7',type:'problem_member'})
            }
+
+           if (Global.isSolverMember(Global.UserInfo)) {
+               displayAry.push({title:'提问时间',content:this.state.data.questionTime,id:'c9'})
+           }
+
 
                 displayAry.push({title:'问题类型',content:problem_type,id:'a3'})
                 displayAry.push({type:'devider'},);
@@ -336,6 +407,10 @@ startProblem(){
                    } else if (displayAry[i].type == 'devider') {
                        itemAry.push(
                           <View style={styles.divider}/>
+                       );
+                   } else if (displayAry[i].type == 'file') {
+                       itemAry.push(
+                         this.renderFile(displayAry[i].data)
                        );
                    }else{
                        itemAry.push(
