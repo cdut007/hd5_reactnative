@@ -273,6 +273,10 @@ export default class WorkStepListView extends Component {
                return
            }
 
+           if (item.launchData) {
+               return  (<Text style= {styles.desc}>见证中</Text>)
+           }
+
 
 
            return (<View style= {styles.desc_check}><CheckBox

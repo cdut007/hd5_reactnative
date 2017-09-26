@@ -183,13 +183,27 @@ export default class PlanDetailView extends Component {
           当前状态
         </Text>
         <Text style={{color:'#e82628',fontSize:14,}}>
-          {this.props.data.status}
+          {this.getStatus(this.props.data.status)}
         </Text>
         </View>
 
         </View>
 )
     }
+    getStatus(status){
+        if (status == 'PROGRESSING') {
+
+            return '施工中'
+        }else if (status == 'UNPROGRESSING') {
+
+            return '未施工'
+        }else if (status == 'COMPLETED') {
+                //
+            return '已完成'
+        }
+            return Global.getWitnesstatus(status)
+    }
+
 
     renderDetailView(){
             return(<ScrollView
