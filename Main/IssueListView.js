@@ -273,7 +273,13 @@ export default class IssueListView extends Component {
             if (rowData.status!='pre') {
                 info = '指派给:'+rowData.designee.realname
                 color = '#0755a6'
+            }else{
+                if (Global.isSolverMember(Global.UserInfo)) {
+                    info = '未处理'
+                    color = '#e82628'
+                }
             }
+
                 return (
                     <CardView
                       cardElevation={2}

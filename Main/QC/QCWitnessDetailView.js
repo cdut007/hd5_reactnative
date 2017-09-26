@@ -256,12 +256,25 @@ export default class QCWitnessDetailView extends Component {
           当前状态
         </Text>
         <Text style={{color:'#e82628',fontSize:14,}}>
-          {this.props.data.status}
+          {this.getStatus(this.props.data.status)}
         </Text>
         </View>
 
         </View>
 )
+    }
+
+    getStatus(status){
+        if (status == 'WITNESSED') {
+            if (this.props.data.result == 'UNQUALIFIED') {
+                return '不合格'
+            }else if(this.props.data.result == 'QUALIFIED'){
+                return '合格'
+            }
+        }else if (status == 'UNWITNESS') {
+            return '待见证'
+        }
+            return Global.getWitnesstatus(status)
     }
 
     renderDetailView(){

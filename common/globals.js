@@ -113,5 +113,12 @@ module.exports = {
     clearCache(){
     UserInfo=null;
     },
+    getWitnesstatus(status){
+        if (status == 'UNASSIGNED') {
+            return '待指派'
+        }else {
+            return status
+        }
+    },
 
 };
