@@ -277,6 +277,11 @@ export default class IssueListView extends Component {
                 if (Global.isSolverMember(Global.UserInfo)) {
                     info = '未处理'
                     color = '#e82628'
+                }else{
+                    if (rowData.designee&&rowData.designee.realname ) {
+                        info = '指派给:'+rowData.designee.realname
+                        color = '#0755a6'
+                    }
                 }
             }
 
