@@ -22,6 +22,7 @@ import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
 import PlanDetailView from './PlanDetailView';
+import PlanWriteLastStepDetailView from './PlanWriteLastStepDetailView';
 import Global from '../common/globals.js';
 
 const isIOS = Platform.OS == "ios"
@@ -167,12 +168,22 @@ export default class PlanListView extends Component {
     }
 
     onItemPress(itemData){
-        this.props.navigator.push({
-            component: PlanDetailView,
-             props: {
-                 data:itemData,
-                }
-        })
+        if (Global.isGroup(Global.UserInfo)) {
+            this.props.navigator.push({
+                component: PlanWriteLastStepDetailView,
+                 props: {
+                     data:itemData,
+                    }
+            })
+        }else{
+            this.props.navigator.push({
+                component: PlanDetailView,
+                 props: {
+                     data:itemData,
+                    }
+            })
+        }
+
     }
 
 
