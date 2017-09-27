@@ -120,6 +120,8 @@ module.exports = {
             return '已完成'
         }else if (status == 'UNCOMPLETED') {
             return '未完成'
+        }else if (status == 'PROGRESSING') {
+            return '未完成'
         }else {
             return status
         }

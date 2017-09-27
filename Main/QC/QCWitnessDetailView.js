@@ -9,7 +9,8 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     ScrollView,
-    AsyncStorage
+    AsyncStorage,
+    TextInput
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../../common/NavBar';
@@ -33,8 +34,30 @@ const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var account = Object();
-
-
+const MAX_IMAGE_COUNT = 5;
+var options = {
+    title: '', // specify null or empty string to remove the title
+    cancelButtonTitle: '取消',
+    takePhotoButtonTitle: '拍照', // specify null or empty string to remove this button
+    chooseFromLibraryButtonTitle: '从相册选取', // specify null or empty string to remove this button
+    cameraType: 'back', // 'front' or 'back'
+    mediaType: 'photo', // 'photo' or 'video'
+    videoQuality: 'medium', // 'low', 'medium', or 'high'
+    durationLimit: 10, // video recording max time in seconds
+    maxWidth: 1920, // photos only
+    maxHeight: 1920, // photos only
+    aspectX: 2, // aspectX:aspectY, the cropping image's ratio of width to height
+    aspectY: 1, // aspectX:aspectY, the cropping image's ratio of width to height
+    quality: 1, // photos only
+    angle: 0, // photos only
+    allowsEditing: false, // Built in functionality to resize/reposition the image
+    noData: true, // photos only - disables the base64 `data` field from being generated (greatly improves performance on large photos)
+    storageOptions: { // if this key is provided, the image will get saved in the documents/pictures directory (rather than a temporary directory)
+        skipBackup: true, // image will NOT be backed up to icloud
+        path: 'images' // will save image at /Documents/images rather than the root
+    }
+};
+import ImagePicker from 'react-native-image-picker'
 
 export default class QCWitnessDetailView extends Component {
     constructor(props) {
@@ -51,8 +74,11 @@ export default class QCWitnessDetailView extends Component {
             input_dosage:null,
             choose_result:null,
             remark:null,
+            fileArr: [{}],
             witnessAddresses:data.witnessAddresses,
             witness_resules:['合格','不合格'],
+            witnessNotOkResultType:'不合格原因2',
+            witnessNotOkResultTypes: ['不合格原因1','不合格原因2'],
         };
     }
 
@@ -146,8 +172,23 @@ export default class QCWitnessDetailView extends Component {
                 result = '3'
             }else{
                 result = '1'
+                if (!this.state.witnessNotOkResultType) {
+                    alert('请选择不合格原因')
+                    return
+                }
+                if (!this.state.choose_reason) {
+                    alert('请填写不合格原因')
+                    return
+                }
+
+                if(this.state.fileArr.length<=1){
+                    alert('请选择至少一张图片');
+                    return;
+                }
             }
         }
+
+
 
         if (!this.state.input_dosage) {
             alert('请填写实际用量')
@@ -163,43 +204,76 @@ export default class QCWitnessDetailView extends Component {
             elemnt.witnessdate = Global.formatFullDate(this.state.data[i].choose_date)
             bodyArray.push(elemnt)
         }
-        var paramBody = {
-                 id:this.props.data.id,
-                 witnessaddress:this.state.choose_address,
-                 witnessdate:this.state.choose_date,
-                 witnessdesc:this.state.input_witnessdesc,
-                 dosage:this.state.input_dosage,
-                 isok:result,
-                 remark:this.state.remark,
-            }
 
-        HttpRequest.post('/witness_op/result', paramBody, this.onDeliverySuccess.bind(this),
-            (e) => {
-                this.setState({
-                    loadingVisible: false
-                });
-                try {
-                    var errorInfo = JSON.parse(e);
+        if (result == '1') {
+            var param = new FormData()
+            param.append('id', this.props.data.id)
+            param.append('witnessaddress', this.state.choose_address)
+            param.append('witnessdate', this.state.choose_date)
+            param.append('witnessdesc', this.state.input_witnessdesc)
+            param.append('dosage', this.state.input_dosage)
+            param.append('isok', result)
+            param.append('remark', this.state.remark)
+            param.append('failType', this.state.witnessNotOkResultType)
+            this.state.fileArr.map((item, i) => {
+                if (item['fileSource']) {
+                   let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
+                   param.append("file",file);   //这里的files就是后台需要的key
                 }
-                catch(err)
-                {
-                    console.log("error======"+err)
-                }
-                    if (errorInfo != null) {
-                        if (errorInfo.code == -1002||
-                         errorInfo.code == -1001) {
-                        alert(errorInfo.message);
-                    }else {
+            });
+            HttpRequest.uploadImage('/witness_op/result', param, this.onDeliverySuccess.bind(this),
+                (e) => {
+                    try {
                         alert(e)
                     }
-
-                    } else {
-                        alert(e)
+                    catch (err) {
+                        console.log(err)
                     }
 
+                    this.setState({
+                        loadingVisible: false
+                    })
+                })
+        }else{
+            var paramBody = {
+                     id:this.props.data.id,
+                     witnessaddress:this.state.choose_address,
+                     witnessdate:this.state.choose_date,
+                     witnessdesc:this.state.input_witnessdesc,
+                     dosage:this.state.input_dosage,
+                     isok:result,
+                }
 
-                console.log(' error:' + e)
-            })
+            HttpRequest.post('/witness_op/result', paramBody, this.onDeliverySuccess.bind(this),
+                (e) => {
+                    this.setState({
+                        loadingVisible: false
+                    });
+                    try {
+                        var errorInfo = JSON.parse(e);
+                    }
+                    catch(err)
+                    {
+                        console.log("error======"+err)
+                    }
+                        if (errorInfo != null) {
+                            if (errorInfo.code == -1002||
+                             errorInfo.code == -1001) {
+                            alert(errorInfo.message);
+                        }else {
+                            alert(e)
+                        }
+
+                        } else {
+                            alert(e)
+                        }
+
+
+                    console.log(' error:' + e)
+                })
+        }
+
+
 
     }
 
@@ -460,6 +534,150 @@ export default class QCWitnessDetailView extends Component {
 
    }
 
+   notOKView(){
+
+       return(<View>
+           {this.renderSelectView()}
+           <View style={{backgroundColor: 'white', width: width, height: 150, paddingTop: 10, paddingLeft: 10,}}>
+               <Text style={{color: '#1c1c1c', fontSize: 14}}>填写不合格原因:</Text>
+               <TextInput
+                   style={{flex: 1, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}}
+                   underlineColorAndroid ='transparent'
+                   multiline = {true}
+                   onChangeText={(text) => this.setState({ remark: text })}
+                   value={this.state.content} />
+           </View>
+           {this.renderFileView()}
+       </View>)
+   }
+
+   renderFileView() {
+       return (
+           <View style={{flexDirection: 'row', flexWrap: 'wrap', width: width, paddingTop: 10, paddingRight: 10}} horizontal={true} >
+                   {this.renderImages()}
+           </View>
+       )
+   }
+
+
+   onSelectFile(idx) {
+       this.currentFileIdx = idx
+
+       let showPicker = () => {
+           ImagePicker.showImagePicker(options, (response) => {
+               //   console.log('Response = ', response);
+               if (response.didCancel) {
+                   console.log('User cancelled image picker');
+               }
+               else if (response.error) {
+                   console.log('ImagePicker Error: ', response.error);
+               }
+               else if (response.customButton) {
+                   console.log('User tapped custom button: ', response.customButton);
+               }
+               else {
+                   // You can display the image using either data:
+                   // const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
+                   var source;
+                   if (Platform.OS === 'android') {
+                        source = {uri: response.uri, isStatic: true};
+                    } else {
+                       source = {
+                          uri: response.uri.replace('file://', ''),
+                          isStatic: true
+                       };
+                   }
+
+                  var fileInfo = this.state.fileArr[this.currentFileIdx]
+                  fileInfo['fileSource'] = source.uri
+                   fileInfo['fileName'] = response.fileName
+
+                   if(this.state.fileArr.length<MAX_IMAGE_COUNT && this.state.fileArr[this.state.fileArr.length-1]['fileSource']){
+                       this.state.fileArr.push({});
+                   }
+                   this.setState({
+                       ...this.state
+                   });
+               }
+           });
+       }
+
+
+       showPicker()
+
+   }
+
+   onDeleteFile(idx) {
+
+       if(this.state.fileArr[idx]['fileSource']){
+           this.state.fileArr.splice(idx, 1)
+           this.setState({
+               ...this.state
+           })
+       }
+
+
+   }
+
+   renderImages(){
+       var imageViews = [];
+       {this.state.fileArr.map((item,i) => {
+               imageViews.push(
+                   <TouchableOpacity
+                    key={i}
+                    onPress = {() => this.onSelectFile(i) }
+                    onLongPress = { () => this.onDeleteFile(i) }
+                    style={{width: 70, height: 70, marginLeft: 10, marginBottom: 10,}}>
+                       {
+                           item['fileSource']
+                            ?
+                           (<Image resizeMode={'cover'} style={{ width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}} source={{uri: item['fileSource']}} />)
+                            :
+                           (<Image resizeMode={'cover'} style={{ width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}} source={require('../../images/add_pic_icon.png')} />)
+                       }
+                   </TouchableOpacity>
+               );
+       })}
+       if(this.state.fileArr[this.state.fileArr.length-1]['fileSource']){
+               this.state.fileArr.push({});
+           }
+       return imageViews;
+   }
+
+   renderSelectView(){
+       return(<View style={{alignItems:'center',padding:10,backgroundColor:'#f2f2f2', width: width,  height: 56}}>
+
+               <TouchableOpacity style={{
+                     borderWidth:0.5,
+                     alignItems:'center',
+                     borderColor : '#f77935',
+                     backgroundColor : 'white',
+                     borderRadius : 4,
+                     flexDirection:'row',
+                     flex: 1,
+                     paddingLeft:10,
+                     paddingRight:10,
+                     paddingTop:8,
+                     paddingBottom:8}}>
+
+                   <MemberSelectView
+                    style={{color:'#f77935',fontSize:14,flex:1}}
+                    title={this.state.witnessNotOkResultType}
+                    data={this.state.witnessNotOkResultTypes}
+                    pickerTitle={'不合格原因类型'}
+                    onSelected={(data) => this.onSelectedType(data)}/>
+
+                   <Image style={{width:20,height:20,}} source={require('../../images/unfold.png')}/>
+
+               </TouchableOpacity>
+
+           </View>)
+   }
+
+   onSelectedType(data){
+       this.setState({witnessNotOkResultType: data[0]})
+   }
+
     renderItem() {
                // 数组
                var itemAry = [];
@@ -485,10 +703,13 @@ export default class QCWitnessDetailView extends Component {
 
                  {title:'简要描述',id:'input_witnessdesc',content:this.state.input_witnessdesc,type:'input'},
                  {type:'devider'},
-                 {title:'实际用量',id:'input_dosage',content:this.state.input_dosage,type:'input'},
 
            ];
+                if (this.state.choose_result == '不合格') {
+                 displayAry.push({title:'不合格绘制',id:'not_ok',type:'not_ok'});
+                }
 
+               displayAry.push({title:'实际用量',id:'input_dosage',content:this.state.input_dosage,type:'input'});
 
                 displayAry.push({title:'计划用量',content:this.state.data.rollingPlan.planAmount,id:'b1'},);
                 displayAry.push({title:'物项名称',content:this.state.data.rollingPlan.itemName,id:'b2'},);
@@ -524,6 +745,10 @@ export default class QCWitnessDetailView extends Component {
                    }else if (displayAry[i].type == 'choose') {
                        itemAry.push(
                           this.chooseItemInfo(displayAry[i].id,displayAry[i].title,displayAry[i].content,displayAry[i].data,'member')
+                       );
+                   }else if (displayAry[i].type == 'not_ok') {
+                       itemAry.push(
+                          this.notOKView()
                        );
                    }else if (displayAry[i].type == 'date') {
                        itemAry.push(
