@@ -256,7 +256,7 @@ export default class IssueListView extends Component {
 
     renderImages(item){
         var itemsArray = [];
-        var len = 1;
+        var len = item.fileSize;
         for (var i = 0; i < len; i++) {
             itemsArray.push(<Image style={{width:24,height:24,marginLeft:10}} source={require('../images/problem_icon_click.png')} />)
         }

@@ -271,7 +271,7 @@ export default class QCWitnessDetailView extends Component {
             }else if(this.props.data.result == 'QUALIFIED'){
                 return '合格'
             }
-        }else if (status == 'UNWITNESS') {
+        }else if (status == 'UNWITNESS'||status == 'ASSIGNED') {
             return '待见证'
         }
             return Global.getWitnesstatus(status)

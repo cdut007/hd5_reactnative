@@ -132,7 +132,7 @@ export default class PlanDetailView extends Component {
     renderFormView(){
             //1  fininshed retun, jsut san
 
-            if (Global.isGroup(Global.UserInfo)) {
+            if (Global.isGroup(Global.UserInfo)&& this.props.data.status != 'COMPLETED' ) {
 
                 return(<View style={{height:50,width:width,flexDirection:'row'}}>
                 <View style={{height:50,flex:1}}><CommitButton title={'问题创建'}
@@ -200,6 +200,9 @@ export default class PlanDetailView extends Component {
         }else if (status == 'COMPLETED') {
                 //
             return '已完成'
+        }else if (status == 'PAUSE') {
+                //
+            return '停滞'
         }
             return Global.getWitnesstatus(status)
     }
