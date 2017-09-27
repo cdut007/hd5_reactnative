@@ -27,13 +27,15 @@ import Accordion from 'react-native-collapsible/Accordion';
 
 import Global from '../common/globals.js'
 import CommitButton from '../common/CommitButton'
+import DateTimePickerView from '../common/DateTimePickerView'
+import MemberSelectView from '../common/MemberSelectView'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var account = Object();
 
-export default class PlanDetailView extends Component {
+export default class PlanWriteLastStepDetailView extends Component {
     constructor(props) {
         super(props);
 
@@ -43,6 +45,11 @@ export default class PlanDetailView extends Component {
             data:this.props.data,
             isTaskConfirm:this.props.isTaskConfirm,
             displayMore:false,
+            choose_date:null,
+            choose_hankouNo:null,
+            displayDate:'选择焊接时间',
+            displayHankouNo:'选择焊工号',
+            members:['焊口号1','焊口号2'],
         };
     }
 
@@ -106,7 +113,7 @@ export default class PlanDetailView extends Component {
             {this.renderTop()}
             <View style={{backgroundColor:'#f2f2f2',height:10,width:width}}></View>
              {this.renderDetailView()}
-            
+             {this.renderFormView()}
             </View>
         )
     }
@@ -120,6 +127,7 @@ export default class PlanDetailView extends Component {
         })
     }
 
+
     startProblem(){
         this.props.navigator.push({
             component: IssueReportView,
@@ -127,6 +135,81 @@ export default class PlanDetailView extends Component {
                  data:this.state.data,
                 }
         })
+    }
+
+    startHankou(){
+        if (!this.state.choose_date) {
+            alert('请选择焊接时间')
+            return
+        }
+
+        if (!this.state.choose_hankouNo) {
+            alert('请选择焊工号')
+            return
+        }
+
+        var paramBody = {
+                'id': this.state.data.id,
+                'ids': this.state.choose_hankouNo,
+                'consDate':Global.formatFullDate(this.state.choose_date),
+            }
+
+        HttpRequest.post('/rollingplan_op', paramBody, this.onDeliverySuccess.bind(this),
+            (e) => {
+                this.setState({
+                    loadingVisible: false
+                });
+                try {
+                    var errorInfo = JSON.parse(e);
+                }
+                catch(err)
+                {
+                    console.log("error======"+err)
+                }
+                    if (errorInfo != null) {
+                        if (errorInfo.code == -1002||
+                         errorInfo.code == -1001) {
+                        alert(errorInfo.message);
+                    }else {
+                        alert(e)
+                    }
+
+                    } else {
+                        alert(e)
+                    }
+
+
+                console.log('Login error:' + e)
+            })
+    }
+
+    onDeliverySuccess(response){
+        Global.showToast(response.message)
+    }
+
+
+    renderFormView(){
+            //1  fininshed retun, jsut san
+
+            if (this.props.data.status != 'COMPLETED' ) {
+
+                return(<View style={{height:50,width:width,flexDirection:'row'}}>
+                <View style={{height:50,flex:1}}><CommitButton title={'问题创建'}
+                        onPress={this.startProblem.bind(this)} containerStyle={{backgroundColor:'#ffffff'}} titleStyle={{color: '#f77935'}}></CommitButton></View>
+                        <View style={{height:50,flex:1}}><CommitButton title={'发起见证'}
+                                onPress={this.startWitness.bind(this)}></CommitButton></View>
+                                </View>)
+
+            }else{
+                if (!this.state.data.backFill) {
+                    return(<View style={{height:50,width:width,flexDirection:'row'}}>
+                                <View style={{height:50,flex:1}}><CommitButton title={'确定'}
+                                    onPress={this.startHankou.bind(this)}></CommitButton></View>
+                                    </View>)
+                }
+
+            }
+
     }
 
     renderTop(){
@@ -192,9 +275,80 @@ export default class PlanDetailView extends Component {
             keyboardDismissMode='on-drag'
             keyboardShouldPersistTaps={false}
             style={styles.mainStyle}>
+                {this.renderHankouInfo()}
                 {this.renderItem()}
                 {this.renderMoreItem()}
                    </ScrollView>);
+    }
+
+
+    onSelectedDate(date){
+     console.log("date=="+date.getTime());
+     this.state.choose_date = date.getTime();
+     this.setState({displayDate:Global.formatDate(this.state.choose_date)})
+    // this.setState({...this.state});
+    }
+
+    onSelectedMember(member){
+        this.state.choose_hankouNo = member[0];
+        this.setState({displayHankouNo:member[0]});
+        console.log(JSON.stringify(member)+"member====");
+
+    }
+
+
+    renderHankouInfo(){
+        if (!this.state.data.backFill) {
+            return(            <View style={[{marginTop:10,alignItems:'center',},styles.statisticsflexContainer]}>
+
+                        <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+
+                        <TouchableOpacity
+
+                        style={{borderWidth:0.5,
+                              alignItems:'center',
+                              borderColor : '#f77935',
+                              backgroundColor : 'white',
+                              borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+
+                        <DateTimePickerView
+                            type={'date'}
+                            title={this.state.displayDate}
+                            visible={this.state.time_visible}
+                            style={{color:'#f77935',fontSize:14,flex:1}}
+                            onSelected={this.onSelectedDate.bind(this)}
+                        />
+                                            <Image
+                                            style={{width:20,height:20}}
+                                            source={require('../images/unfold.png')}/>
+                        </TouchableOpacity>
+
+                        </View>
+
+
+                        <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+
+                        <TouchableOpacity style={{borderWidth:0.5,
+                              alignItems:'center',
+                              borderColor : '#f77935',
+                              backgroundColor : 'white',
+                              borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+
+                        <MemberSelectView
+                        style={{color:'#f77935',fontSize:14,flex:1}}
+                        title={this.state.displayHankouNo}
+                        data={this.state.members}
+                         pickerTitle={'选择焊口号'}
+                        onSelected={this.onSelectedMember.bind(this)} />
+                                            <Image
+                                            style={{width:20,height:20,}}
+                                            source={require('../images/unfold.png')}/>
+                        </TouchableOpacity>
+
+                        </View>
+
+                        </View>)
+        }
     }
 
     getQCCheckStatus(sign){
@@ -208,13 +362,6 @@ export default class PlanDetailView extends Component {
         return '';
     }
 
-    go2WorkStepDetail(){
-
-    }
-
-    go2ZhijiaUpdate(){
-
-    }
 
     issueFeedBack(){
          this.props.navigator.push({
@@ -257,53 +404,11 @@ export default class PlanDetailView extends Component {
 
     onItemClick(menu){
          console.log('menu:work id = ' + menu.id);
-        if (menu.id == '9') {
-            this.go2WorkStepDetail();
-        } else if (menu.id == '9a') {
-            this.go2ZhijiaUpdate();
-        } else if (menu.id == 'c') {
-            this.setState({displayMore:!this.state.displayMore});
-        } else if (menu.id == '10') {
-            this.issueFeedBack();
-        } else if (menu.id == '-1') {
-            this.issueDetail();
-        } else if (menu.id == 'e9') {
-            this.witnessDealBatTask();
-        } else {
-            try {
-                var  index = parseInt(menu.id);
-                if (index >=11 && index<= 15) {
-                    this.go2ItemDetail(menu);
-                }
-            }
-            catch(err)
-            {
-                console.log(err)
-            }
-        }
+        this.setState({displayMore:!this.state.displayMore});
 
     }
 
 
-
-    //display more
-    _renderHeader(section) {
-          return (
-              <EnterItemView
-               title={'查看更多详情'}
-               detail={'查看更多详情'}
-              />
-          );
-        }
-
-        _renderContent(section) {
-          return (
-              <DisplayItemView
-               title={'查看更多详情'}
-               detail={'查看更多详情'}
-              />
-          );
-        }
 
 
 
@@ -339,6 +444,10 @@ export default class PlanDetailView extends Component {
                var itemAry = [];
                // 颜色数组
                var displayAry = [];
+
+
+
+
                if (this.state.data.hankouNo) {
                    displayAry.push({title:'焊工号',content:this.state.data.hankouNo,id:'e1'})
                    displayAry.push({title:'焊接时间',content:this.state.data.hankouTime,id:'e2'})
@@ -350,15 +459,17 @@ export default class PlanDetailView extends Component {
                displayAry.push({title:'机组号',content:this.state.data.unitNo,id:'2'})
                displayAry.push({title:'质量计划号',content:this.state.data.qualityplanno,id:'3'})
 
-                displayAry.push({title:'图纸号',content:this.state.data.drawingNo,id:'5'});
-                displayAry.push({title:'房间号',content:this.state.data.roomNo,id:'b1'});
-                displayAry.push({title:'工程量编号',content:this.state.data.projectNo,id:'b2'});
-                displayAry.push({title:'工程量类别',content:this.state.data.projectType,id:'b3'});
-                displayAry.push({title:'焊口／支架',content:this.state.data.weldno,id:'b4'});
-                displayAry.push({title:'备注',content:this.state.data.remarks,id:'b5'});
-                displayAry.push({type:'devider'});
 
-                displayAry.push({title:'查看更多详情',content:this.state.data.worktime,id:'c',type:'displayMore'});
+
+                displayAry.push({title:'图纸号',content:this.state.data.drawingNo,id:'5'},);
+                displayAry.push({title:'房间号',content:this.state.data.roomNo,id:'b1'},);
+                displayAry.push({title:'工程量编号',content:this.state.data.projectNo,id:'b2'},);
+                displayAry.push({title:'工程量类别',content:this.state.data.projectType,id:'b3'},);
+                displayAry.push({title:'焊口／支架',content:this.state.data.weldno,id:'b4'},);
+                displayAry.push({title:'备注',content:this.state.data.remarks,id:'b5'},);
+                displayAry.push({type:'devider'},);
+
+                displayAry.push({title:'查看更多详情',content:this.state.data.worktime,id:'c',type:'displayMore'},);
 
 
 

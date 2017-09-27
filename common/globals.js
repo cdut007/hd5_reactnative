@@ -113,5 +113,18 @@ module.exports = {
     clearCache(){
     UserInfo=null;
     },
+    getWitnesstatus(status){
+        if (status == 'UNASSIGNED') {
+            return '待指派'
+        }else if (status == 'COMPLETED') {
+            return '已完成'
+        }else if (status == 'UNCOMPLETED') {
+            return '未完成'
+        }else if (status == 'PROGRESSING') {
+            return '未完成'
+        }else {
+            return status
+        }
+    },
 
 };

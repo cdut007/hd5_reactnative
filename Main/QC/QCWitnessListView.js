@@ -24,6 +24,8 @@ import dateformat from 'dateformat'
 import QCWitnessDetailView from './QCWitnessDetailView';
 import Global from '../../common/globals.js';
 import QCWitnessTeamDetailView from './QCWitnessTeamDetailView';
+import QCWitnessResultDetailView from './QCWitnessResultDetailView';
+
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -175,12 +177,23 @@ export default class QCWitnessListView extends Component {
                 }
         })
     }else{
-        this.props.navigator.push({
-            component: QCWitnessDetailView,
-             props: {
-                 data:itemData,
-                }
-        })
+        if (this.props.status == 'UNQUALIFIED'||this.props.status == 'QUALIFIED') {
+            this.props.navigator.push({
+                component: QCWitnessResultDetailView,
+                 props: {
+                     data:itemData,
+                    }
+            })
+
+        }else{
+            this.props.navigator.push({
+                component: QCWitnessDetailView,
+                 props: {
+                     data:itemData,
+                    }
+            })
+        }
+
     }
     }
 

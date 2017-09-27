@@ -177,10 +177,19 @@ onDeliverySuccess(response){
     Global.showToast(response.message)
 
 }
+
+ isMonitorDelivery(){
+     if (Global.isMonitor(Global.UserInfo)) {
+         if (!this.props.data.designee || !this.props.data.designee.realname ) {
+            return true
+         }
+     }
+
+ }
     renderFormView(){
             //1  fininshed retun, jsut san
 
-            if (Global.isMonitor(Global.UserInfo)) {
+            if (this.isMonitorDelivery()) {
 
                 return(<View style={{height:50,width:width,flexDirection:'row'}}>
                         <View style={{height:50,flex:1}}><CommitButton title={'提交'}
@@ -198,15 +207,17 @@ onDeliverySuccess(response){
     }
 
     renderTop(){
-        if(Global.isMonitor(Global.UserInfo) || Global.isSolverMember(Global.UserInfo) ){
+        if(this.isMonitorDelivery() || Global.isSolverMember(Global.UserInfo) ){
             return
         }
         var info = '未指派'
         //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
         var color = '#777777'
-        if (this.props.data.status!='pre') {
-            info = '指派给:'+rowData.designee.realname
+        if (this.props.data.status!='pre' || (this.props.data.designee && this.props.data.designee.realname)) {
+            info = this.props.data.designee.realname
             color = '#777777'
+        }else{
+
         }
 
         return(<View style={styles.statisticsflexContainer}>
@@ -375,7 +386,7 @@ onDeliverySuccess(response){
 
            ];
 
-           if (Global.isMonitor(Global.UserInfo)) {
+           if (this.isMonitorDelivery()) {
                    displayAry.push({title:'选择问题解决人',content:this.state.rolve_member,id:'c7',type:'problem_member'})
            }
 

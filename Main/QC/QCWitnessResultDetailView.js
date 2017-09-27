@@ -32,7 +32,7 @@ var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var account = Object();
 
-export default class QCWitnessTeamDetailView extends Component {
+export default class QCWitnessResultDetailView extends Component {
     constructor(props) {
         super(props);
         var data = this.props.data

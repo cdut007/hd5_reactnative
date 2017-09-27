@@ -128,12 +128,6 @@ export default class WitnessDetailView extends Component {
 
             if (Global.isGroup(Global.UserInfo)) {
 
-                return(<View style={{height:50,width:width,flexDirection:'row'}}>
-                <View style={{height:50,flex:1}}><CommitButton title={'问题创建'}
-                        onPress={this.startProblem.bind(this)}></CommitButton></View>
-                        <View style={{height:50,flex:1}}><CommitButton title={'发起见证'}
-                                onPress={this.startWitness.bind(this)}></CommitButton></View>
-                                </View>)
 
             }else if (Global.isCaptain(Global.UserInfo)) {
 
@@ -181,12 +175,15 @@ export default class WitnessDetailView extends Component {
           当前状态
         </Text>
         <Text style={{color:'#e82628',fontSize:14,}}>
-          {this.props.data.status}
+          {this.getStatus(this.props.data.status)}
         </Text>
         </View>
 
         </View>
 )
+    }
+    getStatus(status){
+            return Global.getWitnesstatus(status)
     }
 
     renderDetailView(){
@@ -299,7 +296,7 @@ onWitnessPress(witnessInfo){
 
             //witnessInfo.result = '不合格'
 
-            if (witnessInfo.result == '合格') {
+            if (witnessInfo.result == 'QUALIFIED') {
                 return(
                     <View style={styles.statisticsflexContainer}>
 
@@ -326,7 +323,7 @@ onWitnessPress(witnessInfo){
 
                     </View>
                 )
-            }else if (witnessInfo.result == '不合格'){
+            }else if (witnessInfo.result == 'UNQUALIFIED'){
                 return(
                     <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onWitnessPress.bind(this,witnessInfo)}>
 
@@ -413,7 +410,7 @@ onWitnessPress(witnessInfo){
                    displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'0'})
                    displayAry.push({title:'点数',content:this.state.data.rollingPlan.points,id:'1'})
                    displayAry.push({title:'机组号',content:this.state.data.rollingPlan.unitNo,id:'2'})
-                   displayAry.push({title:'质量计划号',content:this.state.data.qualityplanno,id:'3'})
+                   displayAry.push({title:'质量计划号',content:this.state.data.rollingPlan.qualityplanno,id:'3'})
 
 
                    displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'},);

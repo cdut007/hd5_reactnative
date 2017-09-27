@@ -256,7 +256,7 @@ export default class IssueListView extends Component {
 
     renderImages(item){
         var itemsArray = [];
-        var len = 1;
+        var len = item.fileSize;
         for (var i = 0; i < len; i++) {
             itemsArray.push(<Image style={{width:24,height:24,marginLeft:10}} source={require('../images/problem_icon_click.png')} />)
         }
@@ -273,7 +273,18 @@ export default class IssueListView extends Component {
             if (rowData.status!='pre') {
                 info = '指派给:'+rowData.designee.realname
                 color = '#0755a6'
+            }else{
+                if (Global.isSolverMember(Global.UserInfo)) {
+                    info = '未处理'
+                    color = '#e82628'
+                }else{
+                    if (rowData.designee&&rowData.designee.realname ) {
+                        info = '指派给:'+rowData.designee.realname
+                        color = '#0755a6'
+                    }
+                }
             }
+
                 return (
                     <CardView
                       cardElevation={2}
