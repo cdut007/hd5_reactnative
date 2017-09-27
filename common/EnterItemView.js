@@ -26,7 +26,7 @@ var width = Dimensions.get('window').width;
             <TouchableOpacity onPress={this.props.onPress}>
             <View style= {styles.container}>
                 <Text style= {styles.title}>{this.props.title}</Text>
-                <Image source={require('../images/right_enter_blue.png')}></Image>
+                <Image source={this.props.flagArrow?require('../images/fold_icon.png'):require('../images/unfold_icon.png')} style= {{height:22,width:22}}></Image>
             </View>
             </TouchableOpacity>
             <View style={styles.divider}/>

@@ -404,7 +404,7 @@ export default class PlanWriteLastStepDetailView extends Component {
 
     onItemClick(menu){
          console.log('menu:work id = ' + menu.id);
-
+        this.setState({displayMore:!this.state.displayMore});
 
     }
 
