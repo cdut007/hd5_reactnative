@@ -44,7 +44,7 @@ export default class MemberSelectView extends Component {
     }
 
     onPickClick(){
-        if (!this.props.data) {
+        if (!this.props.data || this.props.data.length  == 0 ) {
             return
         }
         this.setState({ isPickerVisible: true })

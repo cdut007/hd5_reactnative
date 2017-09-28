@@ -49,7 +49,8 @@ export default class PlanWriteLastStepDetailView extends Component {
             choose_hankouNo:null,
             displayDate:'选择焊接时间',
             displayHankouNo:'选择焊工号',
-            members:['焊口号1','焊口号2'],
+            members:[],
+            membersReponse:null,
         };
     }
 
@@ -57,7 +58,45 @@ export default class PlanWriteLastStepDetailView extends Component {
     componentDidMount() {
 
         this.executeNetWorkRequest(this.props.data.id);
+        this.getWelderTeamMember();
     }
+
+
+        onGetWelderTeamMemberDataSuccess(response){
+          this.state.membersReponse = response.responseResult;
+          var members = []
+          for (var i = 0; i < this.state.membersReponse.length; i++) {
+               members.push(this.state.membersReponse[i].realname)
+          }
+          this.setState({members: members})
+
+        }
+        getWelderTeamMember(){
+
+            var paramBody = {
+                rollingPlanId:this.props.data.id,
+            }
+
+            HttpRequest.get('/team/welder', paramBody, this.onGetWelderTeamMemberDataSuccess.bind(this),
+                (e) => {
+
+
+                    try {
+                        var errorInfo = JSON.parse(e);
+                        if (errorInfo != null) {
+                         console.log(errorInfo)
+                        } else {
+                            console.log(e)
+                        }
+                    }
+                    catch(err)
+                    {
+                        console.log(err)
+                    }
+
+                    console.log('Task error:' + e)
+                })
+        }
 
      onGetDataSuccess(response){
          console.log('onGetDataSuccess@@@@')
@@ -147,14 +186,20 @@ export default class PlanWriteLastStepDetailView extends Component {
             alert('请选择焊工号')
             return
         }
-
+        var choose_hankouNo = null;
+        for (var i = 0; i < this.state.membersReponse.length; i++) {
+            if (this.state.choose_hankouNo == this.state.membersReponse[i].realname) {
+                choose_hankouNo = this.state.membersReponse[i].id;
+                break
+            }
+        }
         var paramBody = {
                 'id': this.state.data.id,
-                'ids': this.state.choose_hankouNo,
-                'consDate':Global.formatFullDate(this.state.choose_date),
+                'welderId': choose_hankouNo,
+                'weldDate':Global.formatFullDate(this.state.choose_date),
             }
 
-        HttpRequest.post('/rollingplan_op', paramBody, this.onDeliverySuccess.bind(this),
+        HttpRequest.post('/rollingplan_op/backfill', paramBody, this.onDeliverySuccess.bind(this),
             (e) => {
                 this.setState({
                     loadingVisible: false
@@ -201,7 +246,7 @@ export default class PlanWriteLastStepDetailView extends Component {
                                 </View>)
 
             }else{
-                if (!this.state.data.backFill) {
+                if (this.state.data.backFill) {
                     return(<View style={{height:50,width:width,flexDirection:'row'}}>
                                 <View style={{height:50,flex:1}}><CommitButton title={'确定'}
                                     onPress={this.startHankou.bind(this)}></CommitButton></View>
@@ -298,7 +343,7 @@ export default class PlanWriteLastStepDetailView extends Component {
 
 
     renderHankouInfo(){
-        if (!this.state.data.backFill) {
+        if (this.state.data.backFill) {
             return(            <View style={[{marginTop:10,alignItems:'center',},styles.statisticsflexContainer]}>
 
                         <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
