@@ -52,15 +52,21 @@ export default class WitnessFailResultView extends Component {
                     style={styles.main_container}>
                     <DisplayItemView
                      title={'不合格类别'}
-                     detail={this.props.data.content}
+                     detail={this.props.data.failType}
                     />
                     <DisplayMoreItemView
                      title={'不合格原因'}
-                     detail={this.props.data.reason}
+                     detail={this.props.data.remark}
                     />
+                    {this.renderFiles()}
                 </ScrollView>
             </View>
         )
+    }
+
+    renderFiles(){
+        //this.props.data.witnessFiles[0].url   /hdxt/api/files/witness/_201709271313591506489239761.jpg
+        //this.props.data.witnessFiles[0].fileName
     }
 
 
