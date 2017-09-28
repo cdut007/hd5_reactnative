@@ -58,7 +58,6 @@ export default class IssueReportView extends Component {
             content: '',
             responsePerson: {},
             fileArr: [{}],
-            avatar: '',
             loadingVisible: false,
             plan_data: this.props.data,
             issueType: '选择问题类型',
