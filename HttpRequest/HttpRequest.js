@@ -1,10 +1,14 @@
 import { AsyncStorage } from 'react-native';
 
-const apiAddr =  'http://39.108.165.171/hdxt/api' //http://106.37.241.216:5555/easycms-website
+const apiDomainAddr = 'http://39.108.165.171'
+const apiAddr =  apiDomainAddr + '/hdxt/api' //http://106.37.241.216:5555/easycms-website
 var httpToken = ''
 var Global = require('../common/globals');
 
 module.exports = {
+ getDomain(){
+     return apiDomainAddr
+ },
 get(apiName, body,successCallback, failCallback)
 {
     // if(!httpToken.length)
@@ -211,5 +215,3 @@ if (body.jsonBody) {
           });
 }
 }
-
-
