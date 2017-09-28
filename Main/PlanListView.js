@@ -273,13 +273,18 @@ export default class PlanListView extends Component {
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
 
+            var styleItem = [styles.statisticsflexContainer,{backgroundColor:'#ffffff'}]
+            if (rowData.backFill) {
+                styleItem = [styles.statisticsflexContainer,{backgroundColor:'#fae7dd'}]
+            }
+
                 return (
 
                        <View style={styles.itemContainer}>
                         <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
 
 
-                        <View style={styles.statisticsflexContainer}>
+                        <View style={styleItem}>
 
                         <View style={styles.cell}>
 

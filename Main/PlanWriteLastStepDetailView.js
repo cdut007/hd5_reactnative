@@ -493,9 +493,9 @@ export default class PlanWriteLastStepDetailView extends Component {
 
 
 
-               if (this.state.data.hankouNo) {
-                   displayAry.push({title:'焊工号',content:this.state.data.hankouNo,id:'e1'})
-                   displayAry.push({title:'焊接时间',content:this.state.data.hankouTime,id:'e2'})
+               if (this.state.data.welder) {
+                   displayAry.push({title:'焊工号',content:this.state.data.welder.realname,id:'e1'})
+                   displayAry.push({title:'焊接时间',content:Global.formatDate(this.state.data.welddate),id:'e2'})
                }
                //qc1 qc2
 
