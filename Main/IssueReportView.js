@@ -140,6 +140,7 @@ export default class IssueReportView extends Component {
     }
 
     onSelectFile(idx) {
+
         this.currentFileIdx = idx
 
         let showPicker = () => {
@@ -195,7 +196,7 @@ export default class IssueReportView extends Component {
             })
         }
 
-        
+
     }
 
     render() {
@@ -209,8 +210,8 @@ export default class IssueReportView extends Component {
                     {this.renderSelectView()}
                     <View style={{backgroundColor: 'white', width: width, height: 150, paddingTop: 10, paddingLeft: 10,}}>
                         <Text style={{color: '#1c1c1c', fontSize: 14}}>问题描述:</Text>
-                        <TextInput 
-                            style={{flex: 1, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}} 
+                        <TextInput
+                            style={{flex: 1, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}}
                             underlineColorAndroid ='transparent'
                             multiline = {true}
                             onChangeText={(text) => this.setState({ content: text })}
@@ -218,7 +219,7 @@ export default class IssueReportView extends Component {
                     </View>
                     {this.renderFileView()}
                 </ScrollView>
-                <TouchableOpacity 
+                <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={this.onCommit.bind(this)}
                     style={styles.commitButton}>
@@ -315,12 +316,12 @@ export default class IssueReportView extends Component {
         var imageViews = [];
         {this.state.fileArr.map((item,i) => {
                 imageViews.push(
-                    <TouchableOpacity 
+                    <TouchableOpacity
                      key={i}
-                     onPress = {() => this.onSelectFile(i) } 
-                     onLongPress = { () => this.onDeleteFile(i) } 
+                     onPress = {() => this.onSelectFile(i) }
+                     onLongPress = { () => this.onDeleteFile(i) }
                      style={{width: 70, height: 70, marginLeft: 10, marginBottom: 10,}}>
-                        {    
+                        {
                             item['fileSource']
                              ?
                             (<Image resizeMode={'cover'} style={{ width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}} source={{uri: item['fileSource']}} />)
@@ -336,7 +337,7 @@ export default class IssueReportView extends Component {
         return imageViews;
     }
 }
-    
+
 
 const styles = StyleSheet.create({
     container: {
