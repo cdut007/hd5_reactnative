@@ -599,15 +599,14 @@ startProblem(){
       if(files){
         files.map((item, i) => {
           images.push(
-            <ImageBackground 
-              style={{width: 70, height: 70, marginLeft: 10}} 
-              source={require('../images/temporary_img.png')} 
-              key={'net' + i} 
-              onPress={() => this.viewBigImages(isFeedback, i)}>
+            <TouchableOpacity key={'net' + i} onPress={() => this.viewBigImages(isFeedback, i)}>
+              <ImageBackground style={{width: 70, height: 70, marginLeft: 10}} source={require('../images/temporary_img.png')}>
                 <Image 
                   style = {{width: 70, height: 70, borderRadius: 4, resizeMode: 'cover'}}
                   source = {{uri: item.path}} />
-            </ImageBackground>
+              </ImageBackground>
+            </TouchableOpacity>
+
           );
         });
       }
