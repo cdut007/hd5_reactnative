@@ -176,7 +176,7 @@ export default class QCWitnessDetailView extends Component {
                     alert('请选择不合格原因')
                     return
                 }
-                if (!this.state.choose_reason) {
+                if (!this.state.remark) {
                     alert('请填写不合格原因')
                     return
                 }
