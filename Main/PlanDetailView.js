@@ -251,7 +251,12 @@ export default class PlanDetailView extends Component {
         })
     }
 
+
     renderTop(){
+        var displayName = '待分派'
+        if (this.props.data.consteam) {
+            displayName = this.props.data.consteam.realname
+        }
         return(<View style={styles.statisticsflexContainer}>
 
         <View style={styles.cell}>
@@ -271,7 +276,7 @@ export default class PlanDetailView extends Component {
           作业组长
         </Text>
         <Text style={{color:'#777777',fontSize:14,}}>
-         {this.props.data.consteam.realname}
+         {displayName}
         </Text>
         </View>
 

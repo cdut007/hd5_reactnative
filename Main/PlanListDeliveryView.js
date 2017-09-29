@@ -266,12 +266,16 @@ export default class PlanListDeliveryView extends Component {
                    isLoading: loading,
                  });
 
-
+                 var userid = ''
+                 if (this.props.userId) {
+                     userid = this.props.userId
+                 }
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
                       status:this.props.status,
+                      userId:userid,
                      }
 
             HttpRequest.get('/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
@@ -474,6 +478,12 @@ export default class PlanListDeliveryView extends Component {
         this._onRefresh();
     }
 
+    renderTitleColsSpace(){
+        if (Global.isMonitor(Global.UserInfo)) {
+            return(<View style={[styles.cell,{flex:0.5}]}>
+            </View>)
+        }
+    }
     renderTitleCols(){
         return(<View  style={{marginTop:10,}}>
 
@@ -484,8 +494,7 @@ export default class PlanListDeliveryView extends Component {
 
         <View style={styles.statisticsflexContainer}>
 
-        <View style={[styles.cell,{flex:0.5}]}>
-        </View>
+        {this.renderTitleColsSpace()}
 
         <View style={styles.cell}>
 
@@ -534,6 +543,15 @@ export default class PlanListDeliveryView extends Component {
      var index = parseInt(rowID) + 1;
         return index;
     }
+    renderTitleColsCheckBox(rowData,rowID){
+        if (Global.isMonitor(Global.UserInfo)) {
+            return(<View style={[styles.cell,{flex:0.5,}]}>
+            <View style={{  alignItems: 'center', justifyContent: 'center', }}>
+                        {this.renderCheckBox(rowData,rowID)}
+                                    </View>
+            </View>)
+        }
+    }
 
     renderRow(rowData, sectionID, rowID) {
 
@@ -547,11 +565,7 @@ export default class PlanListDeliveryView extends Component {
 
                         <View style={styles.statisticsflexContainer}>
 
-                        <View style={[styles.cell,{flex:0.5,}]}>
-                        <View style={{  alignItems: 'center', justifyContent: 'center', }}>
-                                    {this.renderCheckBox(rowData,rowID)}
-                                                </View>
-                        </View>
+                        {this.renderTitleColsCheckBox(rowData,rowID)}
 
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
