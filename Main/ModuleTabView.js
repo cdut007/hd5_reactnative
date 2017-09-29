@@ -5,7 +5,8 @@ import {
     Text,
     View,
     Image,
-    BackAndroid
+    BackAndroid,
+    DeviceEventEmitter,
 } from 'react-native';
 
 
@@ -52,10 +53,14 @@ export default class ModuleTabView extends Component
       });
     }
 
+    componentDidMount(){
+        subscription = DeviceEventEmitter.addListener('new_issue',(params) => this.setState({selectedTab: 'tab2'}))
+    }
 
-      componentWillUnmount() {
-                BackAndroid.removeEventListener('hardwareBackPress');
-            }
+    componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress');
+        subscription.remove();
+    }
 
     render()
     {

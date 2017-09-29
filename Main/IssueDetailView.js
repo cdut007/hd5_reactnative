@@ -13,6 +13,7 @@ import {
     TextInput,
     Modal,
     ImageBackground,
+    DeviceEventEmitter,
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar';
@@ -241,6 +242,7 @@ answerSolution(result){
 }
 
 onAnswerSuccess(response){
+      DeviceEventEmitter.emit('operate_issue','operate_issue');
       console.log('onCommitIssueSuccess:' + JSON.stringify(response))
       this.setState({
           loadingVisible: false
@@ -249,6 +251,7 @@ onAnswerSuccess(response){
 }
 
 onCommitIssueSuccess(response) {
+      DeviceEventEmitter.emit('operate_issue','operate_issue');
       console.log('onCommitIssueSuccess:' + JSON.stringify(response))
       this.setState({
           loadingVisible: false
@@ -307,7 +310,7 @@ startProblem(){
 }
 
       onDeliverySuccess(response){
-        Global.showToast(response.message)
+        DeviceEventEmitter.emit('operate_issue','operate_issue');
         this.back();
       }
 
