@@ -195,7 +195,7 @@ if (body.jsonBody) {
     })
        .then((response) => response.text())
           .then((responseText) => {
-            console.log(responseText);
+            console.log("uploadInfo---->:"+responseText);
             var response = JSON.parse(responseText);
             if (response.code == 1000) {
                 successCallback(response,formData);
@@ -211,6 +211,7 @@ if (body.jsonBody) {
 
           })
           .catch(function(err){
+            console.log("uploadInfo- error---->:"+err);
             failCallback(err);
           });
 }

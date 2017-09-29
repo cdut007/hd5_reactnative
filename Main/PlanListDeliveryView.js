@@ -195,7 +195,9 @@ export default class PlanListDeliveryView extends Component {
      }
 
         var datas = response.responseResult.data;
-
+        if (!datas) {
+            datas = []
+        }
 
 
         if (this.state.filter !== query) {

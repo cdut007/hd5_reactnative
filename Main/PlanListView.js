@@ -180,6 +180,7 @@ export default class PlanListView extends Component {
                 component: PlanDetailView,
                  props: {
                      data:itemData,
+                     type:this.props.type,
                     }
             })
         }
