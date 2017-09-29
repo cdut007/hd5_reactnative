@@ -130,6 +130,7 @@ export default  class  MyReport extends Component {
     //视图数组
    var itemAry = [];
    //数据
+
   var displayAry = [
   {title:'机组',content:this.state.reportData.machineType,id:'0',noLine:true},
   {title:'厂房',content:this.state.reportData.plantType,id:'1',noLine:true},
@@ -139,6 +140,9 @@ export default  class  MyReport extends Component {
   {title:'责任班组',content:this.state.reportData.ResTeam + "(选填)",id:'5',noLine:true},
   {title:'问题描述',content:this.state.reportData.questions,id:'6',noLine:true},
   ];
+
+
+
 
   // 遍历
   for (var i = 0; i<displayAry.length; i++) {

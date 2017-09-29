@@ -123,12 +123,6 @@ return(
 
   onCommit() {
 
-    // Alert.alert('','提交?',
-    //           [
-    //             {text:'取消'},
-    //             {text:'确认'}
-    //             ])
-
     if (this.state.machineType == '选择机组') {
       alert("请选择机组");
       return;

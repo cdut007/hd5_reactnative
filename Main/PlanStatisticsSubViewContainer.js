@@ -221,8 +221,8 @@ export default class PlanStatisticsSubViewContainer extends Component {
         return (
 
             <PlanListDeliveryView
-            tabLabel={label}
-            style={{alignSelf:'stretch',flex:1}}
+             tabLabel={label}
+             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
              status={statusDatas[index].status}
              navigator={this.props.navigator}

@@ -74,7 +74,7 @@ var styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#a9a9a9',
-    height: 56,
+    height: 44,
   },
   searchBarInput: {
     flex: 1,

@@ -14,6 +14,8 @@ import {
 
 import Dimensions from 'Dimensions'
 import NavBar from '../../common/NavBar';
+import QuestionStaicContainer from '../SafeWork/QuestionStaicContainer'
+import Global from '../../common/globals'
 
 var width = Dimensions.get('window').width;
 
@@ -109,6 +111,25 @@ export  default class ProblemRectification extends Component {
 
   _itemClick(item){
 
+    var data =   {
+          'index': 2,
+          'title': '管道计划',
+          "type": "GDJH",
+      }
+
+      data.user = new Object();
+      data.user.id = Global.UserInfo.id;
+      data.user.dept = new Object();
+      data.user.dept.name = data.title;//change later. for dept
+
+     this.props.navigator.push({
+         component: QuestionStaicContainer,
+         props: {
+             data:data,
+             type:data.type,
+             itemType:item.type,
+            }
+     })
 
   }
 

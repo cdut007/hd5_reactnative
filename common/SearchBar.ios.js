@@ -48,7 +48,7 @@ class SearchBar extends React.Component {
 
 var styles = StyleSheet.create({
   searchBar: {
-    marginTop: 64,
+    marginTop: 0,
     padding: 3,
     paddingLeft: 8,
     flexDirection: 'row',
