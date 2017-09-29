@@ -183,7 +183,7 @@ export default class IssueDetailView extends Component {
               keyboardShouldPersistTaps='never'>
                 {this.renderTop()}
                 {this.renderDetailView()}
-            </ScrollView> 
+            </ScrollView>
             {this.renderBottomButton()}
           </View>
         );
@@ -236,7 +236,7 @@ answerSolution(result){
                         }
                         this.setState({
                           loadingVisible: false
-                                })        
+                                })
                     })
 }
 
@@ -327,7 +327,7 @@ startProblem(){
               }
             }
             return false;
-          }    
+          }
 
       isGroupUndo(){
             if(Global.isGroup(Global.UserInfo)){
@@ -336,14 +336,14 @@ startProblem(){
               }
             }
             return false;
-          }        
+          }
 
     renderBottomButton(){
             if (this.isMonitorDelivery()) {
                 return(
                   <View style={{height:50,width:width,flexDirection:'row'}}>
                     <View style={{height:50,flex:1}}>
-                      <CommitButton 
+                      <CommitButton
                         title={'提交'}
                         onPress={this.startProblem.bind(this)} />
                     </View>
@@ -363,14 +363,14 @@ startProblem(){
                return(
                   <View style={{height:50,width:width,flexDirection:'row'}}>
                     <View style={{height:50,flex:1}}>
-                      <CommitButton 
+                      <CommitButton
                         title={'不接受反馈'}
-                        onPress={() => this.answerSolution('unsolved')} 
-                        containerStyle={{backgroundColor:'#ffffff'}} 
+                        onPress={() => this.answerSolution('unsolved')}
+                        containerStyle={{backgroundColor:'#ffffff'}}
                         titleStyle={{color: '#f77935'}} />
                     </View>
                     <View style={{height:50,flex:1}}>
-                      <CommitButton 
+                      <CommitButton
                         title={'接受反馈'}
                         onPress={() => this.answerSolution('solved')} />
                     </View>
@@ -384,8 +384,8 @@ startProblem(){
           return this.renderFeedbackUI();
         }else if(this.isMonitorDelivery()||Global.isSolverMember(Global.UserInfo)){
           return;
-        } 
-        return this.renderHeader();       
+        }
+        return this.renderHeader();
     }
 
     renderHeader(){
@@ -452,8 +452,8 @@ startProblem(){
           <View style={{width: width, backgroundColor: 'white', flexDirection: 'column', paddingTop: 10,}}>
             <View style={{width: width, height: 85, marginLeft: 10}}>
               <Text style={{color: '#e82628', fontSize: 14}}>问题反馈: </Text>
-              <TextInput 
-                style={{flex: 1, fontSize: 14, color: '#1c1c1c', textAlignVertical: 'top', height: 60}} 
+              <TextInput
+                style={{flex: 1, fontSize: 14, color: '#1c1c1c', textAlignVertical: 'top', height: 60}}
                 underlineColorAndroid ='transparent'
                 multiline = {true}
                 onChangeText={(text) => this.setState({ content: text })}
@@ -477,12 +477,12 @@ startProblem(){
         var imageViews = [];
         {this.state.fileArr.map((item,i) => {
                 imageViews.push(
-                    <TouchableOpacity 
+                    <TouchableOpacity
                      key={'local' + i}
-                     onPress = {() => this.onSelectFile(i) } 
-                     onLongPress = { () => this.onDeleteFile(i) } 
+                     onPress = {() => this.onSelectFile(i) }
+                     onLongPress = { () => this.onDeleteFile(i) }
                      style={{width: 70, height: 70, marginLeft: 10, marginBottom: 10,}}>
-                        {    
+                        {
                             item['fileSource']
                              ?
                             (<Image resizeMode={'cover'} style={{ width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}} source={{uri: item['fileSource']}} />)
@@ -561,7 +561,7 @@ startProblem(){
               {this.renderItem()}
           </View>
         );
-    } 
+    }
 
     renderFeedbackDetail(){
         if(this.state.data.status != 'pre' && this.state.data.status != 'unsolved' && this.state.data.feedback){
@@ -573,7 +573,7 @@ startProblem(){
               </Text>
               <ScrollView horizontal={true} style={{marginTop: 10, marginBottom: 10,}}>
                 {this.renderNetImages(this.state.data.feedback[0].files, true)}
-              </ScrollView>  
+              </ScrollView>
               <View style={styles.divider} />
             </View>
          );
@@ -581,7 +581,7 @@ startProblem(){
     }
 
     renderIssueDetail(){
-      return( 
+      return(
             <View style={{backgroundColor: 'white', paddingTop: 10, paddingRight: 6,}}>
               <Text style={{color: '#0755a6', fontSize: 14, lineHeight: 22, marginLeft: 10,}}>
                 <Text style={{fontWeight: 'bold'}}>问题描述: </Text>
@@ -601,7 +601,7 @@ startProblem(){
           images.push(
             <TouchableOpacity key={'net' + i} onPress={() => this.viewBigImages(isFeedback, i)}>
               <ImageBackground style={{width: 70, height: 70, marginLeft: 10}} source={require('../images/temporary_img.png')}>
-                <Image 
+                <Image
                   style = {{width: 70, height: 70, borderRadius: 4, resizeMode: 'cover'}}
                   source = {{uri: item.path}} />
               </ImageBackground>
@@ -685,7 +685,7 @@ startProblem(){
             this.setState({...this.state});
             console.log(JSON.stringify(member)+"member====");
 
-        }    
+        }
 
     renderMemberItem(displayItem){
         var displayMember = displayItem.content
@@ -694,13 +694,14 @@ startProblem(){
         }
         return(<View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
-            <TouchableOpacity style={{borderWidth:0.5,
+            <TouchableOpacity onPress={() => this._selectM.onPickClick()} style={{borderWidth:0.5,
                   alignItems:'center',
                   borderColor : '#f77935',
                   backgroundColor : 'white',
                   borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
 
             <MemberSelectView
+            ref={(c) => this._selectM = c}
             style={{color:'#f77935',fontSize:14,flex:1}}
             title={displayMember}
             data={this.state.members}
@@ -764,7 +765,7 @@ startProblem(){
                        );
                    } else{
                        itemAry.push(
-                           <DisplayItemView 
+                           <DisplayItemView
                             key={i}
                             title={displayAry[i].title}
                             detail={displayAry[i].content?displayAry[i].content+'':''}

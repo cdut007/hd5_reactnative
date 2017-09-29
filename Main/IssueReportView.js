@@ -269,7 +269,7 @@ export default class IssueReportView extends Component {
         return(
             <View style={{alignItems:'center',padding:10,backgroundColor:'#f2f2f2', width: width,  height: 56}}>
 
-                <TouchableOpacity style={{
+                <TouchableOpacity onPress={() => this._selectM.onPickClick()} style={{
                       borderWidth:0.5,
                       alignItems:'center',
                       borderColor : '#f77935',
@@ -283,6 +283,7 @@ export default class IssueReportView extends Component {
                       paddingBottom:8}}>
 
                     <MemberSelectView
+                    ref={(c) => this._selectM = c}
                      style={{color:'#f77935',fontSize:14,flex:1}}
                      title={this.state.issueType}
                      data={issueTypes}
