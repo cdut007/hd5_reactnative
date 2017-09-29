@@ -263,8 +263,9 @@ _questtionDescribe(){
   renderSelectView(title,datas,pickerTitle,pickerType) {
       return(
         <View style={styles.borderStyle}>
-      <TouchableOpacity style={styles.touchStyle}>
+      <TouchableOpacity onPress={() => this._selectM.onPickClick()} style={styles.touchStyle}>
         <MemberSelectView
+        ref={(c) => this._selectM = c}
          style={styles.textStyle}
          title={title}
          data={datas}

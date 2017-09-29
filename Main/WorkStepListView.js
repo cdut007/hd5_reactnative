@@ -273,25 +273,42 @@ export default class WorkStepListView extends Component {
                return
            }
 
+           var witessAgain = false
            if (item.launchData) {
-               return  (<Text style= {styles.desc}>见证中</Text>)
+               if (item.result != 'UNQUALIFIED') {
+                    return  (<Text style= {styles.desc}>见证中</Text>)
+               }else{
+                   witessAgain = true
+               }
+
            }
 
 
 
-           return (<View style= {styles.desc_check}><CheckBox
-               label=''
-               checkedImage={require('../images/choose_icon_click.png')}
-               uncheckedImage={require('../images/choose_icon.png')}
-               checked={item.selected == null ? false : item.selected}
-               onChange={(checked) => {
-                   console.log(checked+'check item=='+item.id+';selected='+item.selected)
-                   item.selected = !checked
-                   this.setState({ ...this.state })
+           return (<View style= {styles.desc_check}>
+               {this.renderCheckLabel(witessAgain)}
+               <CheckBox
+                   label=''
+                   checkedImage={require('../images/choose_icon_click.png')}
+                   uncheckedImage={require('../images/choose_icon.png')}
+                   checked={item.selected == null ? false : item.selected}
+                   onChange={(checked) => {
+                       console.log(checked+'check item=='+item.id+';selected='+item.selected)
+                       item.selected = !checked
+                       this.setState({ ...this.state })
 
-               }
-               }
-           /></View>)
+                   }
+                   }
+               />
+           </View>)
+       }
+
+       renderCheckLabel(witness){
+           if (witness) {
+               return (<Text style= {[styles.desc]}>再次见证  </Text>)
+           }else{
+                return (<Text style= {[styles.desc]}></Text>)
+           }
        }
 
 }
@@ -381,10 +398,13 @@ const styles = StyleSheet.create({
                 color: "#777777",
                 flex:1,
                 textAlign:'right',
+                alignSelf:'center',
+
             },desc_check: {
                 alignItems:'flex-end',
                 flex:1,
-                justifyContent:'center'
+                justifyContent:'center',
+                flexDirection:'row'
             },
 
       cell: {

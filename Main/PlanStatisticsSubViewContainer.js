@@ -218,6 +218,10 @@ export default class PlanStatisticsSubViewContainer extends Component {
 
 
      renderUnassignedView(label,index) {
+         var userId = '';
+         if (this.props.data.user) {
+             userId = this.props.data.user.id
+         }
         return (
 
             <PlanListDeliveryView
@@ -225,6 +229,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
              style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
              status={statusDatas[index].status}
+             userId={userId}
              navigator={this.props.navigator}
              />
 
@@ -232,12 +237,17 @@ export default class PlanStatisticsSubViewContainer extends Component {
     }
 
     renderAssignedListView(label,index) {
+        var userId = '';
+        if (this.props.data.user) {
+            userId = this.props.data.user.id
+        }
         return (
             <PlanStatisticsSubView
             tabLabel={label}
              style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
              data = {this.props.data}
+             userId={userId}
              status={statusDatas[index].status}
              navigator={this.props.navigator}
              />

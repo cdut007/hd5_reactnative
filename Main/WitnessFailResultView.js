@@ -11,14 +11,16 @@ import {
     Picker,
     AsyncStorage,
     TextInput,
-    ScrollView
+    ScrollView,
+    Modal,
 } from 'react-native';
 
 
+import ImageViewer from 'react-native-image-zoom-viewer';
 import Dimensions from 'Dimensions';
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
-
+import HttpRequest from '../HttpRequest/HttpRequest'
 import NavBar from '../common/NavBar'
 var Global = require('../common/globals');
 
@@ -28,7 +30,12 @@ import DisplayMoreItemView from '../common/DisplayMoreItemView';
 export default class WitnessFailResultView extends Component {
     constructor(props) {
         super(props)
+        this.state = {
 
+            modalVisible: false,
+            bigImages: [],
+            currentImageIndex: 0,
+        };
     }
 
 
@@ -42,6 +49,9 @@ export default class WitnessFailResultView extends Component {
     render() {
         return (
             <View style={styles.container}>
+            <Modal visible={this.state.modalVisible} transparent={true} onRequestClose={function(){}} animationType={'fade'}>
+              <ImageViewer imageUrls={this.state.bigImages} onClick={()=>{this.setState({modalVisible: false})}} index={this.state.currentImageIndex} />
+            </Modal>
                 <NavBar
                     title="不合格详情"
                     leftIcon={require('../images/back.png')}
@@ -65,9 +75,45 @@ export default class WitnessFailResultView extends Component {
     }
 
     renderFiles(){
+        return (
+            <ScrollView horizontal={true} style={{marginTop: 10, marginBottom: 10}}>
+              {this.renderNetImages(this.props.data.witnessFiles, true)}
+            </ScrollView>
+        );
         //this.props.data.witnessFiles[0].url   /hdxt/api/files/witness/_201709271313591506489239761.jpg
         //this.props.data.witnessFiles[0].fileName
     }
+
+
+        renderNetImages(files,isFeedback){
+          var images = [];
+          if(files){
+
+            files.map((item, i) => {
+                console.log('url====='+(HttpRequest.getDomain()+ item.url))
+              images.push(
+                <TouchableOpacity key={'net' + i} onPress={() => this.viewBigImages(isFeedback, i)}>
+                  <Image source={{uri: HttpRequest.getDomain()+ item.url }} style={{borderRadius: 4, width: 70, height: 70, resizeMode: 'cover', marginLeft: 10,}}/>
+                </TouchableOpacity>
+              );
+            });
+        }else{
+            console.log('can not find filesss')
+        }
+          return images;
+        }
+
+        viewBigImages(isFeedback, index){
+          var imageUrls = [];
+          if(isFeedback){
+            this.state.data.witnessFiles.map((item) => {imageUrls.push({url: item.url})});
+          }else{
+            this.state.data.witnessFiles.map((item) => {imageUrls.push({url: item.url})});
+          }
+          this.setState({modalVisible: true, bigImages: imageUrls, currentImageIndex: index})
+        }
+
+
 
 
 }

@@ -271,7 +271,7 @@ export default class WorkStepWitnessBatchView extends Component {
                    <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
                    <TouchableOpacity
-
+                   onPress={() => this._selectD.onClick()}
                    style={{borderWidth:0.5,
                          alignItems:'center',
                          borderColor : '#f77935',
@@ -279,6 +279,7 @@ export default class WorkStepWitnessBatchView extends Component {
                          borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
 
                    <DateTimePickerView
+                      ref={(c) => this._selectD = c}
                        type={'date'}
                        title={data.displayDate}
                        visible={this.state.time_visible}
@@ -295,13 +296,14 @@ export default class WorkStepWitnessBatchView extends Component {
 
                    <View TouchableOpacity style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
-                   <TouchableOpacity style={{borderWidth:0.5,
+                   <TouchableOpacity onPress={() => this._selectM.onPickClick()} style={{borderWidth:0.5,
                          alignItems:'center',
                          borderColor : '#f77935',
                          backgroundColor : 'white',
                          borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
 
                    <MemberSelectView
+                   ref={(c) => this._selectM = c}
                    style={{color:'#f77935',fontSize:14,flex:1}}
                    title={data.displayAddress}
                    data={data.witnessAddresses}

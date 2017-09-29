@@ -252,21 +252,19 @@ export default class HomeView extends Component {
               })
               return;
             }
-            if (data.type == 'ZLGL') {
+            if (data.type != 'GDJH') {
              Global.showToast('正在开发')
               return;
             }
 
-            if (data.type == 'WZGL') {
-              Global.showToast('正在开发')
-              return;
-            }
+            
 
 
 
             if (Global.isCaptain(Global.UserInfo)) {
                 this.props.navigator.push({
                     component: ModuleTabView,
+                    name: 'ModuleTabView',
                      props: {
                          data:data,
                          type:data.type,
@@ -283,6 +281,7 @@ export default class HomeView extends Component {
 
                 this.props.navigator.push({
                     component: ModuleTabView,
+                    name: 'ModuleTabView',
                      props: {
                          data:data,
                          type:data.type,
@@ -299,6 +298,7 @@ export default class HomeView extends Component {
 
                 this.props.navigator.push({
                     component: ModuleTabView,
+                    name: 'ModuleTabView',
                      props: {
                          data:data,
                          type:data.type,

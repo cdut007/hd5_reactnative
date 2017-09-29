@@ -12,6 +12,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     InteractionManager,
+    DeviceEventEmitter,
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -111,10 +112,14 @@ export default class IssueListView extends Component {
 
 
     componentDidMount() {
-
         this.executeProblemRequest(1);
+        newIssueSubscription = DeviceEventEmitter.addListener('new_issue',function(){this._onRefresh})
+        operationSubscription = DeviceEventEmitter.addListener('operate_issue',(param)=>{this._onRefresh();})
+    }
 
-
+    componentWillUnmount(){
+      newIssueSubscription.remove();
+      operationSubscription.remove();
     }
 
     onGetDataSuccess(response,paramBody){

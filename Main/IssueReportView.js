@@ -10,7 +10,8 @@ import {
     Picker,
     TouchableNativeFeedback,
     TouchableHighlight,
-    ScrollView
+    ScrollView,
+    DeviceEventEmitter,
 } from 'react-native';
 import NavBar from '../common/NavBar'
 import Dimensions from 'Dimensions'
@@ -58,7 +59,6 @@ export default class IssueReportView extends Component {
             content: '',
             responsePerson: {},
             fileArr: [{}],
-            avatar: '',
             loadingVisible: false,
             plan_data: this.props.data,
             issueType: '选择问题类型',
@@ -130,13 +130,23 @@ export default class IssueReportView extends Component {
 
 
     onCommitIssueSuccess(response) {
-        console.log('onCommitIssueSuccess:' + JSON.stringify(response))
+       DeviceEventEmitter.emit('new_issue','new_issue');
+       console.log('onCommitIssueSuccess:' + JSON.stringify(response))
         this.setState({
             loadingVisible: false
         })
-
-        alert('问题提交成功')
-        this.back()
+        let destinateRoute;
+        const routers = this.props.navigator.getCurrentRoutes();
+        for(let i = routers.length - 1; i >= 0; i--){
+            if(routers[i].name == 'ModuleTabView'){
+                destinateRoute = routers[i];
+            }
+        }
+        if(destinateRoute){
+          this.props.navigator.popToRoute(destinateRoute);
+        }else{
+            this.back();
+        }
     }
 
     onSelectFile(idx) {
@@ -270,7 +280,7 @@ export default class IssueReportView extends Component {
         return(
             <View style={{alignItems:'center',padding:10,backgroundColor:'#f2f2f2', width: width,  height: 56}}>
 
-                <TouchableOpacity style={{
+                <TouchableOpacity onPress={() => this._selectM.onPickClick()} style={{
                       borderWidth:0.5,
                       alignItems:'center',
                       borderColor : '#f77935',
@@ -284,6 +294,7 @@ export default class IssueReportView extends Component {
                       paddingBottom:8}}>
 
                     <MemberSelectView
+                    ref={(c) => this._selectM = c}
                      style={{color:'#f77935',fontSize:14,flex:1}}
                      title={this.state.issueType}
                      data={issueTypes}

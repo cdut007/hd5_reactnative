@@ -32,6 +32,9 @@ export default class DateTimePickerView extends Component {
         }
     }
 
+onClick() {
+this.setState({ isDateTimePickerVisible: true })
+}
 
     onSelectedDate(date) {
         console.log('A date has been picked: ', date);

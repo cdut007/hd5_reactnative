@@ -32,17 +32,24 @@ const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var account = Object();
-
+ import Picker from 'react-native-picker';
 export default class PlanDetailView extends Component {
     constructor(props) {
         super(props);
-
+        if (Global.UserInfo.monitor) {
+             var data = []
+             for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
+                 data.push(Global.UserInfo.monitor[i].user.realname)
+             }
+        }
         this.state = {
             title: '任务详情',
             isHankouType:1,
             data:this.props.data,
             isTaskConfirm:this.props.isTaskConfirm,
             displayMore:false,
+            members:data,
+            choose_member:null,
         };
     }
 
@@ -106,10 +113,125 @@ export default class PlanDetailView extends Component {
             {this.renderTop()}
             <View style={{backgroundColor:'#f2f2f2',height:10,width:width}}></View>
              {this.renderDetailView()}
-            
+              {this.renderFormView()}
             </View>
         )
     }
+
+
+        renderFormView(){
+                //1  fininshed retun, jsut san
+               if (this.props.data.status == 'COMPLETED') {
+
+                    return
+               }
+
+
+               if (this.props.data.status == 'UNASSIGNED' && Global.isMonitor(Global.UserInfo)) {
+
+                   return
+               }
+
+                if (Global.isMonitor(Global.UserInfo) ) {
+
+                    return(<View style={{height:50,width:width,flexDirection:'row'}}>
+                                <View style={{height:50,flex:1}}><CommitButton title={'改派任务'}
+                                    onPress={this.onPickClick.bind(this)}></CommitButton></View>
+                                    </View>)
+
+                }else if (Global.isCaptain(Global.UserInfo)) {
+                    return(<View style={{height:50,width:width,flexDirection:'row'}}>
+                                <View style={{height:50,flex:1}}><CommitButton title={'解除任务'}
+                                    onPress={this.startPlanOp.bind(this,'RELEASE')}></CommitButton></View>
+                                    </View>)
+
+                }
+
+        }
+
+        onPickClick(){
+            if (!this.state.members || this.state.members.length  == 0 ) {
+                return
+            }
+            this.setState({ isPickerVisible: true })
+
+            Picker.init({
+           pickerData: this.state.members,
+           pickerTitleText:'选择组长',
+           pickerConfirmBtnText:'保存',
+           pickerCancelBtnText:'取消',
+           onPickerConfirm: member => {
+               console.log(member);
+               for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
+                   if (Global.UserInfo.monitor[i].user.realname == member) {
+                       this.state.choose_member = Global.UserInfo.monitor[i].user.id;
+
+                        console.log(JSON.stringify(member)+"member===="+";id="+this.state.choose_member);
+                       break;
+                   }
+               }
+               this.startPlanOp('REASSIGN');
+           },
+           onPickerCancel: data => {
+               console.log(data);
+           },
+           onPickerSelect: data => {
+               console.log(data);
+           }
+       });
+       Picker.show();
+        }
+
+        startPlanOp(method){
+            var paramBody = {
+                     type:this.props.type,
+                    'method': method,
+                    'ids': this.props.data.id,
+                }
+
+                if (method == 'REASSIGN') {
+                    paramBody = {
+                             type:this.props.type,
+                            'method': method,
+                            'ids': this.props.data.id,
+                            'fromUserId':this.props.data.consteam.id,
+                            'toUserId':this.state.choose_member
+                        }
+                }
+
+            HttpRequest.post('/rollingplan_op', paramBody, this.onDeliverySuccess.bind(this),
+                (e) => {
+                    this.setState({
+                        loadingVisible: false
+                    });
+                    try {
+                        var errorInfo = JSON.parse(e);
+                    }
+                    catch(err)
+                    {
+                        console.log("error======"+err)
+                    }
+                        if (errorInfo != null) {
+                            if (errorInfo.code == -1002||
+                             errorInfo.code == -1001) {
+                            alert(errorInfo.message);
+                        }else {
+                            alert(e)
+                        }
+
+                        } else {
+                            alert(e)
+                        }
+
+
+                    console.log('Login error:' + e)
+                })
+        }
+
+        onDeliverySuccess(response){
+            Global.showToast(response.message)
+        }
+
 
     startWitness(){
         this.props.navigator.push({
@@ -129,7 +251,12 @@ export default class PlanDetailView extends Component {
         })
     }
 
+
     renderTop(){
+        var displayName = '待分派'
+        if (this.props.data.consteam) {
+            displayName = this.props.data.consteam.realname
+        }
         return(<View style={styles.statisticsflexContainer}>
 
         <View style={styles.cell}>
@@ -149,7 +276,7 @@ export default class PlanDetailView extends Component {
           作业组长
         </Text>
         <Text style={{color:'#777777',fontSize:14,}}>
-         {this.props.data.consteam.realname}
+         {displayName}
         </Text>
         </View>
 
@@ -339,11 +466,16 @@ export default class PlanDetailView extends Component {
                var itemAry = [];
                // 颜色数组
                var displayAry = [];
-               if (this.state.data.hankouNo) {
-                   displayAry.push({title:'焊工号',content:this.state.data.hankouNo,id:'e1'})
-                   displayAry.push({title:'焊接时间',content:this.state.data.hankouTime,id:'e2'})
+               if (this.state.data.welder) {
+                   displayAry.push({title:'焊工号',content:this.state.data.welder.realname,id:'e1'})
+                   displayAry.push({title:'焊接时间',content:Global.formatDate(this.state.data.welddate),id:'e2'})
                }
                //qc1 qc2
+               if (this.state.data.qc1WitnessDate) {
+                   displayAry.push({title:'QC1见证人',content:this.state.data.qc1Witnesser.realname,id:'e3'})
+                   displayAry.push({title:'QC1见证时间',content:Global.formatDate(this.state.data.qc1WitnessDate),id:'e4'})
+
+               }
 
                displayAry.push({title:'作业条目编号',content:this.state.data.workListNo,id:'0'})
                displayAry.push({title:'点数',content:this.state.data.points,id:'1'})

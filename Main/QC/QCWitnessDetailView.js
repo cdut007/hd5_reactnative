@@ -176,7 +176,7 @@ export default class QCWitnessDetailView extends Component {
                     alert('请选择不合格原因')
                     return
                 }
-                if (!this.state.choose_reason) {
+                if (!this.state.remark) {
                     alert('请填写不合格原因')
                     return
                 }
@@ -490,6 +490,7 @@ export default class QCWitnessDetailView extends Component {
               alignItems: 'center',}}>
                   <Text style= {{width: width * 0.33,fontSize: 14,color: "#1c1c1c"}}>{title} : </Text>
                   <DateTimePickerView
+                  ref={(c) => this._selectD = c}
                                          type={'date'}
                                          title={content}
                                          style={{color:'#6d9ee1',fontSize:14,flex:1}}
@@ -518,6 +519,7 @@ export default class QCWitnessDetailView extends Component {
                   <Text style= {{width: width * 0.33,fontSize: 14,color: "#1c1c1c"}}>{title} : </Text>
 
                   <MemberSelectView
+                  ref={(c) => this._selectM = c}
                   style={{color:'#6d9ee1',fontSize:14,flex:1}}
                   title={content}
                   data={data}
@@ -647,7 +649,7 @@ export default class QCWitnessDetailView extends Component {
    renderSelectView(){
        return(<View style={{alignItems:'center',padding:10,backgroundColor:'#f2f2f2', width: width,  height: 56}}>
 
-               <TouchableOpacity style={{
+               <TouchableOpacity onPress={() => this._selectM.onPickClick()} style={{
                      borderWidth:0.5,
                      alignItems:'center',
                      borderColor : '#f77935',
@@ -661,6 +663,7 @@ export default class QCWitnessDetailView extends Component {
                      paddingBottom:8}}>
 
                    <MemberSelectView
+                   ref={(c) => this._selectM = c}
                     style={{color:'#f77935',fontSize:14,flex:1}}
                     title={this.state.witnessNotOkResultType}
                     data={this.state.witnessNotOkResultTypes}

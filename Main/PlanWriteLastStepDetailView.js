@@ -349,7 +349,7 @@ export default class PlanWriteLastStepDetailView extends Component {
                         <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
                         <TouchableOpacity
-
+                         onPress={() => this._selectD.onClick()}
                         style={{borderWidth:0.5,
                               alignItems:'center',
                               borderColor : '#f77935',
@@ -357,6 +357,7 @@ export default class PlanWriteLastStepDetailView extends Component {
                               borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
 
                         <DateTimePickerView
+                        ref={(c) => this._selectD = c}
                             type={'date'}
                             title={this.state.displayDate}
                             visible={this.state.time_visible}
@@ -373,13 +374,14 @@ export default class PlanWriteLastStepDetailView extends Component {
 
                         <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
-                        <TouchableOpacity style={{borderWidth:0.5,
+                        <TouchableOpacity onPress={() => this._selectM.onPickClick()} style={{borderWidth:0.5,
                               alignItems:'center',
                               borderColor : '#f77935',
                               backgroundColor : 'white',
                               borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
 
                         <MemberSelectView
+                        ref={(c) => this._selectM = c}
                         style={{color:'#f77935',fontSize:14,flex:1}}
                         title={this.state.displayHankouNo}
                         data={this.state.members}
@@ -493,11 +495,15 @@ export default class PlanWriteLastStepDetailView extends Component {
 
 
 
-               if (this.state.data.hankouNo) {
-                   displayAry.push({title:'焊工号',content:this.state.data.hankouNo,id:'e1'})
-                   displayAry.push({title:'焊接时间',content:this.state.data.hankouTime,id:'e2'})
+               if (this.state.data.welder) {
+                   displayAry.push({title:'焊工号',content:this.state.data.welder.realname,id:'e1'})
+                   displayAry.push({title:'焊接时间',content:Global.formatDate(this.state.data.welddate),id:'e2'})
                }
                //qc1 qc2
+               if (this.state.data.qc1WitnessDate) {
+                   displayAry.push({title:'QC1见证人',content:this.state.data.qc1Witnesser.realname,id:'e3'})
+                   displayAry.push({title:'QC1见证时间',content:Global.formatDate(this.state.data.qc1WitnessDate),id:'e4'})
+               }
 
                displayAry.push({title:'作业条目编号',content:this.state.data.workListNo,id:'0'})
                displayAry.push({title:'点数',content:this.state.data.points,id:'1'})
