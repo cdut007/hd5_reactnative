@@ -12,6 +12,7 @@ import {
     AsyncStorage,
     TextInput,
     Modal,
+    ImageBackground,
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar';
@@ -599,8 +600,13 @@ startProblem(){
         files.map((item, i) => {
           images.push(
             <TouchableOpacity key={'net' + i} onPress={() => this.viewBigImages(isFeedback, i)}>
-              <Image source={{uri: item.path}} style={{borderRadius: 4, width: 70, height: 70, resizeMode: 'cover', marginLeft: 10,}}/>
+              <ImageBackground style={{width: 70, height: 70, marginLeft: 10}} source={require('../images/temporary_img.png')}>
+                <Image 
+                  style = {{width: 70, height: 70, borderRadius: 4, resizeMode: 'cover'}}
+                  source = {{uri: item.path}} />
+              </ImageBackground>
             </TouchableOpacity>
+
           );
         });
       }
