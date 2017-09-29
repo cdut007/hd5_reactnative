@@ -43,6 +43,11 @@ export default class MemberSelectView extends Component {
         })
     }
 
+    componentWillUnmount(){
+        console.log('member lllllll')
+        Picker.hide();
+    }
+
     onPickClick(){
         if (!this.props.data || this.props.data.length  == 0 ) {
             return
