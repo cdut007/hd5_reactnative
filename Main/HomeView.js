@@ -264,6 +264,7 @@ export default class HomeView extends Component {
             if (Global.isCaptain(Global.UserInfo)) {
                 this.props.navigator.push({
                     component: ModuleTabView,
+                    name: 'ModuleTabView',
                      props: {
                          data:data,
                          type:data.type,
@@ -280,6 +281,7 @@ export default class HomeView extends Component {
 
                 this.props.navigator.push({
                     component: ModuleTabView,
+                    name: 'ModuleTabView',
                      props: {
                          data:data,
                          type:data.type,
@@ -296,6 +298,7 @@ export default class HomeView extends Component {
 
                 this.props.navigator.push({
                     component: ModuleTabView,
+                    name: 'ModuleTabView',
                      props: {
                          data:data,
                          type:data.type,

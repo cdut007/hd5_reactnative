@@ -12,17 +12,17 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     InteractionManager,
-    DeviceEventEmitter,
 } from 'react-native';
-import HttpRequest from '../HttpRequest/HttpRequest'
+
+import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
-import NavBar from '../common/NavBar'
-import LoadMoreFooter from '../common/LoadMoreFooter.js'
-import px2dp from '../common/util'
-import SearchBar from '../common/SearchBar';
+import NavBar from '../../common/NavBar'
+import LoadMoreFooter from '../../common/LoadMoreFooter.js'
+import LoadingView from '../../common/LoadingView.js'
+import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
-import IssueDetailView from './IssueDetailView';
-import CardView from 'react-native-cardview'
+import Global from '../../common/globals.js';
+
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -35,29 +35,34 @@ var resultsCache = {
   nextPageNumberForQuery: {},
   totalForQuery: {},
 };
+
 var LOADING = {};
-import Global from '../common/globals.js'
 
 
-export default class IssueListView extends Component {
+
+export default class QuestionList extends Component {
     constructor(props) {
         super(props)
+
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
        LOADING = {};
         this.state = {
             dataSource: ds,
             isLoading: false,
-            isLoadingTail: false,
             filter: '',
             isRefreshing:false,
             items:[],
             totalCount:0,
-
         }
 
-
     }
+
+    _closeLoading() {
+		this.setState({
+			showLoading: false
+		})
+	}
 
 
         back() {
@@ -73,13 +78,13 @@ export default class IssueListView extends Component {
             console.log("_onRefresh() --> ");
             this.setState({isRefreshing:true})
 
-            this.executeProblemRequest(1);
+            this.executePlanRequest(1);
         }
 
         _loadMoreData() {
             console.log("_loadMoreData() --> ");
-             pageNo = parseInt(20/ pagesize) + 1;
-            this.executeProblemRequest(pageNo);
+             pageNo = parseInt(this.state.items.length / pagesize) + 1;
+            this.executePlanRequest(pageNo);
         }
 
         _toEnd() {
@@ -97,7 +102,7 @@ export default class IssueListView extends Component {
         _renderFooter(label,index) {
             //const { userReducer } = this.props;
             //通过当前product数量和刷新状态（是否正在下拉刷新）来判断footer的显示
-            if (this.state.isRefreshing) {//userReducer.products.length < 1 ||
+            if (this.state.isRefreshing || this.state.items.length < 1) {
                 return null
             };
             if (this.state.items.length < this.state.totalCount) {
@@ -112,14 +117,9 @@ export default class IssueListView extends Component {
 
 
     componentDidMount() {
-        this.executeProblemRequest(1);
-        newIssueSubscription = DeviceEventEmitter.addListener('new_issue',function(){this._onRefresh})
-        operationSubscription = DeviceEventEmitter.addListener('operate_issue',(param)=>{this._onRefresh();})
-    }
 
-    componentWillUnmount(){
-      newIssueSubscription.remove();
-      operationSubscription.remove();
+        this.executePlanRequest(1);
+
     }
 
     onGetDataSuccess(response,paramBody){
@@ -129,7 +129,11 @@ export default class IssueListView extends Component {
          query = '';
      }
 
-        var datas = response.responseResult.data;
+         var datas = [];
+        if(response.responseResult){
+            datas = response.responseResult.data
+        }
+
 
 
 
@@ -138,7 +142,7 @@ export default class IssueListView extends Component {
                 isRefreshing:false,
             });
            // do not update state if the query is stale
-           console.log('executeProblemRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
+           console.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
            return;
          }
 
@@ -163,63 +167,82 @@ export default class IssueListView extends Component {
     }
 
     onItemPress(itemData){
-        this.props.navigator.push({
-            component: IssueDetailView,
-             props: {
-                 data:itemData,
-                }
-        })
+
+
     }
 
 
     hasMore(){
 
 
+
       }
 
 
         onSearchChange(event) {
-           var filter = event.nativeEvent.text.toLowerCase();
-        //    this.clearTimeout(this.timeoutID);
-        //    this.timeoutID = this.setTimeout(() => this.executeProblemRequest(pagesize,1,filter), 100);
+
+           var text = event.nativeEvent.text.toLowerCase();
+
+          this.fileterArr(text);
+
+          //  this.clearTimeout(this.timeoutID);
+          //  this.timeoutID = this.setTimeout(() => this.executePlanRequest(pagesize,1,filter), 100);
         }
 
+        fileterArr(text){
+
+    if (text === '') {
+
+ this.setState({
+   dataSource:this.state.dataSource.cloneWithRows(this.state.items),
+
+ })
+    return;
+
+    }else {
+
+   var a2 = this.state.items.filter(
+      (item) => ((item.projectType.toLowerCase().indexOf(text) !== -1) || (item.projectNo.toLowerCase().indexOf(text) !== -1) || (item.weldno.toLowerCase().indexOf(text) !== -1) || (Global.formatDate(item.planStartDate)).toLowerCase().indexOf(text) !== -1)
+);
+
+
+     this.setState({
+         dataSource:this.state.dataSource.cloneWithRows(a2),
+     })
+
+    }
+  }
 
 
 
-    executeProblemRequest(index){
 
-      console.log('executeProblemRequest pageNo:'+index)
-      var loading = false;
-      if (this.state.items.length == 0) {
-              loading = true
-      }
 
-       this.setState({
-         isLoading: loading,
-       });
+    executePlanRequest(index){
 
-       var api = '';
-       if (Global.isGroup(Global.UserInfo)) {
-           api = '/question/teamList'
-       }else if (Global.isMonitor(Global.UserInfo)) {
-           api = '/question/monitorList'
-       }else if (Global.isSolverMember(Global.UserInfo)) {
-           api = '/question/technicianList'
-       }else if (Global.isCaptain(Global.UserInfo)) {
-           api = '/question/captainList'
-       }
+      console.log('executePlanRequest pageNo:'+index)
+                var loading = false;
+                if (this.state.items.length == 0) {
+                        loading = true
+                }
+
+                 this.setState({
+                   isLoading: loading,
+                 });
+
+                 var userId= ''
+                 if (this.props.userId) {
+                     userId = this.props.userId;
+                 }
 
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
-                      questionStatus:this.props.status,
-                      userId:this.props.userId,
+                      status:this.props.status,
+                      userId:userId,
                      }
 
-
-            HttpRequest.get(api, paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
                     this.setState({
@@ -227,6 +250,7 @@ export default class IssueListView extends Component {
                       isLoading: false,
                       isRefreshing:false,
                     });
+
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
@@ -250,6 +274,7 @@ export default class IssueListView extends Component {
         return (
             <View style={styles.container}>
             {this.renderListView()}
+            <LoadingView showLoading={ this.state.isLoading } closeLoading={ this._closeLoading.bind(this)}></LoadingView>
             </View>
         )
     }
@@ -259,85 +284,53 @@ export default class IssueListView extends Component {
         return index;
     }
 
-    renderImages(item){
-        var itemsArray = [];
-        var len = item.fileSize;
-        for (var i = 0; i < len; i++) {
-            itemsArray.push(<Image style={{width:24,height:24,marginLeft:10}} source={require('../images/problem_icon_click.png')} />)
-        }
 
-        return itemsArray
-
-    }
 
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
-            var info = '未指派'
-            //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
-            var color = '#e82628'
-            if (rowData.status!='pre') {
-                info = '指派给:'+rowData.designee.realname
-                color = '#0755a6'
-            }else{
-                if (Global.isSolverMember(Global.UserInfo)) {
-                    info = '未处理'
-                    color = '#e82628'
-                }else{
-                    if (rowData.designee&&rowData.designee.realname ) {
-                        info = '指派给:'+rowData.designee.realname
-                        color = '#0755a6'
-                    }
-                }
-            }
 
                 return (
-                    <CardView
-                      cardElevation={2}
-                      cardMaxElevation={2}
-                      cornerRadius={5}>
 
                        <View style={styles.itemContainer}>
                         <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <View style={[styles.statisticsflexContainer,]}>
-                        <Text numberOfLines={2} style={{flex:1,color:'#282828',fontSize:14}}>
-                        {rowData.describe}
-                        </Text>
+                        <View style={styles.statisticsflexContainer}>
 
-                        <View style={{paddingBottom:4,flexDirection: 'row',justifyContent:'flex-start',alignItems:'center'}}>
+                        <View style={styles.cell}>
 
-                        <Text numberOfLines={1} style={{flex:1,color:'#888888',fontSize:12}}>
-                        提问时间：{rowData.questionTime}
-                        </Text>
-
-
-                        <Text numberOfLines={1} style={{color:color,fontSize:12}}>
-                        {info}
-                        </Text>
-
+                          <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
+                            {Global.formatDate(rowData.planStartDate)}{'\n'}～{'\n'}{Global.formatDate(rowData.planEndDate)}
+                          </Text>
 
                         </View>
 
 
+                        <View style={styles.cell}>
+
+                        <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
+                              {rowData.projectNo}
+                        </Text>
+
                         </View>
 
-                        <View style={{backgroundColor: '#d6d6d6',
-                        width: width,
-                        height: 0.5,}}/>
+                        <View style={styles.cell}>
 
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          作业条目编号：TM01-2017-08-0001
+                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                           {rowData.weldno}
                         </Text>
 
-                        <View style={{flexDirection:'row',alignItems:'center'}}>
+                        </View>
 
+                        <View style={styles.cell}>
 
-
-                        <Text numberOfLines={1} style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                              附件:
+                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                           {rowData.projectType}
                         </Text>
 
-                        {this.renderImages(rowData)}
+                        </View>
+
+
+
 
                         </View>
 
@@ -348,7 +341,6 @@ export default class IssueListView extends Component {
                         height: 0.5,}}/>
 
                         </View>
-                        </CardView>
 
                 )
 
@@ -359,6 +351,20 @@ export default class IssueListView extends Component {
             </View>
         )
     }
+   //搜索框
+   renderSearchBar(){
+
+    return(
+      <View style={styles.SearchBarStyle}>
+                <SearchBar
+                isLoading={false}
+                onSearchChange={(event) => this.onSearchChange(event)}
+                />
+      </View>
+
+      )
+
+   }
 
     renderListView() {
         return (
@@ -366,7 +372,7 @@ export default class IssueListView extends Component {
                 dataSource={this.state.dataSource}
                 renderRow={this.renderRow.bind(this)}
                 renderFooter={this._renderFooter.bind(this)}
-            	onEndReached={this._toEnd.bind(this)}
+            	  onEndReached={this._toEnd.bind(this)}
                 onEndReachedThreshold={10}
                 enableEmptySections={true}
                 refreshControl={
@@ -388,8 +394,7 @@ export default class IssueListView extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        width: width,
-        height:height-130,
+        flex:1,
     },
     topView: {
         height: 150,
@@ -426,15 +431,11 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
             flex:1,
-            height:160,
-            backgroundColor:'#ffffff',
-            padding:10,
-            paddingRight:20,
     },
      statisticsflexContainer: {
-              height: 80,
+              height: 57.5,
               backgroundColor: '#ffffff',
-
+              flexDirection: 'row',
           },
 
     cell: {
@@ -451,5 +452,13 @@ const styles = StyleSheet.create({
         height: 14,
         backgroundColor: '#cccccc',
     },
-
+    SearchBarStyle : {
+         borderRadius: 6,
+         borderColor: '#cccccc',
+         borderWidth : 1,
+         marginTop: 10,
+         marginRight: 10,
+         marginLeft: 10,
+         marginBottom: 10,
+    }
 });
