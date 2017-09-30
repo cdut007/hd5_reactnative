@@ -237,10 +237,10 @@ export default class PlanStatisticsSubView extends Component {
                         <View style={styles.cell}>
 
                           <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                            未分派
+                            未施工
                           </Text>
                           <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                            {rowData.statistics.unassign}
+                            {rowData.statistics.unProgressing}
                           </Text>
                         </View>
 

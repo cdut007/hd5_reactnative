@@ -22,6 +22,7 @@ import LoadingView from '../../common/LoadingView.js'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 import Global from '../../common/globals.js';
+import QuestionDetail from '../SafeWork/QuestionDetail'
 
 
 const isIOS = Platform.OS == "ios"
@@ -168,6 +169,9 @@ export default class QuestionList extends Component {
 
     onItemPress(itemData){
 
+      this.props.navigator.push({
+          component: QuestionDetail,
+      })
 
     }
 

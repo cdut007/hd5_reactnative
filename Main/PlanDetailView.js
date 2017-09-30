@@ -194,8 +194,7 @@ export default class PlanDetailView extends Component {
                              type:this.props.type,
                             'method': method,
                             'ids': this.props.data.id,
-                            'fromUserId':this.props.data.consteam.id,
-                            'toUserId':this.state.choose_member
+                            'userId':this.state.choose_member
                         }
                 }
 

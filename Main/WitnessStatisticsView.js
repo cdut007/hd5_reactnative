@@ -236,7 +236,7 @@ export default class WitnessStatisticsView extends Component {
                             已发起的见证
                           </Text>
                           <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                            {rowData.statistics.launched}
+                            {rowData.statistics.total}
                           </Text>
                         </View>
 

@@ -234,6 +234,7 @@ export default class PlanListDeliveryView extends Component {
             component: PlanDetailView,
              props: {
                  data:itemData,
+                  type:this.props.type,
                 }
         })
     }
