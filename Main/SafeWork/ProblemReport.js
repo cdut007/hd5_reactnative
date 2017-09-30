@@ -340,6 +340,7 @@ _questtionDescribe(){
      var fileInfo = this.state.fileArr[this.currentFileIdx]
      fileInfo['fileSource'] = source.uri;
      fileInfo['fileName'] = response.fileName;
+     fileInfo['url'] = source.uri;
 
      if(this.state.fileArr.length<MAX_IMAGE_COUNT && this.state.fileArr[this.state.fileArr.length-1]['fileSource']){
          this.state.fileArr.push({});

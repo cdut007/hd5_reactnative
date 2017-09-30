@@ -19,6 +19,8 @@ import {
 import NavBar from '../../common/NavBar';
 import DisplayItemView from '../../common/DisplayItemView'
 import Dimensions from 'Dimensions'
+import ImageShowsUtil from '../../common/ImageShowUtil'
+
 var width = Dimensions.get('window').width;
 
 export default  class  MyReport extends Component {
@@ -69,13 +71,32 @@ export default  class  MyReport extends Component {
 
  _filterDatas(){
 
+  this.state.fileArr = [];
+
     this.state.reportData.images.forEach((item) => {
     if (item['fileSource']) {
+
       this.state.fileArr.push(item);
+
     }
   })
 
+
+
 }
+
+ imageClick(index){
+
+   this.props.navigator.push({
+       component: ImageShowsUtil,
+       props: {
+           images:this.state.fileArr,
+           imageIndex:index,
+          }
+   })
+
+
+ }
 
   renderImages(){
 
@@ -87,8 +108,8 @@ export default  class  MyReport extends Component {
        imageViews.push(
          <TouchableOpacity
             key={i}
-            style={{width:70,height:70,marginLeft:10,marginBottom:10}}>
-
+            style={{width:70,height:70,marginLeft:10,marginBottom:10}}
+            onPress={this.imageClick.bind(this,i)}>
             <Image resizeMode={'cover'} style={{width:70,height:70,borderWidth:0.5,borderRadius:4}} source={{uri:item['fileSource']}}/>
 
          </TouchableOpacity>
@@ -96,6 +117,7 @@ export default  class  MyReport extends Component {
     })}
    return imageViews;
   }
+
 
   _CommitButton(){
  return(
