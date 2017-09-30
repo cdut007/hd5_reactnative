@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native';
 
-const apiDomainAddr = 'http://39.108.165.171'
-const apiAddr =  apiDomainAddr + '/hdxt/api' //http://106.37.241.216:5555/easycms-website
+const apiDomainAddr = 'http://39.108.165.171' //'http://192.168.99.36:8080/easycms-website'//
+const apiAddr =  apiDomainAddr + '/hdxt/api'
 var httpToken = ''
 var Global = require('../common/globals');
 
@@ -186,6 +186,15 @@ if (body.jsonBody) {
 
 
     var url = apiAddr + apiName +"?loginId="+logind
+
+    try {
+        console.log('Post requesr:' + url +":[param body]="+JSON.stringify(formData))
+    } catch (e) {
+
+    } finally {
+
+    }
+
     fetch(url,{
         method:'POST',
         headers:{
