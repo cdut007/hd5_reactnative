@@ -204,8 +204,10 @@ startFeedbackProblem(){
   params.append('questionId',this.props.data.id);
   params.append('describe',this.state.content);
   this.state.fileArr.map((item,i) =>{
-    let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};
-    params.append('file',file);
+    if(item['fileSource']){
+      let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};
+      params.append('file',file);
+    }
   });
   HttpRequest.uploadImage('/question/feedback', params, this.onCommitIssueSuccess.bind(this),
             (e) => {
