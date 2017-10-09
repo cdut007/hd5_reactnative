@@ -135,9 +135,6 @@ export default class QuestionList extends Component {
             datas = response.responseResult.data
         }
 
-
-
-
         if (this.state.filter !== query) {
             this.setState({
                 isRefreshing:false,
@@ -169,8 +166,25 @@ export default class QuestionList extends Component {
 
     onItemPress(itemData){
 
+     var questionData = new Object();
+
+     questionData.title = "东风破";
+     questionData.machineType = "机组20";
+     questionData.plantType = "一汽大众";
+     questionData.elevation = "165";
+     questionData.RoomNumber = "228";
+     questionData.ResDepart = "计科";
+     questionData.team = "1组";
+     questionData.type = "1001";
+     questionData.time = "20171009";
+     questionData.describe = "问题描述问题描题描述问题描述问题题描题描述问题描述问题描述";
+
+
       this.props.navigator.push({
           component: QuestionDetail,
+          props:{
+            data:questionData,
+          }
       })
 
     }
