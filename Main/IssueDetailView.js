@@ -460,6 +460,7 @@ startProblem(){
               <TextInput
                 style={{flex: 1, fontSize: 14, color: '#1c1c1c', textAlignVertical: 'top', height: 60}}
                 underlineColorAndroid ='transparent'
+                maxLength = {150}
                 multiline = {true}
                 onChangeText={(text) => this.setState({ content: text })}
                 value={this.state.content} />

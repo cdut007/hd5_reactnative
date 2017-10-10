@@ -223,6 +223,7 @@ export default class IssueReportView extends Component {
                         <TextInput
                             style={{flex: 1, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}}
                             underlineColorAndroid ='transparent'
+                            maxLength = {150}
                             multiline = {true}
                             onChangeText={(text) => this.setState({ content: text })}
                             value={this.state.content} />
