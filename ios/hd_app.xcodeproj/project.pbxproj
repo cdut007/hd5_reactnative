@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -29,6 +28,7 @@
 		92211BFB1F7CF4E100677649 /* bundle in Resources */ = {isa = PBXBuildFile; fileRef = 92211BFA1F7CF4E100677649 /* bundle */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		BC734CA58D144A34B8383519 /* libRNCardView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ECF34B7333994294A837BEC9 /* libRNCardView.a */; };
+		0F65C3181EAB4CFFA5D27240 /* libXLogForRN.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AB857CF324C648958CB3D322 /* libXLogForRN.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -310,6 +310,8 @@
 		ECF34B7333994294A837BEC9 /* libRNCardView.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNCardView.a; sourceTree = "<group>"; };
 		FECC9A29AA7148B3A9E74BBD /* RCTBEEPickerManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTBEEPickerManager.xcodeproj; path = "../node_modules/react-native-picker/ios/RCTBEEPickerManager.xcodeproj"; sourceTree = "<group>"; };
 		FFB37BC17F33415AA15B6F2D /* libRNImagePicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNImagePicker.a; sourceTree = "<group>"; };
+		C2633C637C6946B1A024AE11 /* XLogForRN.xcodeproj */ = {isa = PBXFileReference; name = "XLogForRN.xcodeproj"; path = "../node_modules/react-native-xlog/ios/XLogForRN.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		AB857CF324C648958CB3D322 /* libXLogForRN.a */ = {isa = PBXFileReference; name = "libXLogForRN.a"; path = "libXLogForRN.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -341,6 +343,7 @@
 				BC734CA58D144A34B8383519 /* libRNCardView.a in Frameworks */,
 				47EC62935A07421CA24AE4CB /* libRNImagePicker.a in Frameworks */,
 				6A4B077A78C14447A20F4357 /* libRCTBEEPickerManager.a in Frameworks */,
+				0F65C3181EAB4CFFA5D27240 /* libXLogForRN.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,6 +497,7 @@
 				18359360D0E443C9BB7DB90F /* RNCardView.xcodeproj */,
 				0B210407B33849A49FD176E1 /* RNImagePicker.xcodeproj */,
 				FECC9A29AA7148B3A9E74BBD /* RCTBEEPickerManager.xcodeproj */,
+				C2633C637C6946B1A024AE11 /* XLogForRN.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1034,12 +1038,14 @@
 					"$(SRCROOT)/../node_modules/react-native-cardview/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
+					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 				);
 				INFOPLIST_FILE = hd_appTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1064,12 +1070,14 @@
 					"$(SRCROOT)/../node_modules/react-native-cardview/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
+					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 				);
 				INFOPLIST_FILE = hd_appTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1095,6 +1103,7 @@
 					"$(SRCROOT)/../node_modules/react-native-cardview/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
+					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 				);
 				INFOPLIST_FILE = hd_app/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1119,6 +1128,7 @@
 					"$(SRCROOT)/../node_modules/react-native-cardview/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
+					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 				);
 				INFOPLIST_FILE = hd_app/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

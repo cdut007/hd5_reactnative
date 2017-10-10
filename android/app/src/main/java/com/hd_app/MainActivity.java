@@ -1,5 +1,5 @@
 package com.hd_app;
-
+import android.os.Bundle;
 import com.facebook.react.ReactActivity;
 
 public class MainActivity extends ReactActivity {
@@ -12,4 +12,13 @@ public class MainActivity extends ReactActivity {
     protected String getMainComponentName() {
         return "hd_app";
     }
+
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+
+            //LogUtils.sendLog(this);
+        }
 }

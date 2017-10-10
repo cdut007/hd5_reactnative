@@ -252,15 +252,11 @@ export default class HomeView extends Component {
               })
               return;
             }
-            if (data.type != 'GDJH') {
+            if (data.type != 'GDJH' && data.type != 'TFJH') {
              Global.showToast('正在开发')
               return;
             }
-
-            
-
-
-
+        
             if (Global.isCaptain(Global.UserInfo)) {
                 this.props.navigator.push({
                     component: ModuleTabView,

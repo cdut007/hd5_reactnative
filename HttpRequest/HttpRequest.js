@@ -1,6 +1,7 @@
 import { AsyncStorage } from 'react-native';
+import Xlog from 'react-native-xlog';
 
-const apiDomainAddr = 'http://39.108.165.171' //'http://192.168.99.36:8080/easycms-website'//
+const apiDomainAddr = 'http://39.108.165.171' //
 const apiAddr =  apiDomainAddr + '/hdxt/api'
 var httpToken = ''
 var Global = require('../common/globals');
@@ -50,11 +51,13 @@ get(apiName, body,successCallback, failCallback)
     url =  url+"?"+param;
 
     console.log('Get requesr:' + url)
+     Xlog.info('HttpRequestGet', url);
     fetch(url, {
         method: 'GET',})
       .then((response) => response.text())
       .then((responseText) => {
         console.log("get request response:"+responseText);
+         Xlog.info('HttpRequestGetReuslt', responseText);
         var response = JSON.parse(responseText);
         if (response.code == 1000) {
             successCallback(response,body);
@@ -70,6 +73,7 @@ get(apiName, body,successCallback, failCallback)
       })
       .catch(function(err){
         failCallback(err);
+          Xlog.info('HttpRequestGetReusltErr', err);
       });
 
   },
@@ -113,7 +117,9 @@ post(apiName, body,successCallback, failCallback)
     url =  url+'&'+param;
 
      try {
-         console.log('Post requesr:' + url +":[param body]="+JSON.stringify(body))
+         var tagInfo = 'Post requesr:' + url +":[param body]="+JSON.stringify(body)
+         console.log(tagInfo)
+         Xlog.info('HttpRequestPost', tagInfo);
      } catch (e) {
 
      } finally {
@@ -132,6 +138,7 @@ if (body.jsonBody) {
           .then((response) => response.text())
           .then((responseText) => {
             console.log(responseText);
+                 Xlog.info('HttpRequestPostReuslt', responseText);
             var response = JSON.parse(responseText);
             if (response.code == 1000) {
                 successCallback(response,param);
@@ -148,6 +155,7 @@ if (body.jsonBody) {
           })
           .catch(function(err){
             failCallback(err);
+              Xlog.info('HttpRequestPostReusltErr', err);
           });
     }else{
         fetch(url, {
@@ -155,6 +163,7 @@ if (body.jsonBody) {
           .then((response) => response.text())
           .then((responseText) => {
             console.log(responseText);
+                 Xlog.info('HttpRequestPostReuslt', responseText);
             var response = JSON.parse(responseText);
             if (response.code == 1000) {
                 successCallback(response,body);
@@ -170,6 +179,7 @@ if (body.jsonBody) {
 
           })
           .catch(function(err){
+                   Xlog.info('HttpRequestPostReusltErr', err);
             failCallback(err);
           });
     }
@@ -221,6 +231,7 @@ if (body.jsonBody) {
           })
           .catch(function(err){
             console.log("uploadInfo- error---->:"+err);
+              Xlog.info('HttpRequestPostReusltErrUpload', err);
             failCallback(err);
           });
 }
