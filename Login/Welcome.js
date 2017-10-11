@@ -32,7 +32,8 @@ export default class Welcome extends Component
     {
         this.props.navigator.push({
             component: LoginView,
-            index: this.props.index
+            index: this.props.index,
+            props: {...this.props}
         })
     }
 

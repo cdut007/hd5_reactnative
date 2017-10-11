@@ -38,6 +38,7 @@ export default class QuestionStaicContainer extends Component {
 
       this.state = {
           title: "问题审核",
+          detailType:this.props.detailType,
       }
   }
 
@@ -55,9 +56,13 @@ export default class QuestionStaicContainer extends Component {
   }
 
 
- _renderQuetionView(label){
+ _renderQuetionView(index,label){
+
+this.state.detailType = index;
 
 return( <View  tabLabel={label} style={styles.container}>
+
+
 
        {this.renderSearchBar()}
        {this.renderContent()}
@@ -71,7 +76,7 @@ return( <View  tabLabel={label} style={styles.container}>
 
   rendTabs(){
 
-   if (this.props.itemType == 'DCL') {
+   if (this.props.detailType == '1001') {
 
      return( <ScrollableTabView
          tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
@@ -80,8 +85,8 @@ return( <View  tabLabel={label} style={styles.container}>
             tabBarInactiveTextColor='#777777'
  >
 
-       {this._renderQuetionView("新问题")}
-       {this._renderQuetionView("待审核")}
+       {this._renderQuetionView(1001,"新问题")}
+       {this._renderQuetionView(1002,"待审核")}
 
  </ScrollableTabView>)
 
@@ -192,6 +197,7 @@ return( <View  tabLabel={label} style={styles.container}>
    return (<QuestionList
       style={{alignSelf:'stretch',flex:1}}
       type={this.props.type}
+      detailType={this.state.detailType}
       userId={userId}
       status={"UNCOMPLETE"}
       navigator={this.props.navigator}

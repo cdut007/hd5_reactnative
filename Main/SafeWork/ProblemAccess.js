@@ -25,12 +25,14 @@ var safeModule = [
     'image': require('../../images/construction_icon.png'),
     'index': 0,
     "type":"WDWT",
+    "detailType":"1008",
   },
   {
     'title':"所有问题",
     'image': require('../../images/construction_icon.png'),
     'index': 1,
     "type":"SYWT",
+    "detailType":"1009",
   },
 ]
 
@@ -127,6 +129,7 @@ export  default class ProblemAceess extends Component {
              data:data,
              type:data.type,
              itemType:item.type,
+             detailType:item.detailType,
             }
      })
 

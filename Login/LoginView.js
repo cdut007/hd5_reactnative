@@ -143,7 +143,8 @@ export default class LoginView extends Component {
         //show main view
         this.props.navigator.resetTo({
             component: TabView,
-            name: 'MainPage'
+            name: 'MainPage',
+            props: {...this.props}
         })
     }
 
