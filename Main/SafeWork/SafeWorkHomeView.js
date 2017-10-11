@@ -163,10 +163,6 @@ var Component;
   }
 
 
-
-
-
-
   }
 
   renderDot(item){

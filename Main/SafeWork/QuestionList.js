@@ -48,6 +48,7 @@ export default class QuestionList extends Component {
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
        LOADING = {};
+
         this.state = {
             dataSource: ds,
             isLoading: false,
@@ -175,10 +176,13 @@ export default class QuestionList extends Component {
      questionData.RoomNumber = "228";
      questionData.ResDepart = "计科";
      questionData.team = "1组";
-     questionData.type = "1001";
+     questionData.type = this.props.detailType;
      questionData.time = "20171009";
      questionData.describe = "问题描述问题描题描述问题描述问题题描题描述问题描述问题描述";
-
+     questionData.rectific = "2017/10/11";
+     questionData.compelete = "2017/10/15";
+     questionData.recPass = "2017/10/17";
+     questionData.save = "2017/10/18";
 
       this.props.navigator.push({
           component: QuestionDetail,

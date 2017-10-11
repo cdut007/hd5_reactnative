@@ -25,12 +25,14 @@ var safeModule = [
     'image': require('../../images/construction_icon.png'),
     'index': 0,
     "type":"DCL",
+    "detailType":"1006",
   },
   {
     'title':"已完成",
     'image': require('../../images/construction_icon.png'),
     'index': 1,
     "type":"YWC",
+    "detailType":"1007",
   },
 
 ]
@@ -128,6 +130,7 @@ export  default class ProblemRectification extends Component {
              data:data,
              type:data.type,
              itemType:item.type,
+             detailType:item.detailType,
             }
      })
 

@@ -25,24 +25,28 @@ var safeModule = [
     'image': require('../../images/construction_icon.png'),
     'index': 0,
     "type":"DCL",
+    "detailType":"1001",
   },
   {
     'title':"整改中",
     'image': require('../../images/construction_icon.png'),
     'index': 1,
     "type":"ZGZ",
+    "detailType":"1003",
   },
   {
     'title':"已完成",
     'image': require('../../images/construction_icon.png'),
     'index': 2,
     "type":"YWC",
+    "detailType":"1004",
   },
   {
     'title':"不需处理",
     'image': require('../../images/construction_icon.png'),
     'index': 3,
     "type":"BXCL",
+    "detailType":"1005",
   },
 ]
 
@@ -141,6 +145,7 @@ export  default class ProblemReview extends Component {
             data:data,
             type:data.type,
             itemType:item.type,
+            detailType:item.detailType
            }
     })
 
