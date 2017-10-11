@@ -55,7 +55,7 @@ export default class MainView extends Component {
         {
             return(<View/>)
         }
-   Global.version = this.props.version
+   
         if (this.state.hasLogin)
         {
             return (
@@ -63,7 +63,7 @@ export default class MainView extends Component {
                 initialRoute={{component: TabView, name: "MainPage"}}
                 configureScene={() => Navigator.SceneConfigs.FloatFromRight}
                 renderScene={(route, navigator) => {
-                      return <route.component navigator={navigator} {...route.props}/>
+                      return <route.component navigator={navigator} {...route.props} version={this.props.version}/>
                     }
                 }
               />
