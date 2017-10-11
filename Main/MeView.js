@@ -126,9 +126,6 @@ export default class MeView extends Component {
 
                 </View>
 
-                <View style={styles.centerLayout}>
-                        <Text style={styles.defaultText}>{Global.UserInfo.realnamename}</Text>
-                </View>
 
                 <View style={{flex:1,marginTop: 100, alignItems: 'center' }}>
                 <TouchableOpacity
