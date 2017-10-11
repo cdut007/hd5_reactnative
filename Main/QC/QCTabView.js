@@ -108,7 +108,7 @@ export default class QCTabView extends Component
                     </TabNavigator>
                 )
         }else{
-            //QC1
+            //QC1,qc2
             return(
                     <TabNavigator>
                         <TabNavigator.Item

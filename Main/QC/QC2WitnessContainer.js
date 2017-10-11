@@ -22,6 +22,7 @@ import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 import QC2WitnessStatisticsView from './QC2WitnessStatisticsView.js'
+import QC2WitnessListDeliveryView from './QC2WitnessListDeliveryView.js'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -109,8 +110,13 @@ export default class QC2WitnessContainer extends Component {
     }
 
 
-    onDeliveryPress(){
-
+    onDeliveryPress(label){
+        this.props.navigator.push({
+            component: QC2WitnessListDeliveryView,
+             props: {
+                 label:label
+                }
+        })
     }
 
     renderListView(label,index,status) {
@@ -120,13 +126,13 @@ export default class QC2WitnessContainer extends Component {
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
 
-            <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onDeliveryPress.bind(this)}>
+            <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onDeliveryPress.bind(this,label)}>
 
             <View style={styles.cell}>
 
 
               <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                带分派的见证（12）
+                待分派的见证（12）
               </Text>
             </View>
 
