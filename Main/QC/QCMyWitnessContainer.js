@@ -46,6 +46,29 @@ var qcteamstatusDatas = [{
             }
 
 ];
+var qc2teamstatusDatas = [
+
+    {
+        index:0,
+        status:'UNHANDLED',
+        data:[],
+        pageNo:1,
+    },
+    {
+        index:1,
+        status:'QUALIFIED',
+        data:[],
+        pageNo:1,
+    },
+    {
+                index:2,
+                status:'UNQUALIFIED',
+                data:[],
+                pageNo:1,
+            }
+
+
+];
 
     var qc1statusDatas = [{
                     index:0,
@@ -66,10 +89,13 @@ export default class QCMyWitnessContainer extends Component {
     constructor(props) {
         super(props)
 
-
+        var title = this.props.title;
+        if (!title) {
+            title = "我的见证"
+        }
         this.state = {
 
-            title: "我的见证",
+            title: title,
         }
 
 
@@ -103,7 +129,35 @@ export default class QCMyWitnessContainer extends Component {
 
             </ScrollableTabView>
                 )
-            }else{
+            }else if (Global.isQC2Team(Global.UserInfo)) {
+                if (this.props.scanQC2Member) {
+                    return( <ScrollableTabView
+                        tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
+                           tabBarBackgroundColor='#FFFFFF'
+                           tabBarActiveTextColor='#f77935'
+                           tabBarInactiveTextColor='#777777'
+                >
+                     {this.renderListView('未完成的见证',0,qcteamstatusDatas[0].status)}
+                     {this.renderListView('已完成的见证',1,qcteamstatusDatas[1].status)}
+
+                </ScrollableTabView>
+                    )
+                }else{
+                    return( <ScrollableTabView
+                        tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
+                           tabBarBackgroundColor='#FFFFFF'
+                           tabBarActiveTextColor='#f77935'
+                           tabBarInactiveTextColor='#777777'
+                >
+                     {this.renderListView('待提交的见证',0,qc2teamstatusDatas[0].status)}
+                     {this.renderListView('已合格的见证',1,qc2teamstatusDatas[1].status)}
+                     {this.renderListView('不合格的见证',2,qc2teamstatusDatas[2].status)}
+
+                </ScrollableTabView>
+                    )
+                }
+
+                }else{
                 return( <ScrollableTabView
                     tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
                        tabBarBackgroundColor='#FFFFFF'

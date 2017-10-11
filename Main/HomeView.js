@@ -256,7 +256,7 @@ export default class HomeView extends Component {
              Global.showToast('正在开发')
               return;
             }
-        
+
             if (Global.isCaptain(Global.UserInfo)) {
                 this.props.navigator.push({
                     component: ModuleTabView,
@@ -303,6 +303,24 @@ export default class HomeView extends Component {
                         }
                 })
             }else if (Global.isQCTeam(Global.UserInfo)) {
+
+                data.user = new Object();
+                data.user.id = Global.UserInfo.id;
+                data.user.dept = new Object();
+                data.user.dept.name = data.title;//change later. for dept
+
+
+                this.props.navigator.push({
+                    component: QCTabView,
+                     props: {
+                         data:data,
+                         type:data.type,
+                         typeStr:typeSegArr[this.state.selectedTypeIndex],
+                         category:dayCateArr[index],
+                        }
+                })
+
+            }else if (Global.isQC2Team(Global.UserInfo)) {
 
                 data.user = new Object();
                 data.user.id = Global.UserInfo.id;
