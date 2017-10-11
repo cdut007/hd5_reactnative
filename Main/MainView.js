@@ -23,7 +23,7 @@ export default class MainView extends Component {
     constructor(props)
     {
         super(props)
-     
+
         this.state={
             hasGotLogin: false,
             hasLogin: null
@@ -55,7 +55,7 @@ export default class MainView extends Component {
         {
             return(<View/>)
         }
-
+   Global.version = this.props.version
         if (this.state.hasLogin)
         {
             return (

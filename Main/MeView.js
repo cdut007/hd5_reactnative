@@ -8,7 +8,8 @@ import {
     Platform,
     TouchableNativeFeedback,
     TouchableHighlight,
-    AsyncStorage
+    AsyncStorage,
+    NativeModules,
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar';
@@ -129,12 +130,18 @@ export default class MeView extends Component {
                         <Text style={styles.defaultText}>{Global.UserInfo.realnamename}</Text>
                 </View>
 
-                <View style={{flex:1,marginTop: 100 }}>
+                <View style={{flex:1,marginTop: 100, alignItems: 'center' }}>
                 <TouchableOpacity
                     style={[styles.loginButton,]}
                     onPress={this._logout_function.bind(this)}
                     ><Text style={styles.loginText}>退出登录</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.reportButton}
+                    onPress = {()=>{NativeModules.LogInterface.sendLogReport()}}>
+                    <Text style={styles.loginText}>发送日志反馈</Text>
+                </TouchableOpacity>
+                <Text style={{fontSize: 18, color: '#000000aa',marginTop: 5}}>{'version: ' + Global.version}</Text>
                 </View>
 
 
@@ -225,7 +232,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-
+    reportButton:
+    {
+        marginTop: 10,
+        height: 50,
+        width: width - 20,
+        backgroundColor: '#fbac2a',
+        borderRadius: 26,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
        itemLine:{
            width: width,
            height: 1,

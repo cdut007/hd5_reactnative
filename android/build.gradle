@@ -22,3 +22,8 @@ allprojects {
         }
     }
 }
+
+ext {
+    MARS_XLOG_VERSION_NAME='1.0.4'
+    MARS_XLOG_VERSION_NAME_SUFFIX = ''
+}

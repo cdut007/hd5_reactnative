@@ -74,7 +74,7 @@ export default class QCWitnessStatisticsView extends Component {
      }
 
 
-        var witmess_team = response.responseResult.witmess_team;
+        var witmess_team = response.responseResult.witness_team;
 
         if (witmess_team) {
             this.setState({
@@ -256,7 +256,7 @@ export default class QCWitnessStatisticsView extends Component {
                           已完成的见证
                         </Text>
                         <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                          {rowData.statistics.comleted}
+                          {rowData.statistics.completed}
                         </Text>
                         </View>
 

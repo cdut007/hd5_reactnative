@@ -97,8 +97,8 @@ android {
         applicationId "com.hd_app"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 8
-        versionName "1.0.7"
+        versionCode 9
+        versionName "1.0.8"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -142,6 +142,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-xlog')
     compile project(':react-native-picker')
     compile project(':react-native-image-picker')
     compile project(':react-native-cardview')
