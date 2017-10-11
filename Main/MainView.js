@@ -63,7 +63,7 @@ export default class MainView extends Component {
                 initialRoute={{component: TabView, name: "MainPage"}}
                 configureScene={() => Navigator.SceneConfigs.FloatFromRight}
                 renderScene={(route, navigator) => {
-                      return <route.component navigator={navigator} {...route.props}/>
+                      return <route.component navigator={navigator} {...this.props}/>
                     }
                 }
               />
@@ -75,7 +75,7 @@ export default class MainView extends Component {
                 initialRoute={{component: WelcomeView, name: "WelcomePage", index: this.props.index}}
                 configureScene={() => Navigator.SceneConfigs.FloatFromRight}
                 renderScene={(route, navigator) => {
-                      return <route.component navigator={navigator} {...route.props}/>
+                      return <route.component navigator={navigator} {...this.props}/>
                     }
                 }
               />

@@ -23,6 +23,6 @@ public class LogReactPackage implements ReactPackage{
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }
