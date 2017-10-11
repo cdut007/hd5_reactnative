@@ -106,9 +106,9 @@ export default class WitnessFailResultView extends Component {
         viewBigImages(isFeedback, index){
           var imageUrls = [];
           if(isFeedback){
-            this.state.data.witnessFiles.map((item) => {imageUrls.push({url: item.url})});
+            this.props.data.witnessFiles.map((item) => {imageUrls.push({url: HttpRequest.getDomain()+ item.url})});
           }else{
-            this.state.data.witnessFiles.map((item) => {imageUrls.push({url: item.url})});
+            this.props.data.witnessFiles.map((item) => {imageUrls.push({url: HttpRequest.getDomain()+ item.url})});
           }
           this.setState({modalVisible: true, bigImages: imageUrls, currentImageIndex: index})
         }
