@@ -11,17 +11,21 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
 } from 'react-native';
-import HttpRequest from '../HttpRequest/HttpRequest'
+import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
-import NavBar from '../common/NavBar'
-import CircleLabelHeadView from '../common/CircleLabelHeadView';
-import px2dp from '../common/util'
-import SearchBar from '../common/SearchBar';
+import NavBar from '../../common/NavBar'
+import CircleLabelHeadView from '../../common/CircleLabelHeadView';
+import px2dp from '../../common/util'
+import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
-import WitnessStatisticsSubView from './WitnessStatisticsSubView';
+import Global from '../../common/globals.js'
+
+
+import QCMyWitnessContainer from './QCMyWitnessContainer.js'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
+var height = Dimensions.get('window').height;
 var pagesize = 10;
 
 var resultsCache = {
@@ -31,7 +35,7 @@ var resultsCache = {
 };
 var LOADING = {};
 
-export default class WitnessStatisticsView extends Component {
+export default class QC2WitnessStatisticsView extends Component {
     constructor(props) {
         super(props)
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -42,7 +46,6 @@ export default class WitnessStatisticsView extends Component {
             isLoading: false,
             isLoadingTail: false,
             filter: '',
-            title: this.props.data.title + "见证",
         }
 
 
@@ -70,13 +73,12 @@ export default class WitnessStatisticsView extends Component {
          query = '';
      }
 
-        var datas = response.responseResult.datas;
 
-        var captain = response.responseResult.captain;
+        var witmess_team = response.responseResult.witness_team;
 
-        if (captain) {
+        if (witmess_team) {
             this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(captain),
+                dataSource: this.state.dataSource.cloneWithRows(witmess_team),
                 isLoading: false,
             });
         }
@@ -85,10 +87,12 @@ export default class WitnessStatisticsView extends Component {
 
     onItemPress(itemData){
         this.props.navigator.push({
-            component: WitnessStatisticsSubView,
+            component: QCMyWitnessContainer,
              props: {
                  data:itemData,
                  type:this.props.type,
+                 scanQC2Member:true,
+                 title:itemData.user.realname + '见证'
                 }
         })
     }
@@ -154,6 +158,7 @@ export default class WitnessStatisticsView extends Component {
 
 
                  var paramBody = {
+                      userId:'267',
                       type:this.props.type
                      }
 
@@ -185,13 +190,14 @@ export default class WitnessStatisticsView extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <NavBar
-                title={this.state.title}
-                leftIcon={require('../images/back.png')}
-                leftPress={this.back.bind(this)} />
+
                {this.renderListView()}
             </View>
         )
+    }
+
+    showNavView(){
+
     }
 
     index(rowID){
@@ -201,7 +207,9 @@ export default class WitnessStatisticsView extends Component {
 
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
-
+                if (!rowData.statistics) {
+                    rowData.statistics = new Object()
+                }
                 return (
                        <View style={styles.itemContainer}>
                         <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
@@ -220,7 +228,7 @@ export default class WitnessStatisticsView extends Component {
                         <View style= {[styles.cellLine,{marginLeft:8,marginRight:8,marginTop:20,marginBottom:20}]}/>
 
                         <Text style={{color:'#888888',fontSize:14,marginLeft:4,}}>
-                          {rowData.user.dept.name + rowData.user.roles[0].name}
+                          {rowData.user.roles[0].name}
                         </Text>
 
                         </View>
@@ -236,7 +244,7 @@ export default class WitnessStatisticsView extends Component {
                             已发起的见证
                           </Text>
                           <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                            {rowData.statistics.total}
+                            {rowData.statistics.launched}
                           </Text>
                         </View>
 
@@ -280,7 +288,7 @@ export default class WitnessStatisticsView extends Component {
     renderListView() {
         return (
             <ListView
-                style={{ }}
+                style={{}}
                 dataSource={this.state.dataSource}
                 renderRow={this.renderRow.bind(this)}
                 renderFooter={this.renderFooter.bind(this)}
@@ -301,7 +309,7 @@ export default class WitnessStatisticsView extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+
         justifyContent: 'flex-start',
         alignItems: 'center',
         backgroundColor: '#f2f2f2',
