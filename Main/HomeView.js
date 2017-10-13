@@ -360,6 +360,26 @@ export default class HomeView extends Component {
 
             }else if (Global.isQC2Member(Global.UserInfo)) {
 
+                //show main view
+
+                                data.user = new Object();
+                                data.user.id = Global.UserInfo.id;
+                                data.user.dept = new Object();
+                                data.user.dept.name = data.title;//change later. for dept
+
+
+                                this.props.navigator.push({
+                                    component: QCTabView,
+                                     props: {
+                                         data:data,
+                                         type:data.type,
+                                         typeStr:typeSegArr[this.state.selectedTypeIndex],
+                                         category:dayCateArr[index],
+                                        }
+                                })
+
+            }else if (Global.isQC2SubMember(Global.UserInfo)) {
+
 
                                                 data.user = new Object();
                                                 data.user.id = Global.UserInfo.id;

@@ -185,14 +185,27 @@ export default class WorkStepWitnessBatchView extends Component {
 
 
 
-    onSelectedDate(data,date){
-     console.log("date=="+date.getTime()+';last time data.choose_date='+data.choose_date);
+    onSelectedDate(index,date){
+    var data = this.state.data[index];
+     console.log("date=="+date.getTime()+';last time data.choose_date='+JSON.stringify(data));
      data.choose_date = date.getTime();
      data.displayDate = Global.formatDate(data.choose_date);
-     this.setState({...this.state});
+
+
+        let newArray = this.state.data.slice();
+                     for (var i = 0; i < this.state.data.length; i++) {
+                         if(data.id == this.state.data[i].id){
+                             newArray[i] = {
+                               ...data,
+                             };
+                             break
+                         }
+                     }
+
+     this.setState({data:newArray});
     }
 
-    onSelectedAddress(data,address){
+    onSelectedAddress(index,address){
         // for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
         //     if (Global.UserInfo.monitor[i].user.realname == member) {
         //         this.state.choose_member = Global.UserInfo.monitor[i].user.id;
@@ -202,12 +215,23 @@ export default class WorkStepWitnessBatchView extends Component {
         //     }
         // }
 
-        console.log(JSON.stringify(address)+"address====");
+        var data = this.state.data[index];
+        console.log(JSON.stringify(address)+"address===="+JSON.stringify(data));
 
         console.log("address=="+';last data.choose_address='+data.choose_address);
         data.choose_address = address[0];
         data.displayAddress = address[0];
-        this.setState({...this.state});
+        let newArray = this.state.data.slice();
+                     for (var i = 0; i < this.state.data.length; i++) {
+                         if(data.id == this.state.data[i].id){
+                             newArray[i] = {
+                               ...data,
+                             };
+                             break
+                         }
+                     }
+
+     this.setState({data:newArray});
 
     }
 
@@ -271,6 +295,7 @@ export default class WorkStepWitnessBatchView extends Component {
                    <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
                    <TouchableOpacity
+                    key={'date' + index}
                    onPress={() => this._selectD.onClick()}
                    style={{borderWidth:0.5,
                          alignItems:'center',
@@ -279,12 +304,13 @@ export default class WorkStepWitnessBatchView extends Component {
                          borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
 
                    <DateTimePickerView
+                    key={'date_choose' + index}
                       ref={(c) => this._selectD = c}
                        type={'date'}
                        title={data.displayDate}
                        visible={this.state.time_visible}
                        style={{color:'#f77935',fontSize:14,flex:1}}
-                       onSelected={this.onSelectedDate.bind(this,data)}
+                       onSelected={this.onSelectedDate.bind(this,index)}
                    />
                                        <Image
                                        style={{width:20,height:20}}
@@ -294,21 +320,24 @@ export default class WorkStepWitnessBatchView extends Component {
                    </View>
 
 
-                   <View TouchableOpacity style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+                   <View
 
-                   <TouchableOpacity onPress={() => this._selectM.onPickClick()} style={{borderWidth:0.5,
+                    style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+
+                   <TouchableOpacity  key={'address' + index} onPress={() => this._selectM.onPickClick()} style={{borderWidth:0.5,
                          alignItems:'center',
                          borderColor : '#f77935',
                          backgroundColor : 'white',
                          borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
 
                    <MemberSelectView
+                       key={'address_choose' + index}
                    ref={(c) => this._selectM = c}
                    style={{color:'#f77935',fontSize:14,flex:1}}
                    title={data.displayAddress}
                    data={data.witnessAddresses}
                    pickerTitle={'选择见证地点'}
-                   onSelected={this.onSelectedAddress.bind(this,data)} />
+                   onSelected={this.onSelectedAddress.bind(this,index)} />
                                        <Image
                                        style={{width:20,height:20,}}
                                        source={require('../images/unfold.png')}/>

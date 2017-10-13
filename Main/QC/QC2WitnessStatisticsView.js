@@ -20,6 +20,7 @@ import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 import Global from '../../common/globals.js'
 
+import QC2WitnessListDeliveryView from './QC2WitnessListDeliveryView.js'
 
 import QCMyWitnessContainer from './QCMyWitnessContainer.js'
 
@@ -45,6 +46,7 @@ export default class QC2WitnessStatisticsView extends Component {
             dataSource: ds,
             isLoading: false,
             isLoadingTail: false,
+            extra:{result:0},
             filter: '',
         }
 
@@ -74,13 +76,16 @@ export default class QC2WitnessStatisticsView extends Component {
      }
 
 
-        var witmess_team = response.responseResult.witness_team;
+        var witmess_team = response.responseResult.witness_qc2;
 
         if (witmess_team) {
+
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(witmess_team),
                 isLoading: false,
+                extra:response.responseResult.extra[0]
             });
+
         }
 
     }
@@ -158,7 +163,7 @@ export default class QC2WitnessStatisticsView extends Component {
 
 
                  var paramBody = {
-                      userId:'267',
+                     memberType:this.props.memberType,
                       type:this.props.type
                      }
 
@@ -187,9 +192,32 @@ export default class QC2WitnessStatisticsView extends Component {
                 })
     }
 
+    onDeliveryPress(){
+        this.props.navigator.push({
+            component: QC2WitnessListDeliveryView,
+             props: {
+                 label:this.props.label
+                }
+        })
+    }
+
     render() {
         return (
             <View style={styles.container}>
+            <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onDeliveryPress.bind(this)}>
+
+            <View style={styles.cell}>
+
+
+              <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
+                待分派的见证（{this.state.extra.result}）
+              </Text>
+            </View>
+
+
+            <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/right_enter_blue.png')}></Image>
+
+            </TouchableOpacity>
 
                {this.renderListView()}
             </View>
@@ -244,7 +272,7 @@ export default class QC2WitnessStatisticsView extends Component {
                             已发起的见证
                           </Text>
                           <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                            {rowData.statistics.launched}
+                            {rowData.statistics.total}
                           </Text>
                         </View>
 

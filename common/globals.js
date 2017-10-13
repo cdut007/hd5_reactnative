@@ -85,6 +85,13 @@ module.exports = {
             return false
         }
         var roleType = user.roles[0].roleType[0]
+        return roleType == 'witness_member_qc2'
+    },isQC2SubMember(user){
+        if (!user) {
+            console.log('maybe crash recycle from the memery cache, can read data again ??')
+            return false
+        }
+        var roleType = user.roles[0].roleType[0]
         return roleType == 'witness_member_czecqc' || roleType == 'witness_member_paec' || roleType == 'witness_member_czecqa'
     },isSolverMember(user){
         if (!user) {

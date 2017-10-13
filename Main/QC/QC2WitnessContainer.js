@@ -22,7 +22,6 @@ import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 import QC2WitnessStatisticsView from './QC2WitnessStatisticsView.js'
-import QC2WitnessListDeliveryView from './QC2WitnessListDeliveryView.js'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -38,19 +37,19 @@ var qc2Datas = [
 
     {
         index:0,
-        status:'czecqc',
+        status:'CZEC_QC',
         data:[],
         pageNo:1,
     },
     {
         index:1,
-        status:'caecqa',
+        status:'CZEC_QA',
         data:[],
         pageNo:1,
     },
     {
                 index:2,
-                status:'paec',
+                status:'PAEC',
                 data:[],
                 pageNo:1,
             }
@@ -110,14 +109,7 @@ export default class QC2WitnessContainer extends Component {
     }
 
 
-    onDeliveryPress(label){
-        this.props.navigator.push({
-            component: QC2WitnessListDeliveryView,
-             props: {
-                 label:label
-                }
-        })
-    }
+
 
     renderListView(label,index,status) {
         var userId = '';
@@ -126,25 +118,11 @@ export default class QC2WitnessContainer extends Component {
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
 
-            <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onDeliveryPress.bind(this,label)}>
-
-            <View style={styles.cell}>
-
-
-              <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                待分派的见证（12）
-              </Text>
-            </View>
-
-
-            <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/right_enter_blue.png')}></Image>
-
-            </TouchableOpacity>
-
             <QC2WitnessStatisticsView
             style={{height:200}}
              type={this.props.type}
-             status={status}
+             label = {label}
+             memberType={status}
              userId={userId}
              navigator={this.props.navigator}
              />

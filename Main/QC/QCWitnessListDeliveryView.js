@@ -53,8 +53,10 @@ export default class QCWitnessListDeliveryView extends Component {
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
        LOADING = {};
-
-
+        var displayInfo = '选择QC1'
+        if (Global.isQC2Team(Global.UserInfo)) {
+            displayInfo = '选择QC2'
+        }
         this.state = {
             dataSource: ds,
             isLoading: false,
@@ -64,7 +66,7 @@ export default class QCWitnessListDeliveryView extends Component {
             QCTeamMember:null,
             totalCount:0,
             choose_memberQC1:null,
-            displayMemberQC1:'选择QC1',
+            displayMemberQC1:displayInfo,
             members:[],
 
         }
