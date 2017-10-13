@@ -196,7 +196,9 @@ export default class QC2WitnessStatisticsView extends Component {
         this.props.navigator.push({
             component: QC2WitnessListDeliveryView,
              props: {
-                 label:this.props.label
+                 label:this.props.label,
+                 noticePointType:this.props.memberType,
+                 type:this.props.type
                 }
         })
     }

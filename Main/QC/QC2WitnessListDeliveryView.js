@@ -299,6 +299,7 @@ export default class QC2WitnessListDeliveryView extends Component {
                       pagenum:index,
                       type:this.props.type,
                       status:'UNASSIGN',
+                      noticePointType:this.props.noticePointType
                      }
 
             HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),

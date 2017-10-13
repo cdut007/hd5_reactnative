@@ -295,6 +295,13 @@ export default class QCWitnessDetailView extends Component {
                                 onPress={this.startWitness.bind(this)}></CommitButton></View>
                                 </View>)
 
+            }else if (Global.isQC2SubMember(Global.UserInfo)) {
+
+                return(<View style={{height:50,width:width,flexDirection:'row'}}>
+                        <View style={{height:50,flex:1}}><CommitButton title={'提交'}
+                                onPress={this.startWitness.bind(this)}></CommitButton></View>
+                                </View>)
+
             }else if (Global.isCaptain(Global.UserInfo)) {
 
 
