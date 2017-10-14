@@ -17,7 +17,7 @@ import px2dp from '../../common/util';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import DisplayItemView from '../../common/DisplayItemView';
 import EnterItemView from '../../common/EnterItemView';
-
+import WitnessFailResultView from '../../Main/WitnessFailResultView';
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
 
@@ -48,7 +48,7 @@ export default class QCWitnessResultDetailView extends Component {
 
 
     componentDidMount() {
-
+        console.log('QCWitnessResultDetailView====')
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
         this.getWitnessTeamMember();
     }
@@ -287,7 +287,43 @@ export default class QCWitnessResultDetailView extends Component {
             style={styles.mainStyle}>
             {this.renderChooseOptions()}
                 {this.renderItem()}
+                    {this.renderFailedView()}
                    </ScrollView>);
+    }
+
+    renderFailedView(){
+        if (this.props.delivery) {
+            return
+        }
+
+        if (!Global.isQC2Member(Global.UserInfo) && !Global.isQC2Team(Global.UserInfo) && this.state.data.result=='UNQUALIFIED') {
+            return (<View>
+                <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onWitnessPress.bind(this,this.props.data)}>
+
+                        <View style={styles.cell}>
+
+
+                          <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
+                            查看不合格原因
+                          </Text>
+                        </View>
+
+                        <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/right_enter_blue.png')}></Image>
+
+                        </TouchableOpacity>
+
+                         <View style={[styles.divider,{height:1}]}/>
+                </View>)
+        }
+    }
+
+    onWitnessPress(witnessInfo){
+        this.props.navigator.push({
+            component: WitnessFailResultView,
+             props: {
+                 data:witnessInfo,
+                }
+        })
     }
 
     onSelectedMember(member){
@@ -386,22 +422,28 @@ export default class QCWitnessResultDetailView extends Component {
     }
 
 
-onWitnessPress(witnessInfo){
+    getNoticeType(noticePoint){
+        if (noticePoint == 'CZEC_QA') {
+            return 'CZEC QA'
+        }
+        if (noticePoint == 'CZEC_QC') {
+            return 'CZEC QC'
+        }
 
-}
+        return noticePoint
+
+    }
 
         witnessItemInfo(witnessInfo){
 
-            //witnessInfo.result = '不合格'
-
-            if (witnessInfo.result == '合格') {
+            if (witnessInfo.result == 'QUALIFIED') {
                 return(
                     <View style={styles.statisticsflexContainer}>
 
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                        {witnessInfo.witnesser.realname}
+                        {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
                         见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
@@ -421,14 +463,14 @@ onWitnessPress(witnessInfo){
 
                     </View>
                 )
-            }else if (witnessInfo.result == '不合格'){
+            }else if (witnessInfo.result == 'UNQUALIFIED'){
                 return(
                     <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onWitnessPress.bind(this,witnessInfo)}>
 
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                        {witnessInfo.witnesser.realname}
+                                {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
                         见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
@@ -457,7 +499,7 @@ onWitnessPress(witnessInfo){
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                        {witnessInfo.witnesser.realname}
+                                {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                     </View>
 
@@ -484,15 +526,15 @@ onWitnessPress(witnessInfo){
                // 颜色数组
                var displayAry = [];
 
-               if (this.state.data.witnessInfo) {
-                   for (var i = 0; i < this.state.data.witnessInfo.length; i++) {
-                         var witnessInfo = this.state.data.witnessInfo[i]
-                         if (!witnessInfo.witnesser) {
+               if (this.state.data.subWitness) {
+                   for (var i = 0; i < this.state.data.subWitness.length; i++) {
+                         var subWitness = this.state.data.subWitness[i]
+                         if (!subWitness.witnesser) {
                              continue
                          }
-                         displayAry.push({data:witnessInfo,id:'m'+i,type:'witness'})
+                         displayAry.push({data:subWitness,id:'m'+i,type:'witness'})
                    }
-                   displayAry.push({type:'line'},);
+                   displayAry.push({type:'devider'},);
                }
 
 
@@ -510,6 +552,9 @@ onWitnessPress(witnessInfo){
                for (var i = 0; i<displayAry.length; i++) {
                    if (displayAry[i].type == 'witness') {
                        itemAry.push(this.witnessItemInfo(displayAry[i].data));
+                       itemAry.push(
+                          <View style={[styles.divider,{height:1}]}/>
+                       );
                    } else if (displayAry[i].type == 'devider') {
                        itemAry.push(
                           <View style={styles.divider}/>

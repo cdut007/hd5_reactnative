@@ -73,7 +73,7 @@ get(apiName, body,successCallback, failCallback)
       })
       .catch(function(err){
         failCallback(err);
-          Xlog.info('HttpRequestGetReusltErr', err);
+          Xlog.info('HttpRequestGetReusltErr', ""+err);
       });
 
   },
@@ -155,7 +155,7 @@ if (body.jsonBody) {
           })
           .catch(function(err){
             failCallback(err);
-              Xlog.info('HttpRequestPostReusltErr', err);
+              Xlog.info('HttpRequestPostReusltErr', ""+err);
           });
     }else{
         fetch(url, {
@@ -179,7 +179,7 @@ if (body.jsonBody) {
 
           })
           .catch(function(err){
-                   Xlog.info('HttpRequestPostReusltErr', err);
+                   Xlog.info('HttpRequestPostReusltErr', ""+err);
             failCallback(err);
           });
     }
@@ -231,7 +231,7 @@ if (body.jsonBody) {
           })
           .catch(function(err){
             console.log("uploadInfo- error---->:"+err);
-              Xlog.info('HttpRequestPostReusltErrUpload', err);
+              Xlog.info('HttpRequestPostReusltErrUpload', ""+err);
             failCallback(err);
           });
 }

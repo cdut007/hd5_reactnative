@@ -190,9 +190,12 @@ export default class QCWitnessDetailView extends Component {
 
 
 
-        if (!this.state.input_dosage) {
-            alert('请填写实际用量')
-            return
+        if (!Global.isQC2SubMember(Global.UserInfo)) {
+            if (!this.state.input_dosage) {
+                alert('请填写实际用量')
+                return
+            }
+
         }
 
         var bodyArray=[]
@@ -218,7 +221,7 @@ export default class QCWitnessDetailView extends Component {
             this.state.fileArr.map((item, i) => {
                 if (item['fileSource']) {
                    let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
-                   param.append("file",file);   //这里的files就是后台需要的key
+                   param.append("file"+i,file);   //这里的files就是后台需要的key
                 }
             });
             HttpRequest.uploadImage('/witness_op/result', param, this.onDeliverySuccess.bind(this),
@@ -288,13 +291,6 @@ export default class QCWitnessDetailView extends Component {
                                 onPress={this.startWitness.bind(this)}></CommitButton></View>
                                 </View>)
 
-            }else if (Global.isQC2Member(Global.UserInfo)) {
-
-                return(<View style={{height:50,width:width,flexDirection:'row'}}>
-                        <View style={{height:50,flex:1}}><CommitButton title={'提交'}
-                                onPress={this.startWitness.bind(this)}></CommitButton></View>
-                                </View>)
-
             }else if (Global.isQC2SubMember(Global.UserInfo)) {
 
                 return(<View style={{height:50,width:width,flexDirection:'row'}}>
@@ -303,7 +299,6 @@ export default class QCWitnessDetailView extends Component {
                                 </View>)
 
             }else if (Global.isCaptain(Global.UserInfo)) {
-
 
             }else if (Global.isMonitor(Global.UserInfo)) {
 
@@ -726,15 +721,19 @@ export default class QCWitnessDetailView extends Component {
                  displayAry.push({title:'不合格绘制',id:'not_ok',type:'not_ok'});
                 }
 
-               displayAry.push({title:'实际用量',id:'input_dosage',content:this.state.input_dosage,type:'input'});
+                if (!Global.isQC2SubMember(Global.UserInfo)) {
+                    displayAry.push({title:'实际用量',id:'input_dosage',content:this.state.input_dosage,type:'input'});
 
-                displayAry.push({title:'计划用量',content:this.state.data.rollingPlan.planAmount,id:'b1'},);
-                displayAry.push({title:'物项名称',content:this.state.data.rollingPlan.itemName,id:'b2'},);
-                displayAry.push({title:'物项编号',content:this.state.data.rollingPlan.itemNo,id:'b3'},);
+                    displayAry.push({title:'计划用量',content:this.state.data.rollingPlan.planAmount,id:'b1'},);
+                    displayAry.push({title:'物项名称',content:this.state.data.rollingPlan.itemName,id:'b2'},);
+                    displayAry.push({title:'物项编号',content:this.state.data.rollingPlan.itemNo,id:'b3'},);
 
-                displayAry.push({title:'规格型号',content:this.state.data.rollingPlan.speification,id:'b4'},);
-                displayAry.push({title:'单位',content:this.state.data.rollingPlan.projectUnit,id:'b5'},);
-                displayAry.push({type:'devider'},);
+                    displayAry.push({title:'规格型号',content:this.state.data.rollingPlan.speification,id:'b4'},);
+                    displayAry.push({title:'单位',content:this.state.data.rollingPlan.projectUnit,id:'b5'},);
+
+                    displayAry.push({type:'devider'},);
+                }
+
 
                 displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'b6'},);
                 displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'b7'},);

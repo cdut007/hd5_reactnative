@@ -13,6 +13,7 @@ import {
     TextInput,
     ScrollView,
     Modal,
+    ImageBackground,
 } from 'react-native';
 
 
@@ -93,7 +94,9 @@ export default class WitnessFailResultView extends Component {
                 console.log('url====='+(HttpRequest.getDomain()+ item.url))
               images.push(
                 <TouchableOpacity key={'net' + i} onPress={() => this.viewBigImages(isFeedback, i)}>
+                     <ImageBackground style={{width: 70, height: 70, marginLeft: 10}} source={require('../images/temporary_img.png')}>
                   <Image source={{uri: HttpRequest.getDomain()+ item.url }} style={{borderRadius: 4, width: 70, height: 70, resizeMode: 'cover', marginLeft: 10,}}/>
+                  </ImageBackground>
                 </TouchableOpacity>
               );
             });
@@ -105,11 +108,9 @@ export default class WitnessFailResultView extends Component {
 
         viewBigImages(isFeedback, index){
           var imageUrls = [];
-          if(isFeedback){
-            this.props.data.witnessFiles.map((item) => {imageUrls.push({url: HttpRequest.getDomain()+ item.url})});
-          }else{
-            this.props.data.witnessFiles.map((item) => {imageUrls.push({url: HttpRequest.getDomain()+ item.url})});
-          }
+
+          this.props.data.witnessFiles.map((item) => {imageUrls.push({url: HttpRequest.getDomain()+ item.url})});
+
           this.setState({modalVisible: true, bigImages: imageUrls, currentImageIndex: index})
         }
 

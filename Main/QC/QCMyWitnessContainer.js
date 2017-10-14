@@ -50,7 +50,7 @@ var qc2teamstatusDatas = [
 
     {
         index:0,
-        status:'UNHANDLED',
+        status:'UNCOMPLETED',
         data:[],
         pageNo:1,
     },
