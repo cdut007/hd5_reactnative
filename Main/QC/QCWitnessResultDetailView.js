@@ -276,6 +276,8 @@ export default class QCWitnessResultDetailView extends Component {
             }
         }else if (status == 'UNWITNESS') {
             return '未完成'
+        }else if (status == 'ASSIGNED') {
+            return '待见证'
         }
         return Global.getWitnesstatus(status)
     }

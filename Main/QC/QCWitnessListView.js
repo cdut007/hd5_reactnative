@@ -168,9 +168,9 @@ export default class QCWitnessListView extends Component {
     }
 
     onItemPress(itemData){
-    if (Global.isQCTeam(Global.UserInfo)) {
+    if (Global.isQCTeam(Global.UserInfo) || Global.isQC2Team(Global.UserInfo)) {
         this.props.navigator.push({
-            component: QCWitnessTeamDetailView,
+            component: QCWitnessResultDetailView,
              props: {
                  data:itemData,
                  delivery:false,
