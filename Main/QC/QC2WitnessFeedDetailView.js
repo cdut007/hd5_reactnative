@@ -31,8 +31,6 @@ import DateTimePickerView from '../../common/DateTimePickerView'
 import MemberSelectView from '../../common/MemberSelectView'
 import WitnessFailResultView from '../../Main/WitnessFailResultView';
 
-import QC2WitnessFeedDetailView from './QC2WitnessFeedDetailView'
-
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -62,13 +60,13 @@ var options = {
 };
 import ImagePicker from 'react-native-image-picker'
 
-export default class QCWitnessDetailView extends Component {
+export default class QC2WitnessFeedDetailView extends Component {
     constructor(props) {
         super(props);
         var data = this.props.data
         data.rollingPlan = new Object()
         this.state = {
-            title: '见证详情',
+            title: '见证回填',
             isHankouType:1,
             data:data,
             choose_address:null,
@@ -142,7 +140,7 @@ export default class QCWitnessDetailView extends Component {
             leftIcon={require('../../images/back.png')}
             leftPress={this.back.bind(this)}
             />
-            {this.renderTop()}
+            
             <View style={{backgroundColor:'#f2f2f2',height:10,width:width}}></View>
              {this.renderDetailView()}
              {this.renderFormView()}
@@ -191,15 +189,6 @@ export default class QCWitnessDetailView extends Component {
             }
         }
 
-
-
-        if (!Global.isQC2SubMember(Global.UserInfo) && !Global.isQC2SubMember(Global.UserInfo)) {
-            if (!this.state.input_dosage) {
-                alert('请填写实际用量')
-                return
-            }
-
-        }
 
         var bodyArray=[]
         for (var i = 0; i < this.state.data.length; i++) {
@@ -287,68 +276,16 @@ export default class QCWitnessDetailView extends Component {
     renderFormView(){
             //1  fininshed retun, jsut san
 
-            if (Global.isQC1Member(Global.UserInfo)) {
-
                 return(<View style={{height:50,width:width,flexDirection:'row'}}>
                         <View style={{height:50,flex:1}}><CommitButton title={'提交'}
                                 onPress={this.startWitness.bind(this)}></CommitButton></View>
                                 </View>)
 
-            }else if (Global.isQC2SubMember(Global.UserInfo)) {
 
-                return(<View style={{height:50,width:width,flexDirection:'row'}}>
-                        <View style={{height:50,flex:1}}><CommitButton title={'提交'}
-                                onPress={this.startWitness.bind(this)}></CommitButton></View>
-                                </View>)
-
-            }else if (Global.isCaptain(Global.UserInfo)) {
-
-            }else if (Global.isMonitor(Global.UserInfo)) {
-
-            }
 
     }
 
-    renderTop(){
-        return(<View style={styles.statisticsflexContainer}>
 
-        <View style={styles.cell}>
-
-          <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
-            申请见证时间
-          </Text>
-          <Text numberOfLines={1} style={{color:'#777777',fontSize:14,}}>
-            {Global.formatDate(this.props.data.createDate)}
-          </Text>
-        </View>
-
-
-        <View style={styles.cell}>
-
-        <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
-          见证类型
-        </Text>
-        <Text style={{color:'#777777',fontSize:14,}}>
-         {this.props.data.noticeType}
-        </Text>
-        </View>
-
-
-
-        <View style={styles.cell}>
-
-
-        <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
-          当前状态
-        </Text>
-        <Text style={{color:'#e82628',fontSize:14,}}>
-          {this.getStatus(this.props.data.status)}
-        </Text>
-        </View>
-
-        </View>
-)
-    }
 
     getStatus(status){
         if (status == 'WITNESSED') {
@@ -706,134 +643,8 @@ export default class QCWitnessDetailView extends Component {
 
    }
 
-   onWitnessPress(witnessInfo){
-       this.props.navigator.push({
-           component: WitnessFailResultView,
-            props: {
-                data:witnessInfo,
-               }
-       })
-   }
-
-   onWitnessFeedPress(witnessInfo){
-       this.props.navigator.push({
-           component: QC2WitnessFeedDetailView,
-            props: {
-                data:witnessInfo,
-               }
-       })
-   }
 
 
-       witnessItemInfo(witnessInfo){
-
-           if (witnessInfo.result == 'QUALIFIED') {
-               return(
-                   <View style={styles.statisticsflexContainer}>
-
-                   <View style={styles.cell}>
-
-                     <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                       {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
-                     </Text>
-                     <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                       见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
-                     </Text>
-                   </View>
-
-
-                   <View style={styles.cell}>
-
-                   <Text style={{textAlign:'right',color:'#0755a6',fontSize:14,marginBottom:4,}}>
-                     合格
-                   </Text>
-                   <Text style={{color:'#777777',fontSize:12,}}>
-                    见证地点： {witnessInfo.realWitnessAddress}
-                   </Text>
-                   </View>
-
-                   </View>
-               )
-           }else if (witnessInfo.result == 'UNQUALIFIED'){
-               return(
-                   <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onWitnessPress.bind(this,witnessInfo)}>
-
-                   <View style={styles.cell}>
-
-                     <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                               {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
-                     </Text>
-                     <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                       见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
-                     </Text>
-                   </View>
-
-
-                   <View style={styles.cell}>
-
-                   <Text style={{textAlign:'right',color:'#0755a6',fontSize:14,marginBottom:4,}}>
-                     不合格
-                   </Text>
-                   <Text style={{color:'#777777',fontSize:12,}}>
-                    见证地点： {witnessInfo.realWitnessAddress}
-                   </Text>
-                   </View>
-
-                   <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/right_enter_blue.png')}></Image>
-
-                   </TouchableOpacity>
-               )
-           }else{
-
-               if (witnessInfo.qc2Status) {
-                   return(
-                       <View style={styles.statisticsflexContainer}>
-
-                       <View style={styles.cell}>
-
-                         <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                                   {this.getNoticeType(witnessInfo.noticePoint)}({witnessInfo.noticeType})
-                         </Text>
-                       </View>
-
-
-                       <View style={styles.cell}>
-
-                       <Text style={{color:'#e82628',fontSize:14,marginBottom:4,}}>
-                         {witnessInfo.witnesser.realname} -- 待见证
-                       </Text>
-
-                       </View>
-
-                       </View>
-                   )
-               }else{
-                   return(
-                        <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onWitnessFeedPress.bind(this,witnessInfo)}>
-
-                       <View style={styles.cell}>
-
-                         <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                                   {this.getNoticeType(witnessInfo.noticePoint)} ({witnessInfo.noticeType})
-                         </Text>
-                       </View>
-
-
-                       <View style={styles.cell}>
-
-                       <Text style={{color:'#0755a6',fontSize:14,marginBottom:4,}}>
-                         回填
-                       </Text>
-
-                       </View>
-                       <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/right_enter_blue.png')}></Image>
-                       </TouchableOpacity>
-                   )
-               }
-
-           }
-
-       }
 
 
     renderItem() {
@@ -864,45 +675,11 @@ export default class QCWitnessDetailView extends Component {
 
            ];
 
-             if (Global.isQC2Member(Global.UserInfo)) {
-                  displayAry = []
-                  if (this.state.data.subWitness) {
-                      for (var i = 0; i < this.state.data.subWitness.length; i++) {
-                            var subWitness = this.state.data.subWitness[i]
-                            if (!subWitness.witnesser) {
-                                continue
-                            }
-                            displayAry.push({data:subWitness,id:'m'+i,type:'witness'})
-                      }
-                      displayAry.push({type:'devider'},);
-                  }
 
-             }
 
                 if (this.state.choose_result == '不合格') {
                  displayAry.push({title:'不合格绘制',id:'not_ok',type:'not_ok'});
                 }
-
-                if (!Global.isQC2SubMember(Global.UserInfo)&&!Global.isQC2Member(Global.UserInfo)) {
-                    displayAry.push({title:'实际用量',id:'input_dosage',content:this.state.input_dosage,type:'input'});
-
-                    displayAry.push({title:'计划用量',content:this.state.data.rollingPlan.planAmount,id:'b1'},);
-                    displayAry.push({title:'物项名称',content:this.state.data.rollingPlan.itemName,id:'b2'},);
-                    displayAry.push({title:'物项编号',content:this.state.data.rollingPlan.itemNo,id:'b3'},);
-
-                    displayAry.push({title:'规格型号',content:this.state.data.rollingPlan.speification,id:'b4'},);
-                    displayAry.push({title:'单位',content:this.state.data.rollingPlan.projectUnit,id:'b5'},);
-
-                    displayAry.push({type:'devider'},);
-                }
-
-
-                displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'b6'},);
-                displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'b7'},);
-                displayAry.push({title:'工程量编号',content:this.state.data.rollingPlan.projectNo,id:'b8'},);
-                displayAry.push({title:'工程量名称',content:this.state.data.rollingPlan.projectName,id:'b9'},);
-                displayAry.push({title:'焊口/支架',content:this.state.data.rollingPlan.weldno,id:'b10'},);
-                displayAry.push({title:'工序名／编号',content:this.state.data.workStepName,id:'b11'},);
 
 
                // 遍历
@@ -932,12 +709,7 @@ export default class QCWitnessDetailView extends Component {
                        itemAry.push(
                           this.chooseItemInfo(displayAry[i].id,displayAry[i].title,displayAry[i].content,displayAry[i].data,'date')
                        );
-                   }else  if (displayAry[i].type == 'witness') {
-                        itemAry.push(this.witnessItemInfo(displayAry[i].data));
-                        itemAry.push(
-                           <View style={[styles.divider,{height:1}]}/>
-                        );
-                    }else{
+                   }else{
                        itemAry.push(
                            <DisplayItemView key={displayAry[i].id}
                             title={displayAry[i].title}
