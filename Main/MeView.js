@@ -79,7 +79,8 @@ export default class MeView extends Component {
         // }
         this.props.navigator.resetTo({
             component: LoginView,
-            name: 'LoginView'
+            name: 'LoginView',
+            props: this.props
         })
     };
     async _removeStorage() {
