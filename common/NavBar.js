@@ -70,7 +70,7 @@ export default class NavBar extends Component{
     }
     render(){
         return(
-            <View style={{color:"#d6d6d6",alignSelf:'stretch',height: NavBar.topbarHeight + 0.5,}}>
+            <View style={{alignSelf:'stretch',height: NavBar.topbarHeight + 0.5,}}>
                 <View style={[styles.topbar, this.props.style]}>
                 {this.renderBtn("left")}
                 <Animated.Text numberOfLines={1} style={[styles.title, this.props.titleStyle]}>{this.props.title}</Animated.Text>
