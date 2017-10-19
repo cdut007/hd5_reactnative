@@ -15,6 +15,7 @@ import com.facebook.soloader.SoLoader;
 import com.hd_app.log.LogReactPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.reactlibrary.RNCardViewPackage;
+import com.tencent.bugly.Bugly;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +50,7 @@ public class MainApplication extends Application implements ReactApplication {
     public void onCreate() {
         super.onCreate();
         SoLoader.init(this, /* native exopackage */ false);
+        Bugly.init(getApplicationContext(), "8627b7cc8e", false);
         final String appName = this.getString(R.string.app_name);
         final String logPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/log";
 
