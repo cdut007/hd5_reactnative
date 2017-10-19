@@ -474,7 +474,7 @@ export default class PlanWriteLastStepDetailView extends Component {
         if (!this.state.displayMore) {
             return;
         }
-          var itemAry = [];
+        var itemAry = [];
         var displayMoreAry=[];
         displayMoreAry.push({title:'子项',content:this.state.data.subItem,id:'c1'},);
         displayMoreAry.push({title:'系统号',content:this.state.data.systemNo,id:'c2'},);

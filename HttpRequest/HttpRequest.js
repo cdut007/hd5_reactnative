@@ -1,14 +1,18 @@
 import { AsyncStorage } from 'react-native';
 import Xlog from 'react-native-xlog';
 
-const apiDomainAddr = 'http://39.108.165.171' //
-const apiAddr =  apiDomainAddr + '/hdxt/api'
+var apiDomainAddr = 'http://39.108.165.171' //
+var apiAddr =  apiDomainAddr + '/hdxt/api'
 var httpToken = ''
 var Global = require('../common/globals');
 
 module.exports = {
  getDomain(){
      return apiDomainAddr
+ },
+ setDomain(domain){
+      apiDomainAddr = domain ;
+      apiAddr =  apiDomainAddr + '/hdxt/api' ;
  },
 get(apiName, body,successCallback, failCallback)
 {

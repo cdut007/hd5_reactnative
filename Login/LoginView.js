@@ -22,6 +22,13 @@ var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 
 var index;
+
+String.prototype.startWith=function(str){
+  var reg=new RegExp("^"+str);
+  return reg.test(this);
+}
+
+
 export default class LoginView extends Component {
     constructor(props) {
         super(props)
@@ -53,9 +60,20 @@ export default class LoginView extends Component {
 
     onLoginPress() {
         console.log('LoginId:' + this.state.LoginId + '  password:' + this.state.passWord)
+
+
+    if (this.state.LoginId && this.state.LoginId.startWith('http:')) {
+                        HttpRequest.setDomain(this.state.LoginId)
+                        Global.showToast('设置成功=='+this.state.LoginId)
+                        return
+        }
+
+
         this.setState({
             loadingVisible: true
         });
+
+
         var paramBody = {
                 'username': this.state.LoginId,
                 'password': this.state.passWord,
@@ -68,6 +86,8 @@ export default class LoginView extends Component {
             alert('请输入用户名或密码')
         }
         else {
+
+
             HttpRequest.post('/authenticate', paramBody, this.onLoginSuccess.bind(this),
                 (e) => {
                     this.setState({
