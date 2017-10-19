@@ -113,7 +113,7 @@ export default class IssueListView extends Component {
 
     componentDidMount() {
         this.executeProblemRequest(1);
-        newIssueSubscription = DeviceEventEmitter.addListener('new_issue',function(){this._onRefresh})
+        newIssueSubscription = DeviceEventEmitter.addListener('new_issue',(param) => {this._onRefresh()})
         operationSubscription = DeviceEventEmitter.addListener('operate_issue',(param)=>{this._onRefresh();})
     }
 

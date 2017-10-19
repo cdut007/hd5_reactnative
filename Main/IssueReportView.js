@@ -343,7 +343,7 @@ export default class IssueReportView extends Component {
                     </TouchableOpacity>
                 );
         })}
-        if(this.state.fileArr[this.state.fileArr.length-1]['fileSource']){
+        if(this.state.fileArr[this.state.fileArr.length-1]['fileSource'] && this.state.fileArr.length < MAX_IMAGE_COUNT){
                 this.state.fileArr.push({});
             }
         return imageViews;
