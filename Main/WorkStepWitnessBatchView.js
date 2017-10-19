@@ -22,7 +22,7 @@ import SingleWorkRollDealBatWitnessView from './SingleWorkRollDealBatWitnessView
 import IssueReportView from './IssueReportView'
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
-
+import Spinner from 'react-native-loading-spinner-overlay'
 import Global from '../common/globals.js'
 import CommitButton from '../common/CommitButton'
 
@@ -85,6 +85,9 @@ export default class WorkStepWitnessBatchView extends Component {
 
              {this.renderDetailView()}
              {this.renderFormView()}
+             <Spinner
+                 visible={this.state.loadingVisible}
+             />
             </View>
         )
     }
@@ -95,6 +98,9 @@ export default class WorkStepWitnessBatchView extends Component {
     }
 
     onDeliverySuccess(response){
+        this.setState({
+            loadingVisible: false
+        });
         Global.showToast(response.message)
 
     }
@@ -120,6 +126,9 @@ export default class WorkStepWitnessBatchView extends Component {
             elemnt.witnessdate = Global.formatFullDate(this.state.data[i].choose_date)
             bodyArray.push(elemnt)
         }
+        this.setState({
+            loadingVisible: true
+        });
         var paramBody = {
                  jsonBody:bodyArray
             }

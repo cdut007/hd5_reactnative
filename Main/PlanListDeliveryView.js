@@ -25,7 +25,7 @@ import dateformat from 'dateformat'
 import PlanDetailView from './PlanDetailView';
 import CommitButton from '../common/CommitButton'
 import CheckBox from 'react-native-checkbox'
-
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -314,6 +314,9 @@ export default class PlanListDeliveryView extends Component {
             {this.renderListView()}
             {this.renderCommitBtn()}
             <LoadingView showLoading={ this.state.isLoading } closeLoading={ this._closeLoading.bind(this)}></LoadingView>
+            <Spinner
+                visible={this.state.loadingVisible}
+            />
             </View>
         )
     }
@@ -440,6 +443,9 @@ export default class PlanListDeliveryView extends Component {
             alert('请选择作业组长')
             return
         }
+        this.setState({
+            loadingVisible: true
+        });
 
         var paramBody = {
                  type:this.props.type,
@@ -479,6 +485,9 @@ export default class PlanListDeliveryView extends Component {
     }
 
     onDeliverySuccess(response){
+        this.setState({
+            loadingVisible: false
+        });
         Global.showToast(response.message)
         this._onRefresh();
     }

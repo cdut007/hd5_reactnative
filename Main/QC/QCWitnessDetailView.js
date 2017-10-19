@@ -32,6 +32,7 @@ import MemberSelectView from '../../common/MemberSelectView'
 import WitnessFailResultView from '../../Main/WitnessFailResultView';
 
 import QC2WitnessFeedDetailView from './QC2WitnessFeedDetailView'
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -146,11 +147,17 @@ export default class QCWitnessDetailView extends Component {
             <View style={{backgroundColor:'#f2f2f2',height:10,width:width}}></View>
              {this.renderDetailView()}
              {this.renderFormView()}
+             <Spinner
+                 visible={this.state.loadingVisible}
+             />
             </View>
         )
     }
 
     onDeliverySuccess(response){
+        this.setState({
+            loadingVisible: false
+        })
         Global.showToast(response.message)
 
     }
@@ -210,6 +217,11 @@ export default class QCWitnessDetailView extends Component {
             elemnt.witnessdate = Global.formatFullDate(this.state.data[i].choose_date)
             bodyArray.push(elemnt)
         }
+
+
+        this.setState({
+            loadingVisible: true
+        })
 
         if (result == '1') {
             var param = new FormData()

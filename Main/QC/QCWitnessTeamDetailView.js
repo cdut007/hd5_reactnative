@@ -17,7 +17,7 @@ import px2dp from '../../common/util';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import DisplayItemView from '../../common/DisplayItemView';
 import EnterItemView from '../../common/EnterItemView';
-
+import Spinner from 'react-native-loading-spinner-overlay'
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
 
@@ -143,11 +143,17 @@ export default class QCWitnessTeamDetailView extends Component {
             <View style={{backgroundColor:'#f2f2f2',height:10,width:width}}></View>
              {this.renderDetailView()}
              {this.renderFormView()}
+             <Spinner
+                 visible={this.state.loadingVisible}
+             />
             </View>
         )
     }
 
     onDeliverySuccess(response){
+        this.setState({
+            loadingVisible: false
+        });
         Global.showToast(response.message)
         this.back();
     }
@@ -174,6 +180,9 @@ export default class QCWitnessTeamDetailView extends Component {
                    }
              }
 
+        this.setState({
+                 loadingVisible: true
+             });
         var paramBody = {
                 'ids': ids,
                 'memberId':qcId,

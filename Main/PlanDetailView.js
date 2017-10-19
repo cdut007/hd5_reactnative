@@ -27,7 +27,7 @@ import Accordion from 'react-native-collapsible/Accordion';
 
 import Global from '../common/globals.js'
 import CommitButton from '../common/CommitButton'
-
+import Spinner from 'react-native-loading-spinner-overlay'
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -114,6 +114,9 @@ export default class PlanDetailView extends Component {
             <View style={{backgroundColor:'#f2f2f2',height:10,width:width}}></View>
              {this.renderDetailView()}
               {this.renderFormView()}
+              <Spinner
+                  visible={this.state.loadingVisible}
+              />
             </View>
         )
     }
@@ -183,6 +186,11 @@ export default class PlanDetailView extends Component {
         }
 
         startPlanOp(method){
+
+            this.setState({
+                loadingVisible: true
+            })
+
             var paramBody = {
                      type:this.props.type,
                     'method': method,
@@ -228,6 +236,9 @@ export default class PlanDetailView extends Component {
         }
 
         onDeliverySuccess(response){
+            this.setState({
+                loadingVisible: false
+            })
             Global.showToast(response.message)
         }
 

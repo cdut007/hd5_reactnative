@@ -19,7 +19,7 @@ import HttpRequest from '../../HttpRequest/HttpRequest'
 import DisplayItemView from '../../common/DisplayItemView';
 import EnterItemView from '../../common/EnterItemView';
 import EditItemView from '../../common/EditItemView';
-
+import Spinner from 'react-native-loading-spinner-overlay'
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
 
@@ -140,15 +140,21 @@ export default class QC2WitnessFeedDetailView extends Component {
             leftIcon={require('../../images/back.png')}
             leftPress={this.back.bind(this)}
             />
-            
+
             <View style={{backgroundColor:'#f2f2f2',height:10,width:width}}></View>
              {this.renderDetailView()}
              {this.renderFormView()}
+             <Spinner
+                 visible={this.state.loadingVisible}
+             />
             </View>
         )
     }
 
     onDeliverySuccess(response){
+        this.setState({
+            loadingVisible: false
+        })
         Global.showToast(response.message)
 
     }
@@ -199,6 +205,10 @@ export default class QC2WitnessFeedDetailView extends Component {
             elemnt.witnessdate = Global.formatFullDate(this.state.data[i].choose_date)
             bodyArray.push(elemnt)
         }
+
+        this.setState({
+            loadingVisible: true
+        })
 
         if (result == '1') {
             var param = new FormData()

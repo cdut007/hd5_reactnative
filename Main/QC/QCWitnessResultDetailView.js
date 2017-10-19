@@ -20,7 +20,7 @@ import EnterItemView from '../../common/EnterItemView';
 import WitnessFailResultView from '../../Main/WitnessFailResultView';
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
-
+import Spinner from 'react-native-loading-spinner-overlay'
 import Global from '../../common/globals.js'
 import CommitButton from '../../common/CommitButton'
 
@@ -143,11 +143,17 @@ export default class QCWitnessResultDetailView extends Component {
             <View style={{backgroundColor:'#f2f2f2',height:10,width:width}}></View>
              {this.renderDetailView()}
              {this.renderFormView()}
+             <Spinner
+                 visible={this.state.loadingVisible}
+             />
             </View>
         )
     }
 
     onDeliverySuccess(response){
+        this.setState({
+            loadingVisible: false
+        });
         Global.showToast(response.message)
         this.back();
     }
@@ -173,6 +179,10 @@ export default class QCWitnessResultDetailView extends Component {
                         break
                    }
              }
+
+        this.setState({
+                 loadingVisible: true
+             });
 
         var paramBody = {
                 'ids': ids,

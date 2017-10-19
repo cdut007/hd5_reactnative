@@ -21,12 +21,12 @@ import CommonContentView from './CommonContentView';
 import SingleWorkRollDealBatWitnessView from './SingleWorkRollDealBatWitnessView';
 import IssueReportView from './IssueReportView'
 import WorkStepListView from './WorkStepListView';
-
+import CommitButton from '../common/CommitButton'
+import Spinner from 'react-native-loading-spinner-overlay'
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
 
 import Global from '../common/globals.js'
-import CommitButton from '../common/CommitButton'
 import DateTimePickerView from '../common/DateTimePickerView'
 import MemberSelectView from '../common/MemberSelectView'
 
@@ -153,6 +153,9 @@ export default class PlanWriteLastStepDetailView extends Component {
             <View style={{backgroundColor:'#f2f2f2',height:10,width:width}}></View>
              {this.renderDetailView()}
              {this.renderFormView()}
+             <Spinner
+                 visible={this.state.loadingVisible}
+             />
             </View>
         )
     }
@@ -193,6 +196,11 @@ export default class PlanWriteLastStepDetailView extends Component {
                 break
             }
         }
+
+        this.setState({
+            loadingVisible: true
+        });
+
         var paramBody = {
                 'id': this.state.data.id,
                 'welderId': choose_hankouNo,
@@ -229,6 +237,9 @@ export default class PlanWriteLastStepDetailView extends Component {
     }
 
     onDeliverySuccess(response){
+        this.setState({
+            loadingVisible: false
+        });
         Global.showToast(response.message)
     }
 

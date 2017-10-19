@@ -24,7 +24,7 @@ import EnterItemView from '../common/EnterItemView';
 import CommonContentView from './CommonContentView';
 import ImagePicker from 'react-native-image-picker';
 import ImageViewer from 'react-native-image-zoom-viewer';
-
+import Spinner from 'react-native-loading-spinner-overlay'
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
 
@@ -186,6 +186,9 @@ export default class IssueDetailView extends Component {
                 {this.renderDetailView()}
             </ScrollView>
             {this.renderBottomButton()}
+            <Spinner
+                visible={this.state.loadingVisible}
+            />
           </View>
         );
     }
@@ -225,6 +228,9 @@ startFeedbackProblem(){
 }
 
 answerSolution(result){
+    this.setState({
+        loadingVisible: true
+    })
   var parma = {
     questionId: this.state.data.id,
     answer: result,
@@ -275,6 +281,11 @@ startProblem(){
         }
     }
 
+
+    this.setState({
+        loadingVisible: true
+    })
+
     var paramBody = {
             'questionId':this.props.data.id,
             'designatedUserId': id,
@@ -312,6 +323,9 @@ startProblem(){
 }
 
       onDeliverySuccess(response){
+          this.setState({
+              loadingVisible: false
+          })
         DeviceEventEmitter.emit('operate_issue','operate_issue');
         this.back();
       }

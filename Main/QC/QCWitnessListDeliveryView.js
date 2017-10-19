@@ -25,7 +25,7 @@ import dateformat from 'dateformat'
 import QCWitnessTeamDetailView from './QCWitnessTeamDetailView';
 import CommitButton from '../../common/CommitButton'
 import CheckBox from 'react-native-checkbox'
-
+import Spinner from 'react-native-loading-spinner-overlay'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -342,6 +342,9 @@ export default class QCWitnessListDeliveryView extends Component {
             {this.renderListView()}
             {this.renderCommitBtn()}
             <LoadingView showLoading={ this.state.isLoading } closeLoading={ this._closeLoading.bind(this)}></LoadingView>
+            <Spinner
+                visible={this.state.loadingVisible}
+            />
             </View>
         )
     }
@@ -439,6 +442,9 @@ export default class QCWitnessListDeliveryView extends Component {
             alert('请选择见证员')
             return
         }
+        this.setState({
+            loadingVisible: true
+        });
 
         var qcId = ''
 
@@ -485,6 +491,9 @@ export default class QCWitnessListDeliveryView extends Component {
     }
 
     onDeliverySuccess(response){
+        this.setState({
+            loadingVisible: false
+        });
         Global.showToast(response.message)
         this._onRefresh();
     }
