@@ -483,7 +483,7 @@ export default class PlanWriteLastStepDetailView extends Component {
         displayMoreAry.push({title:'材质',content:this.state.data.matelial,id:'c5'},);
         displayMoreAry.push({title:'核级',content:this.state.data.croeLevel,id:'c6'},);
         displayMoreAry.push({title:'单位',content:this.state.data.projectUnit,id:'c7'},);
-        displayMoreAry.push({title:'点值',content:this.state.data.spot,id:'c8'},);
+        //displayMoreAry.push({title:'点值',content:this.state.data.spot,id:'c8'},);
         // 遍历
         for (var i = 0; i<displayMoreAry.length; i++) {
             itemAry.push(
