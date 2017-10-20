@@ -8,6 +8,7 @@ import {
     Text,
     AsyncStorage,
     Image,
+    ScrollView,
     KeyboardAvoidingView
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -171,15 +172,15 @@ export default class LoginView extends Component {
     render() {
         return (
 
+
             <View style={styles.rootcontainer}>
             <Image style={{position:'absolute',left:0,top:0,resizeMode:'stretch', alignItems:'center',
                             width:width,height:height,
                   justifyContent:'center',
                   flex:1}} source={require('../images/login_bj.jpg')}/>
-
-                <View style={styles.container}>
+               <KeyboardAvoidingView behavior='padding'>
+                <ScrollView>
                     <Image source={require('../images/cni_logo.png')} style={styles.logo} />
-
                     <View style={styles.LoginId}>
                     <Image
                     style={styles.style_image}
@@ -190,7 +191,7 @@ export default class LoginView extends Component {
                        textAlign: 'left',}}
                         underlineColorAndroid={'transparent'}
                         value={this.state.LoginId}
-                         underlineColorAndroid='transparent'
+                        underlineColorAndroid='transparent'
                         editable={true}
                         placeholderTextColor='#a4b4c4'
                         placeholder={'请输入用户名'}
@@ -218,7 +219,6 @@ export default class LoginView extends Component {
                         onChangeText={(text) => this.setState({ passWord: text })}>
                     </TextInput>
 
-
                     </View>
 
                     <TouchableOpacity onPress={this.onLoginPress.bind(this)}
@@ -228,13 +228,12 @@ export default class LoginView extends Component {
                     </Text>
                     </TouchableOpacity>
 
-
                     <Spinner
                         visible={this.state.loadingVisible}
                     />
 
-                </View>
-
+                </ScrollView>
+             </KeyboardAvoidingView>
 
             </View>
         )
@@ -313,4 +312,9 @@ const styles = StyleSheet.create(
             justifyContent: 'center',
             alignItems: 'center',
         },
+        welcome: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 10,
+},
     });
