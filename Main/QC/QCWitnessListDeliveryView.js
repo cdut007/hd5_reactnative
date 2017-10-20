@@ -194,22 +194,10 @@ export default class QCWitnessListDeliveryView extends Component {
             console.log(checked+'check item=='+item.id+';selected='+item.selected)
             item.selected = !checked
 
-            let newArray = this.state.items.slice();
-                for (var i = 0; i < this.state.items.length; i++) {
-                    if(item.id == this.state.items[i].id){
-                        newArray[i] = {
-                          ...item,
-                        };
-                        break
-                    }
-                }
-
-
-
-                let newDataSource = this.state.dataSource.cloneWithRows(newArray);
-                this.setState({
-                  dataSource: newDataSource
-                });
+            let _item = Object.assign({}, this.state.items[rowID], {'selected': item.selected});
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(Object.assign({}, this.state.items, {[rowID]: _item})),
+            })
 
         }
         }

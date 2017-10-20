@@ -165,22 +165,10 @@ export default class PlanListDeliveryView extends Component {
             console.log(checked+'check item=='+item.id+';selected='+item.selected)
             item.selected = !checked
 
-            let newArray = this.state.items.slice();
-                for (var i = 0; i < newArray.length; i++) {
-                    if(item.id == newArray[i].id){
-                        newArray[i] = {
-                          ...item,
-                        };
-                        break
-                    }
-                }
-
-
-
-                let newDataSource = this.state.dataSource.cloneWithRows(newArray);
-                this.setState({
-                  dataSource: newDataSource
-                });
+            let _item = Object.assign({}, this.state.items[rowID], {'selected': item.selected});
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(Object.assign({}, this.state.items, {[rowID]: _item})),
+            })
 
         }
         }
