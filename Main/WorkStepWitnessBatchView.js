@@ -41,12 +41,16 @@ export default class WorkStepWitnessBatchView extends Component {
     constructor(props) {
         super(props);
 
-
         this.state = {
             title: '发起见证',
             data:this.props.data,
+            address_items:[],
+            date_items:[],
         };
+
+
     }
+
 
 
 
@@ -301,11 +305,11 @@ export default class WorkStepWitnessBatchView extends Component {
 
                    <View style={[{alignItems:'center',},styles.statisticsflexContainer]}>
 
-                   <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+                   <View       key={'date_container' + index} style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
                    <TouchableOpacity
                     key={'date' + index}
-                   onPress={() => this._selectD.onClick()}
+                   onPress={() => this.state.date_items[index].onClick()}
                    style={{borderWidth:0.5,
                          alignItems:'center',
                          borderColor : '#f77935',
@@ -314,7 +318,7 @@ export default class WorkStepWitnessBatchView extends Component {
 
                    <DateTimePickerView
                     key={'date_choose' + index}
-                      ref={(c) => this._selectD = c}
+                      ref={(c) => this.state.date_items[index] = c}
                        type={'date'}
                        title={data.displayDate}
                        visible={this.state.time_visible}
@@ -330,18 +334,19 @@ export default class WorkStepWitnessBatchView extends Component {
 
 
                    <View
+                     key={'address_container' + index}
 
                     style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
-                   <TouchableOpacity  key={'address' + index} onPress={() => this._selectM.onPickClick()} style={{borderWidth:0.5,
+                   <TouchableOpacity  key={'address' + index} onPress={() => this.state.address_items[index].onPickClick()} style={{borderWidth:0.5,
                          alignItems:'center',
                          borderColor : '#f77935',
                          backgroundColor : 'white',
                          borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
 
                    <MemberSelectView
-                       key={'address_choose' + index}
-                   ref={(c) => this._selectM = c}
+                       key={index+'selectM'}
+                   ref={(c) => this.state.address_items[index] = c}
                    style={{color:'#f77935',fontSize:14,flex:1}}
                    title={data.displayAddress}
                    data={data.witnessAddresses}

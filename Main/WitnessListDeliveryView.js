@@ -194,23 +194,11 @@ export default class WitnessListDeliveryView extends Component {
         onChange={(checked) => {
             console.log(checked+'check item=='+item.id+';selected='+item.selected)
             item.selected = !checked
+            let _item = Object.assign({}, this.state.items[rowID], {'selected': item.selected});
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(Object.assign({}, this.state.items, {[rowID]: _item})),
+            })
 
-            let newArray = this.state.items.slice();
-                for (var i = 0; i < this.state.items.length; i++) {
-                    if(item.id == this.state.items[i].id){
-                        newArray[i] = {
-                          ...item,
-                        };
-                        break
-                    }
-                }
-
-
-
-                let newDataSource = this.state.dataSource.cloneWithRows(newArray);
-                this.setState({
-                  dataSource: newDataSource
-                });
 
         }
         }
@@ -218,6 +206,10 @@ export default class WitnessListDeliveryView extends Component {
 }
 
     onGetDataSuccess(response,paramBody){
+        if (paramBody.noticePointType!= noticePointType[this.state.selectIndex]) {
+             console.log('paramBody.noticePointType maybe request from other :'+paramBody.noticePointType)
+            return
+        }
          console.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
@@ -241,7 +233,7 @@ export default class WitnessListDeliveryView extends Component {
 
          var status = paramBody.status
 
-        if (this.state.isRefreshing) {
+        if (this.state.isRefreshing || pageNo == 1 ) {
             this.state.items = datas;
             pageNo = 1;
         }else{

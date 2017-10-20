@@ -249,6 +249,16 @@ export default class PlanWriteLastStepDetailView extends Component {
 
             if (this.props.data.status != 'COMPLETED' ) {
 
+                if (this.state.data.problemFlag){
+                    return(<View style={{height:50,width:width,flexDirection:'row'}}>
+                    <View style={{height:50,flex:1}}><CommitButton title={'问题创建'}
+                            onPress={this.startProblem.bind(this)} containerStyle={{backgroundColor:'#ffffff'}} titleStyle={{color: '#f77935'}}></CommitButton></View>
+                            <View style={{height:50,flex:1}}><CommitButton title={'发起见证'} titleStyle={{color:'#ffffff'}} containerStyle={{backgroundColor:'#f0f0f0',}}
+                                    ></CommitButton></View>
+                                    </View>)
+
+               }
+
                 return(<View style={{height:50,width:width,flexDirection:'row'}}>
                 <View style={{height:50,flex:1}}><CommitButton title={'问题创建'}
                         onPress={this.startProblem.bind(this)} containerStyle={{backgroundColor:'#ffffff'}} titleStyle={{color: '#f77935'}}></CommitButton></View>
