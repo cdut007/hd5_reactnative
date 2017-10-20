@@ -196,8 +196,8 @@ export default class WitnessListDeliveryView extends Component {
             item.selected = !checked
 
             let newArray = this.state.items.slice();
-                for (var i = 0; i < this.state.items.length; i++) {
-                    if(item.id == this.state.items[i].id){
+                for (var i = 0; i < newArray.length; i++) {
+                    if(item.id == newArray[i].id){
                         newArray[i] = {
                           ...item,
                         };
@@ -218,6 +218,10 @@ export default class WitnessListDeliveryView extends Component {
 }
 
     onGetDataSuccess(response,paramBody){
+        if (paramBody.noticePointType!= noticePointType[this.state.selectIndex]) {
+             console.log('paramBody.noticePointType maybe request from other :'+paramBody.noticePointType)
+            return
+        }
          console.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
@@ -241,7 +245,7 @@ export default class WitnessListDeliveryView extends Component {
 
          var status = paramBody.status
 
-        if (this.state.isRefreshing) {
+        if (this.state.isRefreshing || pageNo == 1 ) {
             this.state.items = datas;
             pageNo = 1;
         }else{

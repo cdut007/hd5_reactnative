@@ -166,8 +166,8 @@ export default class PlanListDeliveryView extends Component {
             item.selected = !checked
 
             let newArray = this.state.items.slice();
-                for (var i = 0; i < this.state.items.length; i++) {
-                    if(item.id == this.state.items[i].id){
+                for (var i = 0; i < newArray.length; i++) {
+                    if(item.id == newArray[i].id){
                         newArray[i] = {
                           ...item,
                         };
