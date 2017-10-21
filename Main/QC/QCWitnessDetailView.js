@@ -380,8 +380,6 @@ export default class QCWitnessDetailView extends Component {
 
     renderDetailView(){
             return(<ScrollView
-            keyboardDismissMode='on-drag'
-            keyboardShouldPersistTaps="never"
             style={styles.mainStyle}>
             {this.renderItem()}
             </ScrollView>);
@@ -478,7 +476,7 @@ export default class QCWitnessDetailView extends Component {
     onChangeText(keyValue,text){
         console.log(text+"content===="+keyValue);
         this.state[keyValue] = text;
-        //this.setState({...this.state});
+        this.setState({...this.state});
     }
 
 
