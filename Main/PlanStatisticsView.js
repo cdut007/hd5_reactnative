@@ -10,6 +10,7 @@ import {
     ActivityIndicator,
     TouchableNativeFeedback,
     TouchableHighlight,
+    AsyncStorage,
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -58,22 +59,32 @@ export default class PlanStatisticsView extends Component {
     }
 
     componentDidMount() {
+        var me = this
+        AsyncStorage.getItem('k_plan_captain_team_info_statistics_rollingplan_'+this.props.type,function(errs,result)
+        {
+            if (!errs && result && result.length)
+            {
+                 console.log('read k_plan_captain_info_statistics_rollingplan_@@@@')
+                var captain = JSON.parse(result);
+                if (captain) {
+                    me.setState({
+                        dataSource: me.state.dataSource.cloneWithRows(captain),
+                        isLoading: false,
+                    });
+                }
+
+            }
+            else
+            {
+
+            }
+        });
 
         this.executePlanRequest();
-    //     this.setState({
-    //         dataSource: this.state.dataSource.cloneWithRows(
-    //             [{name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    //         {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    //     {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    // {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    // {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    // {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'},
-    // {name:'刘想',class:'一班班长','total':'123','undelivery':'11','work':'23','finish':'22','pause':'23'}]),
-    //         isLoading: false,
-    //     });
+
     }
 
-    onGetDataSuccess(response){
+    onGetDataSuccess(response,body){
          console.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
@@ -83,6 +94,15 @@ export default class PlanStatisticsView extends Component {
         var captain = response.responseResult.captain;
 
         if (captain) {
+            AsyncStorage.setItem('k_plan_captain_team_info_statistics_rollingplan_'+body.type, JSON.stringify(captain), (error, result) => {
+                if (error) {
+                    console.log('save k_plan_captain_team_info_statistics_rollingplan_ faild.')
+                }
+
+                console.log('save k_plan_captain_team_info_statistics_rollingplan_: sucess')
+
+            });
+
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(captain),
                 isLoading: false,
@@ -172,11 +192,11 @@ export default class PlanStatisticsView extends Component {
             HttpRequest.get('/statistics/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
-
-                    this.setState({
-                      dataSource: this.state.dataSource.cloneWithRows([]),
-                      isLoading: false,
-                    });
+                    // 
+                    // this.setState({
+                    //   dataSource: this.state.dataSource.cloneWithRows([]),
+                    //   isLoading: false,
+                    // });
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {

@@ -10,6 +10,7 @@ import {
     ActivityIndicator,
     TouchableNativeFeedback,
     TouchableHighlight,
+    AsyncStorage,
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -61,11 +62,33 @@ export default class PlanStatisticsSubView extends Component {
 
     componentDidMount() {
 
+        var me = this
+        AsyncStorage.getItem('k_plan_team_info_statistics_rollingplan_'+this.props.data.user.id+"_"+this.props.type,function(errs,result)
+        {
+            if (!errs && result && result.length)
+            {
+                 console.log('read k_plan_team_info_statistics_rollingplan_@@@@'+result)
+                var monitor = JSON.parse(result);
+                if (monitor) {
+                    Global.UserInfo.monitor = monitor ;
+                    me.setState({
+                        dataSource: me.state.dataSource.cloneWithRows(monitor),
+                        isLoading: false,
+                    });
+                }
+
+            }
+            else
+            {
+
+            }
+        });
+
         this.executePlanRequest();
 
     }
 
-    onGetDataSuccess(response){
+    onGetDataSuccess(response,body){
          console.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
@@ -79,10 +102,20 @@ export default class PlanStatisticsSubView extends Component {
 
         if (monitor) {
             Global.UserInfo.monitor = monitor;
+            AsyncStorage.setItem('k_plan_team_info_statistics_rollingplan_'+body.userId+"_"+body.type, JSON.stringify(monitor), (error, result) => {
+                if (error) {
+                    console.log('save k_plan_team_info_statistics_rollingplan_ faild.')
+                }
+
+                console.log('save k_plan_team_info_statistics_rollingplan_: sucess')
+
+            });
+
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(monitor),
                 isLoading: false,
             });
+
         }
 
     }
@@ -165,11 +198,11 @@ export default class PlanStatisticsSubView extends Component {
             HttpRequest.get('/statistics/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
-
-                    this.setState({
-                      dataSource: this.state.dataSource.cloneWithRows([]),
-                      isLoading: false,
-                    });
+                    // 
+                    // this.setState({
+                    //   dataSource: this.state.dataSource.cloneWithRows([]),
+                    //   isLoading: false,
+                    // });
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
