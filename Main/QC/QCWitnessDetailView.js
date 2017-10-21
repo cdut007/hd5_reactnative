@@ -518,7 +518,7 @@ export default class QCWitnessDetailView extends Component {
                   <Text style= {{width: width * 0.33,fontSize: 14,color: "#1c1c1c"}}>{title} : </Text>
                   <DateTimePickerView
                   ref={(c) => this._selectD = c}
-                                         type={'date'}
+                                         type={'datetime'}
                                          title={content}
                                          style={{color:'#6d9ee1',fontSize:14,flex:1}}
                                          onSelected={this.onSelectedDate.bind(this,id)}
@@ -752,7 +752,7 @@ export default class QCWitnessDetailView extends Component {
                        {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                      </Text>
                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                       见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                       见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                      </Text>
                    </View>
 
@@ -779,7 +779,7 @@ export default class QCWitnessDetailView extends Component {
                                {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                      </Text>
                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                       见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                       见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                      </Text>
                    </View>
 

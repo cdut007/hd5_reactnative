@@ -9,6 +9,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     ScrollView,
+    ImageBackground,
     AsyncStorage
 } from 'react-native';
 import Dimensions from 'Dimensions';
@@ -244,8 +245,8 @@ export default class QCWitnessResultDetailView extends Component {
           <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
             见证时间
           </Text>
-          <Text numberOfLines={2} style={{color:'#777777',fontSize:14,}}>
-            {Global.formatDate(date)}
+          <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
+            {Global.formatFullDateDisplay(date)}
           </Text>
         </View>
 
@@ -319,7 +320,6 @@ export default class QCWitnessResultDetailView extends Component {
                             查看不合格原因
                           </Text>
                         </View>
-
                         <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/right_enter_blue.png')}></Image>
 
                         </TouchableOpacity>
@@ -458,7 +458,7 @@ export default class QCWitnessResultDetailView extends Component {
                         {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                        见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                       </Text>
                     </View>
 
@@ -485,7 +485,7 @@ export default class QCWitnessResultDetailView extends Component {
                                 {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                        见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                       </Text>
                     </View>
 

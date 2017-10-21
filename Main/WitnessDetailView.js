@@ -150,8 +150,8 @@ export default class WitnessDetailView extends Component {
           <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
             见证时间
           </Text>
-          <Text numberOfLines={2} style={{color:'#777777',fontSize:14,}}>
-            {Global.formatDate(date)}
+          <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
+            {Global.formatFullDateDisplay(date)}
           </Text>
         </View>
 
@@ -306,7 +306,7 @@ onWitnessPress(witnessInfo){
                         {witnessInfo.witnesser.realname}
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                        见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                       </Text>
                     </View>
 
@@ -333,7 +333,7 @@ onWitnessPress(witnessInfo){
                         {witnessInfo.witnesser.realname}
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                        见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                       </Text>
                     </View>
 

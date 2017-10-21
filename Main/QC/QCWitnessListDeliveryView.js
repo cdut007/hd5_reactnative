@@ -564,7 +564,7 @@ export default class QCWitnessListDeliveryView extends Component {
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
                         <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                           {Global.formatDate(rowData.createDate)}
+                           {Global.formatFullDateDisplay(rowData.createDate)}
                         </Text>
 
                       </TouchableOpacity>

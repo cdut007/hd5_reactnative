@@ -319,7 +319,7 @@ export default class WorkStepWitnessBatchView extends Component {
                    <DateTimePickerView
                     key={'date_choose' + index}
                       ref={(c) => this.state.date_items[index] = c}
-                       type={'date'}
+                       type={'datetime'}
                        title={data.displayDate}
                        visible={this.state.time_visible}
                        style={{color:'#f77935',fontSize:14,flex:1}}
