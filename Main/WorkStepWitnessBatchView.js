@@ -9,7 +9,8 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     ScrollView,
-    AsyncStorage
+    AsyncStorage,
+    DeviceEventEmitter
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar';
@@ -96,16 +97,16 @@ export default class WorkStepWitnessBatchView extends Component {
         )
     }
 
-    onWitnessSuccess(response){
-        Global.showToast(response.message)
 
-    }
 
     onDeliverySuccess(response){
         this.setState({
             loadingVisible: false
         });
         Global.showToast(response.message)
+        //update
+        DeviceEventEmitter.emit('workstep_update','workstep_update');
+        this.back();
 
     }
 
