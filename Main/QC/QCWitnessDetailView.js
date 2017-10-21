@@ -83,6 +83,7 @@ export default class QCWitnessDetailView extends Component {
             witness_resules:['合格','不合格'],
             witnessNotOkResultType:'不合格原因2',
             witnessNotOkResultTypes: ['不合格原因1','不合格原因2'],
+            loadingVisible:false,
         };
     }
 
@@ -218,7 +219,6 @@ export default class QCWitnessDetailView extends Component {
             bodyArray.push(elemnt)
         }
 
-
         this.setState({
             loadingVisible: true
         })
@@ -266,7 +266,8 @@ export default class QCWitnessDetailView extends Component {
                 (e) => {
                     this.setState({
                         loadingVisible: false
-                    });
+                    })
+                Global.showToast(e)
                     try {
                         var errorInfo = JSON.parse(e);
                     }
@@ -277,15 +278,17 @@ export default class QCWitnessDetailView extends Component {
                         if (errorInfo != null) {
                             if (errorInfo.code == -1002||
                              errorInfo.code == -1001) {
-                            alert(errorInfo.message);
+                           Global.showToast(errorInfo.message)
+                            // alert(errorInfo.message);
                         }else {
-                            alert(e)
+                            // alert(e)
+                       Global.showToast(e)
                         }
-
-                        } else {
-                            alert(e)
                         }
-
+                        else {
+                        Global.showToast(e)
+                            // alert(e)
+                        }
 
                     console.log(' error:' + e)
                 })
@@ -896,7 +899,7 @@ export default class QCWitnessDetailView extends Component {
                 }
 
                 if (!Global.isQC2SubMember(Global.UserInfo)&&!Global.isQC2Member(Global.UserInfo)) {
-                    displayAry.push({title:'实际用量',id:'input_dosage',content:this.state.input_dosage,type:'input'});
+                    displayAry.push({title:'实际用量',id:'input_dosage',content:this.state.input_dosage,type:'input',keyboard:'numeric'});
 
                     displayAry.push({title:'计划用量',content:this.state.data.rollingPlan.planAmount,id:'b1'},);
                     displayAry.push({title:'物项名称',content:this.state.data.rollingPlan.itemName,id:'b2'},);
@@ -925,6 +928,7 @@ export default class QCWitnessDetailView extends Component {
                            <EditItemView key={displayAry[i].id}
                             topic={displayAry[i].title}
                             content={displayAry[i].content}
+                            keyboard={displayAry[i].keyboard}
                             onChangeText={this.onChangeText.bind(this,keyValue)}
                            />
                        );

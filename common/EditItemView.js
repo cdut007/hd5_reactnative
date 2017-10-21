@@ -16,7 +16,16 @@ var width = Dimensions.get('window').width;
         content: PropTypes.string,
         topic: PropTypes.string,
         onChangeText:PropTypes.func,
+        keyboard : PropTypes.string ?PropTypes.string : 'default'
     }
+
+    // constructor(props) {
+    //     super(props)
+    // this.state = {
+    //  keyboard : this.props.keyboard ? this.props.keyboard : "default"
+    // }
+    // }
+
 
     render()
     {
@@ -29,6 +38,8 @@ var width = Dimensions.get('window').width;
                 underlineColorAndroid={'transparent'}
                  underlineColorAndroid='transparent'
                 value={this.props.content}
+                keyboardType={this.props.keyboard}
+
                 ></TextInput>
             </View>
             <View style={styles.divider}/>
