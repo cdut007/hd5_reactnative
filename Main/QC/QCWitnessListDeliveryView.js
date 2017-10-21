@@ -13,6 +13,7 @@ import {
     TouchableHighlight,
     InteractionManager,
     ScrollView,
+    DeviceEventEmitter
 } from 'react-native';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -67,6 +68,7 @@ export default class QCWitnessListDeliveryView extends Component {
             totalCount:0,
             choose_memberQC1:null,
             displayMemberQC1:displayInfo,
+            displayInfo:displayInfo,
             members:[],
 
         }
@@ -167,11 +169,15 @@ export default class QCWitnessListDeliveryView extends Component {
 
 
     componentDidMount() {
-
+        this.mSubscription = DeviceEventEmitter.addListener('delivery_qc',(param) => {this._onRefresh()})
         this.executePlanRequest(1);
         this.getWitnessTeamMember();
 
     }
+    componentWillUnmount(){
+      this.mSubscription.remove();
+    }
+
 
     renderCheckBox(item,rowID) {
 
@@ -386,7 +392,7 @@ export default class QCWitnessListDeliveryView extends Component {
                       style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
                       title={this.state.displayMemberQC1}
                       data={membersQC1}
-                      pickerTitle={'选择QC1'}
+                      pickerTitle={this.state.displayInfo}
                       onSelected={this.onSelectedMember.bind(this)} />
                                     <Image
                                     style={{width:20,height:20}}

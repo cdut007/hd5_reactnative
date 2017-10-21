@@ -38,12 +38,17 @@ export default class QCWitnessResultDetailView extends Component {
         super(props);
         var data = this.props.data
         data.rollingPlan = new Object()
+        var displayInfo = '选择QC1'
+        if (Global.isQC2Team(Global.UserInfo)) {
+            displayInfo = '选择QC2'
+        }
         this.state = {
             title: '见证详情',
             data:data,
             QCTeamMember:this.props.QCTeamMember,
             choose_memberQC1:null,
-            displayMemberQC1:'选择QC1',
+            displayMemberQC1:displayInfo,
+            displayInfo:displayInfo,
         };
     }
 
@@ -375,7 +380,7 @@ export default class QCWitnessResultDetailView extends Component {
                       style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
                       title={this.state.displayMemberQC1}
                       data={membersQC1}
-                      pickerTitle={'选择QC1'}
+                      pickerTitle={this.state.displayInfo}
                       onSelected={this.onSelectedMember.bind(this)} />
                                     <Image
                                     style={{width:20,height:20}}
