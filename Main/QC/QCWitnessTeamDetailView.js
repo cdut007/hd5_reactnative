@@ -241,7 +241,7 @@ export default class QCWitnessTeamDetailView extends Component {
         <View style={styles.cell}>
 
           <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-            申请时间
+            见证时间
           </Text>
           <Text numberOfLines={2} style={{color:'#777777',fontSize:14,}}>
             {Global.formatDate(date)}
@@ -252,7 +252,7 @@ export default class QCWitnessTeamDetailView extends Component {
         <View style={styles.cell}>
 
         <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
-          申请地点
+          见证地点
         </Text>
         <Text style={{color:'#777777',fontSize:14,}}>
          {this.props.data.witnessAddress}

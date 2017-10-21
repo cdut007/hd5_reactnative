@@ -130,7 +130,7 @@ export default class PlanDetailView extends Component {
                }
 
 
-               if (this.props.data.status == 'UNASSIGNED' && Global.isMonitor(Global.UserInfo)) {
+               if ( (this.props.data.status == 'UNASSIGNED' || !this.props.data.consteam ) && Global.isMonitor(Global.UserInfo)) {
 
                    return
                }

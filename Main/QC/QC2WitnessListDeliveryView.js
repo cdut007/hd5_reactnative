@@ -384,7 +384,7 @@ export default class QC2WitnessListDeliveryView extends Component {
                       style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
                       title={this.state.displayMemberQC1}
                       data={membersQC1}
-                      pickerTitle={'选择QC1'}
+                      pickerTitle={'选择QC2'}
                       onSelected={this.onSelectedMember.bind(this)} />
                                     <Image
                                     style={{width:20,height:20}}
