@@ -201,6 +201,7 @@ export default class QCWitnessListDeliveryView extends Component {
             item.selected = !checked
 
             let _item = Object.assign({}, this.state.items[rowID], {'selected': item.selected});
+            this.state.items[rowID] = item
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(Object.assign({}, this.state.items, {[rowID]: _item})),
             })

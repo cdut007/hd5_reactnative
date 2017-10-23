@@ -295,34 +295,43 @@ export default class PlanListView extends Component {
 
                         <View style={styles.cell}>
 
-                          <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                            {Global.formatDate(rowData.planStartDate)}{'\n'}～{'\n'}{Global.formatDate(rowData.planEndDate)}
+                        <Text numberOfLines={2} style={{color:'#707070',fontSize:9,marginBottom:2,padding:10,textAlign:'center'}}>
+                              {rowData.drawingNo}
+                        </Text>
+
+
+                        </View>
+
+
+                        <View style={styles.cell}>
+
+                        <Text numberOfLines={1} style={{color:'#707070',fontSize:9,marginBottom:2,}}>
+                              {rowData.weldno}
+                        </Text>
+
+                        </View>
+
+                        <View style={styles.cell}>
+
+                        <Text style={{color:'#707070',fontSize:9,marginBottom:2,}}>
+                           {rowData.roomNo}
+                        </Text>
+
+                        </View>
+
+                        <View style={styles.cell}>
+
+                        <Text numberOfLines={2} style={{color:'#707070',fontSize:9,marginBottom:2,}}>
+                           {rowData.speification}
+                        </Text>
+
+                        </View>
+
+                        <View style={styles.cell}>
+
+                        <Text numberOfLines={3}  style={{color:'#707070',fontSize:9,marginBottom:2,textAlign:'center'}}>
+                            {Global.formatDate(rowData.planStartDate)}
                           </Text>
-
-                        </View>
-
-
-                        <View style={styles.cell}>
-
-                        <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.projectNo}
-                        </Text>
-
-                        </View>
-
-                        <View style={styles.cell}>
-
-                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.weldno}
-                        </Text>
-
-                        </View>
-
-                        <View style={styles.cell}>
-
-                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.projectType}
-                        </Text>
 
                         </View>
 
@@ -340,6 +349,7 @@ export default class PlanListView extends Component {
                         </View>
 
                 )
+                //planBeginProgressDate
 
         }
         return (

@@ -195,6 +195,7 @@ export default class WitnessListDeliveryView extends Component {
             console.log(checked+'check item=='+item.id+';selected='+item.selected)
             item.selected = !checked
             let _item = Object.assign({}, this.state.items[rowID], {'selected': item.selected});
+            this.state.items[rowID] = item
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(Object.assign({}, this.state.items, {[rowID]: _item})),
             })
@@ -425,7 +426,7 @@ export default class WitnessListDeliveryView extends Component {
                         if (item.selected) {
                             selectItems.push(item.id)
                             ids+=item.id+',';
-                            console.log('selected==='+item.id)
+                            console.log(item.selected+'status ，selected==='+item.id)
                         }
                     })
         if (selectItems.length == 0) {

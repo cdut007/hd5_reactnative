@@ -10,6 +10,7 @@ import {
     ActivityIndicator,
     TouchableNativeFeedback,
     TouchableHighlight,
+    AsyncStorage,
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -60,12 +61,32 @@ export default class WitnessStatisticsSubView extends Component {
     }
 
     componentDidMount() {
+        var me = this
+        AsyncStorage.getItem('k_witness_team_info_statistics_monitor_'+this.props.data.user.id+"_"+this.props.type,function(errs,result)
+        {
+            if (!errs && result && result.length)
+            {
+                 console.log('read k_witness_team_info_statistics_monitor_@@@@'+result)
+                var monitor = JSON.parse(result);
+                if (monitor) {
+                    Global.UserInfo.monitor = monitor ;
+                    me.setState({
+                        dataSource: me.state.dataSource.cloneWithRows(monitor),
+                        isLoading: false,
+                    });
+                }
 
+            }
+            else
+            {
+
+            }
+        });
         this.executeWitnessRequest();
 
     }
 
-    onGetDataSuccess(response){
+    onGetDataSuccess(response,body){
          console.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
@@ -77,6 +98,14 @@ export default class WitnessStatisticsSubView extends Component {
         var monitor = response.responseResult.monitor;
 
         if (monitor) {
+            AsyncStorage.setItem('k_witness_team_info_statistics_monitor_'+body.userId+"_"+body.type, JSON.stringify(monitor), (error, result) => {
+                if (error) {
+                    console.log('save k_witness_team_info_statistics_monitor_ faild.')
+                }
+
+                console.log('save k_witness_team_info_statistics_monitor_: sucess')
+
+            });
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(monitor),
                 isLoading: false,
@@ -165,7 +194,6 @@ export default class WitnessStatisticsSubView extends Component {
 
 
                     this.setState({
-                      dataSource: this.state.dataSource.cloneWithRows([]),
                       isLoading: false,
                     });
                     try {

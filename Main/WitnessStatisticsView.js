@@ -10,6 +10,7 @@ import {
     ActivityIndicator,
     TouchableNativeFeedback,
     TouchableHighlight,
+    AsyncStorage,
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -58,12 +59,31 @@ export default class WitnessStatisticsView extends Component {
     }
 
     componentDidMount() {
+        var me = this
+        AsyncStorage.getItem('k_witness_captain_team_info_statistics'+this.props.type,function(errs,result)
+        {
+            if (!errs && result && result.length)
+            {
+                 console.log('read k_witness_captain_team_info_statistics@@@@')
+                var captain = JSON.parse(result);
+                if (captain) {
+                    me.setState({
+                        dataSource: me.state.dataSource.cloneWithRows(captain),
+                        isLoading: false,
+                    });
+                }
 
+            }
+            else
+            {
+
+            }
+        });
         this.executeWitnessRequest();
 
     }
 
-    onGetDataSuccess(response){
+    onGetDataSuccess(response,body){
          console.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
@@ -75,6 +95,15 @@ export default class WitnessStatisticsView extends Component {
         var captain = response.responseResult.captain;
 
         if (captain) {
+            AsyncStorage.setItem('k_witness_captain_team_info_statistics'+body.type, JSON.stringify(captain), (error, result) => {
+                if (error) {
+                    console.log('save k_witness_captain_team_info_statistics faild.')
+                }
+
+                console.log('save k_witness_captain_team_info_statistics: sucess')
+
+            });
+
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(captain),
                 isLoading: false,
@@ -162,7 +191,6 @@ export default class WitnessStatisticsView extends Component {
 
 
                     this.setState({
-                      dataSource: this.state.dataSource.cloneWithRows([]),
                       isLoading: false,
                     });
                     try {

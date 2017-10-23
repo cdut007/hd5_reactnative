@@ -98,28 +98,18 @@ export default class PlanStatisticsSubViewContainer extends Component {
 
 
     renderGroupPlanView(label,index) {
-        var userId = '';
-        if (this.props.data.user) {
-            userId = this.props.data.user.id
-        }
-
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
 
             <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
             </View>
 
-            <ScrollView   horizontal={true}
-                            showsHorizontalScrollIndicator={false}  // 隐藏水平指示器
-                              showsVerticalScrollIndicator={false}    // 隐藏垂直指示器
-            >
-
             <View style={styles.statisticsflexContainer}>
 
             <View style={styles.cell}>
 
-              <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                施工日期
+              <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+                图纸号
               </Text>
 
             </View>
@@ -127,32 +117,32 @@ export default class PlanStatisticsSubViewContainer extends Component {
 
             <View style={styles.cell}>
 
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              工程量编号
+            <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+              焊口/支架
             </Text>
 
             </View>
 
             <View style={styles.cell}>
 
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              支架/焊口
+            <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+              房间号
             </Text>
 
             </View>
 
             <View style={styles.cell}>
 
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              工程量类别
+            <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+              规格
             </Text>
 
             </View>
 
             <View style={styles.cell}>
 
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              作业条目编号
+            <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+              施工日期
             </Text>
 
             </View>
@@ -160,20 +150,20 @@ export default class PlanStatisticsSubViewContainer extends Component {
 
             </View>
 
-            </ScrollView>
+
             <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
             </View>
 
             <PlanListView
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
-             userId={userId}
              status={groupStatusDatas[index].status}
              navigator={this.props.navigator}
              />
             </View>
         )
     }
+    
 
     rendTabs(){
         if (Global.isGroup(Global.UserInfo)) {//for group

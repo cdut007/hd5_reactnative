@@ -166,6 +166,7 @@ export default class PlanListDeliveryView extends Component {
             item.selected = !checked
 
             let _item = Object.assign({}, this.state.items[rowID], {'selected': item.selected});
+            this.state.items[rowID] = item
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(Object.assign({}, this.state.items, {[rowID]: _item})),
             })
@@ -413,7 +414,7 @@ export default class PlanListDeliveryView extends Component {
                         if (item.selected) {
                             selectItems.push(item.id)
                             ids+=item.id+',';
-                            console.log('selected==='+item.id)
+                            console.log(item.selected+'status ，selected==='+item.id)
                         }
                     })
         if (selectItems.length == 0) {
@@ -500,8 +501,8 @@ export default class PlanListDeliveryView extends Component {
 
         <View style={styles.cell}>
 
-          <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-            施工日期
+          <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+            图纸号
           </Text>
 
         </View>
@@ -509,30 +510,35 @@ export default class PlanListDeliveryView extends Component {
 
         <View style={styles.cell}>
 
-        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-          工程量编号
+        <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+          焊口/支架
         </Text>
 
         </View>
 
         <View style={styles.cell}>
 
-        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-          支架/焊口
+        <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+          房间号
         </Text>
 
         </View>
 
-        {/* <View style={styles.cell}>
+        <View style={styles.cell}>
 
-        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-          工程量类别
+        <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+          规格
         </Text>
 
-        </View> */}
+        </View>
 
+        <View style={styles.cell}>
 
+        <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+          施工日期
+        </Text>
 
+        </View>
 
         </View>
         <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
@@ -571,24 +577,45 @@ export default class PlanListDeliveryView extends Component {
 
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                          {Global.formatDate(rowData.planStartDate)}{'\n'}～{'\n'}{Global.formatDate(rowData.planEndDate)}
-                        </Text>
+                         <Text numberOfLines={2} style={{color:'#707070',fontSize:9,marginBottom:2,textAlign:'center'}}>
+                               {rowData.drawingNo}
+                         </Text>
 
                       </TouchableOpacity>
 
 
                       <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
-                          <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                                {rowData.projectNo}
-                          </Text>
+                              <Text numberOfLines={1} style={{color:'#707070',fontSize:9,marginBottom:2,}}>
+                                    {rowData.weldno}
+                              </Text>
                         </TouchableOpacity>
+
+
+
+
+                        <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
+                        <Text style={{color:'#707070',fontSize:9,marginBottom:2,}}>
+                           {rowData.roomNo}
+                        </Text>
+                          </TouchableOpacity>
+
+
+
+
+                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
+                              <Text numberOfLines={2} style={{color:'#707070',fontSize:9,marginBottom:2,}}>
+                                 {rowData.speification}
+                              </Text>
+
+                            </TouchableOpacity>
+
+
 
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.weldno}
-                        </Text>
+                         <Text numberOfLines={3}  style={{color:'#707070',fontSize:9,marginBottom:2,textAlign:'center'}}>
+                           {Global.formatDate(rowData.planStartDate)}{'\n'}～{'\n'}{Global.formatDate(rowData.planEndDate)}
+                         </Text>
 
                         </TouchableOpacity>
 
