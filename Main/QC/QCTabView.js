@@ -81,7 +81,7 @@ export default class QCTabView extends Component
                     </TabNavigator>
                 )
         } else if (Global.isQC2Team(Global.UserInfo)) {
-        
+
                 return(
                         <TabNavigator>
                             <TabNavigator.Item
@@ -114,7 +114,7 @@ export default class QCTabView extends Component
                     <TabNavigator>
                         <TabNavigator.Item
                             selected={this.state.selectedTab === 'tab1'}
-                            title="施工见证"
+                            title="见证分派"
                             renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/task_icon.png')} />}
                             renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/task_icon_click.png')} />}
                             badgeText=""

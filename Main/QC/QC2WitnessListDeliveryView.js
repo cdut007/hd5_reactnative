@@ -594,7 +594,7 @@ export default class QC2WitnessListDeliveryView extends Component {
 
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
+                        <Text numberOfLines={3}  style={{color:'#707070',fontSize:10,marginBottom:2,textAlign:'center'}}>
                            {Global.formatFullDateDisplay(rowData.createDate)}
                         </Text>
 
@@ -602,14 +602,14 @@ export default class QC2WitnessListDeliveryView extends Component {
 
 
                       <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
-                          <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
+                          <Text numberOfLines={2} style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                             {rowData.workStepName}
                           </Text>
                         </TouchableOpacity>
 
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                        <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                            {rowData.noticeType}
                         </Text>
 
@@ -617,7 +617,7 @@ export default class QC2WitnessListDeliveryView extends Component {
 
                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
-                       <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                       <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                            {rowData.launcherName}
                        </Text>
 
