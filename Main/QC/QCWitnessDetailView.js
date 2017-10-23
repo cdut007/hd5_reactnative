@@ -380,8 +380,6 @@ export default class QCWitnessDetailView extends Component {
 
     renderDetailView(){
             return(<ScrollView
-            keyboardDismissMode='on-drag'
-            keyboardShouldPersistTaps="never"
             style={styles.mainStyle}>
             {this.renderItem()}
             </ScrollView>);
@@ -478,7 +476,7 @@ export default class QCWitnessDetailView extends Component {
     onChangeText(keyValue,text){
         console.log(text+"content===="+keyValue);
         this.state[keyValue] = text;
-        //this.setState({...this.state});
+        this.setState({...this.state});
     }
 
 
@@ -518,7 +516,7 @@ export default class QCWitnessDetailView extends Component {
                   <Text style= {{width: width * 0.33,fontSize: 14,color: "#1c1c1c"}}>{title} : </Text>
                   <DateTimePickerView
                   ref={(c) => this._selectD = c}
-                                         type={'date'}
+                                         type={'datetime'}
                                          title={content}
                                          minTime={new Date()}
                                          style={{color:'#6d9ee1',fontSize:14,flex:1}}
@@ -753,7 +751,7 @@ export default class QCWitnessDetailView extends Component {
                        {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                      </Text>
                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                       见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                       见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                      </Text>
                    </View>
 
@@ -780,7 +778,7 @@ export default class QCWitnessDetailView extends Component {
                                {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                      </Text>
                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                       见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                       见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                      </Text>
                    </View>
 
@@ -912,6 +910,9 @@ export default class QCWitnessDetailView extends Component {
                     displayAry.push({type:'devider'},);
                 }
 
+                displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'});
+                displayAry.push({title:'图纸版本',content:this.state.data.rollingPlan.drawingVersion,id:'6'});
+            
 
                 displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'b6'},);
                 displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'b7'},);

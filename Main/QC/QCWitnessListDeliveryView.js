@@ -13,6 +13,7 @@ import {
     TouchableHighlight,
     InteractionManager,
     ScrollView,
+    DeviceEventEmitter
 } from 'react-native';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -67,6 +68,7 @@ export default class QCWitnessListDeliveryView extends Component {
             totalCount:0,
             choose_memberQC1:null,
             displayMemberQC1:displayInfo,
+            displayInfo:displayInfo,
             members:[],
 
         }
@@ -167,11 +169,15 @@ export default class QCWitnessListDeliveryView extends Component {
 
 
     componentDidMount() {
-
+        this.mSubscription = DeviceEventEmitter.addListener('delivery_qc',(param) => {this._onRefresh()})
         this.executePlanRequest(1);
         this.getWitnessTeamMember();
 
     }
+    componentWillUnmount(){
+      this.mSubscription.remove();
+    }
+
 
     renderCheckBox(item,rowID) {
 
@@ -195,6 +201,7 @@ export default class QCWitnessListDeliveryView extends Component {
             item.selected = !checked
 
             let _item = Object.assign({}, this.state.items[rowID], {'selected': item.selected});
+            this.state.items[rowID] = item
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(Object.assign({}, this.state.items, {[rowID]: _item})),
             })
@@ -386,7 +393,7 @@ export default class QCWitnessListDeliveryView extends Component {
                       style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
                       title={this.state.displayMemberQC1}
                       data={membersQC1}
-                      pickerTitle={'选择QC1'}
+                      pickerTitle={this.state.displayInfo}
                       onSelected={this.onSelectedMember.bind(this)} />
                                     <Image
                                     style={{width:20,height:20}}
@@ -563,22 +570,22 @@ export default class QCWitnessListDeliveryView extends Component {
 
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                           {Global.formatDate(rowData.createDate)}
+                        <Text numberOfLines={3}  style={{color:'#707070',fontSize:10,marginBottom:2,textAlign:'center'}}>
+                           {Global.formatFullDateDisplay(rowData.createDate)}
                         </Text>
 
                       </TouchableOpacity>
 
 
                       <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
-                          <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
+                          <Text numberOfLines={2} style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                             {rowData.workStepName}
                           </Text>
                         </TouchableOpacity>
 
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                        <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                            {rowData.noticeType}
                         </Text>
 
@@ -586,7 +593,7 @@ export default class QCWitnessListDeliveryView extends Component {
 
                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
-                       <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                       <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                            {rowData.launcherName}
                        </Text>
 

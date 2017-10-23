@@ -148,10 +148,10 @@ export default class WitnessDetailView extends Component {
         <View style={styles.cell}>
 
           <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-            申请时间
+            见证时间
           </Text>
-          <Text numberOfLines={2} style={{color:'#777777',fontSize:14,}}>
-            {Global.formatDate(date)}
+          <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
+            {Global.formatFullDateDisplay(date)}
           </Text>
         </View>
 
@@ -159,7 +159,7 @@ export default class WitnessDetailView extends Component {
         <View style={styles.cell}>
 
         <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
-          申请地点
+          见证地点
         </Text>
         <Text style={{color:'#777777',fontSize:14,}}>
          {this.props.data.witnessAddress}
@@ -305,8 +305,8 @@ onWitnessPress(witnessInfo){
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
                         {witnessInfo.witnesser.realname}
                       </Text>
-                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
+                        见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                       </Text>
                     </View>
 
@@ -332,8 +332,8 @@ onWitnessPress(witnessInfo){
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
                         {witnessInfo.witnesser.realname}
                       </Text>
-                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
+                        见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                       </Text>
                     </View>
 
@@ -393,8 +393,8 @@ onWitnessPress(witnessInfo){
                              continue
                          }
                          displayAry.push({data:witnessInfo,id:'m'+i,type:'witness'})
+                         displayAry.push({type:'line'},);
                    }
-                   displayAry.push({type:'line'},);
                }
 
                if (Global.isQCTeam(Global.UserInfo)) {
@@ -414,6 +414,8 @@ onWitnessPress(witnessInfo){
 
 
                    displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'},);
+                   displayAry.push({title:'图纸版本',content:this.state.data.drawingVersion,id:'6'});
+               
                    displayAry.push({title:'房间号',content:this.state.data.rollingPlan.roomNo,id:'b1'},);
                    displayAry.push({title:'工程量编号',content:this.state.data.rollingPlan.projectNo,id:'b2'},);
                    displayAry.push({title:'工程量类别',content:this.state.data.rollingPlan.projectType,id:'b3'},);

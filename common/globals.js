@@ -36,6 +36,10 @@ module.exports = {
         var curTime = new Date(time).format("yyyy-MM-dd hh:mm:ss");
         return curTime
     },
+    formatFullDateDisplay(time){
+        var curTime = new Date(time).format("yyyy-MM-dd hh:mm");
+        return curTime
+    },
     isMonitor(user){
         if (!user) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')

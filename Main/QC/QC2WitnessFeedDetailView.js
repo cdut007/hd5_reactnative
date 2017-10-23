@@ -312,8 +312,6 @@ export default class QC2WitnessFeedDetailView extends Component {
 
     renderDetailView(){
             return(<ScrollView
-            keyboardDismissMode='on-drag'
-            keyboardShouldPersistTaps="never"
             style={styles.mainStyle}>
             {this.renderItem()}
             </ScrollView>);
@@ -450,7 +448,7 @@ export default class QC2WitnessFeedDetailView extends Component {
                   <Text style= {{width: width * 0.33,fontSize: 14,color: "#1c1c1c"}}>{title} : </Text>
                   <DateTimePickerView
                   ref={(c) => this._selectD = c}
-                                         type={'date'}
+                                         type={'datetime'}
                                          title={content}
                                          style={{color:'#6d9ee1',fontSize:14,flex:1}}
                                          onSelected={this.onSelectedDate.bind(this,id)}

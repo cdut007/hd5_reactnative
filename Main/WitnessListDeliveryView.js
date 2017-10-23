@@ -51,10 +51,10 @@ export default class WitnessListDeliveryView extends Component {
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
        LOADING = {};
-       if (Global.UserInfo.monitor) {
+       if (Global.UserInfo.witnessmonitor) {
             var data = []
-            for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
-                data.push(Global.UserInfo.monitor[i].user.realname)
+            for (var i = 0; i < Global.UserInfo.witnessmonitor.length; i++) {
+                data.push(Global.UserInfo.witnessmonitor[i].user.realname)
             }
        }else{
            console.log('can not find the monitor class info.')
@@ -195,6 +195,7 @@ export default class WitnessListDeliveryView extends Component {
             console.log(checked+'check item=='+item.id+';selected='+item.selected)
             item.selected = !checked
             let _item = Object.assign({}, this.state.items[rowID], {'selected': item.selected});
+            this.state.items[rowID] = item
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(Object.assign({}, this.state.items, {[rowID]: _item})),
             })
@@ -425,7 +426,7 @@ export default class WitnessListDeliveryView extends Component {
                         if (item.selected) {
                             selectItems.push(item.id)
                             ids+=item.id+',';
-                            console.log('selected==='+item.id)
+                            console.log(item.selected+'status ，selected==='+item.id)
                         }
                     })
         if (selectItems.length == 0) {
@@ -572,22 +573,22 @@ export default class WitnessListDeliveryView extends Component {
 
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                          {Global.formatDate(rowData.createDate)}
+                        <Text numberOfLines={3}  style={{color:'#707070',fontSize:10,marginBottom:2,textAlign:'center'}}>
+                          {Global.formatFullDateDisplay(rowData.createDate)}
                         </Text>
 
                       </TouchableOpacity>
 
 
                       <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
-                          <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
+                          <Text numberOfLines={2} style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                                 {rowData.workStepName}
                           </Text>
                         </TouchableOpacity>
 
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                        <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                            {rowData.noticeType}
                         </Text>
 
@@ -595,7 +596,7 @@ export default class WitnessListDeliveryView extends Component {
 
                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
-                       <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                       <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                           {rowData.launcherName}
                        </Text>
 

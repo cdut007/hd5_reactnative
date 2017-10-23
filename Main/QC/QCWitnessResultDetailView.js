@@ -9,6 +9,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     ScrollView,
+    ImageBackground,
     AsyncStorage
 } from 'react-native';
 import Dimensions from 'Dimensions';
@@ -37,12 +38,17 @@ export default class QCWitnessResultDetailView extends Component {
         super(props);
         var data = this.props.data
         data.rollingPlan = new Object()
+        var displayInfo = '选择QC1'
+        if (Global.isQC2Team(Global.UserInfo)) {
+            displayInfo = '选择QC2'
+        }
         this.state = {
             title: '见证详情',
             data:data,
             QCTeamMember:this.props.QCTeamMember,
             choose_memberQC1:null,
-            displayMemberQC1:'选择QC1',
+            displayMemberQC1:displayInfo,
+            displayInfo:displayInfo,
         };
     }
 
@@ -242,10 +248,10 @@ export default class QCWitnessResultDetailView extends Component {
         <View style={styles.cell}>
 
           <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-            申请时间
+            见证时间
           </Text>
-          <Text numberOfLines={2} style={{color:'#777777',fontSize:14,}}>
-            {Global.formatDate(date)}
+          <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
+            {Global.formatFullDateDisplay(date)}
           </Text>
         </View>
 
@@ -253,7 +259,7 @@ export default class QCWitnessResultDetailView extends Component {
         <View style={styles.cell}>
 
         <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
-          申请地点
+          见证地点
         </Text>
         <Text style={{color:'#777777',fontSize:14,}}>
          {this.props.data.witnessAddress}
@@ -319,7 +325,6 @@ export default class QCWitnessResultDetailView extends Component {
                             查看不合格原因
                           </Text>
                         </View>
-
                         <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/right_enter_blue.png')}></Image>
 
                         </TouchableOpacity>
@@ -375,7 +380,7 @@ export default class QCWitnessResultDetailView extends Component {
                       style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
                       title={this.state.displayMemberQC1}
                       data={membersQC1}
-                      pickerTitle={'选择QC1'}
+                      pickerTitle={this.state.displayInfo}
                       onSelected={this.onSelectedMember.bind(this)} />
                                     <Image
                                     style={{width:20,height:20}}
@@ -458,7 +463,7 @@ export default class QCWitnessResultDetailView extends Component {
                         {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                        见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                       </Text>
                     </View>
 
@@ -485,7 +490,7 @@ export default class QCWitnessResultDetailView extends Component {
                                 {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                        见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                       </Text>
                     </View>
 
@@ -551,6 +556,9 @@ export default class QCWitnessResultDetailView extends Component {
 
 
                    //if not ok add info.
+                   displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'});
+                   displayAry.push({title:'图纸版本',content:this.state.data.rollingPlan.drawingVersion,id:'6'});
+                   
                    displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'7'})
                    displayAry.push({title:'工序编号/名称',content:this.state.data.workStepName,id:'0'})
                    displayAry.push({title:'工程量名称',content:this.state.data.rollingPlan.projectName,id:'1'})

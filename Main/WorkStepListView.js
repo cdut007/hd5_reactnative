@@ -9,7 +9,8 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     ScrollView,
-    AsyncStorage
+    AsyncStorage,
+    DeviceEventEmitter
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar';
@@ -49,8 +50,12 @@ export default class WorkStepListView extends Component {
 
 
     componentDidMount() {
+        this.Subscription = DeviceEventEmitter.addListener('workstep_update',(param) => {    this.executeNetWorkRequest(this.state.plan_data.id) })
 
         this.executeNetWorkRequest(this.state.plan_data.id);
+    }
+    componentWillUnmount(){
+      this.Subscription.remove();
     }
 
      onGetDataSuccess(response){

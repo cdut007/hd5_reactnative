@@ -98,104 +98,18 @@ export default class WitnessSubViewContainer extends Component {
 
 
 
-    renderGroupPlanView(label,index) {
-        return (
-            <View  tabLabel={label} style={{marginTop:10,}}>
-
-            <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
-            </View>
-
-            <ScrollView   horizontal={true}
-                            showsHorizontalScrollIndicator={false}  // 隐藏水平指示器
-                              showsVerticalScrollIndicator={false}    // 隐藏垂直指示器
-            >
-
-            <View style={styles.statisticsflexContainer}>
-
-            <View style={styles.cell}>
-
-              <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                施工日期
-              </Text>
-
-            </View>
-
-
-            <View style={styles.cell}>
-
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              工程量编号
-            </Text>
-
-            </View>
-
-            <View style={styles.cell}>
-
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              支架/焊口
-            </Text>
-
-            </View>
-
-            <View style={styles.cell}>
-
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              工程量类别
-            </Text>
-
-            </View>
-
-            <View style={styles.cell}>
-
-            <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-              作业条目编号
-            </Text>
-
-            </View>
-
-
-            </View>
-
-            </ScrollView>
-            <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
-            </View>
-
-            <PlanListView
-            style={{alignSelf:'stretch',flex:1}}
-             type={this.props.type}
-             status={groupStatusDatas[index].status}
-             navigator={this.props.navigator}
-             />
-            </View>
-        )
-    }
-
     rendTabs(){
-        if (Global.isGroup(Global.UserInfo)) {//for group
-            return( <ScrollableTabView
-                tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
-                   tabBarBackgroundColor='#FFFFFF'
-                   tabBarActiveTextColor='#f77935'
-                   tabBarInactiveTextColor='#777777'
-        >
-             {this.renderGroupPlanView('未完成任务',0)}
-             {this.renderGroupPlanView('已完成任务',1)}
-        </ScrollableTabView>
+        return( <ScrollableTabView
+            tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
+               tabBarBackgroundColor='#FFFFFF'
+               tabBarActiveTextColor='#f77935'
+               tabBarInactiveTextColor='#777777'
+    >
+         {this.renderUnCommitWitnessListView('待提交的见证',0)}
+         {this.renderLunchedWitessListView('已发起的见证',1)}
+    </ScrollableTabView>
 
-            )
-        }else{
-            return( <ScrollableTabView
-                tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
-                   tabBarBackgroundColor='#FFFFFF'
-                   tabBarActiveTextColor='#f77935'
-                   tabBarInactiveTextColor='#777777'
-        >
-             {this.renderUnCommitWitnessListView('待提交的见证',0)}
-             {this.renderLunchedWitessListView('已发起的见证',1)}
-        </ScrollableTabView>
-
-            )
-        }
+        )
 
     }
 

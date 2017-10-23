@@ -293,7 +293,7 @@ export default class QCWitnessListView extends Component {
 
                         <View style={styles.cell}>
 
-                          <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
+                          <Text numberOfLines={3}  style={{color:'#707070',fontSize:10,marginBottom:2,textAlign:'center'}}>
                               {Global.formatDate(rowData.createDate)}
                           </Text>
 
@@ -302,7 +302,7 @@ export default class QCWitnessListView extends Component {
 
                         <View style={styles.cell}>
 
-                        <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
+                        <Text numberOfLines={2} style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                               {rowData.witnessAddress}
                         </Text>
 
@@ -310,7 +310,7 @@ export default class QCWitnessListView extends Component {
 
                         <View style={styles.cell}>
 
-                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                        <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                           {rowData.workStepName}
                         </Text>
 
@@ -318,7 +318,7 @@ export default class QCWitnessListView extends Component {
 
                         <View style={styles.cell}>
 
-                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                        <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                            {rowData.noticeType}
                         </Text>
 

@@ -9,7 +9,8 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     ScrollView,
-    AsyncStorage
+    AsyncStorage,
+    DeviceEventEmitter,
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../../common/NavBar';
@@ -37,12 +38,22 @@ export default class QCWitnessTeamDetailView extends Component {
         super(props);
         var data = this.props.data
         data.rollingPlan = new Object()
+        var displayInfo = '选择QC1'
+        if (Global.isQC2Team(Global.UserInfo)) {
+            displayInfo = '选择QC2'
+        }
+
+        if (this.props.choose_label) {//for qcec ...
+            displayInfo = this.props.choose_label
+        }
+
         this.state = {
             title: '见证详情',
             data:data,
             QCTeamMember:this.props.QCTeamMember,
             choose_memberQC1:null,
-            displayMemberQC1:'选择QC1',
+            displayMemberQC1:displayInfo,
+            displayInfo:displayInfo,
         };
     }
 
@@ -50,7 +61,10 @@ export default class QCWitnessTeamDetailView extends Component {
     componentDidMount() {
 
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
-        this.getWitnessTeamMember();
+        if (!this.props.exist_qc_member) {
+            this.getWitnessTeamMember();
+        }
+
     }
 
 
@@ -155,7 +169,10 @@ export default class QCWitnessTeamDetailView extends Component {
             loadingVisible: false
         });
         Global.showToast(response.message)
+        //update
+        DeviceEventEmitter.emit('delivery_qc','delivery_qc');
         this.back();
+
     }
 
     startWitness(){
@@ -241,10 +258,10 @@ export default class QCWitnessTeamDetailView extends Component {
         <View style={styles.cell}>
 
           <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-            申请时间
+            见证时间
           </Text>
-          <Text numberOfLines={2} style={{color:'#777777',fontSize:14,}}>
-            {Global.formatDate(date)}
+          <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
+            {Global.formatFullDateDisplay(date)}
           </Text>
         </View>
 
@@ -252,7 +269,7 @@ export default class QCWitnessTeamDetailView extends Component {
         <View style={styles.cell}>
 
         <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
-          申请地点
+          见证地点
         </Text>
         <Text style={{color:'#777777',fontSize:14,}}>
          {this.props.data.witnessAddress}
@@ -285,6 +302,8 @@ export default class QCWitnessTeamDetailView extends Component {
             }
         }else if (status == 'UNWITNESS') {
             return '未完成'
+        }else if (status == 'ASSIGNED') {
+            return '待见证'
         }
         return Global.getWitnesstatus(status)
     }
@@ -336,7 +355,7 @@ export default class QCWitnessTeamDetailView extends Component {
                       style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
                       title={this.state.displayMemberQC1}
                       data={membersQC1}
-                      pickerTitle={'选择QC1'}
+                      pickerTitle={this.state.displayInfo}
                       onSelected={this.onSelectedMember.bind(this)} />
                                     <Image
                                     style={{width:20,height:20}}
@@ -413,7 +432,7 @@ onWitnessPress(witnessInfo){
                         {witnessInfo.witnesser.realname}
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                        见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                       </Text>
                     </View>
 
@@ -440,7 +459,7 @@ onWitnessPress(witnessInfo){
                         {witnessInfo.witnesser.realname}
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                        见证时间：{Global.formatDate(witnessInfo.realWitnessDate)}
+                        见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                       </Text>
                     </View>
 
@@ -506,6 +525,9 @@ onWitnessPress(witnessInfo){
 
 
                    //if not ok add info.
+                   displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'});
+                   displayAry.push({title:'图纸版本',content:this.state.data.rollingPlan.drawingVersion,id:'6'});
+               
                    displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'7'})
                    displayAry.push({title:'工序编号/名称',content:this.state.data.workStepName,id:'0'})
                    displayAry.push({title:'工程量名称',content:this.state.data.rollingPlan.projectName,id:'1'})

@@ -178,7 +178,7 @@ export default class LoginView extends Component {
                             width:width,height:height,
                   justifyContent:'center',
                   flex:1}} source={require('../images/login_bj.jpg')}/>
-               <KeyboardAvoidingView behavior='padding'>
+
                 <ScrollView>
                     <Image source={require('../images/cni_logo.png')} style={styles.logo} />
                     <View style={styles.LoginId}>
@@ -189,6 +189,8 @@ export default class LoginView extends Component {
                        style={{alignSelf: 'stretch',
                        fontSize: 18,flex:1,
                        textAlign: 'left',}}
+                       autoFocus={true}
+                       showsVerticalScrollIndicator={false}
                         underlineColorAndroid={'transparent'}
                         value={this.state.LoginId}
                         underlineColorAndroid='transparent'
@@ -233,7 +235,7 @@ export default class LoginView extends Component {
                     />
 
                 </ScrollView>
-             </KeyboardAvoidingView>
+
 
             </View>
         )

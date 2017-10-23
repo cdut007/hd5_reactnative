@@ -518,12 +518,12 @@ export default class PlanWriteLastStepDetailView extends Component {
 
                if (this.state.data.welder) {
                    displayAry.push({title:'焊工号',content:this.state.data.welder.realname,id:'e1'})
-                   displayAry.push({title:'焊接时间',content:Global.formatDate(this.state.data.welddate),id:'e2'})
+                   displayAry.push({title:'焊接时间',content:Global.formatFullDateDisplay(this.state.data.welddate),id:'e2'})
                }
                //qc1 qc2
                if (this.state.data.qc1WitnessDate) {
                    displayAry.push({title:'QC1见证人',content:this.state.data.qc1Witnesser.realname,id:'e3'})
-                   displayAry.push({title:'QC1见证时间',content:Global.formatDate(this.state.data.qc1WitnessDate),id:'e4'})
+                   displayAry.push({title:'QC1见证时间',content:Global.formatFullDateDisplay(this.state.data.qc1WitnessDate),id:'e4'})
                }
 
                displayAry.push({title:'作业条目编号',content:this.state.data.workListNo,id:'0'})
@@ -534,6 +534,8 @@ export default class PlanWriteLastStepDetailView extends Component {
 
 
                 displayAry.push({title:'图纸号',content:this.state.data.drawingNo,id:'5'},);
+                displayAry.push({title:'图纸版本',content:this.state.data.drawingVersion,id:'6'});
+            
                 displayAry.push({title:'房间号',content:this.state.data.roomNo,id:'b1'},);
                 displayAry.push({title:'工程量编号',content:this.state.data.projectNo,id:'b2'},);
                 displayAry.push({title:'工程量类别',content:this.state.data.projectType,id:'b3'},);
