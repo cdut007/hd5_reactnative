@@ -220,14 +220,7 @@ export default class WorkStepWitnessBatchView extends Component {
     }
 
     onSelectedAddress(index,address){
-        // for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
-        //     if (Global.UserInfo.monitor[i].user.realname == member) {
-        //         this.state.choose_member = Global.UserInfo.monitor[i].user.id;
-        //         this.setState({displayMember:member});
-        //             console.log(JSON.stringify(member)+"member===="+";id="+this.state.choose_member);
-        //         break;
-        //     }
-        // }
+    
 
         var data = this.state.data[index];
         console.log(JSON.stringify(address)+"address===="+JSON.stringify(data));

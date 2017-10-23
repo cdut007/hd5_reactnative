@@ -10,6 +10,7 @@ import {
     ActivityIndicator,
     TouchableNativeFeedback,
     TouchableHighlight,
+    AsyncStorage,
 } from 'react-native';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -63,12 +64,36 @@ export default class QC2WitnessStatisticsView extends Component {
     }
 
     componentDidMount() {
+        var me = this
+        AsyncStorage.getItem('k_qc2_witness_team_info_statistics_member'+this.props.memberType+"_"+this.props.type,function(errs,result)
+        {
+            if (!errs && result && result.length)
+            {
+                 console.log('read k_qc2_witness_team_info_statistics_member@@@@'+result)
+                var response = JSON.parse(result);
+                if (response) {
+                    var witmess_team = response.responseResult.witness_qc2;
+                    if (witmess_team) {
+                        me.setState({
+                            dataSource: me.state.dataSource.cloneWithRows(witmess_team),
+                            isLoading: false,
+                            extra:response.responseResult.extra[0]
+                        });
+                    }
 
+                }
+
+            }
+            else
+            {
+
+            }
+        });
         this.executeWitnessRequest();
 
     }
 
-    onGetDataSuccess(response){
+    onGetDataSuccess(response,body){
          console.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
@@ -79,6 +104,14 @@ export default class QC2WitnessStatisticsView extends Component {
         var witmess_team = response.responseResult.witness_qc2;
 
         if (witmess_team) {
+            AsyncStorage.setItem('k_qc2_witness_team_info_statistics_member'+body.memberType+"_"+body.type, JSON.stringify(response), (error, result) => {
+                if (error) {
+                    console.log('save k_qc2_witness_team_info_statistics_member faild.')
+                }
+
+                console.log('save k_qc2_witness_team_info_statistics_member: sucess')
+
+            });
 
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(witmess_team),
@@ -172,7 +205,6 @@ export default class QC2WitnessStatisticsView extends Component {
 
 
                     this.setState({
-                      dataSource: this.state.dataSource.cloneWithRows([]),
                       isLoading: false,
                     });
                     try {

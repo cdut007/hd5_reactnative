@@ -42,6 +42,11 @@ export default class QCWitnessTeamDetailView extends Component {
         if (Global.isQC2Team(Global.UserInfo)) {
             displayInfo = '选择QC2'
         }
+
+        if (this.props.choose_label) {//for qcec ...
+            displayInfo = this.props.choose_label
+        }
+
         this.state = {
             title: '见证详情',
             data:data,
@@ -56,7 +61,10 @@ export default class QCWitnessTeamDetailView extends Component {
     componentDidMount() {
 
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
-        this.getWitnessTeamMember();
+        if (!this.props.exist_qc_member) {
+            this.getWitnessTeamMember();
+        }
+
     }
 
 
@@ -166,7 +174,7 @@ export default class QCWitnessTeamDetailView extends Component {
         this.back();
 
     }
-    
+
     startWitness(){
 
         var ids=this.props.data.id;
@@ -294,6 +302,8 @@ export default class QCWitnessTeamDetailView extends Component {
             }
         }else if (status == 'UNWITNESS') {
             return '未完成'
+        }else if (status == 'ASSIGNED') {
+            return '待见证'
         }
         return Global.getWitnesstatus(status)
     }
@@ -515,6 +525,9 @@ onWitnessPress(witnessInfo){
 
 
                    //if not ok add info.
+                   displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'});
+                   displayAry.push({title:'图纸版本',content:this.state.data.rollingPlan.drawingVersion,id:'6'});
+               
                    displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'7'})
                    displayAry.push({title:'工序编号/名称',content:this.state.data.workStepName,id:'0'})
                    displayAry.push({title:'工程量名称',content:this.state.data.rollingPlan.projectName,id:'1'})

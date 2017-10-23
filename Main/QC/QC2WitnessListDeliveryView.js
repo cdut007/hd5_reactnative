@@ -65,6 +65,7 @@ export default class QC2WitnessListDeliveryView extends Component {
             totalCount:0,
             choose_memberQC1:null,
             displayMemberQC1:label,
+            label:label,
             members:[],
 
         }
@@ -83,10 +84,36 @@ export default class QC2WitnessListDeliveryView extends Component {
             this.props.navigator.pop()
         }
 
+        parseNoticePointType(notice_type){
+            if (notice_type == 'witness_member_czecqc') {
+                    return 'CZEC_QC'
+            }
+
+            if (notice_type == 'witness_member_czecqa') {
+                    return 'CZEC_QA'
+            }
+
+            if (notice_type == 'witness_member_paec') {
+                    return 'PAEC'
+            }
+
+            return ''
+        }
+
 
         onGetWitnessTeamMemberDataSuccess(response){
           this.state.QCTeamMember = response.responseResult;
-          this.setState({QCTeamMember:  this.state.QCTeamMember})
+          var qc2Member = []
+          if (this.state.QCTeamMember) {
+              for (var i = 0; i < this.state.QCTeamMember.length; i++) {
+                  var notice_type = this.state.QCTeamMember[i].roles[0].roleType[0]
+                  if (this.parseNoticePointType(notice_type) == this.props.noticePointType) {
+                      qc2Member.push(this.state.QCTeamMember[i])
+                  }
+              }
+          }
+
+          this.setState({QCTeamMember:  qc2Member})
 
         }
         getWitnessTeamMember(){
@@ -94,6 +121,7 @@ export default class QC2WitnessListDeliveryView extends Component {
             var paramBody = {
                 teamType:'WITNESS_MEMBER',
                 userId:Global.UserInfo.id,
+                noticePointType:this.props.noticePointType,
             }
 
             HttpRequest.get('/team/witness', paramBody, this.onGetWitnessTeamMemberDataSuccess.bind(this),
@@ -127,6 +155,9 @@ export default class QC2WitnessListDeliveryView extends Component {
             this.setState({isRefreshing:true})
 
             this.executePlanRequest(1);
+            if (!this.state.QCTeamMember) {
+                this.getWitnessTeamMember();
+            }
         }
 
         _loadMoreData() {
@@ -249,6 +280,8 @@ export default class QC2WitnessListDeliveryView extends Component {
                  data:itemData,
                  QCTeamMember:this.state.QCTeamMember,
                  delivery:true,
+                 choose_label:this.state.label,
+                 exist_qc_member:true
                 }
         })
     }
@@ -385,7 +418,7 @@ export default class QC2WitnessListDeliveryView extends Component {
                       style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
                       title={this.state.displayMemberQC1}
                       data={membersQC1}
-                      pickerTitle={'选择QC2'}
+                      pickerTitle={this.state.label}
                       onSelected={this.onSelectedMember.bind(this)} />
                                     <Image
                                     style={{width:20,height:20}}

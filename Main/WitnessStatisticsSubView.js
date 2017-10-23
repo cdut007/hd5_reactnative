@@ -69,7 +69,7 @@ export default class WitnessStatisticsSubView extends Component {
                  console.log('read k_witness_team_info_statistics_monitor_@@@@'+result)
                 var monitor = JSON.parse(result);
                 if (monitor) {
-                    Global.UserInfo.monitor = monitor ;
+                    Global.UserInfo.witnessmonitor = monitor ;
                     me.setState({
                         dataSource: me.state.dataSource.cloneWithRows(monitor),
                         isLoading: false,

@@ -51,10 +51,10 @@ export default class WitnessListDeliveryView extends Component {
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
        LOADING = {};
-       if (Global.UserInfo.monitor) {
+       if (Global.UserInfo.witnessmonitor) {
             var data = []
-            for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
-                data.push(Global.UserInfo.monitor[i].user.realname)
+            for (var i = 0; i < Global.UserInfo.witnessmonitor.length; i++) {
+                data.push(Global.UserInfo.witnessmonitor[i].user.realname)
             }
        }else{
            console.log('can not find the monitor class info.')

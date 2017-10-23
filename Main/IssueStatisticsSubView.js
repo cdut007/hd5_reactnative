@@ -90,7 +90,7 @@ export default class IssueStatisticsSubView extends Component {
         var monitor = response.responseResult.monitor;
 
         if (monitor) {
-            Global.UserInfo.monitor = monitor;
+            Global.UserInfo.issuemonitor = monitor;
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(monitor),
                 isLoading: false,
