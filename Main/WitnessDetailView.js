@@ -305,7 +305,7 @@ onWitnessPress(witnessInfo){
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
                         {witnessInfo.witnesser.realname}
                       </Text>
-                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
+                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
                         见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                       </Text>
                     </View>
@@ -332,7 +332,7 @@ onWitnessPress(witnessInfo){
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
                         {witnessInfo.witnesser.realname}
                       </Text>
-                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
+                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
                         见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
                       </Text>
                     </View>
@@ -414,6 +414,8 @@ onWitnessPress(witnessInfo){
 
 
                    displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'},);
+                   displayAry.push({title:'图纸版本',content:this.state.data.drawingVersion,id:'6'});
+               
                    displayAry.push({title:'房间号',content:this.state.data.rollingPlan.roomNo,id:'b1'},);
                    displayAry.push({title:'工程量编号',content:this.state.data.rollingPlan.projectNo,id:'b2'},);
                    displayAry.push({title:'工程量类别',content:this.state.data.rollingPlan.projectType,id:'b3'},);

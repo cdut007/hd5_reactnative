@@ -909,6 +909,9 @@ export default class QCWitnessDetailView extends Component {
                     displayAry.push({type:'devider'},);
                 }
 
+                displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'});
+                displayAry.push({title:'图纸版本',content:this.state.data.rollingPlan.drawingVersion,id:'6'});
+            
 
                 displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'b6'},);
                 displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'b7'},);
