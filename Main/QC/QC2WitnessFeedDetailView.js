@@ -312,8 +312,6 @@ export default class QC2WitnessFeedDetailView extends Component {
 
     renderDetailView(){
             return(<ScrollView
-            keyboardDismissMode='on-drag'
-            keyboardShouldPersistTaps="never"
             style={styles.mainStyle}>
             {this.renderItem()}
             </ScrollView>);
