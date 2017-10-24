@@ -17,6 +17,7 @@ export default class DateTimePickerView extends Component {
         type: PropTypes.string,  //'date', 'time', 'datetime'
         onSelected: PropTypes.func,
         title:PropTypes.string,
+        minTime:PropTypes.stting,
     }
 
     constructor(props) {
@@ -73,6 +74,7 @@ this.setState({ isDateTimePickerVisible: true })
                     cancelTextIOS={'取消'}
                     confirmTextIOS={'确定'}
                     titleIOS={''}
+                    minimumDate={this.props.minTime}
                     datePickerModeAndroid={'spinner'}
                     mode = {this.props.type}
                     isVisible={this.state.isDateTimePickerVisible}

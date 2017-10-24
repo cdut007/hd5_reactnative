@@ -518,6 +518,7 @@ export default class QCWitnessDetailView extends Component {
                   ref={(c) => this._selectD = c}
                                          type={'datetime'}
                                          title={content}
+                                         minTime={new Date()}
                                          style={{color:'#6d9ee1',fontSize:14,flex:1}}
                                          onSelected={this.onSelectedDate.bind(this,id)}
                                      />
