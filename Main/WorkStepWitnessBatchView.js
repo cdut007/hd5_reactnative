@@ -203,7 +203,7 @@ export default class WorkStepWitnessBatchView extends Component {
     var data = this.state.data[index];
      console.log("date=="+date.getTime()+';last time data.choose_date='+JSON.stringify(data));
      data.choose_date = date.getTime();
-     data.displayDate = Global.formatDate(data.choose_date);
+     data.displayDate = Global.formatFullDateDisplay(data.choose_date);
 
 
         let newArray = this.state.data.slice();
@@ -317,7 +317,7 @@ export default class WorkStepWitnessBatchView extends Component {
                        minTime={new Date()}
                        title={data.displayDate}
                        visible={this.state.time_visible}
-                       style={{color:'#f77935',fontSize:14,flex:1}}
+                       style={{color:'#f77935',fontSize:12,flex:1}}
                        onSelected={this.onSelectedDate.bind(this,index)}
                    />
                                        <Image
