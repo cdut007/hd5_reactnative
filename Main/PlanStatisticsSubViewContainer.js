@@ -25,6 +25,7 @@ import PlanListDeliveryView from './PlanListDeliveryView';
 import PlanStatisticsSubView from './PlanStatisticsSubView';
 import PlanListView from './PlanListView';
 import Global from '../common/globals.js';
+import ConstMapValue from '../common/ConstMapValue.js';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -98,6 +99,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
 
 
     renderGroupPlanView(label,index) {
+            var plan_col_map = ConstMapValue.Plan_Col_Map(this.props.type)
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
 
@@ -109,7 +111,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
             <View style={styles.cell}>
 
               <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
-                图纸号
+                {plan_col_map.col1}
               </Text>
 
             </View>
@@ -118,7 +120,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
             <View style={styles.cell}>
 
             <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
-              焊口/支架
+             {plan_col_map.col2}
             </Text>
 
             </View>
@@ -126,7 +128,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
             <View style={styles.cell}>
 
             <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
-              房间号
+              {plan_col_map.col3}
             </Text>
 
             </View>
@@ -134,7 +136,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
             <View style={styles.cell}>
 
             <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
-              规格
+             {plan_col_map.col4}
             </Text>
 
             </View>
@@ -142,7 +144,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
             <View style={styles.cell}>
 
             <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
-              施工日期
+              {plan_col_map.col5}
             </Text>
 
             </View>
@@ -163,7 +165,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
             </View>
         )
     }
-    
+
 
     rendTabs(){
         if (Global.isGroup(Global.UserInfo)) {//for group
