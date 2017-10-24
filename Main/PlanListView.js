@@ -330,7 +330,7 @@ export default class PlanListView extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={3}  style={{color:'#707070',fontSize:9,marginBottom:2,textAlign:'center'}}>
-                            {Global.formatDate(rowData.planStartDate)}
+                            {Global.formatDate(rowData.planBeginProgressDate)}
                           </Text>
 
                         </View>

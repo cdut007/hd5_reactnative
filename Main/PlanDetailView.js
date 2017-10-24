@@ -267,6 +267,12 @@ export default class PlanDetailView extends Component {
         if (this.props.data.consteam) {
             displayName = this.props.data.consteam.realname
         }
+
+        var time = this.props.data.planBeginProgressDate
+        if (!time) {
+            time = this.props.data.planStartDate
+        }
+
         return(<View style={styles.statisticsflexContainer}>
 
         <View style={styles.cell}>
@@ -275,7 +281,7 @@ export default class PlanDetailView extends Component {
             施工日期
           </Text>
           <Text numberOfLines={1} style={{color:'#777777',fontSize:14,}}>
-            {Global.formatDate(this.props.data.planStartDate)}
+            {Global.formatDate(time)}
           </Text>
         </View>
 
