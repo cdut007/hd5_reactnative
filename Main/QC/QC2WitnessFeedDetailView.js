@@ -453,6 +453,7 @@ export default class QC2WitnessFeedDetailView extends Component {
                   <DateTimePickerView
                   ref={(c) => this._selectD = c}
                                          type={'datetime'}
+                                         minTime={new Date()}
                                          title={content}
                                          style={{color:'#6d9ee1',fontSize:14,flex:1}}
                                          onSelected={this.onSelectedDate.bind(this,id)}

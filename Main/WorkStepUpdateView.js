@@ -359,6 +359,7 @@ export default class WorkStepUpdateView extends Component {
                              <Text style= {styles.timetitle}> 见证时间: </Text>
                              <DateTimePickerView
                                  type={'datetime'}
+                                 minTime={new Date()}
                                  onSelected={this.onSelectedDate.bind(this,keyValue)}
                              />
                          </View>

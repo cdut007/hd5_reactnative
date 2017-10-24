@@ -384,6 +384,7 @@ export default class PlanWriteLastStepDetailView extends Component {
                         <DateTimePickerView
                         ref={(c) => this._selectD = c}
                             type={'date'}
+                            minTime={new Date()}
                             title={this.state.displayDate}
                             visible={this.state.time_visible}
                             style={{color:'#f77935',fontSize:14,flex:1}}

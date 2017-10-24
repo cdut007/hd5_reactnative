@@ -329,6 +329,7 @@ export default class SingleWorkRollDealBatWitnessView extends Component {
                              <Text style= {styles.timetitle}>{displayAry[i].title}: </Text>
                              <DateTimePickerView
                                  type={'datetime'}
+                                 minTime={new Date()}
                                  onSelected={this.onSelectedDate.bind(this,keyValue)}
                              />
                          </View>

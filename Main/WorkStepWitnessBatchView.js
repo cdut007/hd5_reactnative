@@ -220,7 +220,7 @@ export default class WorkStepWitnessBatchView extends Component {
     }
 
     onSelectedAddress(index,address){
-    
+
 
         var data = this.state.data[index];
         console.log(JSON.stringify(address)+"address===="+JSON.stringify(data));
@@ -314,6 +314,7 @@ export default class WorkStepWitnessBatchView extends Component {
                     key={'date_choose' + index}
                       ref={(c) => this.state.date_items[index] = c}
                        type={'datetime'}
+                       minTime={new Date()}
                        title={data.displayDate}
                        visible={this.state.time_visible}
                        style={{color:'#f77935',fontSize:14,flex:1}}
