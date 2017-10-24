@@ -26,7 +26,7 @@ import dateformat from 'dateformat'
 import PlanDetailView from './PlanDetailView';
 import PlanWriteLastStepDetailView from './PlanWriteLastStepDetailView';
 import Global from '../common/globals.js';
-
+import ConstMapValue from '../common/ConstMapValue.js';
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -41,11 +41,13 @@ var resultsCache = {
 var LOADING = {};
 
 
+var plan_col_map_val;
 
 export default class PlanListView extends Component {
     constructor(props) {
         super(props)
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+        plan_col_map_val = ConstMapValue.Plan_Col_Map_Value(this.props.type)
 
        LOADING = {};
         this.state = {
@@ -302,7 +304,7 @@ export default class PlanListView extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={2} style={{color:'#707070',fontSize:9,marginBottom:2,padding:10,textAlign:'center'}}>
-                              {rowData.drawingNo}
+                             {rowData[plan_col_map_val.val1]}
                         </Text>
 
 
@@ -312,7 +314,7 @@ export default class PlanListView extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:9,marginBottom:2,}}>
-                              {rowData.weldno}
+                             {rowData[plan_col_map_val.val2]}
                         </Text>
 
                         </View>
@@ -320,7 +322,7 @@ export default class PlanListView extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:9,marginBottom:2,}}>
-                           {rowData.roomNo}
+                           {rowData[plan_col_map_val.val3]}
                         </Text>
 
                         </View>
@@ -328,7 +330,7 @@ export default class PlanListView extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={2} style={{color:'#707070',fontSize:9,marginBottom:2,}}>
-                           {rowData.speification}
+                           {rowData[plan_col_map_val.val4]}
                         </Text>
 
                         </View>

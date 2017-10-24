@@ -78,6 +78,9 @@ get(apiName, body,successCallback, failCallback)
       .catch(function(err){
         failCallback(err);
           Xlog.info('HttpRequestGetReusltErr', ""+err);
+          if (err == 'TypeError: Network request failed') {
+              Global.showToast('网络异常')
+          }
       });
 
   },

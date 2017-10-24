@@ -47,11 +47,13 @@ import DateTimePickerView from '../common/DateTimePickerView'
 import MemberSelectView from '../common/MemberSelectView'
 
 
-
+var plan_col_map_val;
 export default class PlanListDeliveryView extends Component {
     constructor(props) {
         super(props)
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
+        plan_col_map_val = ConstMapValue.Plan_Col_Map_Value(this.props.type)
 
        LOADING = {};
        if (Global.UserInfo.monitor) {
@@ -588,7 +590,7 @@ export default class PlanListDeliveryView extends Component {
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
                          <Text numberOfLines={2} style={{color:'#707070',fontSize:9,marginBottom:2,textAlign:'center'}}>
-                               {rowData.drawingNo}
+                               {rowData[plan_col_map_val.val1]}
                          </Text>
 
                       </TouchableOpacity>
@@ -596,7 +598,7 @@ export default class PlanListDeliveryView extends Component {
 
                       <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
                               <Text numberOfLines={1} style={{color:'#707070',fontSize:9,marginBottom:2,}}>
-                                    {rowData.weldno}
+                                 {rowData[plan_col_map_val.val2]}
                               </Text>
                         </TouchableOpacity>
 
@@ -605,7 +607,7 @@ export default class PlanListDeliveryView extends Component {
 
                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
                         <Text style={{color:'#707070',fontSize:9,marginBottom:2,}}>
-                           {rowData.roomNo}
+                            {rowData[plan_col_map_val.val3]}
                         </Text>
                           </TouchableOpacity>
 
@@ -614,7 +616,7 @@ export default class PlanListDeliveryView extends Component {
 
                           <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
                               <Text numberOfLines={2} style={{color:'#707070',fontSize:9,marginBottom:2,}}>
-                                 {rowData.speification}
+                                  {rowData[plan_col_map_val.val4]}
                               </Text>
 
                             </TouchableOpacity>
