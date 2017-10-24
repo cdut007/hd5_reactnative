@@ -9,7 +9,8 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     ScrollView,
-    AsyncStorage
+    AsyncStorage,
+    DeviceEventEmitter,
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar';
@@ -240,6 +241,9 @@ export default class PlanDetailView extends Component {
                 loadingVisible: false
             })
             Global.showToast(response.message)
+            //update
+            DeviceEventEmitter.emit('plan_update','plan_update');
+            this.back();
         }
 
 

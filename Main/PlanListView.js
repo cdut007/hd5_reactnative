@@ -12,6 +12,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     InteractionManager,
+    DeviceEventEmitter,
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -126,8 +127,13 @@ export default class PlanListView extends Component {
     componentDidMount() {
 
         this.executePlanRequest(1);
-
+        mSubscription = DeviceEventEmitter.addListener('plan_update',(param)=>{this._onRefresh();})
     }
+
+        componentWillUnmount(){
+          mSubscription.remove();
+        }
+
 
     onGetDataSuccess(response,paramBody){
          console.log('onGetDataSuccess@@@@')

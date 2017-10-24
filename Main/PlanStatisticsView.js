@@ -11,6 +11,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     AsyncStorage,
+    DeviceEventEmitter,
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -82,7 +83,12 @@ export default class PlanStatisticsView extends Component {
 
         this.executePlanRequest();
 
+        mSubscription = DeviceEventEmitter.addListener('plan_update',(param)=>{this.executePlanRequest();})
     }
+
+        componentWillUnmount(){
+          mSubscription.remove();
+        }
 
     onGetDataSuccess(response,body){
          console.log('onGetDataSuccess@@@@')
@@ -192,7 +198,7 @@ export default class PlanStatisticsView extends Component {
             HttpRequest.get('/statistics/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
-                    // 
+                    //
                     // this.setState({
                     //   dataSource: this.state.dataSource.cloneWithRows([]),
                     //   isLoading: false,

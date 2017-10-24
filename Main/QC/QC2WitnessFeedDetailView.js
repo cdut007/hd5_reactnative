@@ -10,7 +10,8 @@ import {
     TouchableHighlight,
     ScrollView,
     AsyncStorage,
-    TextInput
+    TextInput,
+    DeviceEventEmitter
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../../common/NavBar';
@@ -156,6 +157,9 @@ export default class QC2WitnessFeedDetailView extends Component {
             loadingVisible: false
         })
         Global.showToast(response.message)
+        //update
+        DeviceEventEmitter.emit('witness_update','witness_update');
+        this.back();
 
     }
 
