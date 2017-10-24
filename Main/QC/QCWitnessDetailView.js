@@ -192,10 +192,10 @@ export default class QCWitnessDetailView extends Component {
                     return
                 }
 
-                if(this.state.fileArr.length<=1){
-                    alert('请选择至少一张图片');
-                    return;
-                }
+                // if(this.state.fileArr.length<=1){
+                //     alert('请选择至少一张图片');
+                //     return;
+                // }
             }
         }
 
@@ -233,12 +233,16 @@ export default class QCWitnessDetailView extends Component {
             param.append('isok', result)
             param.append('remark', this.state.remark)
             param.append('failType', this.state.witnessNotOkResultType)
-            this.state.fileArr.map((item, i) => {
-                if (item['fileSource']) {
-                   let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
-                   param.append("file"+i,file);   //这里的files就是后台需要的key
-                }
-            });
+
+        if (this.state.fileArr.length>0) {
+                this.state.fileArr.map((item, i) => {
+                    if (item['fileSource']) {
+                       let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
+                       param.append("file"+i,file);   //这里的files就是后台需要的key
+                    }
+                });
+            }
+
             HttpRequest.uploadImage('/witness_op/result', param, this.onDeliverySuccess.bind(this),
                 (e) => {
                     try {
@@ -912,7 +916,7 @@ export default class QCWitnessDetailView extends Component {
 
                 displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'});
                 displayAry.push({title:'图纸版本',content:this.state.data.rollingPlan.drawingVersion,id:'6'});
-            
+
 
                 displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'b6'},);
                 displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'b7'},);
