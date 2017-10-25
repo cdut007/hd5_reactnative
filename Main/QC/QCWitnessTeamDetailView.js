@@ -417,6 +417,17 @@ export default class QCWitnessTeamDetailView extends Component {
 onWitnessPress(witnessInfo){
 
 }
+getNoticeType(noticePoint){
+    if (noticePoint == 'CZEC_QA') {
+        return 'CZEC QA'
+    }
+    if (noticePoint == 'CZEC_QC') {
+        return 'CZEC QC'
+    }
+
+    return noticePoint
+
+}
 
         witnessItemInfo(witnessInfo){
 
@@ -429,7 +440,7 @@ onWitnessPress(witnessInfo){
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                        {witnessInfo.witnesser.realname}
+                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
                         见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
@@ -456,7 +467,7 @@ onWitnessPress(witnessInfo){
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                        {witnessInfo.witnesser.realname}
+                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
                         见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
@@ -485,7 +496,7 @@ onWitnessPress(witnessInfo){
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                        {witnessInfo.witnesser.realname}
+                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                     </View>
 

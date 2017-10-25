@@ -26,7 +26,7 @@ import Accordion from 'react-native-collapsible/Accordion';
 
 import Global from '../common/globals.js'
 import CommitButton from '../common/CommitButton'
-
+import WitnessDetailView from './WitnessDetailView.js'
 
 import CheckBox from 'react-native-checkbox'
 
@@ -230,15 +230,28 @@ export default class WorkStepListView extends Component {
                return itemAry;
            }
 
+
+           onWitnessPress(itemData){
+               if (itemData.hasCheckedBtn) {
+                   return
+               }
+               this.props.navigator.push({
+                   component: WitnessDetailView,
+                    props: {
+                        data:itemData,
+                       }
+               })
+           }
+
            renderWorkStepItem(index,data){
                return(
 
                    <View>
-                   <View style= {styles.item_container}>
+                   <TouchableOpacity style= {styles.item_container} onPress={this.onWitnessPress.bind(this,data)}>
                        <Text style= {styles.title}>{data.stepno}{'、'} {data.stepname}</Text>
                         {this.renderQC(data)}
                        {this.renderCheckBox(data)}
-                   </View>
+                   </TouchableOpacity>
                    <View style={styles.divider_line}/>
                    </View>
 
@@ -288,7 +301,7 @@ export default class WorkStepListView extends Component {
 
            }
 
-
+           item.hasCheckedBtn = true
 
            return (<View style= {styles.desc_check}>
                {this.renderCheckLabel(witessAgain)}

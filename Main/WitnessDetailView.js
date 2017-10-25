@@ -292,6 +292,18 @@ onWitnessPress(witnessInfo){
     })
 }
 
+getNoticeType(noticePoint){
+    if (noticePoint == 'CZEC_QA') {
+        return 'CZEC QA'
+    }
+    if (noticePoint == 'CZEC_QC') {
+        return 'CZEC QC'
+    }
+
+    return noticePoint
+
+}
+
         witnessItemInfo(witnessInfo){
 
             //witnessInfo.result = '不合格'
@@ -303,7 +315,7 @@ onWitnessPress(witnessInfo){
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                        {witnessInfo.witnesser.realname}
+                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
                         见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
@@ -330,7 +342,7 @@ onWitnessPress(witnessInfo){
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                        {witnessInfo.witnesser.realname}
+                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
                         见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
@@ -359,7 +371,7 @@ onWitnessPress(witnessInfo){
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                        {witnessInfo.witnesser.realname}
+                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                     </View>
 
@@ -386,7 +398,13 @@ onWitnessPress(witnessInfo){
                // 颜色数组
                var displayAry = [];
 
+
                if (this.state.data.witnessInfo) {
+                   displayAry.push({title:'发起人',content:this.state.data.witnessInfo[0].launcherName,id:'name'})
+
+                   displayAry.push({type:'devider'},);
+
+
                    for (var i = 0; i < this.state.data.witnessInfo.length; i++) {
                          var witnessInfo = this.state.data.witnessInfo[i]
                          if (!witnessInfo.witnesser) {

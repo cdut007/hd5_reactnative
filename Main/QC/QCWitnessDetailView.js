@@ -926,7 +926,6 @@ export default class QCWitnessDetailView extends Component {
                 displayAry.push({title:'焊口/支架',content:this.state.data.rollingPlan.weldno,id:'b10'},);
                 displayAry.push({title:'工序名／编号',content:this.state.data.workStepName,id:'b11'},);
 
-
                // 遍历
                for (var i = 0; i<displayAry.length; i++) {
                    if (displayAry[i].type == 'input') {

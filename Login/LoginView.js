@@ -64,10 +64,22 @@ export default class LoginView extends Component {
 
 
     if (this.state.LoginId && this.state.LoginId.startWith('http:')) {
-                        HttpRequest.setDomain(this.state.LoginId)
-                        Global.showToast('设置成功=='+this.state.LoginId)
+                        HttpRequest.setDomain(this.state.LoginId,'本地环境')
+                        Global.showToast('本地环境设置成功=='+this.state.LoginId)
                         return
         }
+
+        if (this.state.LoginId && this.state.LoginId == 'test') {
+                            HttpRequest.setDomain('http://39.108.165.171','测试环境')
+                            Global.showToast('测试环境设置成功')
+                            return
+            }
+
+            if (this.state.LoginId && this.state.LoginId == 'product') {
+                                HttpRequest.setDomain('http://39.108.165.171','产品环境')
+                                Global.showToast('产品环境设置成功')
+                                return
+                }
 
 
         this.setState({
