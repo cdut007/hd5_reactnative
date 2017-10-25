@@ -85,7 +85,7 @@ export default class WorkStepUpdateView extends Component {
             HttpRequest.get('/hdxt/api/baseservice/workstep/'+this.props.data.id, paramBody, this.onGetWorkStepDetailSuccess.bind(this),
                 (e) => {
                     try {
-                        alert(e)
+                        Global.alert(e)
                     }
                     catch (err) {
                         console.log(err)
@@ -210,7 +210,7 @@ export default class WorkStepUpdateView extends Component {
         HttpRequest.post('/hdxt/api/baseservice/construction/mytask/witness', param, this.onCommitSuccess.bind(this),
             (e) => {
                 try {
-                    alert(e)
+                    Global.alert(e)
                 }
                 catch (err) {
                     console.log(err)

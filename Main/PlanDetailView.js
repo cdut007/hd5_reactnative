@@ -222,13 +222,13 @@ export default class PlanDetailView extends Component {
                         if (errorInfo != null) {
                             if (errorInfo.code == -1002||
                              errorInfo.code == -1001) {
-                            alert(errorInfo.message);
+                            Global.alert(errorInfo.message);
                         }else {
-                            alert(e)
+                            Global.alert(e)
                         }
 
                         } else {
-                            alert(e)
+                            Global.alert(e)
                         }
 
 

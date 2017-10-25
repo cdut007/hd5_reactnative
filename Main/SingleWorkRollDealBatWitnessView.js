@@ -82,7 +82,7 @@ export default class SingleWorkRollDealBatWitnessView extends Component {
             HttpRequest.get('/hdxt/api/baseservice/workstep/rollingplan/'+this.props.data.id, paramBody, this.onGetWorkStepDetailSuccess.bind(this),
                 (e) => {
                     try {
-                        alert(e)
+                        Global.alert(e)
                     }
                     catch (err) {
                         console.log(err)
@@ -110,25 +110,25 @@ export default class SingleWorkRollDealBatWitnessView extends Component {
 
 
         if (!this.state.witnessAdress) {
-            alert('请填写见证地点')
+            Global.alert('请填写见证地点')
             return
         }
         if (!this.state.chooseTime) {
-            alert('填写见证时间')
+            Global.alert('填写见证时间')
             return
         }
         if (this.state.has_R && !this.state.R) {
-            alert('选择见证负责人')
+            Global.alert('选择见证负责人')
             return
         }
 
         if (this.state.has_W && !this.state.W) {
-            alert('选择见证负责人')
+            Global.alert('选择见证负责人')
             return
         }
 
         if (this.state.has_H && !this.state.H) {
-            alert('选择见证负责人')
+            Global.alert('选择见证负责人')
             return
         }
 
@@ -185,7 +185,7 @@ export default class SingleWorkRollDealBatWitnessView extends Component {
         HttpRequest.post('/hdxt/api/baseservice/construction/mytask/batch_witness', param, this.onCommitSuccess.bind(this),
             (e) => {
                 try {
-                    alert(e)
+                    Global.alert(e)
                 }
                 catch (err) {
                     console.log(err)
@@ -204,7 +204,7 @@ export default class SingleWorkRollDealBatWitnessView extends Component {
             loadingVisible: false
         })
 
-        alert('提交成功')
+        Global.alert('提交成功')
         this.back()
     }
 

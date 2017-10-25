@@ -457,14 +457,14 @@ export default class QC2WitnessListDeliveryView extends Component {
                         }
                     })
         if (selectItems.length == 0) {
-            alert('请选择见证')
+            Global.alert('请选择见证')
             return
         }
         ids = ids.substr(0,ids.length-1)
 
 
         if (!this.state.choose_memberQC1) {
-            alert('请选择见证员')
+            Global.alert('请选择见证员')
             return
         }
 
@@ -500,13 +500,13 @@ export default class QC2WitnessListDeliveryView extends Component {
                     if (errorInfo != null) {
                         if (errorInfo.code == -1002||
                          errorInfo.code == -1001) {
-                        alert(errorInfo.message);
+                        Global.alert(errorInfo.message);
                     }else {
-                        alert(e)
+                        Global.alert(e)
                     }
 
                     } else {
-                        alert(e)
+                        Global.alert(e)
                     }
 
 

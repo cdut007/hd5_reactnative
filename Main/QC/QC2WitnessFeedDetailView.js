@@ -174,17 +174,17 @@ export default class QC2WitnessFeedDetailView extends Component {
 
     startWitness(){
         if (!this.state.choose_date) {
-            alert('请选择见证日期')
+            Global.alert('请选择见证日期')
             return
         }
 
         if (!this.state.choose_address) {
-            alert('请选择见证地点')
+            Global.alert('请选择见证地点')
             return
         }
         var result = '3'
         if (!this.state.choose_result) {
-            alert('请选择见证结果')
+            Global.alert('请选择见证结果')
             return
         }else{
 
@@ -193,16 +193,16 @@ export default class QC2WitnessFeedDetailView extends Component {
             }else{
                 result = '1'
                 if (!this.state.witnessNotOkResultType) {
-                    alert('请选择不合格原因')
+                    Global.alert('请选择不合格原因')
                     return
                 }
                 if (!this.state.remark) {
-                    alert('请填写不合格原因')
+                    Global.alert('请填写不合格原因')
                     return
                 }
 
                 // if(this.state.fileArr.length<=1){
-                //     alert('请选择至少一张图片');
+                //     Global.alert('请选择至少一张图片');
                 //     return;
                 // }
             }
@@ -245,7 +245,7 @@ export default class QC2WitnessFeedDetailView extends Component {
             HttpRequest.uploadImage('/witness_op/result', param, this.onDeliverySuccess.bind(this),
                 (e) => {
                     try {
-                        alert(e)
+                        Global.alert(e)
                     }
                     catch (err) {
                         console.log(err)
@@ -280,13 +280,13 @@ export default class QC2WitnessFeedDetailView extends Component {
                         if (errorInfo != null) {
                             if (errorInfo.code == -1002||
                              errorInfo.code == -1001) {
-                            alert(errorInfo.message);
+                            Global.alert(errorInfo.message);
                         }else {
-                            alert(e)
+                            Global.alert(e)
                         }
 
                         } else {
-                            alert(e)
+                            Global.alert(e)
                         }
 
 

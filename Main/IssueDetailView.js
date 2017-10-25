@@ -196,11 +196,11 @@ export default class IssueDetailView extends Component {
 
 startFeedbackProblem(){
   if(!this.state.content){
-    alert('请输入问题反馈内容')
+    Global.alert('请输入问题反馈内容')
     return
   }
   if(this.state.fileArr.length<=1){
-    alert('请选择至少一张反馈图片')
+    Global.alert('请选择至少一张反馈图片')
     return
   }
   var params = new FormData();
@@ -215,7 +215,7 @@ startFeedbackProblem(){
   HttpRequest.uploadImage('/question/feedback', params, this.onCommitIssueSuccess.bind(this),
             (e) => {
                 try {
-                    alert(e)
+                    Global.alert(e)
                 }
                 catch (err) {
                     console.log(err)
@@ -239,7 +239,7 @@ answerSolution(result){
   HttpRequest.post('/question/answer',parma,this.onAnswerSuccess.bind(this),
                     (e) => {
                        try {
-                          alert(e)
+                          Global.alert(e)
                         }catch (err) {
                           console.log(err)
                         }
@@ -264,13 +264,13 @@ onCommitIssueSuccess(response) {
       this.setState({
           loadingVisible: false
       })
-      alert('问题反馈成功')
+      Global.alert('问题反馈成功')
       this.back();
     }
 
 startProblem(){
     if (!this.state.rolve_member) {
-        alert('请选择问题解决人')
+        Global.alert('请选择问题解决人')
         return
     }
     var id = ''
@@ -307,13 +307,13 @@ startProblem(){
                 if (errorInfo != null) {
                     if (errorInfo.code == -1002||
                      errorInfo.code == -1001) {
-                    alert(errorInfo.message);
+                    Global.alert(errorInfo.message);
                 }else {
-                    alert(e)
+                    Global.alert(e)
                 }
 
                 } else {
-                    alert(e)
+                    Global.alert(e)
                 }
 
 

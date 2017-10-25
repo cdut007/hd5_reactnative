@@ -106,6 +106,28 @@ module.exports = {
         var roleType = user.roles[0].roleType[0]
         return roleType == 'solver'
     },
+    alert(content){
+        let toast = Toast.show(content, {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+            onShow: () => {
+                // calls on toast\`s appear animation start
+            },
+            onShown: () => {
+                // calls on toast\`s appear animation end.
+            },
+            onHide: () => {
+                // calls on toast\`s hide animation start.
+            },
+            onHidden: () => {
+                // calls on toast\`s hide animation end.
+            }
+        });
+    },
     showToast(content){
         // Add a Toast on screen.
     let toast = Toast.show(content, {

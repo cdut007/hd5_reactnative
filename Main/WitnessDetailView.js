@@ -183,6 +183,7 @@ export default class WitnessDetailView extends Component {
 )
     }
     getStatus(status){
+         console.log('status ========'+status)
             return Global.getWitnesstatus(status)
     }
 

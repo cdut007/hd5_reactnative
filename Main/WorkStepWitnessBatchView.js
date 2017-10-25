@@ -113,12 +113,12 @@ export default class WorkStepWitnessBatchView extends Component {
     startCommitWitness(){
         for (var i = 0; i < this.state.data.length; i++) {
             if (!this.state.data[i].choose_date) {
-                alert('请选择见证日期')
+                Global.alert('请选择见证日期')
                 return
             }
 
             if (!this.state.data[i].choose_address) {
-                alert('请选择见证地点')
+                Global.alert('请选择见证地点')
                 return
             }
         }
@@ -153,13 +153,13 @@ export default class WorkStepWitnessBatchView extends Component {
                     if (errorInfo != null) {
                         if (errorInfo.code == -1002||
                          errorInfo.code == -1001) {
-                        alert(errorInfo.message);
+                        Global.alert(errorInfo.message);
                     }else {
-                        alert(e)
+                        Global.alert(e)
                     }
 
                     } else {
-                        alert(e)
+                        Global.alert(e)
                     }
 
 

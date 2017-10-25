@@ -46,7 +46,7 @@ export default class RegisterView extends Component
             this.setState({
                         loadingVisible: false
                     });
-            alert('请输入用户名或密码')
+            Global.alert('请输入用户名或密码')
         }
         else
         {
@@ -58,9 +58,9 @@ export default class RegisterView extends Component
                 });
                 var errorInfo = JSON.parse(e);
                 if (errorInfo!=null && errorInfo.description) {
-                     alert(errorInfo.description)
+                     Global.alert(errorInfo.description)
                 }else{
-                    alert(e)
+                    Global.alert(e)
                 }
                 console.log('Login error:' + e)
             })
@@ -71,7 +71,7 @@ export default class RegisterView extends Component
                     this.setState({
                         loadingVisible: false
                     });
-                    alert('登录超时，请稍候再试');
+                    Global.alert('登录超时，请稍候再试');
                 }
             }, 1000 *15);
 

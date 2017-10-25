@@ -429,18 +429,18 @@ export default class PlanListDeliveryView extends Component {
                         }
                     })
         if (selectItems.length == 0) {
-            alert('请选择任务')
+            Global.alert('请选择任务')
             return
         }
         ids = ids.substr(0,ids.length-1)
 
         if (!this.state.choose_date) {
-            alert('请选择施工日期')
+            Global.alert('请选择施工日期')
             return
         }
 
         if (!this.state.choose_member) {
-            alert('请选择作业组长')
+            Global.alert('请选择作业组长')
             return
         }
         this.setState({
@@ -470,13 +470,13 @@ export default class PlanListDeliveryView extends Component {
                     if (errorInfo != null) {
                         if (errorInfo.code == -1002||
                          errorInfo.code == -1001) {
-                        alert(errorInfo.message);
+                        Global.alert(errorInfo.message);
                     }else {
-                        alert(e)
+                        Global.alert(e)
                     }
 
                     } else {
-                        alert(e)
+                        Global.alert(e)
                     }
 
 

@@ -52,7 +52,7 @@ export default class WorkStepDetailView extends Component {
         HttpRequest.get('/hdxt/api/baseservice/workstep/rollingplan/'+this.state.data.id, paramBody, this.onGetWorkStepSuccess.bind(this),
             (e) => {
                 try {
-                    alert(e)
+                    Global.alert(e)
                 }
                 catch (err) {
                     console.log(err)

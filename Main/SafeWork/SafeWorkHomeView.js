@@ -125,7 +125,7 @@ export  default class SafeWorkHomeView extends Component {
 
   _itemClick(item){
 
-// AlertIOS.alert(item.type,item.title);
+// AlertIOS.Global.alert(item.type,item.title);
 
 var Component;
 

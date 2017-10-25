@@ -182,12 +182,12 @@ export default class PlanWriteLastStepDetailView extends Component {
 
     startHankou(){
         if (!this.state.choose_date) {
-            alert('请选择焊接时间')
+            Global.alert('请选择焊接时间')
             return
         }
 
         if (!this.state.choose_hankouNo) {
-            alert('请选择焊工号')
+            Global.alert('请选择焊工号')
             return
         }
         var choose_hankouNo = null;
@@ -223,13 +223,13 @@ export default class PlanWriteLastStepDetailView extends Component {
                     if (errorInfo != null) {
                         if (errorInfo.code == -1002||
                          errorInfo.code == -1001) {
-                        alert(errorInfo.message);
+                        Global.alert(errorInfo.message);
                     }else {
-                        alert(e)
+                        Global.alert(e)
                     }
 
                     } else {
-                        alert(e)
+                        Global.alert(e)
                     }
 
 

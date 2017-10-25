@@ -96,7 +96,7 @@ export default class LoginView extends Component {
             this.setState({
                 loadingVisible: false
             });
-            alert('请输入用户名或密码')
+            Global.alert('请输入用户名或密码')
         }
         else {
 
@@ -116,13 +116,13 @@ export default class LoginView extends Component {
                         if (errorInfo != null) {
                             if (errorInfo.code == -1002||
 							 errorInfo.code == -1001) {
-							alert("账号或密码错误");
+							Global.alert("账号或密码错误");
 						}else {
-                            alert(e)
+                            Global.alert(e)
 						}
 
                         } else {
-                            alert(e)
+                            Global.alert(e)
                         }
 
 
@@ -135,7 +135,7 @@ export default class LoginView extends Component {
                 this.setState({
                     loadingVisible: false
                 });
-                alert('登录超时，请稍候再试');
+                Global.alert('登录超时，请稍候再试');
             }
         }, 1000 * 15);
 

@@ -51,7 +51,7 @@ export default class WorkStepScanView extends Component {
             HttpRequest.get('/hdxt/api/baseservice/workstep/'+this.state.data.id, paramBody, this.onGetWorkStepDetailSuccess.bind(this),
                 (e) => {
                     try {
-                        alert(e)
+                        Global.alert(e)
                     }
                     catch (err) {
                         console.log(err)

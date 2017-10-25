@@ -201,7 +201,7 @@ export default class HomeView extends Component {
         HttpRequest.get('/module', paramBody, this.onGetModuleSuccess.bind(this),
             (e) => {
                 try {
-                    alert(e)
+                    Global.alert(e)
                 }
                 catch (err) {
                     console.log(err)

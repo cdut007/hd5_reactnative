@@ -127,7 +127,7 @@ export default class WorkStepListView extends Component {
                         }
                     })
         if (selectItems.length == 0) {
-            alert('请选择工序见证')
+            Global.alert('请选择工序见证')
             return
         }
 

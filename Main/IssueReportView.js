@@ -84,17 +84,17 @@ export default class IssueReportView extends Component {
 
     onCommit() {
         if (this.state.issueType=='选择问题类型') {
-            alert('请选择问题类型')
+            Global.alert('请选择问题类型')
             return
         }
 
         if (!this.state.content.length) {
-            alert('请填写问题描述')
+            Global.alert('请填写问题描述')
             return
         }
 
         if(this.state.fileArr.length<=1){
-            alert('请选择至少一张问题图片');
+            Global.alert('请选择至少一张问题图片');
             return;
         }
 
@@ -124,7 +124,7 @@ export default class IssueReportView extends Component {
         HttpRequest.uploadImage(REQUST_ISSUE_COMMIT_URL, param, this.onCommitIssueSuccess.bind(this),
             (e) => {
                 try {
-                    alert(e)
+                    Global.alert(e)
                 }
                 catch (err) {
                     console.log(err)

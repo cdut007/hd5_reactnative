@@ -7,6 +7,7 @@ import {
 
 import ModalDropdown from 'react-native-modal-dropdown'
 import HttpRequest from '../HttpRequest/HttpRequest'
+import Global from './globals.js'
 import Dimensions from 'Dimensions'
 
 var width = Dimensions.get('window').width;
@@ -47,7 +48,7 @@ export default class DepartmentSelectView extends Component {
         HttpRequest.get(REQUST_DEPARTMENT_URL, {}, this.onGetDepartMentSuccess.bind(this),
             (e) => {
                 try {
-                    alert(e)
+                    Global.alert(e)
                 }
                 catch (err) {
                     console.log(err)
@@ -57,7 +58,7 @@ export default class DepartmentSelectView extends Component {
 
     onGetDepartMentSuccess(response) {
         console.log('onGetDepartMentSuccess:' + JSON.stringify(response))
-        
+
 
         if (response['code'] == '1000') {
             departmentArr = response['responseResult']
@@ -72,7 +73,7 @@ export default class DepartmentSelectView extends Component {
         HttpRequest.get(REQUST_DEPARTMENT_MEMBER_URL, param, this.onGetMemberSuccess.bind(this),
             (e) => {
                 try {
-                    alert(e)
+                    Global.alert(e)
                 }
                 catch (err) {
                     console.log(err)
@@ -82,7 +83,7 @@ export default class DepartmentSelectView extends Component {
 
     onGetMemberSuccess(response) {
         console.log('onGetMemberSuccess:' + JSON.stringify(response))
-        
+
 
         if (response['code'] == '1000') {
             departmentMemberDic[this.state.selectedDepartment.id] = response['responseResult']
