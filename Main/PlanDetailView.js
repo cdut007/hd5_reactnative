@@ -240,11 +240,16 @@ export default class PlanDetailView extends Component {
 
         startPlanOp(method){
 
-          Alert.alert('','确定解除任务?',
-                    [
-                      {text:'取消',},
-                      {text:'确认',onPress:()=> {this.ComfirmPlan(method)}}
-        ])
+         if (method == 'RELEASE') {
+             Alert.alert('','确定解除任务?',
+                       [
+                         {text:'取消',},
+                         {text:'确认',onPress:()=> {this.ComfirmPlan(method)}}
+           ])
+       }else {
+           this.ComfirmPlan(method)
+       }
+
         }
 
         onDeliverySuccess(response){
