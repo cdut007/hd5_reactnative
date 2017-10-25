@@ -50,11 +50,12 @@ class SearchBar extends React.Component {
         <TextInput
           ref="input"
           autoCapitalize="none"
+          underlineColorAndroid={'transparent'}
           autoCorrect={false}
           autoFocus={true}
-          onChange={this.props.onSearchChange}
-          placeholder="输入搜索内容..."
-          placeholderTextColor="rgba(255, 255, 255, 0.5)"
+          onChangeText={this.props.onSearchChange}
+          placeholder="搜索"
+          placeholderTextColor="#979797"
           onFocus={this.props.onFocus}
           style={styles.searchBarInput}
         />
@@ -73,16 +74,16 @@ var styles = StyleSheet.create({
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#a9a9a9',
+    backgroundColor: '#f2f2f2',
     height: 44,
+    flex:1
   },
   searchBarInput: {
     flex: 1,
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
+    fontSize: 14,
+    color: '#1c1c1c',
     height: 50,
-    padding: 0,
+    paddingLeft: 10,
     backgroundColor: 'transparent'
   },
   spinner: {

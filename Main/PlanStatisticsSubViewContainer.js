@@ -78,6 +78,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
         this.state = {
 
             title: this.props.data.user.dept.name + "任务",
+            keyword:'',
         }
 
 
@@ -159,6 +160,8 @@ export default class PlanStatisticsSubViewContainer extends Component {
             <PlanListView
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
+             ref={(c) => this._plan_list_ref = c}
+              keyword={this.state.keyword}
              status={groupStatusDatas[index].status}
              navigator={this.props.navigator}
              />
@@ -202,10 +205,36 @@ export default class PlanStatisticsSubViewContainer extends Component {
                 <NavBar
                 title={this.state.title}
                 leftIcon={require('../images/back.png')}
+                searchMode={true}
+                onSearchChanged={(text) => this.onSearchChanged(text)}
+                onSearchClose = {this.onSearchClose.bind(this)}
                 leftPress={this.back.bind(this)} />
                 {this.rendTabs()}
             </View>
         )
+    }
+
+    onSearchChanged(text){
+    console.log('text=='+text);
+    this.setState({keyword:text})
+    if (this._plan_list_ref) {
+        setTimeout(() => {
+                this._plan_list_ref._onRefresh()
+        }, 1000 * 2);
+    }
+
+    }
+
+    onSearchClose(){
+        if (this.state.keyword == '') {
+            return
+        }
+        this.setState({keyword:''})
+        if (this._plan_list_ref) {
+            setTimeout(() => {
+                    this._plan_list_ref._onRefresh()
+            }, 1000 * 2);
+        }
     }
 
 
@@ -222,6 +251,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
              type={this.props.type}
              status={statusDatas[index].status}
              userId={userId}
+             keyword={this.state.keyword}
              navigator={this.props.navigator}
              />
 

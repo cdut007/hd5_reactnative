@@ -275,7 +275,9 @@ export default class PlanListDeliveryView extends Component {
                       status:this.props.status,
                       userId:userid,
                      }
-
+                     if (this.props.keyword) {
+                         paramBody.keyword = this.props.keyword
+                     }
             HttpRequest.get('/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
