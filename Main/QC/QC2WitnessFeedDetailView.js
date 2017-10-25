@@ -11,7 +11,8 @@ import {
     ScrollView,
     AsyncStorage,
     TextInput,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    Keyboard
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../../common/NavBar';
@@ -127,10 +128,14 @@ export default class QC2WitnessFeedDetailView extends Component {
     componentWillMount(){
 
     }
+    componentWillUnmount(){
+
+    }
 
     back() {
         this.props.navigator.pop()
     }
+
 
     render() {
 
@@ -160,7 +165,7 @@ export default class QC2WitnessFeedDetailView extends Component {
         //update
         this.props.data.realWitnessAddress = this.state.choose_address;
         this.props.data.realWitnessDate = this.state.choose_date;
-        this.props.data.result = this.state.choose_result == '合格' ? 'QUALIFIED' : 'UNQUALIFIED' ; 
+        this.props.data.result = this.state.choose_result == '合格' ? 'QUALIFIED' : 'UNQUALIFIED' ;
         DeviceEventEmitter.emit('witness_update','witness_update');
         DeviceEventEmitter.emit('Qc_issueDeals','Qc_issueDeals');
         this.back();
@@ -521,6 +526,7 @@ export default class QC2WitnessFeedDetailView extends Component {
            {this.renderFileView()}
        </View>)
    }
+
 
    renderFileView() {
        return (
