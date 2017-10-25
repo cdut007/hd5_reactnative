@@ -4,7 +4,9 @@ import {
     Text,
     View,
     TouchableHighlight,
-    TouchableOpacity
+    TouchableOpacity,
+    DeviceEventEmitter,
+    Keyboard
 } from 'react-native';
 
  import Picker from 'react-native-picker';
@@ -20,7 +22,6 @@ export default class MemberSelectView extends Component {
 
     constructor(props) {
         super(props)
-
         // if (!this.props.type) {
         //     this.props.type = 'date'
         // }
@@ -43,10 +44,28 @@ export default class MemberSelectView extends Component {
         })
     }
 
+      _keyboardDidShow () {
+        Picker.hide();
+      }
+
+      _keyboardDidHide () {
+        // alert('Keyboard Hidden');
+      }
+
     componentWillUnmount(){
         console.log('member lllllll')
         Picker.hide();
+        this.keyboardDidShowListener.remove();
+        this.keyboardDidHideListener.remove();
     }
+
+    componentWillMount(){
+            //监听键盘弹出事件
+      this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+      this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+
+    }
+
 
     onPickClick(){
         if (!this.props.data || this.props.data.length  == 0 ) {

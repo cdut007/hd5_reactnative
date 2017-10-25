@@ -25,7 +25,7 @@ import MemberSelectView from '../common/MemberSelectView'
 const MAX_IMAGE_COUNT = 5;
 const REQUST_ISSUE_COMMIT_URL = '/question/create'
 var width = Dimensions.get('window').width;
-var issueTypes = ['协调','技术'];
+var issueTypes = ['协调问题','技术问题','物项问题'];
 var options = {
     title: '', // specify null or empty string to remove the title
     cancelButtonTitle: '取消',
@@ -103,7 +103,15 @@ export default class IssueReportView extends Component {
         })
 
         var param = new FormData()
-        param.append('questionType', this.state.issueType==issueTypes[0]?'technicalMatters':'coordinationProblem')
+        let type = '';
+        if(this.state.issueType == issueTypes[0]){
+            type = 'technicalMatters';
+        }else if(this.state.issueType == issueTypes[1]){
+            type = 'coordinationProblem';
+        }else{
+            type = 'resourceMatters';
+        }
+        param.append('questionType', type);
         param.append('describe', this.state.content)
         param.append('rollingPlanId', this.props.data['id'])
         this.state.fileArr.map((item, i) => {
