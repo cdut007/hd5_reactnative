@@ -10,7 +10,8 @@ import {
     TouchableHighlight,
     ScrollView,
     AsyncStorage,
-    TextInput
+    TextInput,
+    DeviceEventEmitter
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../../common/NavBar';
@@ -91,8 +92,15 @@ export default class QCWitnessDetailView extends Component {
     componentDidMount() {
 
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
+        QcissueDeals = DeviceEventEmitter.addListener('Qc_issueDeals',(param) => {    this.executeNetWorkRequest(this.props.data.rollingPlanId) })
+
     }
 
+   componentWillUnmount(){
+
+     QcissueDeals.remove();
+
+   }
      onGetDataSuccess(response){
          console.log('onGetDataSuccess@@@@')
          this.state.data.rollingPlan = response.responseResult
@@ -912,7 +920,7 @@ export default class QCWitnessDetailView extends Component {
 
                 displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'});
                 displayAry.push({title:'图纸版本',content:this.state.data.rollingPlan.drawingVersion,id:'6'});
-            
+
 
                 displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'b6'},);
                 displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'b7'},);

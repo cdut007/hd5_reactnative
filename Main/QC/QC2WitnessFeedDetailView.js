@@ -159,6 +159,7 @@ export default class QC2WitnessFeedDetailView extends Component {
         Global.showToast(response.message)
         //update
         DeviceEventEmitter.emit('witness_update','witness_update');
+        DeviceEventEmitter.emit('Qc_issueDeals','Qc_issueDeals');
         this.back();
 
     }

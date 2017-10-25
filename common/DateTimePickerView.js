@@ -17,7 +17,7 @@ export default class DateTimePickerView extends Component {
         type: PropTypes.string,  //'date', 'time', 'datetime'
         onSelected: PropTypes.func,
         title:PropTypes.string,
-        minTime:PropTypes.stting,
+        minTime:PropTypes.string,
     }
 
     constructor(props) {
