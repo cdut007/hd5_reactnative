@@ -12,6 +12,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     InteractionManager,
+    DeviceEventEmitter,
 } from 'react-native';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -126,10 +127,14 @@ export default class QCWitnessListView extends Component {
 
     componentDidMount() {
 
-        this.executePlanRequest(1);
+    QcissueDeals = DeviceEventEmitter.addListener('Qc_issueDeals',(param) => {this.executePlanRequest(1)})
+    this.executePlanRequest(1);
 
     }
 
+    componentWillUnmount(){
+       QcissueDeals.remove();
+  }
     onGetDataSuccess(response,paramBody){
          console.log('onGetDataSuccess@@@@')
      var query = this.state.filter;

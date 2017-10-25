@@ -92,18 +92,20 @@ export default class QCWitnessDetailView extends Component {
     componentDidMount() {
 
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
-        QcissueDeals = DeviceEventEmitter.addListener('Qc_issueDeals',(param) => {    this.executeNetWorkRequest(this.props.data.rollingPlanId) })
+
 
     }
 
    componentWillUnmount(){
 
-     QcissueDeals.remove();
+
 
    }
      onGetDataSuccess(response){
          console.log('onGetDataSuccess@@@@')
          this.state.data.rollingPlan = response.responseResult
+         console.log('subWitness = ' , this.state.data.subWitness);
+
          this.setState({
              data:this.state.data,
          });
