@@ -22,6 +22,7 @@ import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 import QCWitnessListView from './QCWitnessListView.js';
+import ConstMapValue from '../../common/ConstMapValue.js';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -76,6 +77,7 @@ export default class QCWitnessListViewContainer extends Component {
 
 
     renderListView() {
+        var qc_witness_col_map = ConstMapValue.QC_Witness_Col_Map(this.props.type)
         return (
             <View style={{marginTop:10,}}>
 
@@ -84,73 +86,47 @@ export default class QCWitnessListViewContainer extends Component {
 
             <View style={[{alignItems:'center',},styles.statisticsflexContainer]}>
 
-            <View style={[styles.cell,{alignItems:'center',padding:4,backgroundColor:'#f2f2f2'}]}>
+            <View style={styles.cell}>
 
-            <TouchableOpacity style={{borderWidth:0.5,
-                  alignItems:'center',
-                  borderColor : '#f77935',
-                  backgroundColor : 'white',
-                  borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:4,paddingRight:4,paddingTop:8,paddingBottom:8}}>
-            <Text style={{color:'#f77935',fontSize:10,flex:1}}>
-                                  见证时间
-            </Text>
-                                <Image
-                                style={{width:20,height:20}}
-                                source={require('../../images/unfold.png')}/>
-            </TouchableOpacity>
+              <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+                {qc_witness_col_map.col1}
+              </Text>
 
             </View>
 
-            <View style={[styles.cell,{alignItems:'center',padding:4,backgroundColor:'#f2f2f2'}]}>
 
-            <TouchableOpacity style={{borderWidth:0.5,
-                  alignItems:'center',
-                  borderColor : '#f77935',
-                  backgroundColor : 'white',
-                  borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:4,paddingRight:4,paddingTop:8,paddingBottom:8}}>
-            <Text style={{color:'#f77935',fontSize:10,flex:1}}>
-                                  见证地点
+            <View style={styles.cell}>
+
+            <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+             {qc_witness_col_map.col2}
             </Text>
-                                <Image
-                                style={{width:20,height:20}}
-                                source={require('../../images/unfold.png')}/>
-            </TouchableOpacity>
 
             </View>
 
-            <View style={[styles.cell,{alignItems:'center',padding:4,backgroundColor:'#f2f2f2'}]}>
+            <View style={styles.cell}>
 
-            <TouchableOpacity style={{borderWidth:0.5,
-                  alignItems:'center',
-                  borderColor : '#f77935',
-                  backgroundColor : 'white',
-                  borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:4,paddingRight:4,paddingTop:8,paddingBottom:8}}>
-            <Text style={{color:'#f77935',fontSize:10,flex:1}}>
-                                  工序编号
+            <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+            {qc_witness_col_map.col3}
             </Text>
-                                <Image
-                                style={{width:20,height:20}}
-                                source={require('../../images/unfold.png')}/>
-            </TouchableOpacity>
 
             </View>
 
-            <View style={[styles.cell,{alignItems:'center',padding:4,backgroundColor:'#f2f2f2'}]}>
+            <View style={styles.cell}>
 
-            <TouchableOpacity style={{borderWidth:0.5,
-                  alignItems:'center',
-                  borderColor : '#f77935',
-                  backgroundColor : 'white',
-                  borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:4,paddingRight:4,paddingTop:8,paddingBottom:8}}>
-            <Text style={{color:'#f77935',fontSize:10,flex:1}}>
-                                  见证点类型
+            <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+             {qc_witness_col_map.col4}
             </Text>
-                                <Image
-                                style={{width:20,height:20}}
-                                source={require('../../images/unfold.png')}/>
-            </TouchableOpacity>
 
             </View>
+
+            <View style={styles.cell}>
+
+            <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+             {qc_witness_col_map.col5}
+            </Text>
+
+            </View>
+
 
 
             </View>

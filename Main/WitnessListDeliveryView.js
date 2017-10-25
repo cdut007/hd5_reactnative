@@ -27,6 +27,7 @@ import CommitButton from '../common/CommitButton'
 import CheckBox from 'react-native-checkbox'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LoadEmptyView from '../common/LoadEmptyView.js'
+import ConstMapValue from '../common/ConstMapValue.js';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -503,6 +504,7 @@ export default class WitnessListDeliveryView extends Component {
     }
 
     renderTitleCols(){
+    var witness_col_map = ConstMapValue.Witness_Col_Map(this.props.type)
         return(<View  style={{marginTop:10,}}>
 
         <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
@@ -512,11 +514,10 @@ export default class WitnessListDeliveryView extends Component {
 
         <View style={styles.statisticsflexContainer}>
 
-
         <View style={styles.cell}>
 
-          <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-            见证时间
+          <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+            {witness_col_map.col1}
           </Text>
 
         </View>
@@ -524,27 +525,28 @@ export default class WitnessListDeliveryView extends Component {
 
         <View style={styles.cell}>
 
-        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-          编号/名称
+        <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+         {witness_col_map.col2}
         </Text>
 
         </View>
 
         <View style={styles.cell}>
 
-        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-          见证点类型
+        <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+        {witness_col_map.col3}
         </Text>
 
         </View>
 
         <View style={styles.cell}>
 
-        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-          发起人
+        <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+         {witness_col_map.col4}
         </Text>
 
         </View>
+
 
 
         <View style={[styles.cell,{flex:0.5}]}>

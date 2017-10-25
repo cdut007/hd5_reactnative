@@ -10,9 +10,38 @@ module.exports = {
  getDomain(){
      return apiDomainAddr
  },
- setDomain(domain){
+ initDomain(){
+
+      AsyncStorage.getItem('k_domain_info',function(errs,result)
+      {
+          console.log(' init k_domain_info:' + result)
+          if (!errs && result && result.length)
+          {
+              var resultJSon = JSON.parse(result);
+              apiDomainAddr = resultJSon.domain ;
+              apiAddr =  apiDomainAddr + '/hdxt/api' ;
+          }
+          else
+          {
+
+          }
+      });
+
+ },
+ setDomain(domain,env){
       apiDomainAddr = domain ;
       apiAddr =  apiDomainAddr + '/hdxt/api' ;
+      var domainInfo = new Object()
+      domainInfo.env = env
+      domainInfo.domain = domain
+      AsyncStorage.setItem('k_domain_info', JSON.stringify(domainInfo), (error, result) => {
+          if (error) {
+              console.log('save k_domain_info faild.')
+          }
+          console.log('k_domain_info: ' + result)
+
+      });
+
  },
 get(apiName, body,successCallback, failCallback)
 {

@@ -28,6 +28,7 @@ export default class MeView extends Component {
         super(props);
         this.state = {
             name: "",
+            env:"",
         };
     }
 
@@ -40,6 +41,20 @@ export default class MeView extends Component {
             {
                 var resultJSon = JSON.parse(result);
                 me.setState({name: resultJSon.responseResult.realname})
+            }
+            else
+            {
+
+            }
+        });
+
+        AsyncStorage.getItem('k_domain_info',function(errs,result)
+        {
+            console.log('me page k_domain_info:' + result)
+            if (!errs && result && result.length)
+            {
+                var resultJSon = JSON.parse(result);
+                me.setState({env: resultJSon.env})
             }
             else
             {
@@ -139,7 +154,7 @@ export default class MeView extends Component {
                     onPress = {()=>{NativeModules.LogInterface.sendLogReport()}}>
                     <Text style={styles.loginText}>发送日志反馈</Text>
                 </TouchableOpacity>
-                <Text style={{fontSize: 18, color: '#000000aa',marginTop: 5}}>{'version: ' + this.props.version}</Text>
+                <Text style={{fontSize: 18, color: '#000000aa',marginTop: 5}}>{'version: ' + this.props.version} {this.state.env}</Text>
                 </View>
 
 

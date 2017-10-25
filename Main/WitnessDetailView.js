@@ -292,6 +292,18 @@ onWitnessPress(witnessInfo){
     })
 }
 
+getNoticeType(noticePoint){
+    if (noticePoint == 'CZEC_QA') {
+        return 'CZEC QA'
+    }
+    if (noticePoint == 'CZEC_QC') {
+        return 'CZEC QC'
+    }
+
+    return noticePoint
+
+}
+
         witnessItemInfo(witnessInfo){
 
             //witnessInfo.result = '不合格'
@@ -303,7 +315,7 @@ onWitnessPress(witnessInfo){
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                        {witnessInfo.witnesser.realname}
+                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
                         见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
@@ -330,7 +342,7 @@ onWitnessPress(witnessInfo){
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                        {witnessInfo.witnesser.realname}
+                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,textAlign:'center'}}>
                         见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
@@ -359,7 +371,7 @@ onWitnessPress(witnessInfo){
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                        {witnessInfo.witnesser.realname}
+                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
                       </Text>
                     </View>
 
@@ -386,7 +398,13 @@ onWitnessPress(witnessInfo){
                // 颜色数组
                var displayAry = [];
 
+
                if (this.state.data.witnessInfo) {
+                   displayAry.push({title:'发起人',content:this.state.data.witnessInfo[0].launcherName,id:'name'})
+
+                   displayAry.push({type:'devider'},);
+
+
                    for (var i = 0; i < this.state.data.witnessInfo.length; i++) {
                          var witnessInfo = this.state.data.witnessInfo[i]
                          if (!witnessInfo.witnesser) {
@@ -400,6 +418,7 @@ onWitnessPress(witnessInfo){
                if (Global.isQCTeam(Global.UserInfo)) {
                    //if not ok add info.
                    displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'7'})
+                   displayAry.push({title:'ITP名称',content:this.state.data.rollingPlan.itpName,id:'b12'},);
                    displayAry.push({title:'工序编号/名称',content:this.state.data.workStepName,id:'0'})
                    displayAry.push({title:'工程量名称',content:this.state.data.rollingPlan.projectName,id:'1'})
                    displayAry.push({title:'焊口／支架',content:this.state.data.rollingPlan.weldno,id:'2'},);
@@ -407,6 +426,7 @@ onWitnessPress(witnessInfo){
 
                }else{
                    displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'7'})
+                   displayAry.push({title:'ITP名称',content:this.state.data.rollingPlan.itpName,id:'b12'},);
                    displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'0'})
                    displayAry.push({title:'点数',content:this.state.data.rollingPlan.points,id:'1'})
                    displayAry.push({title:'机组号',content:this.state.data.rollingPlan.unitNo,id:'2'})
@@ -415,7 +435,7 @@ onWitnessPress(witnessInfo){
 
                    displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'},);
                    displayAry.push({title:'图纸版本',content:this.state.data.drawingVersion,id:'6'});
-               
+
                    displayAry.push({title:'房间号',content:this.state.data.rollingPlan.roomNo,id:'b1'},);
                    displayAry.push({title:'工程量编号',content:this.state.data.rollingPlan.projectNo,id:'b2'},);
                    displayAry.push({title:'工程量类别',content:this.state.data.rollingPlan.projectType,id:'b3'},);
