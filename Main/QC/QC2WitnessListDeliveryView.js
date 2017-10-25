@@ -42,7 +42,7 @@ var LOADING = {};
 import Global from '../../common/globals.js'
 
 import DateTimePickerView from '../../common/DateTimePickerView'
-
+import ConstMapValue from '../../common/ConstMapValue.js';
 import MemberSelectView from '../../common/MemberSelectView'
 
 
@@ -523,6 +523,7 @@ export default class QC2WitnessListDeliveryView extends Component {
     }
 
     renderTitleCols(){
+        var qc_witness_col_map = ConstMapValue.QC_Witness_Col_Map(this.props.type)
         return(<View  style={{marginTop:10,}}>
 
         <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
@@ -535,8 +536,8 @@ export default class QC2WitnessListDeliveryView extends Component {
 
         <View style={styles.cell}>
 
-          <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-            见证时间
+          <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+            {qc_witness_col_map.col1}
           </Text>
 
         </View>
@@ -544,24 +545,32 @@ export default class QC2WitnessListDeliveryView extends Component {
 
         <View style={styles.cell}>
 
-        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-          编号/名称
+        <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+         {qc_witness_col_map.col2}
         </Text>
 
         </View>
 
         <View style={styles.cell}>
 
-        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-          见证点类型
+        <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+        {qc_witness_col_map.col3}
         </Text>
 
         </View>
 
         <View style={styles.cell}>
 
-        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-          发起人
+        <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+         {qc_witness_col_map.col4}
+        </Text>
+
+        </View>
+
+        <View style={styles.cell}>
+
+        <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
+         {qc_witness_col_map.col5}
         </Text>
 
         </View>
@@ -597,27 +606,38 @@ export default class QC2WitnessListDeliveryView extends Component {
 
                         <View style={styles.statisticsflexContainer}>
 
-                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <Text numberOfLines={3}  style={{color:'#707070',fontSize:10,marginBottom:2,textAlign:'center'}}>
-                           {Global.formatFullDateDisplay(rowData.createDate)}
-                        </Text>
 
-                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
+
+                     <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
+                        {rowData.drawingNo}
+                     </Text>
+
+                     </TouchableOpacity>
+
+                     <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
+
+                    <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
+                       {rowData.witnessAddress}
+                    </Text>
+
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
+
+                   <Text numberOfLines={3}  style={{color:'#707070',fontSize:10,marginBottom:2,textAlign:'center'}}>
+                      {Global.formatFullDateDisplay(rowData.createDate)}
+                   </Text>
+
+                 </TouchableOpacity>
+
 
 
                       <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
                           <Text numberOfLines={2} style={{color:'#707070',fontSize:10,marginBottom:2,}}>
                             {rowData.workStepName}
                           </Text>
-                        </TouchableOpacity>
-
-                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
-
-                        <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
-                           {rowData.noticeType}
-                        </Text>
-
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>

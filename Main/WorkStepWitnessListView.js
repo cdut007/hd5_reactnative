@@ -273,7 +273,7 @@ export default class WorkStepWitnessListView extends Component {
                         <View style={styles.cell}>
 
                           <Text numberOfLines={3}  style={{color:'#707070',fontSize:10,marginBottom:2,textAlign:'center'}}>
-                          {Global.formatDate(rowData.launchData)}
+                          {Global.formatFullDateDisplay(rowData.launchData)}
                           </Text>
 
                         </View>

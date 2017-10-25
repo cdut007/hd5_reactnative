@@ -11,7 +11,7 @@ import {
 
 import {Navigator}
  from 'react-native-deprecated-custom-components'
-
+import HttpRequest from '../HttpRequest/HttpRequest'
 import Navigation from '../common/Navigation';
 import TabNavigator from 'react-native-tab-navigator';
 import TabView from './TabView'
@@ -48,6 +48,8 @@ export default class MainView extends Component {
                 me.setState({hasLogin: false})
             }
         });
+
+        HttpRequest.initDomain();
     }
 
     render() {
@@ -55,7 +57,7 @@ export default class MainView extends Component {
         {
             return(<View/>)
         }
-   
+
         if (this.state.hasLogin)
         {
             return (

@@ -742,8 +742,10 @@ startProblem(){
                var problem_type = '技术问题'
                if (this.state.data.questionType == 'technicalMatters') {
                    problem_type = '技术问题'
-               }else{
+               }else if(this.state.data.questionType == 'coordinationProblem'){
                    problem_type = '协调问题'
+               }else {
+                   problem_type = '物项问题'
                }
 
           var displayAry = []
