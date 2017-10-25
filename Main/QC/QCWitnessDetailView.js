@@ -10,7 +10,8 @@ import {
     TouchableHighlight,
     ScrollView,
     AsyncStorage,
-    TextInput
+    TextInput,
+    DeviceEventEmitter
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../../common/NavBar';
@@ -91,11 +92,20 @@ export default class QCWitnessDetailView extends Component {
     componentDidMount() {
 
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
+
+
     }
 
+   componentWillUnmount(){
+
+
+
+   }
      onGetDataSuccess(response){
          console.log('onGetDataSuccess@@@@')
          this.state.data.rollingPlan = response.responseResult
+         console.log('subWitness = ' , this.state.data.subWitness);
+
          this.setState({
              data:this.state.data,
          });
