@@ -5,7 +5,8 @@ import {
 	StyleSheet,
 	Dimensions,
 	TouchableOpacity,
-	Modal
+	Modal,
+	ActivityIndicator,
 } from 'react-native';
 const { width, height } = Dimensions.get('window')
 
@@ -26,10 +27,21 @@ class LoadingView extends Component{
 			 		 	{
 			 		 		this.props.closeLoading ?
 	 		 		 		<TouchableOpacity onPress={ this.props.closeLoading }>
-	 			 		    	<Image style={ styles.loadingImage } source={ require('../images/loading.gif') }/>
+							<ActivityIndicator
+					          animating={true}
+					          color="white"
+					          size="large"
+					          style={styles.loadingImage}
+					        />
+
 	 		 		    	</TouchableOpacity>
 	 		 		    	:
-	 		 		    	<Image style={ styles.loadingImage } source={ require('../images/loading.gif') }/>
+							<ActivityIndicator
+					          animating={true}
+					          color="white"
+					          size="large"
+					          style={styles.loadingImage}
+					        />
 			 		 	}
 		 			</View>
 			 	</View>
