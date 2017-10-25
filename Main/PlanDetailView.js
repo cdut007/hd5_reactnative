@@ -11,6 +11,7 @@ import {
     ScrollView,
     AsyncStorage,
     DeviceEventEmitter,
+    Alert,
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar';
@@ -186,54 +187,65 @@ export default class PlanDetailView extends Component {
        Picker.show();
         }
 
+     ComfirmPlan(method){
+
+       this.setState({
+           loadingVisible: true
+       })
+
+       var paramBody = {
+                type:this.props.type,
+               'method': method,
+               'ids': this.props.data.id,
+           }
+
+           if (method == 'REASSIGN') {
+               paramBody = {
+                        type:this.props.type,
+                       'method': method,
+                       'ids': this.props.data.id,
+                       'userId':this.state.choose_member
+                   }
+           }
+
+       HttpRequest.post('/rollingplan_op', paramBody, this.onDeliverySuccess.bind(this),
+           (e) => {
+               this.setState({
+                   loadingVisible: false
+               });
+               try {
+                   var errorInfo = JSON.parse(e);
+               }
+               catch(err)
+               {
+                   console.log("error======"+err)
+               }
+                   if (errorInfo != null) {
+                       if (errorInfo.code == -1002||
+                        errorInfo.code == -1001) {
+                       alert(errorInfo.message);
+                   }else {
+                       alert(e)
+                   }
+
+                   } else {
+                       alert(e)
+                   }
+
+
+               console.log('Login error:' + e)
+           })
+
+     }
+
         startPlanOp(method){
 
-            this.setState({
-                loadingVisible: true
-            })
+          Alert.alert('','确定解除任务?',
+                    [
+                      {text:'取消',},
+                      {text:'确认',onPress:()=> {this.ComfirmPlan(method)}}
+        ])
 
-            var paramBody = {
-                     type:this.props.type,
-                    'method': method,
-                    'ids': this.props.data.id,
-                }
-
-                if (method == 'REASSIGN') {
-                    paramBody = {
-                             type:this.props.type,
-                            'method': method,
-                            'ids': this.props.data.id,
-                            'userId':this.state.choose_member
-                        }
-                }
-
-            HttpRequest.post('/rollingplan_op', paramBody, this.onDeliverySuccess.bind(this),
-                (e) => {
-                    this.setState({
-                        loadingVisible: false
-                    });
-                    try {
-                        var errorInfo = JSON.parse(e);
-                    }
-                    catch(err)
-                    {
-                        console.log("error======"+err)
-                    }
-                        if (errorInfo != null) {
-                            if (errorInfo.code == -1002||
-                             errorInfo.code == -1001) {
-                            alert(errorInfo.message);
-                        }else {
-                            alert(e)
-                        }
-
-                        } else {
-                            alert(e)
-                        }
-
-
-                    console.log('Login error:' + e)
-                })
         }
 
         onDeliverySuccess(response){
