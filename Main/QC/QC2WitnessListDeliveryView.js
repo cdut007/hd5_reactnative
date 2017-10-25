@@ -26,7 +26,7 @@ import QCWitnessTeamDetailView from './QCWitnessTeamDetailView';
 import CommitButton from '../../common/CommitButton'
 import CheckBox from 'react-native-checkbox'
 import Spinner from 'react-native-loading-spinner-overlay'
-
+import LoadEmptyView from '../../common/LoadEmptyView.js'
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -181,9 +181,14 @@ export default class QC2WitnessListDeliveryView extends Component {
         _renderFooter(label,index) {
             //const { userReducer } = this.props;
             //通过当前product数量和刷新状态（是否正在下拉刷新）来判断footer的显示
-            if (this.state.isRefreshing || this.state.items.length < 1) {
+            if (this.state.isRefreshing || this.state.isLoading ) {
                 return null
             };
+
+            if (this.state.items.length < 1) {
+                return <LoadEmptyView />
+            };
+
             if (this.state.items.length < this.state.totalCount) {
                 //还有更多，默认显示‘正在加载更多...’
                 return <LoadMoreFooter />

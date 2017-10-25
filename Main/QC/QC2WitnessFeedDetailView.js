@@ -193,10 +193,10 @@ export default class QC2WitnessFeedDetailView extends Component {
                     return
                 }
 
-                if(this.state.fileArr.length<=1){
-                    alert('请选择至少一张图片');
-                    return;
-                }
+                // if(this.state.fileArr.length<=1){
+                //     alert('请选择至少一张图片');
+                //     return;
+                // }
             }
         }
 
@@ -225,12 +225,15 @@ export default class QC2WitnessFeedDetailView extends Component {
             param.append('isok', result)
             param.append('remark', this.state.remark)
             param.append('failType', this.state.witnessNotOkResultType)
-            this.state.fileArr.map((item, i) => {
-                if (item['fileSource']) {
-                   let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
-                   param.append("file"+i,file);   //这里的files就是后台需要的key
-                }
-            });
+            if (this.state.fileArr.length>0) {
+                this.state.fileArr.map((item, i) => {
+                    if (item['fileSource']) {
+                       let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
+                       param.append("file"+i,file);   //这里的files就是后台需要的key
+                    }
+                });
+            }
+
             HttpRequest.uploadImage('/witness_op/result', param, this.onDeliverySuccess.bind(this),
                 (e) => {
                     try {

@@ -4,6 +4,8 @@ import Toast from 'react-native-root-toast';
 var currentRole;
 var UserInfo;
 
+
+
 Date.prototype.format = function(fmt)
 { //author: meizz
     var o = {
@@ -27,7 +29,6 @@ module.exports = {
     BASE_URL:'http://ucstage.sealedchat.com:8008/api',
     STAGING_BASE_URL:'http://ucstage.sealedchat.com:8008/api',
     ICON_URL:'http://ucstage.sealedchat.com:8008/api',
-
     formatDate(time){
         var curTime = new Date(time).format("yyyy/MM/dd");
         return curTime
@@ -144,5 +145,6 @@ module.exports = {
             return status
         }
     },
+
 
 };

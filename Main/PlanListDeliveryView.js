@@ -26,7 +26,8 @@ import PlanDetailView from './PlanDetailView';
 import CommitButton from '../common/CommitButton'
 import CheckBox from 'react-native-checkbox'
 import Spinner from 'react-native-loading-spinner-overlay'
-
+import LoadEmptyView from '../common/LoadEmptyView.js'
+import ConstMapValue from '../common/ConstMapValue.js';
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -46,11 +47,13 @@ import DateTimePickerView from '../common/DateTimePickerView'
 import MemberSelectView from '../common/MemberSelectView'
 
 
-
+var plan_col_map_val;
 export default class PlanListDeliveryView extends Component {
     constructor(props) {
         super(props)
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
+        plan_col_map_val = ConstMapValue.Plan_Col_Map_Value(this.props.type)
 
        LOADING = {};
        if (Global.UserInfo.monitor) {
@@ -124,9 +127,14 @@ export default class PlanListDeliveryView extends Component {
         _renderFooter(label,index) {
             //const { userReducer } = this.props;
             //通过当前product数量和刷新状态（是否正在下拉刷新）来判断footer的显示
-            if (this.state.isRefreshing || this.state.items.length < 1) {
+            if (this.state.isRefreshing || this.state.isLoading ) {
                 return null
             };
+
+            if (this.state.items.length < 1) {
+                return <LoadEmptyView />
+            };
+
             if (this.state.items.length < this.state.totalCount) {
                 //还有更多，默认显示‘正在加载更多...’
                 return <LoadMoreFooter />
@@ -489,6 +497,9 @@ export default class PlanListDeliveryView extends Component {
         }
     }
     renderTitleCols(){
+
+        var plan_col_map = ConstMapValue.Plan_Col_Map(this.props.type)
+
         return(<View  style={{marginTop:10,}}>
 
         <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
@@ -503,7 +514,7 @@ export default class PlanListDeliveryView extends Component {
         <View style={styles.cell}>
 
           <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
-            图纸号
+            {plan_col_map.col1}
           </Text>
 
         </View>
@@ -512,7 +523,7 @@ export default class PlanListDeliveryView extends Component {
         <View style={styles.cell}>
 
         <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
-          焊口/支架
+          {plan_col_map.col2}
         </Text>
 
         </View>
@@ -520,7 +531,7 @@ export default class PlanListDeliveryView extends Component {
         <View style={styles.cell}>
 
         <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
-          房间号
+          {plan_col_map.col3}
         </Text>
 
         </View>
@@ -528,7 +539,7 @@ export default class PlanListDeliveryView extends Component {
         <View style={styles.cell}>
 
         <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
-          规格
+          {plan_col_map.col4}
         </Text>
 
         </View>
@@ -536,7 +547,7 @@ export default class PlanListDeliveryView extends Component {
         <View style={styles.cell}>
 
         <Text style={{color:'#1c1c1c',fontSize:10,marginBottom:2,}}>
-          施工日期
+          {plan_col_map.col5}
         </Text>
 
         </View>
@@ -579,7 +590,7 @@ export default class PlanListDeliveryView extends Component {
                          <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
                          <Text numberOfLines={2} style={{color:'#707070',fontSize:9,marginBottom:2,textAlign:'center'}}>
-                               {rowData.drawingNo}
+                               {rowData[plan_col_map_val.val1]}
                          </Text>
 
                       </TouchableOpacity>
@@ -587,7 +598,7 @@ export default class PlanListDeliveryView extends Component {
 
                       <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
                               <Text numberOfLines={1} style={{color:'#707070',fontSize:9,marginBottom:2,}}>
-                                    {rowData.weldno}
+                                 {rowData[plan_col_map_val.val2]}
                               </Text>
                         </TouchableOpacity>
 
@@ -596,7 +607,7 @@ export default class PlanListDeliveryView extends Component {
 
                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
                         <Text style={{color:'#707070',fontSize:9,marginBottom:2,}}>
-                           {rowData.roomNo}
+                            {rowData[plan_col_map_val.val3]}
                         </Text>
                           </TouchableOpacity>
 
@@ -605,7 +616,7 @@ export default class PlanListDeliveryView extends Component {
 
                           <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
                               <Text numberOfLines={2} style={{color:'#707070',fontSize:9,marginBottom:2,}}>
-                                 {rowData.speification}
+                                  {rowData[plan_col_map_val.val4]}
                               </Text>
 
                             </TouchableOpacity>
