@@ -26,7 +26,7 @@ import Global from '../common/globals.js'
 const MAX_IMAGE_COUNT = 5;
 const REQUST_ISSUE_COMMIT_URL = '/question/create'
 var width = Dimensions.get('window').width;
-var issueTypes = ['协调问题','技术问题','物项问题'];
+var issueTypes = ['技术问题','协调问题','物项问题'];
 var options = {
     title: '', // specify null or empty string to remove the title
     cancelButtonTitle: '取消',
