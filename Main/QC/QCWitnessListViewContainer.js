@@ -41,6 +41,7 @@ export default class QCWitnessListViewContainer extends Component {
         this.state = {
 
             title: "待见证",
+            keyword:'',
         }
 
 
@@ -69,10 +70,37 @@ export default class QCWitnessListViewContainer extends Component {
                 <NavBar
                 title={this.state.title}
                 leftIcon={require('../../images/back.png')}
+                searchMode={true}
+                onSearchChanged={(text) => this.onSearchChanged(text)}
+                onSearchClose = {this.onSearchClose.bind(this)}
                 leftPress={this.back.bind(this)} />
+
                 {this.renderListView()}
             </View>
         )
+    }
+
+    onSearchChanged(text){
+    console.log('text=='+text);
+    this.setState({keyword:text})
+    if (this._plan_list_ref) {
+        setTimeout(() => {
+                this._plan_list_ref._onRefresh()
+        }, 1000 * 2);
+    }
+
+    }
+
+    onSearchClose(){
+        if (this.state.keyword == '') {
+            return
+        }
+        this.setState({keyword:''})
+        if (this._plan_list_ref) {
+            setTimeout(() => {
+                    this._plan_list_ref._onRefresh()
+            }, 1000 * 2);
+        }
     }
 
 
