@@ -49,7 +49,7 @@ var options = {
 var width = Dimensions.get('window').width;
 var machineTypes = ['机组1','机组2','机组3','机组4','机组5'];
 var PlantTypes = ['厂房1','厂房2','厂房3','厂房4','厂房5'];
-var DepartTypes = ['责任部门1','责任部门2','责任部门3','责任部门4','责任部门5'];
+var DepartTypes = [1,2,3,4,5];
 var TeamTypes = ['责任班组1','责任班组2','责任班组3','责任班组4','责任班组5'];
 
 export  default class ProblemReport extends Component {
@@ -94,18 +94,71 @@ export  default class ProblemReport extends Component {
 
    return(
        <ScrollView style={styles.container}>
-          {this._SelectView("机组",this.state.machineType,machineTypes,"选择机组","XZJZ")}
-          {this._SelectView("厂房",this.state.plantType,PlantTypes,"选择厂房","XZCF")}
-          {this._inPutView("标高",this.state.elevation,"BG")}
-          {this._inPutView("房间号",this.state.RoomNumber,"FJH")}
-          {this._SelectView("责任部门",this.state.ResDepart,DepartTypes,"选择责任部门","ZRBM")}
-          {this._SelectViewOption("责任班组",this.state.ResTeam,TeamTypes,"选择责任班组","ZRBZ")}
-          {this._questtionDescribe()}
-          {this.renderFileView()}
+            {this.renderItem()}
        </ScrollView>
 
    )
 
+
+  }
+
+  renderItem() {
+    // 数组
+    var itemAry = [];
+
+    var displayAry = [
+      {title:'机组',id:'choose_machiche',pickerTitle:"选择机组",content:this.state.machineType,data:machineTypes,type:'choose'},
+      {title:'厂房',id:'choose_platHouse',pickerTitle:"选择厂房",content:this.state.plantType,data:PlantTypes,type:'choose'},
+      {title:'标高',id:'elevation',content:this.state.elevation,type:'input'},
+      {title:'房间号',id:'room_no',content:this.state.RoomNumber,type:'input'},
+      {title:'责任部门',id:'choose_des',pickerTitle:"选择责任部门",content:this.state.ResDepart,data:DepartTypes,type:'choose'},
+      {title:'责任班组',id:'choose_team',pickerTitle:"选择责任班组",content:this.state.ResTeam,data:TeamTypes,type:'chooseOption'},
+      {type:'describe'},
+      {type:'file'},
+
+];
+
+
+// 遍历
+for (var i = 0; i<displayAry.length; i++) {
+
+  if (displayAry[i].type == 'choose') {
+
+   itemAry.push(
+        this._SelectView(displayAry[i].title,displayAry[i].content,displayAry[i].data,displayAry[i].pickerTitle,displayAry[i].id)
+   )
+ }else if (displayAry[i].type == 'input') {
+     itemAry.push(
+       this._inPutView(displayAry[i].title,displayAry[i].content,displayAry[i].id)
+     )
+ }else if (displayAry[i].type == 'chooseOption') {
+   itemAry.push(
+       this._SelectViewOption(displayAry[i].title,displayAry[i].content,displayAry[i].data,displayAry[i].pickerTitle,displayAry[i].id)
+   )
+ }else if (displayAry[i].type == 'describe') {
+    itemAry.push(
+      this._questtionDescribe()
+    )
+ }else if (displayAry[i].type == 'file') {
+     itemAry.push(
+       this.renderFileView()
+     )
+ }
+
+}
+/*
+{this._SelectView("机组",this.state.machineType,machineTypes,"选择机组","XZJZ")}
+{this._SelectView("厂房",this.state.plantType,PlantTypes,"选择厂房","XZCF")}
+{this._inPutView("标高",this.state.elevation,"BG")}
+{this._inPutView("房间号",this.state.RoomNumber,"FJH")}
+{this._SelectView("责任部门",this.state.ResDepart,DepartTypes,"选择责任部门","ZRBM")}
+{this._SelectViewOption("责任班组",this.state.ResTeam,TeamTypes,"选择责任班组","ZRBZ")}
+{this._questtionDescribe()}
+{this.renderFileView()}
+ */
+
+
+ return itemAry;
 
   }
 
@@ -224,12 +277,12 @@ _questtionDescribe(){
   _ontextChange(text,tag){
 
   switch (tag) {
-    case "BG":
+    case "elevation":
       {
           this.setState({elevation:text})
       }
       break;
-      case "FJH":
+      case "room_no":
       {
          this.setState({RoomNumber:text})
       }
@@ -368,23 +421,24 @@ _questtionDescribe(){
   }
 
   onSelectedType(data,pickerType){
+
    switch (pickerType) {
-     case "XZJZ":
+     case "choose_machiche":
      {
        this.setState({machineType:data[0]})
      }
      break;
-     case "XZCF":
+     case "choose_platHouse":
      {
       this.setState({plantType:data[0]})
      }
        break;
-      case "ZRBM":
+      case "choose_des":
       {
          this.setState({ResDepart:data[0]})
       }
         break;
-        case "ZRBZ":
+        case "choose_team":
         {
           this.setState({ResTeam:data[0]})
         }

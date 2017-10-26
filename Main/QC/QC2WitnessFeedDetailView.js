@@ -439,7 +439,6 @@ export default class QC2WitnessFeedDetailView extends Component {
 
     onSelectedMember(id,member){
 
-
         console.log(JSON.stringify(member)+"choose====");
 
          this.state[id] = member[0];
