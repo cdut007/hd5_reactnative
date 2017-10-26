@@ -45,6 +45,7 @@ export default class QCWitnessStatisticsView extends Component {
             isLoading: false,
             isLoadingTail: false,
             filter: '',
+            keyword:'',
             title: this.props.data.user.dept.name + "见证",
         }
 
@@ -198,7 +199,33 @@ export default class QCWitnessStatisticsView extends Component {
         return(<NavBar
         title={this.state.title}
         leftIcon={require('../../images/back.png')}
+        searchMode={true}
+        onSearchChanged={(text) => this.onSearchChanged(text)}
+        onSearchClose = {this.onSearchClose.bind(this)}
         leftPress={this.back.bind(this)} />)
+    }
+
+    onSearchChanged(text){
+    console.log('text=='+text);
+    this.setState({keyword:text})
+    if (this._plan_list_ref) {
+        setTimeout(() => {
+                this._plan_list_ref._onRefresh()
+        }, 1000 * 2);
+    }
+
+    }
+
+    onSearchClose(){
+        if (this.state.keyword == '') {
+            return
+        }
+        this.setState({keyword:''})
+        if (this._plan_list_ref) {
+            setTimeout(() => {
+                    this._plan_list_ref._onRefresh()
+            }, 1000 * 2);
+        }
     }
 
     index(rowID){

@@ -14,54 +14,74 @@
  * @providesModule SearchBar
  * @flow
  */
-'use strict';
+ 'use strict';
 
-var React = require('react');
-var ReactNative = require('react-native');
-var {
-  ActivityIndicator,
-  TextInput,
-  StyleSheet,
-  View,
-} = ReactNative;
+ var React = require('react');
+ var ReactNative = require('react-native');
+ var {
+   Image,
+   Platform,
+   ActivityIndicator,
+   TextInput,
+   StyleSheet,
+   TouchableNativeFeedback,
+   View,
+ } = ReactNative;
 
-class SearchBar extends React.Component {
-  render() {
-    return (
-      <View style={styles.searchBar}>
-        <TextInput
-          autoCapitalize="none"
-          autoCorrect={false}
-          onChange={this.props.onSearchChange}
-          placeholder="输入搜索内容..."
-          onFocus={this.props.onFocus}
-          style={styles.searchBarInput}
-        />
-        <ActivityIndicator
-          animating={this.props.isLoading}
-          style={styles.spinner}
-        />
-      </View>
-    );
-  }
-}
+ class SearchBar extends React.Component {
+   render() {
 
-var styles = StyleSheet.create({
-  searchBar: {
-    marginTop: 0,
-    padding: 3,
-    paddingLeft: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  searchBarInput: {
-    fontSize: 15,
-    flex: 1,
-    height: 30,
-  },
-  spinner: {
-    width: 30,
-  },
-});
+     return (
+       <View style={styles.searchBar}>
+         <TextInput
+           ref="input"
+           autoCapitalize="none"
+           underlineColorAndroid={'transparent'}
+           autoCorrect={false}
+           autoFocus={true}
+           onChangeText={this.props.onSearchChange}
+           placeholder="搜索"
+           placeholderTextColor="#979797"
+           onFocus={this.props.onFocus}
+           style={styles.searchBarInput}
+         />
+         <ActivityIndicator
+           animating={this.props.isLoading}
+           color="white"
+           size="large"
+           style={styles.spinner}
+         />
+       </View>
+     );
+   }
+ }
 
-module.exports = SearchBar;
+ var styles = StyleSheet.create({
+   searchBar: {
+     flexDirection: 'row',
+     alignItems: 'center',
+     backgroundColor: '#f2f2f2',
+     height: 44,
+     flex:1
+   },
+   searchBarInput: {
+     flex: 1,
+     fontSize: 14,
+     color: '#1c1c1c',
+     height: 50,
+     paddingLeft: 10,
+     backgroundColor: 'transparent'
+   },
+   spinner: {
+     width: 30,
+     height: 30,
+     marginRight: 16,
+   },
+   icon: {
+     width: 24,
+     height: 24,
+     marginHorizontal: 8,
+   },
+ });
+
+ module.exports = SearchBar;
