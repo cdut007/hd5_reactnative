@@ -21,6 +21,7 @@ import ImagePicker from 'react-native-image-picker'
 import Spinner from 'react-native-loading-spinner-overlay'
 import DisplayItemView from '../common/DisplayItemView'
 import MemberSelectView from '../common/MemberSelectView'
+import Global from '../common/globals.js'
 
 const MAX_IMAGE_COUNT = 5;
 const REQUST_ISSUE_COMMIT_URL = '/question/create'
