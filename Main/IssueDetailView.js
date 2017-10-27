@@ -90,6 +90,10 @@ export default class IssueDetailView extends Component {
       }
     }
 
+    componentWillUnmount(){
+      Picker.hide();
+    }
+
      onGetDataSuccess(response){
          console.log('onGetDataSuccess@@@@')
          if(this.isMonitorDelivery()||this.isLeaderPre()||this.isLeaderUnsolved()){
