@@ -27,6 +27,7 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import Spinner from 'react-native-loading-spinner-overlay'
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
+import Picker from 'react-native-picker';
 
 import Global from '../common/globals.js'
 import CommitButton from '../common/CommitButton'
@@ -81,7 +82,8 @@ export default class IssueDetailView extends Component {
 
 
     componentDidMount() {
-      if(this.props.data.status == 'pre' && Global.isMonitor(Global.UserInfo)){
+      this.setState({loadingVisible: true})
+      if((this.props.data.status == 'pre' && Global.isMonitor(Global.UserInfo))||this.isLeaderPre()||this.isLeaderUnsolved()){
         this.requestAssignUI(this.props.data.id);
       }else{
         this.requestFeedbackUI(this.props.data.id);
@@ -90,7 +92,7 @@ export default class IssueDetailView extends Component {
 
      onGetDataSuccess(response){
          console.log('onGetDataSuccess@@@@')
-         if(this.isMonitorDelivery()){
+         if(this.isMonitorDelivery()||this.isLeaderPre()||this.isLeaderUnsolved()){
             var membersArray = []
             if (response.responseResult.userList) {
               this.state.memberIds = response.responseResult.userList
@@ -99,11 +101,13 @@ export default class IssueDetailView extends Component {
               }
             }
             this.setState({
+              loadingVisible: false,
               data:response.responseResult,
               members:membersArray
             });
          }else{
             this.setState({
+                loadingVisible: false,
                 data: response.responseResult,
               })
          }
@@ -133,6 +137,28 @@ export default class IssueDetailView extends Component {
 
             console.log('executeNetWorkRequest error:' + e)
         })
+    }
+
+    reassign(){
+      if (this.state.members && this.state.members.length  > 0 ) {
+            Picker.init({
+               pickerData: this.state.members,
+               pickerTitleText: '改派',
+               pickerConfirmBtnText:'保存',
+               pickerCancelBtnText:'取消',
+               onPickerConfirm: data => {
+                   this.setState({rolve_member: data[0]});
+                   this.startProblem();
+               },
+               onPickerCancel: data => {
+                   console.log(data);
+               },
+               onPickerSelect: data => {
+                   console.log(data);
+               }
+           });
+           Picker.show();
+        }
     }
 
     requestFeedbackUI(id){
@@ -330,6 +356,24 @@ startProblem(){
         this.back();
       }
 
+      isLeaderPre(){
+        if(Global.isSolverLeader(Global.UserInfo)){
+          if(this.state.data.status == 'pre'){
+            return true;
+          }
+        }
+      return false;
+    }
+
+    isLeaderUnsolved(){
+      if(Global.isSolverLeader(Global.UserInfo)){
+        if(this.state.data.status == 'unsolved'){
+          return true;
+        }
+      }
+      return false;
+    }
+
       isMonitorDelivery(){
               if (Global.isMonitor(Global.UserInfo)) {
                 if (this.state.data.status == 'pre') {
@@ -392,6 +436,33 @@ startProblem(){
                       <CommitButton
                         title={'接受反馈'}
                         onPress={() => this.answerSolution('solved')} />
+                    </View>
+                  </View>
+                );
+            }else if(this.isLeaderPre()){
+              return(
+                  <View style={{height:50,width:width,flexDirection:'row'}}>
+                    <View style={{height:50,flex:1}}>
+                      <CommitButton
+                        title={'延时'}
+                        onPress={() => Global.alert('正在开发')}
+                        containerStyle={{backgroundColor:'#ffffff'}}
+                        titleStyle={{color: '#f77935'}} />
+                    </View>
+                    <View style={{height:50,flex:1}}>
+                      <CommitButton
+                        title={'改派'}
+                        onPress={() => this.reassign()} />
+                    </View>
+                  </View>
+                );
+            }else if (this.isLeaderUnsolved()) {
+                return(
+                  <View style={{height:50,width:width,flexDirection:'row'}}>
+                    <View style={{height:50,flex:1}}>
+                      <CommitButton
+                        title={'改派'}
+                        onPress={() => this.reassign()} />
                     </View>
                   </View>
                 );
