@@ -247,6 +247,10 @@ export default class QCWitnessListView extends Component {
                       userId:userId,
                      }
 
+                     if (this.props.keyword) {
+                         paramBody.keyword = this.props.keyword
+                     }
+                     
             HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 

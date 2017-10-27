@@ -55,6 +55,7 @@ export default class WitnessListViewContainer extends Component {
         this.state = {
 
             title: this.props.data.user.dept.name + "见证",
+            keyword:'',
         }
 
 
@@ -95,11 +96,37 @@ export default class WitnessListViewContainer extends Component {
             <View style={styles.container}>
                 <NavBar
                 title={this.state.title}
+                searchMode={true}
+                onSearchChanged={(text) => this.onSearchChanged(text)}
+                onSearchClose = {this.onSearchClose.bind(this)}
                 leftIcon={require('../images/back.png')}
                 leftPress={this.back.bind(this)} />
                 {this.rendTabs()}
             </View>
         )
+    }
+
+    onSearchChanged(text){
+    console.log('text=='+text);
+    this.setState({keyword:text})
+    if (this._plan_list_ref) {
+        setTimeout(() => {
+                this._plan_list_ref._onRefresh()
+        }, 1000 * 2);
+    }
+
+    }
+
+    onSearchClose(){
+        if (this.state.keyword == '') {
+            return
+        }
+        this.setState({keyword:''})
+        if (this._plan_list_ref) {
+            setTimeout(() => {
+                    this._plan_list_ref._onRefresh()
+            }, 1000 * 2);
+        }
     }
 
 
@@ -145,7 +172,7 @@ export default class WitnessListViewContainer extends Component {
             </Text>
 
             </View>
-            
+
 
             </View>
 
@@ -165,7 +192,9 @@ export default class WitnessListViewContainer extends Component {
               style={{alignSelf:'stretch',flex:1}}
                type={this.props.type}
                userId={this.props.data.user.id}
+              ref={(c) => this._plan_list_ref = c}
                status={statusDatas[index].status}
+              keyword={this.state.keyword}
                navigator={this.props.navigator}
                />
           )
