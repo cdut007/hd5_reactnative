@@ -78,7 +78,7 @@ export default class IssueListView extends Component {
 
         _loadMoreData() {
             console.log("_loadMoreData() --> ");
-             pageNo = parseInt(20/ pagesize) + 1;
+             pageNo += 1;
             this.executeProblemRequest(pageNo);
         }
 
