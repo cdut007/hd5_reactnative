@@ -42,6 +42,7 @@ export default class QCWitnessListViewContainer extends Component {
 
             title: "待见证",
             keyword:'',
+            statistics:{},
         }
 
 
@@ -61,8 +62,58 @@ export default class QCWitnessListViewContainer extends Component {
     }
 
 
+    onGetDataSuccess(response,paramBody){
+         console.log('statistics onGetDataSuccess@@@@')
+     var query = this.state.filter;
+     if (!query) {
+         query = '';
+     }
+
+        var statistics = response.responseResult.statistics;
+        if (!statistics) {
+            statistics = {}
+
+        }
+        this.setState({statistics:statistics})
+    }
+
+    executeStatisticsRequest(status){
+
+      console.log('executeStatisticsRequest')
 
 
+                 var userId = ''
+                 if (this.props.data && this.props.data.user) {
+                     userId = this.props.data.user.id
+                 }
+
+                 var paramBody = {
+                      pagesize:10,
+                      pagenum:1,
+                      type:this.props.type,
+                      status:status,
+                      userId:userId,
+                     }
+
+            HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),
+                (e) => {
+
+                    try {
+                        var errorInfo = JSON.parse(e);
+                        if (errorInfo != null) {
+                         console.log(errorInfo)
+                        } else {
+                            console.log(e)
+                        }
+                    }
+                    catch(err)
+                    {
+                        console.log(err)
+                    }
+
+                    console.log('Task error:' + e)
+                })
+    }
 
     render() {
         return (
@@ -74,11 +125,59 @@ export default class QCWitnessListViewContainer extends Component {
                 onSearchChanged={(text) => this.onSearchChanged(text)}
                 onSearchClose = {this.onSearchClose.bind(this)}
                 leftPress={this.back.bind(this)} />
-
+                {this.renderWorkStepWitnessStatisticsItem()}
                 {this.renderListView()}
             </View>
         )
     }
+
+    renderWorkStepWitnessStatisticsItem(){
+                if (!this.state.statistics.total) {
+                    this.executeStatisticsRequest('UNCOMPLETED');
+                }
+                return(<View>
+                    <Text style={{color:'#1c1c1c',fontSize:16,marginBottom:10,marginLeft:10}}>
+                      今日见证点总数 ({this.state.statistics.total})
+                    </Text>
+
+                    <View style={[{alignItems:'center',},styles.statisticsflexContainer]}>
+
+                    <View style={styles.cell}>
+
+                      <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:2,}}>
+                        W点 ({this.state.statistics.pointW})
+                      </Text>
+
+                    </View>
+
+
+                    <View style={styles.cell}>
+
+                    <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:2,}}>
+                     R点 ({this.state.statistics.pointR})
+                    </Text>
+
+                    </View>
+
+                    <View style={styles.cell}>
+
+                    <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:2,}}>
+                    H点 ({this.state.statistics.pointH})
+                    </Text>
+
+                    </View>
+
+
+                    </View>
+
+
+                    <View style={{backgroundColor:'#d6d6d6',height:1,width:width}}>
+                    </View>
+
+                    </View>)
+
+    }
+
 
     onSearchChanged(text){
     console.log('text=='+text);
