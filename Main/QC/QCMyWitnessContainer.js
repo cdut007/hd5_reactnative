@@ -396,6 +396,8 @@ export default class QCMyWitnessContainer extends Component {
             <QCWitnessListView
             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
+             ref={(c) => this._plan_list_ref = c}
+              keyword={this.state.keyword}
              status={status}
              userId={userId}
              navigator={this.props.navigator}

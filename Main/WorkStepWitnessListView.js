@@ -215,6 +215,10 @@ export default class WorkStepWitnessListView extends Component {
                       status:this.props.status,
                       userId:this.props.userId,
                      }
+                     
+                     if (this.props.keyword) {
+                         paramBody.keyword = this.props.keyword
+                     }
 
             HttpRequest.get('/workstep', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {

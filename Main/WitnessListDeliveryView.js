@@ -305,6 +305,10 @@ export default class WitnessListDeliveryView extends Component {
                       noticePointType:noticePointType[this.state.selectIndex],
                      }
 
+                     if (this.props.keyword) {
+                         paramBody.keyword = this.props.keyword
+                     }
+
             HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 

@@ -249,6 +249,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
              tabLabel={label}
              style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
+             ref={(c) => this._plan_list_ref = c}
              status={statusDatas[index].status}
              userId={userId}
              keyword={this.state.keyword}

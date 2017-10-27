@@ -20,7 +20,11 @@ import NavBar from '../../common/NavBar';
 import DisplayItemView from '../../common/DisplayItemView'
 import Dimensions from 'Dimensions'
 import ImageShowsUtil from '../../common/ImageShowUtil'
+import Spinner from 'react-native-loading-spinner-overlay'
+import HttpRequest from '../../HttpRequest/HttpRequest'
+import Global from '../../common/globals'
 
+const SAFEWORK_ISSUE_COMMIT_URL = '/hse/create'
 var width = Dimensions.get('window').width;
 
 export default  class  MyReport extends Component {
@@ -31,6 +35,7 @@ export default  class  MyReport extends Component {
     title: "我的上报",
     reportData:this.props.data,
     fileArr:[],
+    loadingVisible:false,
   }
   }
 
@@ -52,7 +57,9 @@ export default  class  MyReport extends Component {
                      {this.renderFileView()}
             </ScrollView>
             {this._CommitButton()}
-
+            <Spinner
+                visible={this.state.loadingVisible}
+            />
           </View>
       )
   }
@@ -143,7 +150,50 @@ export default  class  MyReport extends Component {
 
    confirmCommit(){
 
-   this.props.navigator.popToTop()
+     this.setState({
+         loadingVisible: true
+    })
+
+    var param = new FormData()
+
+    param.append('unit', this.state.reportData.machineType);
+    param.append('wrokshop', this.state.reportData.plantType);
+    param.append('eleration', this.state.reportData.elevation);
+    param.append('roomno', this.state.reportData.RoomNumber);
+    param.append('description', this.state.reportData.questions);
+    param.append('responsibleDeptId', this.state.reportData.ResDepart);
+
+    this.state.fileArr.map((item, i) => {
+        if (item['fileSource']) {
+           let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
+           param.append("file",file);   //这里的files就是后台需要的key
+        }
+    });
+
+    HttpRequest.uploadImage(SAFEWORK_ISSUE_COMMIT_URL, param, this.onCommitIssueSuccess.bind(this),
+        (e) => {
+            try {
+                Global.alert(e)
+            }
+            catch (err) {
+                console.log(err)
+            }
+
+            this.setState({
+                loadingVisible: false
+            })
+        })
+
+   }
+
+   onCommitIssueSuccess(response) {
+
+     this.setState({
+         loadingVisible: false
+     })
+
+      Global.alert(response.message)
+      this.props.navigator.popToTop()
 
    }
 
