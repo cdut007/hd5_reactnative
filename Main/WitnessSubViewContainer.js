@@ -43,8 +43,14 @@ var LOADING = {};
                     status:'PENDING',
                     data:[],
                 },
+
+                {
+                                    index:1,
+                                    status:'PENDING',
+                                    data:[],
+                    },
             {
-                    index:1,
+                    index:2,
                     status:'COMPLETED',
                     data:[],
                 }
@@ -106,8 +112,9 @@ export default class WitnessSubViewContainer extends Component {
                tabBarActiveTextColor='#f77935'
                tabBarInactiveTextColor='#777777'
     >
-         {this.renderUnCommitWitnessListView('待提交的见证',0)}
-         {this.renderLunchedWitessListView('已发起的见证',1)}
+         {this.renderUnCommitWitnessListView('QC1组长待提交',0,'QC1')}
+         {this.renderUnCommitWitnessListView('QC2组长待提交',1,'QC2')}
+          {this.renderLunchedWitessListView('已发起的见证',2,'lunched')}
     </ScrollableTabView>
 
         )
@@ -153,7 +160,7 @@ export default class WitnessSubViewContainer extends Component {
     }
 
 
-     renderUnCommitWitnessListView(label,index) {
+     renderUnCommitWitnessListView(label,index,tag) {
         return (
 
             <WitnessListDeliveryView
@@ -162,6 +169,7 @@ export default class WitnessSubViewContainer extends Component {
              type={this.props.type}
              ref={(c) => this._plan_list_ref = c}
              keyword={this.state.keyword}
+             tag = {tag}
              status={statusDatas[index].status}
              navigator={this.props.navigator}
              />
