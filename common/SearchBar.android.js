@@ -40,11 +40,12 @@ class SearchBar extends React.Component {
      searchBarInput:this.props.searchBarInput ? this.props.searchBarInput : styles.searchBarInput,
      placeholderTextColor:"#979797",
       }
+      if (this.props.placeholderTextColor) {
+           this.state.placeholderTextColor = this.props.placeholderTextColor
+      }
   }
 
-  if (this.props.placeholderTextColor) {
-       this.state.placeholderTextColor = this.props.placeholderTextColor
-  }
+
 
   render() {
     var background = IS_RIPPLE_EFFECT_SUPPORTED ?
