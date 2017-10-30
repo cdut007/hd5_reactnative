@@ -105,9 +105,16 @@ export default class QuestionList extends Component {
         _renderFooter(label,index) {
             //const { userReducer } = this.props;
             //通过当前product数量和刷新状态（是否正在下拉刷新）来判断footer的显示
-            if (this.state.isRefreshing || this.state.items.length < 1) {
+            //const { userReducer } = this.props;
+            //通过当前product数量和刷新状态（是否正在下拉刷新）来判断footer的显示
+            if (this.state.isRefreshing || this.state.isLoading ) {
                 return null
             };
+
+            if (this.state.items.length < 1) {
+                return <LoadEmptyView />
+            };
+
             if (this.state.items.length < this.state.totalCount) {
                 //还有更多，默认显示‘正在加载更多...’
                 return <LoadMoreFooter />
@@ -168,27 +175,26 @@ export default class QuestionList extends Component {
 
     onItemPress(itemData){
 
-     var questionData = new Object();
-
-     questionData.title = "东风破";
-     questionData.machineType = "机组20";
-     questionData.plantType = "一汽大众";
-     questionData.elevation = "165";
-     questionData.RoomNumber = "228";
-     questionData.ResDepart = "计科";
-     questionData.team = "1组";
-     questionData.type = this.props.detailType;
-     questionData.time = "20171009";
-     questionData.describe = "问题描述问题描题描述问题描述问题题描题描述问题描述问题描述";
-     questionData.rectific = "2017/10/11";
-     questionData.compelete = "2017/10/15";
-     questionData.recPass = "2017/10/17";
-     questionData.save = "2017/10/18";
+    //  var questionData = new Object();
+    //  questionData.title = "东风破";
+    //  questionData.machineType = "机组20";
+    //  questionData.plantType = "一汽大众";
+    //  questionData.elevation = "165";
+    //  questionData.RoomNumber = "228";
+    //  questionData.ResDepart = "计科";
+    //  questionData.team = "1组";
+    //  questionData.type = this.props.detailType;
+    //  questionData.time = "20171009";
+    //  questionData.describe = "问题描述问题描题描述问题描述问题题描题描述问题描述问题描述";
+    //  questionData.rectific = "2017/10/11";
+    //  questionData.compelete = "2017/10/15";
+    //  questionData.recPass = "2017/10/17";
+    //  questionData.save = "2017/10/18";
 
       this.props.navigator.push({
           component: QuestionDetail,
           props:{
-            data:questionData,
+            data:itemData,
           }
       })
 
@@ -202,11 +208,11 @@ export default class QuestionList extends Component {
       }
 
 
-        onSearchChange(event) {
+        onSearchChange(text) {
 
-          //  var text = event.nativeEvent.text.toLowerCase();
-          //
-          // this.fileterArr(text);
+           var text = text.toLowerCase();
+
+          this.fileterArr(text);
 
           //  this.clearTimeout(this.timeoutID);
           //  this.timeoutID = this.setTimeout(() => this.executePlanRequest(pagesize,1,filter), 100);
@@ -225,7 +231,7 @@ export default class QuestionList extends Component {
     }else {
 
    var a2 = this.state.items.filter(
-      (item) => ((item.projectType.toLowerCase().indexOf(text) !== -1) || (item.projectNo.toLowerCase().indexOf(text) !== -1) || (item.weldno.toLowerCase().indexOf(text) !== -1) || (Global.formatDate(item.planStartDate)).toLowerCase().indexOf(text) !== -1)
+      (item) => ((Global.formatDate(item.createTime).toLowerCase().indexOf(text) !== -1) || (item.createUser.toLowerCase().indexOf(text) !== -1) || (item.id.toLowerCase().indexOf(text) !== -1) || (this.getStatus(rowData.problemStatus).toLowerCase().indexOf(text) !== -1))
 );
 
 
@@ -351,7 +357,7 @@ export default class QuestionList extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.problemStatus}
+                           {this.getStatus(rowData.problemStatus)}
                         </Text>
 
                         </View>
@@ -372,12 +378,32 @@ export default class QuestionList extends Component {
                 )
 
         }
+
         return (
             <View style={styles.itemView}>
                 {itemView()}
             </View>
         )
     }
+
+   //问题执行状态
+   getStatus(status){
+
+     if (status == 'Need_Handle') {
+         return '新问题'
+     }else if (status == 'Renovating') {
+         return '整改中'
+     }else if (status == 'Need_Check') {
+         return '待审核'
+     }else if (status == 'Finish') {
+         return '已完成'
+     }else if(status == 'None'){
+         return '不需处理'
+     }else {
+       return status
+     }
+   }
+
    //搜索框
    renderSearchBar(){
 

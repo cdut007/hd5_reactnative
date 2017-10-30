@@ -37,8 +37,9 @@ export default class QuestionStaicContainer extends Component {
       super(props)
 
       this.state = {
-          title: "问题审核",
+          title: this.props.data.item.title,
           detailType:this.props.detailType,
+          problemStatus:this.props.problemStatus,
       }
   }
 
@@ -59,7 +60,7 @@ export default class QuestionStaicContainer extends Component {
  _renderQuetionView(index,label,problemSolveStatus){
 
 this.state.detailType = index;
-this.state.problemSolveStatus =  problemSolveStatus;
+this.state.problemStatus =  problemSolveStatus;
 
 return( <View  tabLabel={label} style={styles.container}>
 
@@ -84,8 +85,8 @@ return( <View  tabLabel={label} style={styles.container}>
             tabBarInactiveTextColor='#777777'
  >
 
-       {this._renderQuetionView(1001,"新问题","Pre")}
-       {this._renderQuetionView(1002,"待审核","Done")}
+       {this._renderQuetionView(1001,"新问题","Need_Handle")}
+       {this._renderQuetionView(1002,"待审核","Need_Check")}
 
  </ScrollableTabView>)
 
@@ -154,10 +155,7 @@ return( <View  tabLabel={label} style={styles.container}>
 
        </View>
 
-
-
      )
-
 
   }
 
@@ -201,7 +199,7 @@ return( <View  tabLabel={label} style={styles.container}>
       detailType={this.state.detailType}
       userId={userId}
       status={"UNCOMPLETE"}
-      problemStatus={this.props.problemStatus}
+      problemStatus={this.state.problemStatus}
       problemSolveStatus={this.state.problemSolveStatus}
       navigator={this.props.navigator}
       ref="myQuestionlist"
@@ -249,5 +247,6 @@ const styles = StyleSheet.create({
            height:36,
            margin:10,
            textAlign:'center',
+           backgroundColor:'white',
          }
   })

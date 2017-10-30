@@ -21,6 +21,10 @@ import NavBar from '../../common/NavBar';
 import MemberSelectView from '../../common/MemberSelectView'
 import ImagePicker from 'react-native-image-picker'
 import MyReport from '../SafeWork/MyReport'
+import Spinner from 'react-native-loading-spinner-overlay'
+import HttpRequest from '../../HttpRequest/HttpRequest'
+import Global from '../../common/globals'
+const SAFEWORK_ISSUE_COMMIT_URL = '/hse/create'
 
 const MAX_IMAGE_COUNT = 5;
 
@@ -67,11 +71,26 @@ export  default class ProblemReport extends Component {
           ResTeam:'选择责任班组',
           question:'',
           fileArr: [{}],//装图片资源的数组
+          loadingVisible:false,
       }
   }
 
   back() {
-      this.props.navigator.pop()
+
+    Alert.alert('','退出编辑?',
+              [
+                {text:'取消',},
+                {text:'确认',onPress:()=> {this.confirmBack()}}
+  ])
+
+
+  }
+
+  confirmBack(){
+
+  this.props.navigator.pop()
+
+
   }
 
   render() {
@@ -85,7 +104,9 @@ export  default class ProblemReport extends Component {
                  {this._ContentView()}
                  {this._CommitButton()}
                </View>
-
+               <Spinner
+                   visible={this.state.loadingVisible}
+               />
           </View>
       )
   }
@@ -112,7 +133,7 @@ export  default class ProblemReport extends Component {
       {title:'标高',id:'elevation',content:this.state.elevation,type:'input'},
       {title:'房间号',id:'room_no',content:this.state.RoomNumber,type:'input'},
       {title:'责任部门',id:'choose_des',pickerTitle:"选择责任部门",content:this.state.ResDepart,data:DepartTypes,type:'choose'},
-      {title:'责任班组',id:'choose_team',pickerTitle:"选择责任班组",content:this.state.ResTeam,data:TeamTypes,type:'chooseOption'},
+      {title:'责任班组(选填)',id:'choose_team',pickerTitle:"选择责任班组",content:this.state.ResTeam,data:TeamTypes,type:'choose'},
       {type:'describe'},
       {type:'file'},
 
@@ -174,6 +195,74 @@ return(
   </TouchableOpacity>
 )}
 
+
+  confirmCommit(){
+
+    this.setState({
+        loadingVisible: true
+   })
+
+   var param = new FormData()
+
+   param.append('unit', this.state.machineType);
+   param.append('wrokshop', this.state.plantType);
+   param.append('eleration', this.state.elevation);
+   param.append('roomno', this.state.RoomNumber);
+   param.append('description', this.state.question);
+   param.append('responsibleDeptId', this.state.ResDepart);
+
+   this.state.fileArr.map((item, i) => {
+       if (item['fileSource']) {
+          let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
+          param.append("file",file);   //这里的files就是后台需要的key
+       }
+   });
+
+   HttpRequest.uploadImage(SAFEWORK_ISSUE_COMMIT_URL, param, this.onCommitIssueSuccess.bind(this),
+       (e) => {
+           try {
+               Global.alert(e)
+           }
+           catch (err) {
+               console.log(err)
+           }
+
+           this.setState({
+               loadingVisible: false
+           })
+       })
+
+    // var reportData = new Object()
+    // reportData.machineType = this.state.machineType;//机组
+    // reportData.plantType = this.state.plantType;//厂房
+    // reportData.elevation = this.state.elevation;//标高
+    // reportData.RoomNumber = this.state.RoomNumber;//房间号
+    // reportData.ResDepart = this.state.ResDepart;//责任部门
+    // reportData.ResTeam = team;//责任班组
+    // reportData.questions = this.state.question;//问题描述
+    // reportData.images = this.state.fileArr;//图片
+    //
+    //  this.props.navigator.push({
+    //      component: MyReport,
+    //      props: {
+    //          data:reportData,
+    //         }
+    //  })
+
+  }
+
+  onCommitIssueSuccess(response) {
+
+    this.setState({
+        loadingVisible: false
+    })
+
+     Global.alert(response.message)
+     this.props.navigator.pop()
+
+  }
+
+
   onCommit() {
 
     if (this.state.machineType == '选择机组') {
@@ -213,22 +302,14 @@ return(
        team = this.state.ResTeam;
      }
 
-    var reportData = new Object()
-    reportData.machineType = this.state.machineType;//机组
-    reportData.plantType = this.state.plantType;//厂房
-    reportData.elevation = this.state.elevation;//标高
-    reportData.RoomNumber = this.state.RoomNumber;//房间号
-    reportData.ResDepart = this.state.ResDepart;//责任部门
-    reportData.ResTeam = team;//责任班组
-    reportData.questions = this.state.question;//问题描述
-    reportData.images = this.state.fileArr;//图片
 
-     this.props.navigator.push({
-         component: MyReport,
-         props: {
-             data:reportData,
-            }
-     })
+     Alert.alert('','确认提交?',
+               [
+                 {text:'取消',},
+                 {text:'确认',onPress:()=> {this.confirmCommit()}}
+   ])
+
+
 
   }
 

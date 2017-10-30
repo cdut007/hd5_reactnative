@@ -34,6 +34,7 @@ var safeModule = [
     'index': 1,
     "type":"ZGZ",
     "detailType":"1003",
+    "problemStatus":"Renovating",
   },
   {
     'title':"已完成",
@@ -41,6 +42,7 @@ var safeModule = [
     'index': 2,
     "type":"YWC",
     "detailType":"1004",
+    "problemStatus":"Finish",
   },
   {
     'title':"不需处理",
@@ -48,6 +50,7 @@ var safeModule = [
     'index': 3,
     "type":"BXCL",
     "detailType":"1005",
+    "problemStatus":"None",
   },
 ]
 
@@ -128,24 +131,19 @@ export  default class ProblemReview extends Component {
   _itemClick(item){
 
 
-
    var data =   {
-         'index': 2,
-         'title': '管道计划',
-         "type": "GDJH",
      }
 
      data.user = new Object();
      data.user.id = Global.UserInfo.id;
      data.user.dept = new Object();
      data.user.dept.name = data.title;//change later. for dept
+     data.item = item;
 
     this.props.navigator.push({
         component: QuestionStaicContainer,
         props: {
             data:data,
-            type:data.type,
-            itemType:item.type,
             detailType:item.detailType,
             problemStatus:item.problemStatus,
            }

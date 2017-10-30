@@ -63,7 +63,7 @@ export default class QuestionDetail extends Component {
      this.state = {
        data : this.props.data,
        title: "问题详情",
-       team : this.props.data.team,
+       team : this.props.data.responsibleTeam,
        fileArr : images,
        time: this.props.data.time,
        recDes:"",
@@ -91,7 +91,7 @@ export default class QuestionDetail extends Component {
 
   renderCommitBtn(){
 
-    if (this.state.data.type == "1001") {
+    if (this.state.data.problemStatus == "Need_Handle") {
    return this.renderNewCommit();
  }else if (this.state.data.type == "1002") {
       return this.renderModeratedCommit();
@@ -139,14 +139,14 @@ return(
       <View style={{height:50,width:width,flexDirection:'row'}}>
     <View style={{height:50,flex:1}}>
       <CommitButton
-        title={'不需处理'}
+        title={'退回'}
       containerStyle={{backgroundColor:'#ffffff'}}
         titleStyle={{color: '#f77935'}}>
       </CommitButton>
       </View>
       <View style={{height:50,flex:1}}>
         <CommitButton
-          title={'分派'}>
+          title={'核实'}>
         </CommitButton>
       </View>
       </View>)
@@ -159,12 +159,12 @@ return(
     var itemAry = [];//视图数组
 
     var displayAry = [
-      {title:'标题',content:this.state.data.machineType,id:'0',noLine:true},
-      {title:'机组',content:this.state.data.machineType,id:'1',noLine:true},
-      {title:'厂房',content:this.state.data.plantType,id:'2',noLine:true},
-      {title:'标高',content:this.state.data.elevation,id:'3',noLine:true},
-      {title:'房间号',content:this.state.data.RoomNumber,id:'4',noLine:true},
-      {title:'责任部门',content:this.state.data.ResDepart,id:'5',noLine:true},
+      {title:'问题名称',content:this.state.data.id,id:'0',noLine:true},
+      {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
+      {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
+      {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
+      {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
+      {title:'责任部门',content:this.state.data.responsibleDept,id:'5',noLine:true},
     ];
 
 
@@ -198,7 +198,7 @@ return(
         <DisplayItemView
          key={6}
          title={"问题描述"}
-         detail={this.state.data.describe}
+         detail={this.state.data.description}
          noLine={true}
         />
     );
@@ -536,7 +536,7 @@ return(
 
   renderItem(){
 
-   if (this.state.data.type == "1001") {
+   if (this.state.data.problemStatus == "Need_Handle") {
 
       return  this.renderNewQuestion()
 
@@ -568,7 +568,6 @@ return(
       <View style={styles.topContainer}>
             <Text style={styles.title}> {name} </Text>
            {this.renderInputView(inputs,tag)}
-           <Text> (选填) </Text>
       </View>
 
     )
