@@ -22,6 +22,7 @@ import SolverTabView from './Problem/SolverTabView';
 import Banner from 'react-native-banner';
 import Badge from 'react-native-smart-badge'
 import SafeWorkHomeView from './SafeWork/SafeWorkHomeView'
+import QualityControlHomeView from './QualityControl/QualityControlHomeView'
 import SolverLeaderView from './Problem/SolverLeaderView'
 
 
@@ -253,6 +254,20 @@ export default class HomeView extends Component {
               })
               return;
             }
+
+            if (data.type == 'ZLGL') {
+              this.props.navigator.push({
+                  component: QualityControlHomeView,
+                   props: {
+                       data:data,
+                       type:data.type,
+                       typeStr:typeSegArr[this.state.selectedTypeIndex],
+                       category:dayCateArr[index],
+                      }
+              })
+              return;
+            }
+
             if (data.type != 'GDJH' && data.type != 'TFJH') {
              Global.showToast('正在开发')
               return;
