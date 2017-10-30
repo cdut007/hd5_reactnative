@@ -43,9 +43,7 @@ var resultsCache = {
 var LOADING = {};
 import Global from '../common/globals.js'
 
-
-
-var  noticePointType =['QC1','QC2'];
+import MemberSelectView from '../common/MemberSelectView'
 
 export default class WitnessListDeliveryView extends Component {
     constructor(props) {
@@ -61,7 +59,10 @@ export default class WitnessListDeliveryView extends Component {
        }else{
            console.log('can not find the monitor class info.')
        }
-
+        var displayTeamQC = '选择QC1组长'
+        if (this.props.tag == 'QC2') {
+            displayTeamQC = '选择QC2组长'
+        }
         this.state = {
             dataSource: ds,
             isLoading: false,
@@ -69,11 +70,10 @@ export default class WitnessListDeliveryView extends Component {
             isRefreshing:false,
             items:[],
             totalCount:0,
-            selectIndex:0,
-            QCTeam:null,
-            displayMemberQC1:'QC1组长',
-            displayMemberQC2:'QC2组长',
+            QCTeamMember:null,
+            displayTeamQC:displayTeamQC,
             members:data,
+            choose_teamQC:null,
 
 
         }
@@ -98,6 +98,10 @@ export default class WitnessListDeliveryView extends Component {
 
 
         _onRefresh() {
+            if (!this.state.QCTeamMember) {
+                this.getWitnessTeam();
+            }
+
             console.log("_onRefresh() --> ");
             this.setState({isRefreshing:true})
 
@@ -152,7 +156,24 @@ export default class WitnessListDeliveryView extends Component {
     }
 
     onGetWitnessTeamDataSuccess(response){
-      this.state.QCTeam = response;
+      var roleType = ''
+       if (response) {
+           if (this.props.tag == 'QC1') {//qc1
+               roleType = 'witness_team_qc1'
+           }else{
+               roleType = 'witness_team_qc2'
+           }
+           var data = response.responseResult
+           var QCTeamMember = []
+           for (var i = 0; i < data.length; i++) {
+               if (roleType == data[i].roles[0].roleType[0]) {
+                   QCTeamMember.push(data[i])
+               }
+
+           }
+             this.setState({QCTeamMember:  QCTeamMember})
+       }
+
     }
     getWitnessTeam(){
 
@@ -214,10 +235,7 @@ export default class WitnessListDeliveryView extends Component {
 }
 
     onGetDataSuccess(response,paramBody){
-        if (paramBody.noticePointType!= noticePointType[this.state.selectIndex]) {
-             console.log('paramBody.noticePointType maybe request from other :'+paramBody.noticePointType)
-            return
-        }
+
          console.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
@@ -302,7 +320,7 @@ export default class WitnessListDeliveryView extends Component {
                       pagenum:index,
                       type:this.props.type,
                       status:this.props.status,
-                      noticePointType:noticePointType[this.state.selectIndex],
+                      noticePointType:this.props.tag,
                      }
 
                      if (this.props.keyword) {
@@ -356,14 +374,10 @@ export default class WitnessListDeliveryView extends Component {
 
 
     QCSelectedPress(index){
-        if (this.state.selectIndex == index) {
-            return
-        }
+
 
         this.state.selectIndex = index ;
         this.setState({selectIndex:index,dataSource:this.state.dataSource.cloneWithRows([])})
-
-        this._onRefresh();
 
     }
 
@@ -397,27 +411,57 @@ export default class WitnessListDeliveryView extends Component {
         }
     }
 
+
+    onSelectedMember(member){
+
+        console.log(JSON.stringify(member)+"member====");
+         this.state.choose_teamQC = member[0]
+         this.setState({displayTeamQC:member[0]})
+
+    }
+
     renderChooseOptions(){
         if (Global.isMonitor(Global.UserInfo)){
+            var teamQC = []
+            if (this.state.QCTeamMember) {
+                for (var i = 0; i < this.state.QCTeamMember.length; i++) {
+                    teamQC.push(this.state.QCTeamMember[i].realname)
+                }
+            }
+
             return(
                 <View style={[{marginTop:10,alignItems:'center',},styles.statisticsflexContainer]}>
 
                 <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
-                 {this.slectItem(this.state.selectIndex == 0,'QC1组长',0)}
+                <TouchableOpacity
+                onPress={() => this._selectM.onPickClick()}
+                style={{borderWidth:0.5,
+                      alignItems:'center',
+                      borderColor : '#f77935',
+                      backgroundColor : 'white',
+                      borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+
+                      <MemberSelectView
+                      ref={(c) => this._selectM = c}
+                      style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
+                      title={this.state.displayTeamQC}
+                      data={teamQC}
+                      pickerTitle={this.state.label}
+                      onSelected={this.onSelectedMember.bind(this)} />
+                                    <Image
+                                    style={{width:20,height:20}}
+                                    source={require('../images/unfold.png')}/>
+                </TouchableOpacity>
 
                 </View>
 
 
-                <View TouchableOpacity style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
-
-                {this.slectItem(this.state.selectIndex == 1,'QC2组长',1)}
-
-                </View>
 
                 </View>
 
             )
+
         }
     }
 
@@ -446,22 +490,20 @@ export default class WitnessListDeliveryView extends Component {
         }
         ids = ids.substr(0,ids.length-1)
 
+        if (!this.state.choose_teamQC) {
+            Global.alert('请选择见证员')
+            return
+        }
         var teamId = ''
-        var roleType = ''
-         if (this.state.QCTeam) {
-             if (this.state.selectIndex == 0) {//qc1
-                 roleType = 'witness_team_qc1'
-             }else{
-                 roleType = 'witness_team_qc2'
-             }
-             var data = this.state.QCTeam.responseResult
+
+             var data = this.state.QCTeamMember
              for (var i = 0; i < data.length; i++) {
-                   if (data[i].roles[0].roleType[0] == roleType) {
+                   if (data[i].realname == this.state.choose_teamQC) {
                        teamId = data[i].id;
                         break
                    }
              }
-         }
+
          this.setState({
              loadingVisible: true
          });

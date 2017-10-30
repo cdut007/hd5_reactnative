@@ -22,6 +22,7 @@ import SolverTabView from './Problem/SolverTabView';
 import Banner from 'react-native-banner';
 import Badge from 'react-native-smart-badge'
 import SafeWorkHomeView from './SafeWork/SafeWorkHomeView'
+import SolverLeaderView from './Problem/SolverLeaderView'
 
 
 const isIOS = Platform.OS == "ios"
@@ -396,6 +397,22 @@ export default class HomeView extends Component {
                                                          category:dayCateArr[index],
                                                         }
                                                 })
+            }else if(Global.isSolverLeader(Global.UserInfo)){
+                data.user = new Object();
+                data.user.id = Global.UserInfo.id;
+                data.user.dept = new Object();
+                data.user.dept.name = data.title;//change later. for dept
+
+
+                this.props.navigator.push({
+                    component: SolverLeaderView,
+                     props: {
+                         data:data,
+                         type:data.type,
+                         typeStr:typeSegArr[this.state.selectedTypeIndex],
+                         category:dayCateArr[index],
+                        }
+                })
             }else {
                 data.user = new Object();
                 data.user.id = Global.UserInfo.id;

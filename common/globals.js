@@ -105,6 +105,13 @@ module.exports = {
         }
         var roleType = user.roles[0].roleType[0]
         return roleType == 'solver'
+    },isSolverLeader(user){
+        if (!user) {
+            console.log('maybe crash recycle from the memery cache, can read data again ??')
+            return false
+        }
+        var roleType = user.roles[0].roleType[0]
+        return roleType == 'plumbingSupervisor'
     },
     alert(content){
         let toast = Toast.show(content, {

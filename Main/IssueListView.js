@@ -78,7 +78,7 @@ export default class IssueListView extends Component {
 
         _loadMoreData() {
             console.log("_loadMoreData() --> ");
-             pageNo = parseInt(20/ pagesize) + 1;
+             pageNo += 1;
             this.executeProblemRequest(pageNo);
         }
 
@@ -208,6 +208,8 @@ export default class IssueListView extends Component {
            api = '/question/technicianList'
        }else if (Global.isCaptain(Global.UserInfo)) {
            api = '/question/captainList'
+       }else if (Global.isSolverLeader(Global.UserInfo)){
+           api = '/question/technicianList'
        }
 
                  var paramBody = {

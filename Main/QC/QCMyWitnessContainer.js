@@ -98,6 +98,7 @@ export default class QCMyWitnessContainer extends Component {
 
             title: title,
             keyword:'',
+            statistics:{},
         }
 
 
@@ -225,17 +226,120 @@ export default class QCMyWitnessContainer extends Component {
         }
     }
 
+    onGetDataSuccess(response,paramBody){
+         console.log('statistics onGetDataSuccess@@@@')
+     var query = this.state.filter;
+     if (!query) {
+         query = '';
+     }
+
+        var statistics = response.responseResult.statistics;
+        if (!statistics) {
+            statistics = {}
+
+        }
+        this.setState({statistics:statistics})
+    }
+
+    executeStatisticsRequest(status){
+
+      console.log('executeStatisticsRequest')
+
+
+                 var userId = ''
+                 if (this.props.data && this.props.data.user) {
+                     userId = this.props.data.user.id
+                 }
+
+                 var paramBody = {
+                      pagesize:10,
+                      pagenum:1,
+                      type:this.props.type,
+                      status:status,
+                      userId:userId,
+                     }
+
+            HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),
+                (e) => {
+
+                    try {
+                        var errorInfo = JSON.parse(e);
+                        if (errorInfo != null) {
+                         console.log(errorInfo)
+                        } else {
+                            console.log(e)
+                        }
+                    }
+                    catch(err)
+                    {
+                        console.log(err)
+                    }
+
+                    console.log('Task error:' + e)
+                })
+    }
+
+
+    renderWorkStepWitnessStatisticsItem(status){
+            if (status == 'UNCOMPLETED') {
+                if (!this.state.statistics.total) {
+                    this.executeStatisticsRequest(status);
+                }
+                return(<View>
+                    <Text style={{color:'#1c1c1c',fontSize:16,marginBottom:10,marginLeft:10}}>
+                      今日见证点总数 ({this.state.statistics.total})
+                    </Text>
+
+                    <View style={[{alignItems:'center',},styles.statisticsflexContainer]}>
+
+                    <View style={styles.cell}>
+
+                      <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:2,}}>
+                        W点 ({this.state.statistics.pointW})
+                      </Text>
+
+                    </View>
+
+
+                    <View style={styles.cell}>
+
+                    <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:2,}}>
+                     R点 ({this.state.statistics.pointR})
+                    </Text>
+
+                    </View>
+
+                    <View style={styles.cell}>
+
+                    <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:2,}}>
+                    H点 ({this.state.statistics.pointH})
+                    </Text>
+
+                    </View>
+
+
+                    </View>
+
+
+                    <View style={{backgroundColor:'#d6d6d6',height:1,width:width}}>
+                    </View>
+
+                    </View>)
+            }
+    }
 
     renderListView(label,index,status) {
         var userId = '';
         if (this.props.data && this.props.data.user) {
             userId = this.props.data.user.id
         }
-            var qc_witness_col_map = ConstMapValue.QC_Witness_Col_Map(this.props.type)
+
+
+        var qc_witness_col_map = ConstMapValue.QC_Witness_Col_Map(this.props.type)
 
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
-
+            {this.renderWorkStepWitnessStatisticsItem(status)}
             <View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
             </View>
 

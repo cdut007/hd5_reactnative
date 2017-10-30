@@ -126,7 +126,32 @@ var mysolvestatusDatas = [{
 
 
 ];
+var solverLearderStatus = [{
+                    index:0,
+                    status:'PRE',
+                    data:[],
+                    pageNo:1,
+                },
+                {
+                    index:1,
+                    status:'DONE',
+                    data:[],
+                    pageNo:1,
+                },
+                {
+                    index:2,
+                    status:'SOLVED',
+                    data:[],
+                    pageNo:1,
+                },
 
+                {
+                    index:3,
+                    status:'NEED_SOLVE',
+                    data:[],
+                    pageNo:1,
+                },
+];
 
 
 export default class IssueListViewContainer extends Component {
@@ -135,7 +160,8 @@ export default class IssueListViewContainer extends Component {
 
         var title=this.props.data.class//队长才能取得到
          if (!title) {
-             title = this.props.data.user.dept.name//否则班长
+             if(this.props.data.user)
+                title = this.props.data.user.dept.name//否则班长
          }
         this.state = {
 
@@ -235,7 +261,21 @@ export default class IssueListViewContainer extends Component {
 
                                 )
                             }
-                    }
+                }else if(Global.isSolverLeader(Global.UserInfo)){
+                    return(
+                        <ScrollableTabView
+                            tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
+                            tabBarBackgroundColor='#FFFFFF'
+                            tabBarActiveTextColor='#0755a6'
+                            tabBarInactiveTextColor='#777777'>
+                            {this.renderListView('未处理',0,solverLearderStatus[0].status)}
+                            {this.renderListView('已回执',1,solverLearderStatus[1].status)}
+                            {this.renderListView('已解决',2,solverLearderStatus[2].status)}
+                            {this.renderListView('未解决',3,solverLearderStatus[3].status)}
+                        </ScrollableTabView>
+                    );
+                }        
+
 
     }
 
