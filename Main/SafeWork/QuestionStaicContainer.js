@@ -56,13 +56,12 @@ export default class QuestionStaicContainer extends Component {
   }
 
 
- _renderQuetionView(index,label){
+ _renderQuetionView(index,label,problemSolveStatus){
 
 this.state.detailType = index;
+this.state.problemSolveStatus =  problemSolveStatus;
 
 return( <View  tabLabel={label} style={styles.container}>
-
-
 
        {this.renderSearchBar()}
        {this.renderContent()}
@@ -85,8 +84,8 @@ return( <View  tabLabel={label} style={styles.container}>
             tabBarInactiveTextColor='#777777'
  >
 
-       {this._renderQuetionView(1001,"新问题")}
-       {this._renderQuetionView(1002,"待审核")}
+       {this._renderQuetionView(1001,"新问题","Pre")}
+       {this._renderQuetionView(1002,"待审核","Done")}
 
  </ScrollableTabView>)
 
@@ -165,13 +164,15 @@ return( <View  tabLabel={label} style={styles.container}>
   renderSearchBar(){
 
    return(
-     <View style={styles.SearchBarStyle}>
                <SearchBar
                isLoading={false}
+               searchBarInput={styles.searchBarInput}
+               searchBar={styles.SearchBarStyle}
+               placeholderTextColor="#F77935"
                onSearchChange={(event) =>
                this.refs.myQuestionlist.onSearchChange(event)}
                />
-     </View>
+
 
      )
 
@@ -200,6 +201,8 @@ return( <View  tabLabel={label} style={styles.container}>
       detailType={this.state.detailType}
       userId={userId}
       status={"UNCOMPLETE"}
+      problemStatus={this.props.problemStatus}
+      problemSolveStatus={this.state.problemSolveStatus}
       navigator={this.props.navigator}
       ref="myQuestionlist"
       />)
@@ -235,12 +238,16 @@ const styles = StyleSheet.create({
              flexDirection: 'row',
          },
          SearchBarStyle : {
-              borderRadius: 6,
-              borderColor: '#cccccc',
-              borderWidth : 1,
-              marginTop: 5,
-              marginBottom: 5,
-              width: width - 20,
-
+            backgroundColor: 'rgba(244, 244, 244, 1)',
+            width:width,
+            height:56,
+         },
+         searchBarInput:{
+           borderColor:"#F77935",
+           borderWidth:1,
+           borderRadius:4,
+           height:36,
+           margin:10,
+           textAlign:'center',
          }
   })

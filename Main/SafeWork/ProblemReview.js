@@ -26,6 +26,7 @@ var safeModule = [
     'index': 0,
     "type":"DCL",
     "detailType":"1001",
+    "problemStatus":"Need_Handle",
   },
   {
     'title':"整改中",
@@ -145,7 +146,8 @@ export  default class ProblemReview extends Component {
             data:data,
             type:data.type,
             itemType:item.type,
-            detailType:item.detailType
+            detailType:item.detailType,
+            problemStatus:item.problemStatus,
            }
     })
 

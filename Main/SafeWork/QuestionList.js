@@ -23,6 +23,7 @@ import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 import Global from '../../common/globals.js';
 import QuestionDetail from '../SafeWork/QuestionDetail'
+import LoadEmptyView from '../../common/LoadEmptyView'
 
 
 const isIOS = Platform.OS == "ios"
@@ -203,9 +204,9 @@ export default class QuestionList extends Component {
 
         onSearchChange(event) {
 
-           var text = event.nativeEvent.text.toLowerCase();
-
-          this.fileterArr(text);
+          //  var text = event.nativeEvent.text.toLowerCase();
+          //
+          // this.fileterArr(text);
 
           //  this.clearTimeout(this.timeoutID);
           //  this.timeoutID = this.setTimeout(() => this.executePlanRequest(pagesize,1,filter), 100);
@@ -259,12 +260,16 @@ export default class QuestionList extends Component {
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
-                      type:this.props.type,
-                      status:this.props.status,
+                      problemStatus:this.props.problemStatus,
                       userId:userId,
                      }
 
-            HttpRequest.get('/rollingplan', paramBody, this.onGetDataSuccess.bind(this),
+                if (this.props.problemSolveStatus) {
+                      paramBody.problemSolveStatus = this.props.problemSolveStatus
+              }
+
+
+            HttpRequest.get('/hse/problemList', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
                     this.setState({
@@ -320,8 +325,8 @@ export default class QuestionList extends Component {
 
                         <View style={styles.cell}>
 
-                          <Text numberOfLines={3}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                            {Global.formatDate(rowData.planStartDate)}{'\n'}～{'\n'}{Global.formatDate(rowData.planEndDate)}
+                          <Text numberOfLines={2}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
+                            {Global.formatDate(rowData.createTime)}
                           </Text>
 
                         </View>
@@ -330,7 +335,7 @@ export default class QuestionList extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.projectNo}
+                              {rowData.id}
                         </Text>
 
                         </View>
@@ -338,7 +343,7 @@ export default class QuestionList extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.weldno}
+                           {rowData.createUser}
                         </Text>
 
                         </View>
@@ -346,7 +351,7 @@ export default class QuestionList extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.projectType}
+                           {rowData.problemStatus}
                         </Text>
 
                         </View>
@@ -443,7 +448,7 @@ const styles = StyleSheet.create({
        marginVertical: 20,
      },
     flexContainer: {
-           height: 54,
+           height: 48,
            width: width,
            backgroundColor: '#ffffff',
            // 容器需要添加direction才能变成让子元素flex
@@ -455,14 +460,14 @@ const styles = StyleSheet.create({
             flex:1,
     },
      statisticsflexContainer: {
-              height: 57.5,
+              height: 48,
               backgroundColor: '#ffffff',
               flexDirection: 'row',
           },
 
     cell: {
         flex: 1,
-        height: 57.5,
+        height: 48,
         width:width/4,
         justifyContent: "center",
         alignItems: 'center',

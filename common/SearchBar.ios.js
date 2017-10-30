@@ -16,7 +16,7 @@
  */
  'use strict';
 
- var React = require('react');
+import React, { Component,PropTypes } from 'react';
  var ReactNative = require('react-native');
  var {
    Image,
@@ -29,10 +29,27 @@
  } = ReactNative;
 
  class SearchBar extends React.Component {
+
+   constructor(props) {
+       super(props)
+
+       this.state = {
+      searchBar: this.props.searchBar ? this.props.searchBar : styles.searchBar,
+      searchBarInput:this.props.searchBarInput ? this.props.searchBarInput : styles.searchBarInput,
+      placeholderTextColor:"#979797",
+       }
+   }
+
+
+
    render() {
 
+ if (this.props.placeholderTextColor) {
+      this.state.placeholderTextColor = this.props.placeholderTextColor
+ }
+
      return (
-       <View style={styles.searchBar}>
+       <View style={this.state.searchBar}>
          <TextInput
            ref="input"
            autoCapitalize="none"
@@ -41,9 +58,9 @@
            autoFocus={true}
            onChangeText={this.props.onSearchChange}
            placeholder="搜索"
-           placeholderTextColor="#979797"
+           placeholderTextColor={this.state.placeholderTextColor}
            onFocus={this.props.onFocus}
-           style={styles.searchBarInput}
+           style={this.props.searchBarInput}
          />
          <ActivityIndicator
            animating={this.props.isLoading}
