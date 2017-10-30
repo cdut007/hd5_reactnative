@@ -278,6 +278,16 @@ export default class PlanStatisticsView extends Component {
                           </Text>
                         </View>
 
+                        <View style={styles.cell}>
+
+                          <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+                            未施工
+                          </Text>
+                          <Text style={{color:'#1c1c1c',fontSize:14,}}>
+                            {rowData.statistics.unProgressing}
+                          </Text>
+                        </View>
+
 
                         <View style={styles.cell}>
 
