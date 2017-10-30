@@ -26,7 +26,9 @@ var {
   StyleSheet,
   TouchableNativeFeedback,
   View,
+  Dimensions
 } = ReactNative;
+const { width, height } = Dimensions.get('window')
 
 var IS_RIPPLE_EFFECT_SUPPORTED = Platform.Version >= 21;
 
@@ -52,7 +54,7 @@ class SearchBar extends React.Component {
       TouchableNativeFeedback.SelectableBackgroundBorderless() :
       TouchableNativeFeedback.SelectableBackground();
     return (
-      <View style={styles.searchBar}>
+      <View style={this.state.searchBar}>
         <TouchableNativeFeedback
             background={background}
             onPress={() => this.refs.input && this.refs.input.focus()}>
@@ -73,7 +75,7 @@ class SearchBar extends React.Component {
           placeholder="搜索"
           placeholderTextColor={this.state.placeholderTextColor}
           onFocus={this.props.onFocus}
-          style={this.props.searchBarInput}
+          style={this.state.searchBarInput}
         />
         <ActivityIndicator
           animating={this.props.isLoading}
@@ -87,21 +89,21 @@ class SearchBar extends React.Component {
 }
 
 var styles = StyleSheet.create({
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f2f2f2',
-    height: 44,
-    flex:1
-  },
-  searchBarInput: {
-    flex: 1,
-    fontSize: 14,
-    color: '#1c1c1c',
-    height: 50,
-    paddingLeft: 10,
-    backgroundColor: 'transparent'
-  },
+    searchBar: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: '#f2f2f2',
+      height: 44,
+      flex:1
+    },
+    searchBarInput: {
+      flex: 1,
+      fontSize: 14,
+      color: '#1c1c1c',
+      height: 50,
+      paddingLeft: 10,
+      backgroundColor: 'transparent'
+    },
   spinner: {
     width: 30,
     height: 30,
