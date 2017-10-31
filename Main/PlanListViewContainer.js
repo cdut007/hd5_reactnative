@@ -27,7 +27,7 @@ const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 
 import   ScrollableTabView  from 'react-native-scrollable-tab-view';
-
+var timer;
 
 
 var LOADING = {};
@@ -67,6 +67,7 @@ export default class PlanListViewContainer extends Component {
         this.state = {
 
             title: this.props.data.user.dept.name + "任务",
+            keyword:'',
         }
 
 
@@ -109,10 +110,43 @@ export default class PlanListViewContainer extends Component {
                 <NavBar
                 title={this.state.title}
                 leftIcon={require('../images/back.png')}
+                searchMode={true}
+                onSearchChanged={(text) => this.onSearchChanged(text)}
+                onSearchClose = {this.onSearchClose.bind(this)}
                 leftPress={this.back.bind(this)} />
                 {this.rendTabs()}
             </View>
         )
+    }
+
+    onSearchChanged(text){
+    console.log('text=='+text);
+    this.setState({keyword:text})
+    if (this._plan_list_ref) {
+        if (timer) {
+            clearTimeout(timer);
+        }
+        timer = setTimeout(() => {
+        
+                this._plan_list_ref._onRefresh()
+        }, 1000);
+    }
+
+    }
+
+    onSearchClose(){
+        if (timer) {
+            clearTimeout(timer);
+        }
+        if (this.state.keyword == '') {
+            return
+        }
+        this.setState({keyword:''})
+        if (this._plan_list_ref) {
+            timer = setTimeout(() => {
+                    this._plan_list_ref._onRefresh()
+            }, 1000);
+        }
     }
 
 
@@ -182,6 +216,8 @@ export default class PlanListViewContainer extends Component {
             <PlanListView
             style={{alignSelf:'stretch',flex:1}}
             userId = {userId}
+             ref={(c) => this._plan_list_ref = c}
+              keyword={this.state.keyword}
              type={this.props.type}
              status={statusDatas[index].status}
              navigator={this.props.navigator}

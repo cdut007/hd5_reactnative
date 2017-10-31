@@ -32,11 +32,13 @@ import Picker from 'react-native-picker';
 import Global from '../common/globals.js'
 import CommitButton from '../common/CommitButton'
 import MemberSelectView from '../common/MemberSelectView'
+import IssueReject from './IssueReject'
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var account = Object();
 
+var delayDays = ['1天','2天','3天'];
 const MAX_IMAGE_COUNT = 5;
 var options = {
     title: '', // specify null or empty string to remove the title
@@ -83,11 +85,7 @@ export default class IssueDetailView extends Component {
 
     componentDidMount() {
       this.setState({loadingVisible: true})
-      if((this.props.data.status == 'pre' && Global.isMonitor(Global.UserInfo))||this.isLeaderPre()||this.isLeaderUnsolved()){
-        this.requestAssignUI(this.props.data.id);
-      }else{
-        this.requestFeedbackUI(this.props.data.id);
-      }
+      this.requestFeedbackUI(this.props.data.id);
     }
 
     componentWillUnmount(){
@@ -95,8 +93,7 @@ export default class IssueDetailView extends Component {
     }
 
      onGetDataSuccess(response){
-         console.log('onGetDataSuccess@@@@')
-         if(this.isMonitorDelivery()||this.isLeaderPre()||this.isLeaderUnsolved()){
+        console.log('onGetDataSuccess@@@@')
             var membersArray = []
             if (response.responseResult.userList) {
               this.state.memberIds = response.responseResult.userList
@@ -109,38 +106,66 @@ export default class IssueDetailView extends Component {
               data:response.responseResult,
               members:membersArray
             });
-         }else{
-            this.setState({
-                loadingVisible: false,
-                data: response.responseResult,
-              })
-         }
-     }
+        }
 
-    requestAssignUI(id){
-        console.log('executeNetWorkRequest:work id = ' + id);
-        var paramBody = {
-             questionId:id
-             }
+    delay(){
+      Picker.init({
+               pickerData: delayDays,
+               pickerTitleText: '延时',
+               pickerConfirmBtnText:'保存',
+               pickerCancelBtnText:'取消',
+               onPickerConfirm: data => {
+                   this.timeDelay(data);
+               },
+               onPickerCancel: data => {
+                   console.log(data);
+               },
+               onPickerSelect: data => {
+                   console.log(data);
+               }
+        });
+        Picker.show();
+    }
 
-    HttpRequest.get('/question/assignUI', paramBody, this.onGetDataSuccess.bind(this),
-        (e) => {
-
-            try {
-                var errorInfo = JSON.parse(e);
-                if (errorInfo != null) {
-                 console.log(errorInfo)
-                } else {
-                    console.log(e)
+    timeDelay(data){
+        let hours = 24;
+        if(data[0] == delayDays[0]){
+          hours = 24;
+        }else if(data[0] == delayDays[1]){
+          hours = 48;
+        }else{
+          hours = 72;
+        }
+        this.setState({loadingVisible: true,})
+        let paramBody = {
+          questionId: this.state.data.id,
+          designatedUserId: this.state.data.designee.id,
+          delayHour: hours,
+        }
+        HttpRequest.post('/question/timeDelay', paramBody, this.onDelaySuccess.bind(this), 
+            (e) => {
+                this.setState({loadingVisible: false,});
+                try {
+                  var errorInfo = JSON.parse(e);
+                  if (errorInfo != null) {
+                   console.log(errorInfo)
+                  } else {
+                      console.log(e)
+                  }
                 }
+                catch(err)
+                {
+                    console.log(err)
+                }
+                console.log('executeNetWorkRequest error:' + e)
             }
-            catch(err)
-            {
-                console.log(err)
-            }
+        )
+    }
 
-            console.log('executeNetWorkRequest error:' + e)
-        })
+    onDelaySuccess(response){
+        this.setState({loadingVisible: false,});
+        Global.alert('延时成功');
+        this.props.navigator.pop();
     }
 
     reassign(){
@@ -213,6 +238,7 @@ export default class IssueDetailView extends Component {
               keyboardDismissMode='on-drag'
               keyboardShouldPersistTaps='never'>
                 {this.renderTop()}
+                {this.renderReason()}
                 {this.renderDetailView()}
             </ScrollView>
             {this.renderBottomButton()}
@@ -225,6 +251,7 @@ export default class IssueDetailView extends Component {
 
 
 startFeedbackProblem(){
+  this.setState({loadingVisible: true,})
   if(!this.state.content){
     Global.alert('请输入问题反馈内容')
     return
@@ -255,6 +282,26 @@ startFeedbackProblem(){
                     loadingVisible: false
                 })
             })
+}
+
+rejectSolution(reason){
+  this.setState({loadingVisible: true,})
+  let param = {
+    questionId: this.state.data.id,
+    answer: 'unsolved',
+    reason: reason,
+  }
+  HttpRequest.post('/question/answer',param,this.onAnswerSuccess.bind(this),
+                    (e) => {
+                       try {
+                          Global.alert(e)
+                        }catch (err) {
+                          console.log(err)
+                        }
+                        this.setState({
+                          loadingVisible: false
+                        })
+                    })
 }
 
 answerSolution(result){
@@ -389,7 +436,7 @@ startProblem(){
 
       isSolverSubmit(){
             if(Global.isSolverMember(Global.UserInfo)){
-              if(this.state.data.status == 'unsolved'){
+              if(this.state.data.status == 'pre'){
                 return true;
               }
             }
@@ -432,7 +479,7 @@ startProblem(){
                     <View style={{height:50,flex:1}}>
                       <CommitButton
                         title={'不接受反馈'}
-                        onPress={() => this.answerSolution('unsolved')}
+                        onPress={() => this.props.navigator.push({component:IssueReject, props:{callback:(message) => this.rejectSolution(message)}})}
                         containerStyle={{backgroundColor:'#ffffff'}}
                         titleStyle={{color: '#f77935'}} />
                     </View>
@@ -449,7 +496,7 @@ startProblem(){
                     <View style={{height:50,flex:1}}>
                       <CommitButton
                         title={'延时'}
-                        onPress={() => Global.alert('正在开发')}
+                        onPress={() => this.delay()}
                         containerStyle={{backgroundColor:'#ffffff'}}
                         titleStyle={{color: '#f77935'}} />
                     </View>
@@ -480,6 +527,20 @@ startProblem(){
           return;
         }
         return this.renderHeader();
+    }
+
+    renderReason(){
+      if(this.state.data.reason && this.state.data.status == 'unsolved'){
+        return(
+          <View style={{backgroundColor: 'white', paddingTop: 10, paddingRight: 6,}}>
+              <Text style={{color: '#e82628', fontSize: 14, lineHeight: 22, marginLeft: 10, marginBottom: 10}}>
+                <Text style={{fontWeight: 'bold'}}>退回理由: </Text>
+                 <Text>{this.state.data.reason}</Text>
+              </Text>
+              <View style={styles.divider} />
+          </View>
+        );
+      }
     }
 
     renderHeader(){
@@ -659,7 +720,7 @@ startProblem(){
     }
 
     renderFeedbackDetail(){
-        if(this.state.data.status != 'pre' && this.state.data.status != 'unsolved' && this.state.data.feedback){
+        if(this.state.data.status != 'pre' && this.state.data.feedback){
           return(
             <View style={{backgroundColor: 'white', paddingTop: 10, paddingRight: 6,}}>
               <Text style={{color: '#e82628', fontSize: 14, lineHeight: 22, marginLeft: 10,}}>

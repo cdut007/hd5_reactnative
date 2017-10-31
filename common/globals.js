@@ -111,7 +111,7 @@ module.exports = {
             return false
         }
         var roleType = user.roles[0].roleType[0]
-        return roleType == 'plumbingSupervisor'
+        return roleType == 'supervisor'
     },
     alert(content){
         let toast = Toast.show(content, {

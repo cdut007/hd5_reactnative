@@ -218,6 +218,7 @@ export default class IssueListView extends Component {
                       type:this.props.type,
                       questionStatus:this.props.status,
                       userId:this.props.userId,
+                      keyword: this.props.keyword,
                      }
 
 
