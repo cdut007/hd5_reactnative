@@ -222,9 +222,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
             clearTimeout(timer);
         }
         timer = setTimeout(() => {
-            if (this.state.keyword == '') {
-                return
-            }
+            
                 this._plan_list_ref._onRefresh()
         }, 1000);
     }
