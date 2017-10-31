@@ -32,6 +32,7 @@ import Picker from 'react-native-picker';
 import Global from '../common/globals.js'
 import CommitButton from '../common/CommitButton'
 import MemberSelectView from '../common/MemberSelectView'
+import IssueReject from './IssueReject'
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -237,6 +238,7 @@ export default class IssueDetailView extends Component {
               keyboardDismissMode='on-drag'
               keyboardShouldPersistTaps='never'>
                 {this.renderTop()}
+                {this.renderReason()}
                 {this.renderDetailView()}
             </ScrollView>
             {this.renderBottomButton()}
@@ -249,6 +251,7 @@ export default class IssueDetailView extends Component {
 
 
 startFeedbackProblem(){
+  this.setState({loadingVisible: true,})
   if(!this.state.content){
     Global.alert('请输入问题反馈内容')
     return
@@ -279,6 +282,26 @@ startFeedbackProblem(){
                     loadingVisible: false
                 })
             })
+}
+
+rejectSolution(reason){
+  this.setState({loadingVisible: true,})
+  let param = {
+    questionId: this.state.data.id,
+    answer: 'unsolved',
+    reason: reason,
+  }
+  HttpRequest.post('/question/answer',param,this.onAnswerSuccess.bind(this),
+                    (e) => {
+                       try {
+                          Global.alert(e)
+                        }catch (err) {
+                          console.log(err)
+                        }
+                        this.setState({
+                          loadingVisible: false
+                        })
+                    })
 }
 
 answerSolution(result){
@@ -413,7 +436,7 @@ startProblem(){
 
       isSolverSubmit(){
             if(Global.isSolverMember(Global.UserInfo)){
-              if(this.state.data.status == 'unsolved'){
+              if(this.state.data.status == 'pre'){
                 return true;
               }
             }
@@ -456,7 +479,7 @@ startProblem(){
                     <View style={{height:50,flex:1}}>
                       <CommitButton
                         title={'不接受反馈'}
-                        onPress={() => this.answerSolution('unsolved')}
+                        onPress={() => this.props.navigator.push({component:IssueReject, props:{callback:(message) => this.rejectSolution(message)}})}
                         containerStyle={{backgroundColor:'#ffffff'}}
                         titleStyle={{color: '#f77935'}} />
                     </View>
@@ -504,6 +527,20 @@ startProblem(){
           return;
         }
         return this.renderHeader();
+    }
+
+    renderReason(){
+      if(this.state.data.reason && this.state.data.status == 'unsolved'){
+        return(
+          <View style={{backgroundColor: 'white', paddingTop: 10, paddingRight: 6,}}>
+              <Text style={{color: '#e82628', fontSize: 14, lineHeight: 22, marginLeft: 10, marginBottom: 10}}>
+                <Text style={{fontWeight: 'bold'}}>退回理由: </Text>
+                 <Text>{this.state.data.reason}</Text>
+              </Text>
+              <View style={styles.divider} />
+          </View>
+        );
+      }
     }
 
     renderHeader(){
@@ -683,7 +720,7 @@ startProblem(){
     }
 
     renderFeedbackDetail(){
-        if(this.state.data.status != 'pre' && this.state.data.status != 'unsolved' && this.state.data.feedback){
+        if(this.state.data.status != 'pre' && this.state.data.feedback){
           return(
             <View style={{backgroundColor: 'white', paddingTop: 10, paddingRight: 6,}}>
               <Text style={{color: '#e82628', fontSize: 14, lineHeight: 22, marginLeft: 10,}}>
