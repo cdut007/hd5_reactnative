@@ -32,7 +32,7 @@ var width = Dimensions.get('window').width;
 
 import   ScrollableTabView  from 'react-native-scrollable-tab-view';
 
-
+var timer;
 
 var LOADING = {};
 
@@ -218,22 +218,31 @@ export default class PlanStatisticsSubViewContainer extends Component {
     console.log('text=='+text);
     this.setState({keyword:text})
     if (this._plan_list_ref) {
-        setTimeout(() => {
+        if (timer) {
+            clearTimeout(timer);
+        }
+        timer = setTimeout(() => {
+            if (this.state.keyword == '') {
+                return
+            }
                 this._plan_list_ref._onRefresh()
-        }, 1000 * 2);
+        }, 1000);
     }
 
     }
 
     onSearchClose(){
+        if (timer) {
+            clearTimeout(timer);
+        }
         if (this.state.keyword == '') {
             return
         }
         this.setState({keyword:''})
         if (this._plan_list_ref) {
-            setTimeout(() => {
+            timer = setTimeout(() => {
                     this._plan_list_ref._onRefresh()
-            }, 1000 * 2);
+            }, 1000);
         }
     }
 

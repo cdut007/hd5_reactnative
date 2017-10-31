@@ -94,6 +94,7 @@ var styles = StyleSheet.create({
       alignItems: 'center',
       backgroundColor: '#f2f2f2',
       height: 44,
+      width:100,
       flex:1
     },
     searchBarInput: {
