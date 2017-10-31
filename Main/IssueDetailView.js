@@ -37,6 +37,7 @@ var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var account = Object();
 
+var delayDays = ['1天','2天','3天'];
 const MAX_IMAGE_COUNT = 5;
 var options = {
     title: '', // specify null or empty string to remove the title
@@ -83,11 +84,7 @@ export default class IssueDetailView extends Component {
 
     componentDidMount() {
       this.setState({loadingVisible: true})
-      if((this.props.data.status == 'pre' && Global.isMonitor(Global.UserInfo))||this.isLeaderPre()||this.isLeaderUnsolved()){
-        this.requestAssignUI(this.props.data.id);
-      }else{
-        this.requestFeedbackUI(this.props.data.id);
-      }
+      this.requestFeedbackUI(this.props.data.id);
     }
 
     componentWillUnmount(){
@@ -95,8 +92,7 @@ export default class IssueDetailView extends Component {
     }
 
      onGetDataSuccess(response){
-         console.log('onGetDataSuccess@@@@')
-         if(this.isMonitorDelivery()||this.isLeaderPre()||this.isLeaderUnsolved()){
+        console.log('onGetDataSuccess@@@@')
             var membersArray = []
             if (response.responseResult.userList) {
               this.state.memberIds = response.responseResult.userList
@@ -109,38 +105,66 @@ export default class IssueDetailView extends Component {
               data:response.responseResult,
               members:membersArray
             });
-         }else{
-            this.setState({
-                loadingVisible: false,
-                data: response.responseResult,
-              })
-         }
-     }
+        }
 
-    requestAssignUI(id){
-        console.log('executeNetWorkRequest:work id = ' + id);
-        var paramBody = {
-             questionId:id
-             }
+    delay(){
+      Picker.init({
+               pickerData: delayDays,
+               pickerTitleText: '延时',
+               pickerConfirmBtnText:'保存',
+               pickerCancelBtnText:'取消',
+               onPickerConfirm: data => {
+                   this.timeDelay(data);
+               },
+               onPickerCancel: data => {
+                   console.log(data);
+               },
+               onPickerSelect: data => {
+                   console.log(data);
+               }
+        });
+        Picker.show();
+    }
 
-    HttpRequest.get('/question/assignUI', paramBody, this.onGetDataSuccess.bind(this),
-        (e) => {
-
-            try {
-                var errorInfo = JSON.parse(e);
-                if (errorInfo != null) {
-                 console.log(errorInfo)
-                } else {
-                    console.log(e)
+    timeDelay(data){
+        let hours = 24;
+        if(data[0] == delayDays[0]){
+          hours = 24;
+        }else if(data[0] == delayDays[1]){
+          hours = 48;
+        }else{
+          hours = 72;
+        }
+        this.setState({loadingVisible: true,})
+        let paramBody = {
+          questionId: this.state.data.id,
+          designatedUserId: this.state.data.designee.id,
+          delayHour: hours,
+        }
+        HttpRequest.post('/question/timeDelay', paramBody, this.onDelaySuccess.bind(this), 
+            (e) => {
+                this.setState({loadingVisible: false,});
+                try {
+                  var errorInfo = JSON.parse(e);
+                  if (errorInfo != null) {
+                   console.log(errorInfo)
+                  } else {
+                      console.log(e)
+                  }
                 }
+                catch(err)
+                {
+                    console.log(err)
+                }
+                console.log('executeNetWorkRequest error:' + e)
             }
-            catch(err)
-            {
-                console.log(err)
-            }
+        )
+    }
 
-            console.log('executeNetWorkRequest error:' + e)
-        })
+    onDelaySuccess(response){
+        this.setState({loadingVisible: false,});
+        Global.alert('延时成功');
+        this.props.navigator.pop();
     }
 
     reassign(){
@@ -449,7 +473,7 @@ startProblem(){
                     <View style={{height:50,flex:1}}>
                       <CommitButton
                         title={'延时'}
-                        onPress={() => Global.alert('正在开发')}
+                        onPress={() => this.delay()}
                         containerStyle={{backgroundColor:'#ffffff'}}
                         titleStyle={{color: '#f77935'}} />
                     </View>
