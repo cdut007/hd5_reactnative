@@ -107,7 +107,7 @@ var bottomModuleData = [
     },
     {
         'index': 2,
-        'title': '物质管理',
+        'title': '物资管理',
         "type": "WZGL",
         'image': require('../images/material_icon.png')
     },
