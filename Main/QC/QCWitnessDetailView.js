@@ -26,7 +26,7 @@ import Accordion from 'react-native-collapsible/Accordion';
 
 import Global from '../../common/globals.js'
 import CommitButton from '../../common/CommitButton'
-
+import ConstMapValue from '../../common/ConstMapValue.js';
 import DateTimePickerView from '../../common/DateTimePickerView'
 
 import MemberSelectView from '../../common/MemberSelectView'
@@ -924,16 +924,9 @@ export default class QCWitnessDetailView extends Component {
                     displayAry.push({type:'devider'},);
                 }
 
-                displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'});
-                displayAry.push({title:'图纸版本',content:this.state.data.rollingPlan.drawingVersion,id:'6'});
+            
+                ConstMapValue.PlanDataCategoryDisplay(displayAry,this.state.data.rollingPlan,this.props.type);
 
-
-                displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'b6'},);
-                displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'b7'},);
-                displayAry.push({title:'ITP名称',content:this.state.data.rollingPlan.itpName,id:'b12'},);
-                displayAry.push({title:'工程量编号',content:this.state.data.rollingPlan.projectNo,id:'b8'},);
-                displayAry.push({title:'工程量名称',content:this.state.data.rollingPlan.projectName,id:'b9'},);
-                displayAry.push({title:'焊口/支架',content:this.state.data.rollingPlan.weldno,id:'b10'},);
                 displayAry.push({title:'工序名／编号',content:this.state.data.workStepName,id:'b11'},);
 
                // 遍历

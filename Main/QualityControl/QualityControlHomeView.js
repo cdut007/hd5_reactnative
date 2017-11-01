@@ -5,199 +5,109 @@ import {
     Text,
     View,
     Image,
-    Navigator,
-    BackAndroid,
-    ListView,
-    TouchableOpacity,
-    // AlertIOS,
-
+    BackAndroid
 } from 'react-native';
 
-import Dimensions from 'Dimensions'
-import NavBar from '../../common/NavBar';
-import ProblemReview from '../SafeWork/ProblemReview'
-import ProblemRectification from '../SafeWork/ProbleRectification'
-import ProblemAceess from '../SafeWork/ProblemAccess'
+
+import Global from '../../common/globals.js'
 import ProblemView from '../QualityControl/ProblemView'
 
-var width = Dimensions.get('window').width;
+import TabNavigator from 'react-native-tab-navigator';
 
-var qulityModule = [
-  {
-    'title':"质量问题反馈",
-    'image': require('../../images/construction_icon.png'),
-    'index': 0,
-    "type":"BGWT",
-  },
-  {
-    'title':"处理质量问题",
-    'image': require('../../images/construction_icon.png'),
-    'index': 1,
-    "type":"WTSH",
-  },
-
-]
-
-export  default class QualityControlHomeView extends Component {
-
-  constructor(props) {
-      super(props)
-
-      var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
-      this.state = {
-          title: "质量管理",
-          dataSource: ds,
-      }
-
-  }
-
-  componentDidMount() {
-
-      this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(qulityModule),
-      });
-
-
-  }
-
-  back() {
-      this.props.navigator.pop()
-  }
-
-  render() {
-      return (
-          <View style={styles.container}>
-              <NavBar
-              title={this.state.title}
-              leftIcon={require('../../images/back.png')}
-              leftPress={this.back.bind(this)}/>
-               <View style={styles.content}>
-                     {this.renderToolsView()}
-               </View>
-
-          </View>
-      )
-  }
-
-  renderToolsView() {
-      return(
-
-          <ListView
-            dataSource={this.state.dataSource}
-            renderRow={this.renderRow.bind(this)}
-            contentContainerStyle={{
-                  justifyContent: 'space-around',
-                  flexDirection:'row', //改变ListView的主轴方向
-                  flexWrap:'wrap', //换行
-                  alignItems:'center', // 必须设置,否则换行不起作用
-          }}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-        />
-      )
-
-
-  }
-
-  renderRow(item,sectionId,rowId){
-      return(
-           <View key = {item.index}
-                style={[{width:width/2,
-                          height:width/2,}, styles.toolsItem]}>
-
-               {this.renderDot(item)}
-
-           </View>
-      )
-  }
-
-  _itemClick(item){
-
-// AlertIOS.Global.alert(item.type,item.title);
-
-var Component;
-
-  switch (item.type) {
-    case "BGWT":
+export default class QualityControlHomeView extends Component
+{
+    state =
     {
-     Component =   ProblemView;
+        selectedTab: 'tab1'
     }
-    break;
 
-      break;
-    case "WTSH":
-      {
-         Component = ProblemReview;
-      }
-      break;
-      case "WTZG":
-      {
-        Component = ProblemRectification;
-      }
-          break;
-      case "WTCY":
-          {
-        Component = ProblemAceess;
-          }
-          break;
+    componentWillMount(){
+        var me = this;
+        BackAndroid.addEventListener('harwardBackPress', () => {
+            const routers = me.props.navigator.getCurrentRoutes();
+            if (routers.length > 1) {
+                me.props.navigator.pop();
+                return true;
+            } else {
+                    if (routers[0].name == 'MainPage'||routers[0].name == 'LoginView') {
+                      BackAndroid.exitApp();
+                      return true;
+                    } else {
+                      me.props.navigator.pop();
+                      return true;
+                    }
 
-  }
-
-  if (Component) {
-    this.props.navigator.push({
-        component: Component,
-
-    })
-  }
+                  }
+                  return false;
+      });
+    }
 
 
-  }
+      componentWillUnmount() {
+                BackAndroid.removeEventListener('hardwareBackPress');
+            }
 
-  renderDot(item){
+    render()
+    {
+        if (Global.isQCTeam(Global.UserInfo)) {
+            return(
+                    <TabNavigator>
+                        <TabNavigator.Item
+                            selected={this.state.selectedTab === 'tab1'}
+                            title="待处理"
+                            renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/task_icon.png')} />}
+                            renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/task_icon_click.png')} />}
+                            badgeText=""
+                            selectedTitleStyle={styles.tabBarTintColor}
+                            onPress={() => this.setState({ selectedTab: 'tab1' })}>
+                            {<ProblemView {...this.props}/>}
+                        </TabNavigator.Item>
+                        <TabNavigator.Item
+                            selected={this.state.selectedTab === 'tab2'}
+                            title="报告问题"
+                            renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/problem_icon.png')} />}
+                            renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/problem_icon_click.png')} />}
+                            selectedTitleStyle={styles.tabBarTintColor}
+                            onPress={() => this.setState({ selectedTab: 'tab2' })}>
+                            {<ProblemView {...this.props}/>}
+                        </TabNavigator.Item>
 
-    return(
-      <TouchableOpacity style={{alignSelf:'center'}}
-        onPress={this._itemClick.bind(this,item)}>
-          <Image source={item.image} style={styles.circle_outter} resizeMode={Image.resizeMode.contain}></Image>
-           <Text style={styles.item}> {item.title} </Text>
-      </TouchableOpacity>
-    );
 
-  }
 
+                    </TabNavigator>
+                )
+        }else{
+
+            return(
+                <ProblemView {...this.props}/>
+                )
+        }
+
+
+    }
 }
+
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
+        justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: '#F5FCFF',
     },
-    content: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#fff',
+    welcome: {
+        fontSize: 20,
+        textAlign: 'center',
+        margin: 10,
     },
-    toolsItem: {
-        backgroundColor: "#fff",
-        justifyContent: "center",
-        alignItems: "center"
+    instructions: {
+        textAlign: 'center',
+        color: '#333333',
+        marginBottom: 5,
     },
-    item: {
-      color: "#3b3b3b",
-      alignSelf:'center',
-    },
-    circle_outter:{
-      marginBottom: 6,
-      borderRadius : 44,
-      borderWidth:1,
-      borderColor : 'darkgray',
-      alignSelf:'center',
-      width: 88,
-      height: 88,
+    tabBarTintColor: {
+
+      color: '#f77935'
     },
 
-  });
+});
