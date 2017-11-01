@@ -427,7 +427,7 @@ startProblem(){
 
       isMonitorDelivery(){
               if (Global.isMonitor(Global.UserInfo)) {
-                if (this.state.data.status == 'pre') {
+                if (this.state.data.status == 'pre' && !this.state.data.designee.id) {
                   return true
                 }
               }
