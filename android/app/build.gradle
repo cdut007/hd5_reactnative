@@ -102,6 +102,10 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        manifestPlaceholders = [
+              JPUSH_APPKEY: "bdf293923ddf18c6e0af8ee0", //在此替换你的APPKey
+              APP_CHANNEL: "android"    //应用渠道号
+      ]
     }
     signingConfigs {
         release {
@@ -142,11 +146,14 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-device-info')
     compile project(':react-native-xlog')
     compile project(':react-native-picker')
     compile project(':react-native-image-picker')
     compile project(':react-native-cardview')
     compile fileTree(dir: "libs", include: ["*.jar"])
+    compile project(':jpush-react-native')
+    compile project(':jcore-react-native')
     compile "com.android.support:appcompat-v7:23.0.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
     //注释掉原有bugly的仓库

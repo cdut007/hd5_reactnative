@@ -7,6 +7,10 @@ import com.facebook.react.ReactActivityDelegate;
 
 import javax.annotation.Nullable;
 
+
+import cn.jpush.android.api.JPushInterface;
+
+
 public class MainActivity extends ReactActivity {
 
     @Override
@@ -42,7 +46,21 @@ public class MainActivity extends ReactActivity {
         protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
-
+         // JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
+        JPushInterface.init(this);
             //LogUtils.sendLog(this);
         }
+
+        @Override
+protected void onPause() {
+    super.onPause();
+    JPushInterface.onPause(this);
+}
+
+@Override
+protected void onResume() {
+    super.onResume();
+    JPushInterface.onResume(this);
+}
+
 }
