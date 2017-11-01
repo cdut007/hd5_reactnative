@@ -268,7 +268,7 @@ export default class HomeView extends Component {
               return;
             }
 
-            if (data.type != 'GDJH' && data.type != 'TFJH') {
+            if (data.type != 'GDJH' && data.type != 'TFJH' && data.type != 'JXJH') {
              Global.showToast('正在开发')
               return;
             }
