@@ -50,6 +50,7 @@ export  default class ProblemRectification extends Component {
 
       this.state = {
           title: "问题查阅",
+          detailType:"1003",
 
       }
 

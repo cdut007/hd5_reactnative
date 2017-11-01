@@ -51,10 +51,10 @@ var options = {
     }
 };
 var width = Dimensions.get('window').width;
-var machineTypes = ['机组1','机组2','机组3','机组4','机组5'];
-var PlantTypes = ['厂房1','厂房2','厂房3','厂房4','厂房5'];
-var DepartTypes = [1,2,3,4,5];
-var TeamTypes = ['责任班组1','责任班组2','责任班组3','责任班组4','责任班组5'];
+var machineTypes = [];
+var PlantTypes = [];
+var DepartTypes = [];
+var TeamTypes = [];
 
 export  default class ProblemReport extends Component {
 
@@ -65,10 +65,17 @@ export  default class ProblemReport extends Component {
           title: "报告问题",
           machineType: '选择机组',
           plantType: '选择厂房',
+          questionName:'',
           elevation: '', //标高
           RoomNumber:'',//房间号
           ResDepart:'选择责任部门',
+          ResDepartId:null,
+          ResTeamId:null,
           ResTeam:'选择责任班组',
+          DepartTypes:null,
+          TeamTypes:null,
+          machineTypes:null,
+          PlantTypes:null,
           question:'',
           fileArr: [{}],//装图片资源的数组
           loadingVisible:false,
@@ -83,6 +90,108 @@ export  default class ProblemReport extends Component {
                 {text:'确认',onPress:()=> {this.confirmBack()}}
   ])
 
+  }
+
+  componentDidMount(){
+
+  this.featchData()
+
+  }
+
+  featchData(){
+
+    this.setState({
+        loadingVisible: true
+    });
+   var param = new FormData()
+    if (this.state.ResDepartId) {
+      param.append('responsibleDeptId',this.state.ResDepartId);
+    }
+
+    HttpRequest.get('/hse/createUI', param, this.featchDataSuccess.bind(this),
+        (e) => {
+          this.setState({
+              loadingVisible: false
+          });
+          try {
+              var errorInfo = JSON.parse(e);
+          }
+          catch(err)
+          {
+              console.log("error======"+err)
+          }
+              if (errorInfo != null) {
+                  if (errorInfo.code == -1002||
+                   errorInfo.code == -1001) {
+                  Global.showToast(errorInfo.message);
+              }else {
+                  Global.showToast(e)
+              }
+
+              } else {
+                  Global.showToast(e)
+              }
+
+          console.log('Login error:' + e)
+        })
+
+  }
+
+  featchDataSuccess(response){
+
+    this.setState({
+        loadingVisible: false
+    });
+
+   if (response.responseResult) {
+
+    this.figureData(response.responseResult)
+
+   }
+
+    Global.alert(response.message);
+
+  }
+
+  figureData(data){
+
+  machineTypes = [];
+  PlantTypes = [];
+  DepartTypes = [];
+  TeamTypes = [];
+
+    this.state.machineTypes = data.unit;
+    this.state.PlantTypes = data.wrokshop;
+    this.state.DepartTypes = data.responsibleDept;
+    this.state.TeamTypes = data.responsibleTeam;
+
+    this.state.machineTypes.forEach((item) => {
+
+         machineTypes.push(item)
+
+    })
+
+    this.state.PlantTypes.forEach((item) => {
+
+         PlantTypes.push(item)
+
+    })
+
+  this.state.DepartTypes.forEach((item) => {
+
+  DepartTypes.push(item['deptName'])
+
+  })
+
+if (this.state.ResDepartId) {
+
+  this.state.TeamTypes.forEach((item) => {
+
+  TeamTypes.push(item['deptName'])
+
+  })
+
+}
 
   }
 
@@ -128,6 +237,7 @@ export  default class ProblemReport extends Component {
     var itemAry = [];
 
     var displayAry = [
+      {title:'问题',id:'questionName',content:this.state.questionName,type:'input'},
       {title:'机组',id:'choose_machiche',pickerTitle:"选择机组",content:this.state.machineType,data:machineTypes,type:'choose'},
       {title:'厂房',id:'choose_platHouse',pickerTitle:"选择厂房",content:this.state.plantType,data:PlantTypes,type:'choose'},
       {title:'标高',id:'elevation',content:this.state.elevation,type:'input'},
@@ -203,13 +313,20 @@ return(
    })
 
    var param = new FormData()
-
+   param.append('problemTitle',this.state.questionName);
    param.append('unit', this.state.machineType);
    param.append('wrokshop', this.state.plantType);
    param.append('eleration', this.state.elevation);
    param.append('roomno', this.state.RoomNumber);
    param.append('description', this.state.question);
-   param.append('responsibleDeptId', this.state.ResDepart);
+   param.append('responsibleDeptId', this.state.ResDepartId);
+
+ if (this.state.ResTeamId) {
+
+  param.append('responsibleTeamId',this.state.ResTeamId);
+
+ }
+
 
    this.state.fileArr.map((item, i) => {
        if (item['fileSource']) {
@@ -220,16 +337,29 @@ return(
 
    HttpRequest.uploadImage(SAFEWORK_ISSUE_COMMIT_URL, param, this.onCommitIssueSuccess.bind(this),
        (e) => {
-           try {
-               Global.alert(e)
-           }
-           catch (err) {
-               console.log(err)
-           }
+         this.setState({
+             loadingVisible: false
+         });
+         try {
+             var errorInfo = JSON.parse(e);
+         }
+         catch(err)
+         {
+             console.log("error======"+err)
+         }
+             if (errorInfo != null) {
+                 if (errorInfo.code == -1002||
+                  errorInfo.code == -1001) {
+                 Global.showToast(errorInfo.message);
+             }else {
+                 Global.showToast(e)
+             }
 
-           this.setState({
-               loadingVisible: false
-           })
+             } else {
+                 Global.showToast(e)
+             }
+
+         console.log('Login error:' + e)
        })
 
     // var reportData = new Object()
@@ -265,6 +395,11 @@ return(
 
   onCommit() {
 
+ if (!this.state.questionName.length) {
+         alert("请输入问题名称");
+         return
+ }
+
     if (this.state.machineType == '选择机组') {
       alert("请选择机组");
       return;
@@ -282,7 +417,7 @@ return(
       alert("请输入房间号");
       return;
     }
-     if (this.state.ResDepart == '选择责任部门') {
+     if (!this.state.ResDepartId) {
        alert("请选择责任部门");
        return;
      }
@@ -293,13 +428,6 @@ return(
      if(this.state.fileArr.length<=1){
          alert('请选择至少一张问题图片');
          return;
-     }
-
-     let team;
-     if (this.state.ResTeam == '选择责任班组') {
-       team = "        ";
-     }else {
-       team = this.state.ResTeam;
      }
 
 
@@ -367,6 +495,11 @@ _questtionDescribe(){
       {
          this.setState({RoomNumber:text})
       }
+        break;
+      case "questionName":{
+        this.setState({questionName:text})
+      }
+
         break;
   }
   }
@@ -516,12 +649,12 @@ _questtionDescribe(){
        break;
       case "choose_des":
       {
-         this.setState({ResDepart:data[0]})
+         this.figureDes(data);
       }
         break;
         case "choose_team":
         {
-          this.setState({ResTeam:data[0]})
+        this.figureTeam(data);
         }
           break;
    }
@@ -529,6 +662,40 @@ _questtionDescribe(){
       // this.setState({machineType: data[0]})
   }
 
+  figureDes(data){
+
+  this.setState({ResDepart:data[0]})
+
+  this.state.DepartTypes.forEach((item) => {
+
+    if (item['deptName']  == this.state.ResDepart) {
+
+      this.state.ResDepartId = item['deptId'];
+
+    }
+
+  })
+
+  this.state.ResTeamId = null;
+
+  this.featchData();
+
+}
+  figureTeam(data){
+
+  this.setState({ResTeam:data[0]})
+
+  this.state.TeamTypes.forEach((item) => {
+
+    if (item['deptName']  == this.state.ResTeam) {
+
+      this.state.ResTeamId = item['deptId'];
+
+    }
+
+  })
+
+}
 
 }
 
