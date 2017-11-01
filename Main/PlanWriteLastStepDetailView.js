@@ -26,6 +26,7 @@ import CommitButton from '../common/CommitButton'
 import Spinner from 'react-native-loading-spinner-overlay'
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
+import ConstMapValue from '../common/ConstMapValue.js';
 
 import Global from '../common/globals.js'
 import DateTimePickerView from '../common/DateTimePickerView'
@@ -537,20 +538,8 @@ export default class PlanWriteLastStepDetailView extends Component {
                    displayAry.push({title:'QC1见证时间',content:Global.formatFullDateDisplay(this.state.data.qc1WitnessDate),id:'e4'})
                }
 
-               displayAry.push({title:'作业条目编号',content:this.state.data.workListNo,id:'0'})
-               displayAry.push({title:'点数',content:this.state.data.points,id:'1'})
-               displayAry.push({title:'机组号',content:this.state.data.unitNo,id:'2'})
-               displayAry.push({title:'质量计划号',content:this.state.data.qualityplanno,id:'3'})
+                ConstMapValue.PlanDataCategoryDisplay(displayAry,this.state.data,this.props.type);
 
-
-
-                displayAry.push({title:'图纸号',content:this.state.data.drawingNo,id:'5'},);
-                displayAry.push({title:'图纸版本',content:this.state.data.drawingVersion,id:'6'});
-
-                displayAry.push({title:'房间号',content:this.state.data.roomNo,id:'b1'},);
-                displayAry.push({title:'工程量编号',content:this.state.data.projectNo,id:'b2'},);
-                displayAry.push({title:'工程量类别',content:this.state.data.projectType,id:'b3'},);
-                displayAry.push({title:'焊口／支架',content:this.state.data.weldno,id:'b4'},);
                 displayAry.push({title:'备注',content:this.state.data.remarks,id:'b5'},);
                 displayAry.push({type:'devider'},);
 

@@ -23,6 +23,7 @@ import IssueReportView from './IssueReportView'
 import WorkStepListView from './WorkStepListView';
 import WitnessFailResultView from './WitnessFailResultView'
 
+import ConstMapValue from '../common/ConstMapValue.js';
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
 
@@ -418,29 +419,13 @@ getNoticeType(noticePoint){
 
                if (Global.isQCTeam(Global.UserInfo)) {
                    //if not ok add info.
-                   displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'7'})
-                   displayAry.push({title:'ITP名称',content:this.state.data.rollingPlan.itpName,id:'b12'},);
+                   ConstMapValue.PlanDataCategoryDisplay(displayAry,this.state.data.rollingPlan,this.props.type);
+
                    displayAry.push({title:'工序编号/名称',content:this.state.data.workStepName,id:'0'})
-                   displayAry.push({title:'工程量名称',content:this.state.data.rollingPlan.projectName,id:'1'})
-                   displayAry.push({title:'焊口／支架',content:this.state.data.rollingPlan.weldno,id:'2'},);
                    displayAry.push({title:'选点类型',content:this.state.data.noticeType,id:'3'})
 
                }else{
-                   displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'7'})
-                   displayAry.push({title:'ITP名称',content:this.state.data.rollingPlan.itpName,id:'b12'},);
-                   displayAry.push({title:'作业条目编号',content:this.state.data.rollingPlan.workListNo,id:'0'})
-                   displayAry.push({title:'点数',content:this.state.data.rollingPlan.points,id:'1'})
-                   displayAry.push({title:'机组号',content:this.state.data.rollingPlan.unitNo,id:'2'})
-                   displayAry.push({title:'质量计划号',content:this.state.data.rollingPlan.qualityplanno,id:'3'})
-
-
-                   displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'},);
-                   displayAry.push({title:'图纸版本',content:this.state.data.drawingVersion,id:'6'});
-
-                   displayAry.push({title:'房间号',content:this.state.data.rollingPlan.roomNo,id:'b1'},);
-                   displayAry.push({title:'工程量编号',content:this.state.data.rollingPlan.projectNo,id:'b2'},);
-                   displayAry.push({title:'工程量类别',content:this.state.data.rollingPlan.projectType,id:'b3'},);
-                   displayAry.push({title:'焊口／支架',content:this.state.data.rollingPlan.weldno,id:'b4'},);
+                   ConstMapValue.PlanDataCategoryDisplay(displayAry,this.state.data.rollingPlan,this.props.type);
 
                }
 

@@ -13,18 +13,18 @@ var Map_Plan_Col = {
 
 var Map_Plan_Col_value = {
     'GDJH':{val1:'drawingNo',val2:'weldno',val3:'roomNo',val4:'speification',val5:'施工日期'},
-    'TFJH':{val1:'drawingNo',val2:'weldno',val3:'roomNo',val4:'speification',val5:'施工日期'},
+    'TFJH':{val1:'drawingNo',val2:'lineNo',val3:'roomNo',val4:'projectNo',val5:'施工日期'},
 }
 
 
 var Map_Witness_Col = {
     'GDJH':{col1:'发起日期',col2:'工序编号',col3:'见证点类型',col4:'焊口/支架',},
-    'TFJH':{col1:'发起日期',col2:'工序编号',col3:'见证点类型',col4:'焊口/支架',},
+    'TFJH':{col1:'发起日期',col2:'工序编号',col3:'见证点类型',col4:'管线号',},
 }
 
 var Map_Witness_Col_value = {
     'GDJH':{val1:'drawingNo',val2:'weldno',val3:'roomNo',val4:'speification',val5:'施工日期'},
-    'TFJH':{val1:'drawingNo',val2:'weldno',val3:'roomNo',val4:'speification',val5:'施工日期'},
+    'TFJH':{val1:'drawingNo',val2:'lineNo',val3:'roomNo',val4:'projectNo',val5:'施工日期'},
 }
 
 var Map_QC_Witness_Col = {
@@ -34,7 +34,7 @@ var Map_QC_Witness_Col = {
 
 var Map_QC_Witness_Col_value = {
     'GDJH':{val1:'drawingNo',val2:'weldno',val3:'roomNo',val4:'speification',val5:'施工日期'},
-    'TFJH':{val1:'drawingNo',val2:'weldno',val3:'roomNo',val4:'speification',val5:'施工日期'},
+    'TFJH':{val1:'drawingNo',val2:'lineNo',val3:'roomNo',val4:'projectNo',val5:'施工日期'},
 }
 
 
@@ -65,7 +65,30 @@ module.exports = {
 
         return Map_QC_Witness_Col_value[type]
     },
+    PlanDataCategoryDisplay(displayAry,data,type){
+        //common
+        displayAry.push({title:'作业条目编号',content:data.workListNo,id:'x0'})
+        displayAry.push({title:'点数',content:data.points,id:'x1'})
+        displayAry.push({title:'机组号',content:data.unitNo,id:'x2'})
+        displayAry.push({title:'质量计划号',content:data.qualityplanno,id:'x3'})
 
+         displayAry.push({title:'图纸号',content:data.drawingNo,id:'x4'});
+         displayAry.push({title:'图纸版本',content:data.drawingVersion,id:'x5'});
+         displayAry.push({title:'房间号',content:data.roomNo,id:'x6'});
+         displayAry.push({title:'工程量编号',content:data.projectNo,id:'x7'});
+         displayAry.push({title:'工程量类别',content:data.projectType,id:'x8'});
+         displayAry.push({title:'ITP编号',content:data.itpNo,id:'x9'},);
+         displayAry.push({title:'ITP名称',content:data.itpName,id:'x10'},);
+
+            if (type == 'GDJH') {
+                displayAry.push({title:'焊口／支架',content:data.weldno,id:'r0'});
+            }else if (type == 'TFJH') {
+                displayAry.push({title:'作业包名称',content:data.workPackageNo,id:'r0'});
+                displayAry.push({title:'管线号',content:data.lineNo,id:'r1'});
+            }
+
+            return displayAry
+    },
 
 
 };

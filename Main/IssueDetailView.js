@@ -251,7 +251,6 @@ export default class IssueDetailView extends Component {
 
 
 startFeedbackProblem(){
-  this.setState({loadingVisible: true,})
   if(!this.state.content){
     Global.alert('请输入问题反馈内容')
     return
@@ -260,6 +259,7 @@ startFeedbackProblem(){
     Global.alert('请选择至少一张反馈图片')
     return
   }
+  this.setState({loadingVisible: true,})
   var params = new FormData();
   params.append('questionId',this.props.data.id);
   params.append('describe',this.state.content);
@@ -427,7 +427,7 @@ startProblem(){
 
       isMonitorDelivery(){
               if (Global.isMonitor(Global.UserInfo)) {
-                if (this.state.data.status == 'pre') {
+                if (this.state.data.status == 'pre' && !this.state.data.designee.id) {
                   return true
                 }
               }
@@ -590,7 +590,7 @@ startProblem(){
        let status = this.state.data.status;
        switch(status){
         case 'pre':
-          return '待指派';
+          return this.state.data.designee.id ? '待解决': '待指派';
         case 'undo':
           return '待确认';
         case 'unsolved':
