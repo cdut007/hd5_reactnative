@@ -29,7 +29,7 @@ var width = Dimensions.get('window').width;
 import   ScrollableTabView  from 'react-native-scrollable-tab-view';
 
 
-
+var timer;
 var LOADING = {};
 
 //captainList
@@ -164,7 +164,7 @@ export default class IssueListViewContainer extends Component {
                 title = this.props.data.user.dept.name//否则班长
          }
         this.state = {
-
+            keyword: '',
             title: title + "问题",
         }
 
@@ -285,10 +285,42 @@ export default class IssueListViewContainer extends Component {
                 <NavBar
                 title={this.state.title}
                 leftIcon={require('../images/back.png')}
+                searchMode={true}
+                onSearchChanged={(text) => this.onSearchChanged(text)}
+                onSearchClose = {this.onSearchClose.bind(this)}
                 leftPress={this.back.bind(this)} />
                 {this.rendTabs()}
             </View>
         )
+    }
+
+    onSearchChanged(text){
+        console.log('text=='+text);
+        this.setState({keyword:text})
+        if (this._issue_list_ref) {
+            if (timer) {
+                clearTimeout(timer);
+            }
+            timer = setTimeout(() => {
+                
+                    this._issue_list_ref._onRefresh()
+            }, 1000);
+        }
+    }
+
+    onSearchClose(){
+        if (timer) {
+            clearTimeout(timer);
+        }
+        if (this.state.keyword == '') {
+            return
+        }
+        this.setState({keyword:''})
+        if (this._issue_list_ref) {
+            timer = setTimeout(() => {
+                    this._issue_list_ref._onRefresh()
+            }, 1000);
+        }
     }
 
 
@@ -300,7 +332,9 @@ export default class IssueListViewContainer extends Component {
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
             <IssueListView
-            style={{alignSelf:'stretch',flex:1}}
+             ref = {(c) => this._issue_list_ref = c}
+             keyword = {this.state.keyword}
+             style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
              userId = {userId}
              status={status}
