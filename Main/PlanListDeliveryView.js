@@ -154,9 +154,32 @@ export default class PlanListDeliveryView extends Component {
 
     renderCheckBox(item,rowID) {
 
-    if (Global.isCaptain(Global.UserInfo)) {
-            return
-        }
+
+    if (rowID == '-1') {
+        return (<CheckBox
+            label=''
+            checkedImage={require('../images/choose_icon_click.png')}
+            uncheckedImage={require('../images/choose_icon.png')}
+            checked={this.state.allSelected == null ? false : this.state.allSelected}
+            onChange={(checked) => {
+                console.log(checked+'this.state.allSelected=='+this.state.allSelected)
+                 var selected = !checked
+                    var newdata = []
+                 for (var i = 0; i < this.state.items.length; i++) {
+                     let _item = Object.assign({}, this.state.items[i], {'selected': selected});
+                     newdata.push(_item)
+                 }
+
+                this.setState({
+                    allSelected:selected,
+                    items:newdata,
+                    dataSource: this.state.dataSource.cloneWithRows(newdata),
+                })
+
+            }
+            }
+        />)
+    }
 
     if (!item) {
         return ({})
@@ -494,8 +517,9 @@ export default class PlanListDeliveryView extends Component {
 
     renderTitleColsSpace(){
         if (Global.isMonitor(Global.UserInfo)) {
-            return(<View style={[styles.cell,{flex:0.5}]}>
-            </View>)
+            // return(<View style={[styles.cell,{flex:0.5}]}>
+            // </View>)
+            return (this.renderTitleColsCheckBox(null,-1))
         }
     }
     renderTitleCols(){
