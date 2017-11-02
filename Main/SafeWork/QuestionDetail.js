@@ -105,24 +105,7 @@ export default class QuestionDetail extends Component {
           this.setState({
               loadingVisible: false
           });
-          try {
-              var errorInfo = JSON.parse(e);
-          }
-          catch(err)
-          {
-              console.log("error======"+err)
-          }
-              if (errorInfo != null) {
-                  if (errorInfo.code == -1002||
-                   errorInfo.code == -1001) {
-                  Global.showToast(errorInfo.message);
-              }else {
-                Global.showToast(e)
-              }
 
-              } else {
-                  Global.showToast(e)
-              }
 
           console.log('Login error:' + e)
         })
@@ -147,7 +130,6 @@ export default class QuestionDetail extends Component {
 
    }
 
-    Global.alert(response.message);
 
   }
 
