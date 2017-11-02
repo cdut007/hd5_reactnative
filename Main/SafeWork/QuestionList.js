@@ -232,7 +232,7 @@ export default class QuestionList extends Component {
     }else {
 
    var a2 = this.state.items.filter(
-      (item) => ((Global.formatDate(item.createTime).toLowerCase().indexOf(text) !== -1) || (item.createUser.toLowerCase().indexOf(text) !== -1) || (item.id.toLowerCase().indexOf(text) !== -1) || (this.getStatus(rowData.problemStatus).toLowerCase().indexOf(text) !== -1))
+      (item) => ((Global.formatDate(item.createDate).toLowerCase().indexOf(text) !== -1) || (item.createUser.toLowerCase().indexOf(text) !== -1) || (item.problemTitle.toLowerCase().indexOf(text) !== -1) || (this.getStatus(item.problemStatus).toLowerCase().indexOf(text) !== -1))
 );
 
 
