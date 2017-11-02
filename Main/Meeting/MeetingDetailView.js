@@ -61,15 +61,7 @@ export default class MeetingDetailView extends Component {
                     keyboardDismissMode='on-drag'
                     keyboardShouldPersistTaps={false}
                     style={styles.main_container}>
-                    <DisplayItemView
-                     title={'不合格类别'}
-                     detail={this.props.data.failType}
-                    />
-                    <DisplayMoreItemView
-                     title={'不合格原因'}
-                     detail={this.props.data.remark}
-                    />
-                    {this.renderFiles()}
+                    
                 </ScrollView>
             </View>
         )

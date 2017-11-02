@@ -112,7 +112,15 @@ export default class MeetingListView extends Component {
 
 
     componentDidMount() {
-        this.executeMeetingRequest(1);
+            var items = []
+            items.push({'id':'sds'})
+                this.setState({
+                    dataSource:this.state.dataSource.cloneWithRows(items),
+                    isLoading: false,
+                    isRefreshing:false,
+                    totalCount:1
+                });
+        //this.executeMeetingRequest(1);
         newMeetingSubscription = DeviceEventEmitter.addListener('new_meeting',(param) => {this._onRefresh()})
         operationSubscription = DeviceEventEmitter.addListener('operate_meeting',(param)=>{this._onRefresh();})
     }
@@ -191,10 +199,14 @@ export default class MeetingListView extends Component {
 
       console.log('executeMeetingRequest pageNo:'+index)
       var loading = false;
+
       if (this.state.items.length == 0) {
               loading = true
       }
 
+      if (true) {
+          return
+      }
        this.setState({
          isLoading: loading,
        });
@@ -275,23 +287,10 @@ export default class MeetingListView extends Component {
 
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
-            var info = '未指派'
+            var info = '未开始'
             //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
             var color = '#e82628'
-            if (rowData.status!='pre') {
-                info = '指派给:'+rowData.designee.realname
-                color = '#0755a6'
-            }else{
-                if (Global.isSolverMember(Global.UserInfo)) {
-                    info = '未处理'
-                    color = '#e82628'
-                }else{
-                    if (rowData.designee&&rowData.designee.realname ) {
-                        info = '指派给:'+rowData.designee.realname
-                        color = '#0755a6'
-                    }
-                }
-            }
+
 
                 return (
                     <CardView
@@ -303,14 +302,14 @@ export default class MeetingListView extends Component {
                         <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
 
                         <View style={[styles.statisticsflexContainer,]}>
-                        <Text numberOfLines={2} style={{flex:1,color:'#282828',fontSize:14}}>
-                        {rowData.describe}
+                        <Text numberOfLines={2} style={{color:'#282828',fontSize:14}}>
+                        test
                         </Text>
 
-                        <View style={{paddingBottom:4,flexDirection: 'row',justifyContent:'flex-start',alignItems:'center'}}>
+                        <View style={{marginTop:10,paddingBottom:4,flexDirection: 'row',justifyContent:'flex-start',alignItems:'center'}}>
 
                         <Text numberOfLines={1} style={{flex:1,color:'#888888',fontSize:12}}>
-                        提问时间：{rowData.questionTime}
+                        创建时间：{rowData.questionTime}
                         </Text>
 
 
@@ -328,9 +327,41 @@ export default class MeetingListView extends Component {
                         width: width,
                         height: 0.5,}}/>
 
+                        <View style={{flexDirection:'row',alignItems:'center'}}>
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          作业条目编号：TM01-2017-08-0001
+                          会议时间：
                         </Text>
+
+                        <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
+                          2017-09-10 10：00
+                        </Text>
+
+                        </View>
+
+                        <View style={{flexDirection:'row',alignItems:'center'}}>
+                        <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+                          会议地点：
+                        </Text>
+
+                        <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
+                          第六会议室
+                        </Text>
+
+                        </View>
+
+
+                        <View style={{flexDirection:'row',alignItems:'center'}}>
+                        <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+                          会议主持：
+                        </Text>
+
+                        <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
+                          James
+                        </Text>
+
+                        </View>
+
+
 
                         <View style={{flexDirection:'row',alignItems:'center'}}>
 
@@ -429,13 +460,13 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
             flex:1,
-            height:160,
+            height:220,
             backgroundColor:'#ffffff',
             padding:10,
             paddingRight:20,
     },
      statisticsflexContainer: {
-              height: 80,
+              height: 54,
               backgroundColor: '#ffffff',
 
           },
