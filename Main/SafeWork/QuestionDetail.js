@@ -105,24 +105,7 @@ export default class QuestionDetail extends Component {
           this.setState({
               loadingVisible: false
           });
-          try {
-              var errorInfo = JSON.parse(e);
-          }
-          catch(err)
-          {
-              console.log("error======"+err)
-          }
-              if (errorInfo != null) {
-                  if (errorInfo.code == -1002||
-                   errorInfo.code == -1001) {
-                  Global.showToast(errorInfo.message);
-              }else {
-                Global.showToast(e)
-              }
 
-              } else {
-                  Global.showToast(e)
-              }
 
           console.log('Login error:' + e)
         })
@@ -147,7 +130,6 @@ export default class QuestionDetail extends Component {
 
    }
 
-    Global.alert(response.message);
 
   }
 
@@ -551,6 +533,9 @@ this.figureFiles();
 
 figureFiles(){
 
+problemFiles = [];
+solveFiles = [];
+
   this.state.data.files.forEach((item) => {
      item['url'] = item['path'];
 })
@@ -727,11 +712,11 @@ historyData.hseCheckTime = item['solveDate'];
       {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
       {title:'责任部门',content:this.state.data.responsibleDept,id:'5',noLine:true},
       {title:'责任班组',content:this.state.data.responsibleTeam,id:'6',noLine:true},
-      {title:'截止日期',content:Global.formatDate(this.state.data.startDate),id:'7',noLine:true},
+      {title:'截止日期',content:Global.formatDate(this.state.data.targetDate),id:'7',noLine:true},
       {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
       {title:'历史状态',content:"",id:'9',noLine:true},
       {title:'问题提交',content:Global.formatDate(this.state.data.createDate),id:'10',noLine:true},
-      {title:'问题审核',content:Global.formatDate(this.state.data.startDate),id:'11',noLine:true},
+      {title:'问题审核',content:Global.formatDate(historyData.handleTime),id:'11',noLine:true},
       {title:'当前状态',content:"待整改",id:'13',noLine:true},
     ];
 

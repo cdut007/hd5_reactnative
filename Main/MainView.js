@@ -5,7 +5,8 @@ import {
     Text,
     View,
     Image,
-    AsyncStorage
+    AsyncStorage,
+    Platform,
 } from 'react-native';
 
 
@@ -38,9 +39,14 @@ export default class MainView extends Component {
     }
 
     componentDidMount(){
-        JPushModule.notifyJSDidLoad((resultCode) => {
-			if (resultCode === 0) {}
-		});
+
+      if (Platform.OS === 'android') {
+            JPushModule.notifyJSDidLoad((resultCode) => {
+        	if (resultCode === 0) {}
+        });
+       }
+
+
 		JPushModule.addReceiveCustomMsgListener((map) => {
 			this.setState({
 				pushMsg: map.message
