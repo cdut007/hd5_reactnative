@@ -7,6 +7,9 @@ import NavBar from '../../common/NavBar'
 import CircleLabelHeadView from '../../common/CircleLabelHeadView';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import IssueListViewContainer from '../IssueListViewContainer';
+import HttpRequest from '../../HttpRequest/HttpRequest';
+
+import Spinner from 'react-native-loading-spinner-overlay';
 
 var width = Dimensions.get('window').width;
 
@@ -18,20 +21,46 @@ export default class SolverLeaderView extends Component{
 		
 
 		this.state = {
+			loadingVisible: false,
 			dataSource: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
 		}
 	}
 
 	componentDidMount(){
-		this.setState({
-	        dataSource: this.state.dataSource.cloneWithRows(
-		        [
-		          {user: {id: '278',name:'Z1',realname: 'GDGCS1',roles:[{id:'199',name:'组长',roleType:['team']}],dept:{id:'197',name:'一组'}}},
-		      	  {user: {id: '319',name:'Z1',realname: 'GDGCS3',roles:[{id:'199',name:'组长',roleType:['team']}],dept:{id:'197',name:'一组'}}},
-		      	  {user: {id: '320',name:'Z1',realname: 'GDGCS4',roles:[{id:'199',name:'组长',roleType:['team']}],dept:{id:'197',name:'一组'}}},
-		       	]
-		   	),           
-		})
+		this.requestStatistics();
+	}
+
+	requestStatistics(){
+		let param = {type: 'GDJH'};
+		this.setState({loadingVisible: true});
+		HttpRequest.get('/statistics/problem', param, this.onGetDataSuccess.bind(this),
+			(e) => {
+				this.setState({loadingVisible: false,});
+                try {
+                  var errorInfo = JSON.parse(e);
+                  if (errorInfo != null) {
+                   console.log(errorInfo)
+                  } else {
+                      console.log(e)
+                  }
+                }
+                catch(err)
+                {
+                    console.log(err)
+                }
+                console.log('executeNetWorkRequest error:' + e)
+			}
+		)
+	}
+
+	onGetDataSuccess(response){
+		if(response.responseResult){
+			let results = response.responseResult.supervisor;
+			this.setState({
+				loadingVisible: false,
+				dataSource: this.state.dataSource.cloneWithRows(results),
+			})
+		}
 	}
 
 	render(){
@@ -48,9 +77,7 @@ export default class SolverLeaderView extends Component{
             	    keyboardDismissMode="on-drag"
                	    keyboardShouldPersistTaps='always'
            	  	    showsVerticalScrollIndicator={false} />
-           	  	{
-           	  		this.renderEmpty()
-           	  	}
+           	  	<Spinner visible = {this.state.loadingVisible} />
 			</View>
 		);
 	}
@@ -58,7 +85,7 @@ export default class SolverLeaderView extends Component{
 	renderEmpty(){
 		if(this.state.dataSource.getRowCount() <= 0) {
            	return (
-           	    <Text style={{fontSize: 14, flex: 1, }}>Empty</Text>
+           	    <Text style={{fontSize: 14, flex: 1, fontStyle: 'bold'}}>Empty</Text>
            	);  			
         }
 	}
@@ -74,14 +101,14 @@ export default class SolverLeaderView extends Component{
 					<CircleLabelHeadView contactName={rowData.user.realname} imageStyle={{marginLeft: 10,}}/>
 					<Text style={{fontSize: 16, color: '#1c1c1c', marginLeft: 10,}}>{rowData.user.realname}</Text>
 					<View style={{marginLeft: 8, marginRight: 12, backgroundColor: '#aeaeae', width: 2, height: 14}} />
-					<Text style={{fontSize: 14, color: '#888888'}}>(260)</Text>
+					<Text style={{fontSize: 14, color: '#888888'}}>{rowData.statistics.total}</Text>
 				</View>
 				<View style={{width: width, height: 0.5, backgroundColor: '#d6d6d6'}} />
 				<View style={{width: width, height: 57.5, flexDirection: 'row',}}>
-					{this.renderCell('未处理', 100, '#1c1c1c')}
-					{this.renderCell('已回执', 100, '#1c1c1c')}
-					{this.renderCell('已解决', 50, '#1c1c1c')}
-					{this.renderCell('未解决', 10, '#e82628')}
+					{this.renderCell('未处理', rowData.statistics.pre, '#1c1c1c')}
+					{this.renderCell('已回执', rowData.statistics.done, '#1c1c1c')}
+					{this.renderCell('已解决', rowData.statistics.solved, '#1c1c1c')}
+					{this.renderCell('未解决', rowData.statistics.unsolved, '#e82628')}
 				</View>
 			</TouchableOpacity>
 		);
