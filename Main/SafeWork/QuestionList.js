@@ -333,7 +333,7 @@ export default class QuestionList extends Component {
                         <View style={styles.cell}>
 
                           <Text numberOfLines={2}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                            {Global.formatDate(rowData.createTime)}
+                            {Global.formatDate(rowData.createDate)}
                           </Text>
 
                         </View>
@@ -342,7 +342,7 @@ export default class QuestionList extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.id}
+                              {rowData.problemTitle}
                         </Text>
 
                         </View>
