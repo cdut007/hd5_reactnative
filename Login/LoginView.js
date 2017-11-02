@@ -16,6 +16,8 @@ import Dimensions from 'Dimensions';
 import Spinner from 'react-native-loading-spinner-overlay';
 import NavBar from '../common/NavBar'
 import TabView from '../Main/TabView'
+import JPushModule from 'jpush-react-native';
+import DeviceInfo from 'react-native-device-info'
 var Global = require('../common/globals');
 
 var width = Dimensions.get('window').width;
@@ -58,6 +60,10 @@ export default class LoginView extends Component {
         });
     }
 
+    genId(){
+    return  DeviceInfo.getUniqueID().toUpperCase();
+  }
+
 
     onLoginPress() {
         console.log('LoginId:' + this.state.LoginId + '  password:' + this.state.passWord)
@@ -86,11 +92,11 @@ export default class LoginView extends Component {
             loadingVisible: true
         });
 
-
+       var id = this.genId()
         var paramBody = {
                 'username': this.state.LoginId,
                 'password': this.state.passWord,
-                'uuid': 'uc'
+                'uuid': id
             }
         if (!this.state.LoginId.length || !this.state.passWord.length) {
             this.setState({
@@ -141,7 +147,7 @@ export default class LoginView extends Component {
 
     }
 
-    onLoginSuccess(response) {
+    onLoginSuccess(response,paramBody) {
         this.setState({
             loadingVisible: false
         });
@@ -173,12 +179,31 @@ export default class LoginView extends Component {
         });
 
 
+        var alias = paramBody.uuid + "_" + response.responseResult.id
+
+        this.registerPush(alias)
+
         //show main view
         this.props.navigator.resetTo({
             component: TabView,
             name: 'MainPage',
             props: {...this.props}
         })
+    }
+
+    registerPush(alias){
+        JPushModule.resumePush();
+        JPushModule.setAlias(alias, (map) => {
+                if (map.errorCode === 0) {
+                    console.log("set alias succeed==="+alias);
+                } else {
+                    console.log("set alias failed, errorCode: " + map.errorCode);
+                    if (map.errorCode == 6002) {
+                        this.registerPush(alias)
+                        console.log("set alias timeouted register again==="+alias);
+                    }
+                }
+            });
     }
 
     render() {

@@ -107,7 +107,7 @@ var bottomModuleData = [
     },
     {
         'index': 2,
-        'title': '物质管理',
+        'title': '物资管理',
         "type": "WZGL",
         'image': require('../images/material_icon.png')
     },
@@ -268,7 +268,7 @@ export default class HomeView extends Component {
               return;
             }
 
-            if (data.type != 'GDJH' && data.type != 'TFJH') {
+            if (data.type != 'GDJH' && data.type != 'TFJH' && data.type != 'JXJH') {
              Global.showToast('正在开发')
               return;
             }

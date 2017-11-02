@@ -342,6 +342,7 @@ const styles = StyleSheet.create({
         height:height,
         justifyContent: 'flex-start',
         alignItems: 'center',
+        backgroundColor: '#f2f2f2',
     },
     divider: {
     backgroundColor: '#f2f2f2',

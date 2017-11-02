@@ -25,7 +25,7 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import Global from '../../common/globals.js'
 import CommitButton from '../../common/CommitButton'
 
-
+import ConstMapValue from '../../common/ConstMapValue.js';
 import MemberSelectView from '../../common/MemberSelectView'
 
 const isIOS = Platform.OS == "ios"
@@ -556,14 +556,9 @@ export default class QCWitnessResultDetailView extends Component {
 
 
                    //if not ok add info.
-                   displayAry.push({title:'图纸号',content:this.state.data.rollingPlan.drawingNo,id:'5'});
-                   displayAry.push({title:'图纸版本',content:this.state.data.rollingPlan.drawingVersion,id:'6'});
+                ConstMapValue.PlanDataCategoryDisplay(displayAry,this.state.data.rollingPlan,this.props.type);
+                displayAry.push({title:'工序名／编号',content:this.state.data.workStepName,id:'0'},);
 
-                   displayAry.push({title:'ITP编号',content:this.state.data.rollingPlan.itpNo,id:'7'})
-                   displayAry.push({title:'ITP名称',content:this.state.data.rollingPlan.itpName,id:'b12'},);
-                   displayAry.push({title:'工序编号/名称',content:this.state.data.workStepName,id:'0'})
-                   displayAry.push({title:'工程量名称',content:this.state.data.rollingPlan.projectName,id:'1'})
-                   displayAry.push({title:'焊口／支架',content:this.state.data.rollingPlan.weldno,id:'2'},);
                    displayAry.push({title:'选点类型',content:this.state.data.noticeType,id:'3'})
 
 
