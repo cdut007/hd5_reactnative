@@ -9,7 +9,8 @@ import {
     AsyncStorage,
     Image,
     ScrollView,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Platform,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Dimensions from 'Dimensions';
@@ -192,6 +193,9 @@ export default class LoginView extends Component {
     }
 
     registerPush(alias){
+
+      if (Platform.OS === 'android') {
+
         JPushModule.resumePush();
         JPushModule.setAlias(alias, (map) => {
                 if (map.errorCode === 0) {
@@ -204,6 +208,9 @@ export default class LoginView extends Component {
                     }
                 }
             });
+      }
+
+
     }
 
     render() {

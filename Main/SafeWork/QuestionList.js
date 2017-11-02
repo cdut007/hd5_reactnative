@@ -267,9 +267,20 @@ export default class QuestionList extends Component {
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
-                      problemStatus:this.props.problemStatus,
                       userId:userId,
                      }
+
+                 if (this.props.problemStatus) {
+
+                  paramBody.problemStatus = this.props.problemStatus
+
+                  }
+
+                if (this.props.probelmType) {
+
+                paramBody.probelmType = this.props.probelmType
+
+                }
 
                 if (this.props.problemSolveStatus) {
                       paramBody.problemSolveStatus = this.props.problemSolveStatus

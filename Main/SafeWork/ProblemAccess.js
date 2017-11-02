@@ -65,8 +65,8 @@ export  default class ProblemRectification extends Component {
            tabBarInactiveTextColor='#777777'
   >
 
-      {this._renderQuetionView("我的问题","Need_Check")}
-      {this._renderQuetionView("所有问题","Finish")}
+      {this._renderQuetionView("我的问题","mine")}
+      {this._renderQuetionView("所有问题","all")}
 
   </ScrollableTabView>)
 
@@ -168,7 +168,7 @@ export  default class ProblemRectification extends Component {
       type={this.props.type}
       detailType={this.state.detailType}
       userId={userId}
-      problemStatus={this.state.problemStatus}
+      probelmType={this.state.problemStatus}
       navigator={this.props.navigator}
       ref="myQuestionlist"
       />)

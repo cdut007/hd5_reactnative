@@ -80,7 +80,12 @@ export default class MeView extends Component {
     }
 
     _logout_function(){
-        JPushModule.stopPush();
+
+      if (Platform.OS === 'android') {
+              JPushModule.stopPush();
+       }
+
+
         //logout here
         this._removeStorage();
         //logout success go 2 call page

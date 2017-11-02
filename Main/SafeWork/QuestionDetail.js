@@ -155,7 +155,7 @@ export default class QuestionDetail extends Component {
 
   renderCommitBtn(){
 
-    if (this.state.data.problemStatus == "Need_Handle") {
+    if (this.state.data.problemStatus == "Need_Handle" && this.props.detailType !== '1003') {
    return this.renderNewCommit();
  }else if (this.state.data.problemStatus == "Need_Check") {
       return this.renderModeratedCommit();
@@ -594,7 +594,7 @@ historyData.hseCheckTime = item['solveDate'];
     var itemAry = [];//视图数组
 
     var displayAry = [
-      {title:'问题名称',content:this.state.data.id,id:'0',noLine:true},
+      {title:'问题名称',content:this.state.data.problemTitle,id:'0',noLine:true},
       {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
       {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
       {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
@@ -657,7 +657,7 @@ historyData.hseCheckTime = item['solveDate'];
   var itemAry = [];//视图数组
 
   var displayAry = [
-    {title:'标题',content:this.state.data.id,id:'0',noLine:true},
+    {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
     {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
     {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
@@ -807,7 +807,7 @@ historyData.hseCheckTime = item['solveDate'];
   var itemAry = [];//视图数组
 
   var displayAry = [
-    {title:'标题',content:this.state.data.id,id:'0',noLine:true},
+    {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
     {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
     {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
@@ -846,13 +846,57 @@ historyData.hseCheckTime = item['solveDate'];
 
   }
 
+  //等待审核
+    waitCheck(){
+
+    var itemAry = [];//视图数组
+
+    var displayAry = [
+      {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
+      {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
+      {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
+      {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
+      {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
+      {title:'责任部门',content:this.state.data.responsibleDept,id:'5',noLine:true},
+      {title:'责任班组',content:this.state.data.responsibleTeam,id:'6',noLine:true},
+      {title:'问题描述',content:this.state.data.problemDescription,id:'7',noLine:true},
+      {title:'历史状态',content:"",id:'8',noLine:true},
+      {title:'问题提交',content:Global.formatDate(this.state.data.createDate),id:'9',noLine:true},
+      {title:'当前状态',content:"新问题",id:'10',noLine:true},
+
+    ];
+
+    // 遍历
+    for (var i = 0; i<displayAry.length; i++) {
+     if (displayAry[i].type == 'devider') {
+            itemAry.push(
+               <View style={styles.divider}/>
+            );
+        }else{
+            itemAry.push(
+                <DisplayItemView
+                 key={displayAry[i].id}
+                 title={displayAry[i].title}
+                 detail={displayAry[i].content}
+                 noLine={displayAry[i].noLine}
+                />
+            );
+        }
+    }
+
+    itemAry.splice(8,0,  this.renderFileView("故障照片",problemFiles))
+
+    return itemAry;
+
+    }
+
   WaitDeal(){
 
   var itemAry = [];//视图数组
 
 
   var displayAry = [
-    {title:'标题',content:this.state.data.id,id:'0',noLine:true},
+    {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
     {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
     {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
@@ -975,7 +1019,13 @@ historyData.hseCheckTime = item['solveDate'];
 
    if (this.state.data.problemStatus == "Need_Handle") {
 
+     if (this.props.detailType == "1003") {
+    return this.waitCheck()
+     }else {
       return  this.renderNewQuestion()
+     }
+
+
 
    }else if (this.state.data.problemStatus == "Need_Check") {
 

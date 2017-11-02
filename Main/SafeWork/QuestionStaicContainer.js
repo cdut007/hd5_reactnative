@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
            borderColor:"#F77935",
            borderWidth:1,
            borderRadius:4,
-           height:36,
+           height:Platform.OS === 'android' ?  44 : 36 ,
            margin:10,
            textAlign:'center',
            backgroundColor:'white',
