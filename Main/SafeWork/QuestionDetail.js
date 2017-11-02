@@ -114,6 +114,7 @@ export default class QuestionDetail extends Component {
 
   featchDataSuccess(response){
 
+  teams = [];
     this.setState({
         loadingVisible: false
     });
@@ -383,7 +384,7 @@ if (status == 1) {
          });
 
          var paramBody = {
-                  'problemId' : this.props.data.id,
+                  'problemId' : this.state.data.id,
              }
 
     HttpRequest.post('/hse/unAssign', paramBody, this.onDeliverySuccess.bind(this),
@@ -419,10 +420,12 @@ if (status == 1) {
     this.setState({
              loadingVisible: true
          });
+   var  UsId = + this.state.ResTeamId;
+   var  Pid = + this.state.data.id;
 
          var paramBody = {
-                  'problemId' : this.props.data.id,
-                  'designatedUserId' :  this.state.ResTeamId,
+                  'problemId' : Pid,
+                  'responsibleTeamId' :  UsId,
                   'startDate' : this.state.choose_date,
              }
 
