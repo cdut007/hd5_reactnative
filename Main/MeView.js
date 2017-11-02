@@ -15,7 +15,7 @@ import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar';
 import px2dp from '../common/util';
 import HttpRequest from '../HttpRequest/HttpRequest'
-
+import JPushModule from 'jpush-react-native';
 import LoginView from '../Login/LoginView'
 
 const isIOS = Platform.OS == "ios"
@@ -80,7 +80,7 @@ export default class MeView extends Component {
     }
 
     _logout_function(){
-
+        JPushModule.stopPush();
         //logout here
         this._removeStorage();
         //logout success go 2 call page

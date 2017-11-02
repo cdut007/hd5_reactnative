@@ -30,7 +30,7 @@ export default class IssueReject extends Component{
 	            <CommitButton
 	            	containerStyle = {{flex: 0}}
 	            	title = '确认退回'
-	            	onPress = {() => {Keyboard.dismiss()}} />     
+	            	onPress = {() => this.confirm()} />     
 			</View>
 		);
 	}
