@@ -20,7 +20,7 @@ import LoginView from '../Login/LoginView'
 var Global = require('../common/globals');
 var width = Dimensions.get('window').width;
 import CommitButton from '../common/CommitButton'
-
+import MeetingListViewContainer from '../Main/Meeting/MeetingListViewContainer';
 var meetingModuleData = [
     {
         'index': 0,
@@ -74,40 +74,23 @@ export default class MeetingView extends Component {
     back() {
         this.props.navigator.pop()
     }
-    _logout_function(){
 
-        //logout here
-        this._removeStorage();
-        //logout success go 2 call page
-        // var routes = this.props.navigator.state.routeStack;
-        // for (var i = routes.length - 1; i >= 0; i--) {
-        //     if(routes[i].name === "MyDestinationRoute"){
-        //     var destinationRoute = this.props.navigator.getCurrentRoutes()[i]
-        //     this.props.navigator.popToRoute(destinationRoute);
-        //
-        //     }
-        // }
-        this.props.navigator.resetTo({
-            component: LoginView,
-            name: 'LoginView'
+
+
+
+    createMeeting(type){
+
+    }
+
+    onModuleItemClick(itemData) {
+        this.props.navigator.push({
+            component: MeetingListViewContainer,
+             props: {
+                 data:itemData,
+                 type:this.props.type,
+                }
         })
-    };
-    async _removeStorage() {
-        Global.UserInfo = null;
-            AsyncStorage.removeItem('k_login_info').then((value) => {
-
-            }
-            ).done();
-
-        }
-
-
-createMeeting(type){
-
-}
-
-onModuleItemClick(moduleDataItem) {
-}
+    }
 
   renderItems(moduleData){
       var displayArr = []
@@ -131,7 +114,7 @@ onModuleItemClick(moduleDataItem) {
       return(<View style={{height:50,width:width,flexDirection:'row'}}>
       <View style={{height:50,flex:1}}><CommitButton title={'发布通告'}
               onPress={this.createMeeting.bind(this,'meeting')} containerStyle={{backgroundColor:'#ffffff'}} titleStyle={{color: '#f77935'}}></CommitButton></View>
-              <View onPress={this.createMeeting.bind(this,'notice')} style={{height:50,flex:1}}><CommitButton title={'发布会议'} 
+              <View onPress={this.createMeeting.bind(this,'notice')} style={{height:50,flex:1}}><CommitButton title={'发布会议'}
                       ></CommitButton></View>
                       </View>)
   }
