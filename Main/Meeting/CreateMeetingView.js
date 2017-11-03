@@ -28,6 +28,7 @@ import DateTimePickerView from '../../common/DateTimePickerView'
 import EditItemView from '../../common/EditItemView';
 import MemberSelectView from '../../common/MemberSelectView'
 
+import HttpRequest from '../../HttpRequest/HttpRequest'
 
 
 export default class CreateMeetingView extends Component {
@@ -46,9 +47,56 @@ export default class CreateMeetingView extends Component {
 
 
 
+    onPublishSuccess(response){
+
+        Global.showToast(response.message)
+
+    }
 
     publishMeeting(){
+        var paramBody = {
+                 subject:'test',
+                'content': 'test',
+                'category': 'test',
+                'project':'test',
+                'host':'james',
+                recorder:'james',
+                supplies:'photo',
+                remark:'info',
+                startTime:'2013-11-12 12:00',
+                endTime:'2013-11-12 12:00',
+                alarmTime:'2015-11-11 12:00',
+                type:'SEND',
 
+            }
+
+        HttpRequest.post('/conference', paramBody, this.onPublishSuccess.bind(this),
+            (e) => {
+                this.setState({
+                    loadingVisible: false
+                });
+                try {
+                    var errorInfo = JSON.parse(e);
+                }
+                catch(err)
+                {
+                    console.log("error======"+err)
+                }
+                    if (errorInfo != null) {
+                        if (errorInfo.code == -1002||
+                         errorInfo.code == -1001) {
+                        Global.alert(errorInfo.message);
+                    }else {
+                        Global.alert(e)
+                    }
+
+                    } else {
+                        Global.alert(e)
+                    }
+
+
+                console.log('push meeting error:' + e)
+            })
     }
 
     saveDraftMeeting(){

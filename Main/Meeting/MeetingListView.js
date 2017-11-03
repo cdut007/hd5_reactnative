@@ -211,30 +211,17 @@ export default class MeetingListView extends Component {
          isLoading: loading,
        });
 
-       var api = '';
-       if (Global.isGroup(Global.UserInfo)) {
-           api = '/question/teamList'
-       }else if (Global.isMonitor(Global.UserInfo)) {
-           api = '/question/monitorList'
-       }else if (Global.isSolverMember(Global.UserInfo)) {
-           api = '/question/technicianList'
-       }else if (Global.isCaptain(Global.UserInfo)) {
-           api = '/question/captainList'
-       }else if (Global.isSolverLeader(Global.UserInfo)){
-           api = '/question/technicianList'
-       }
+
 
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
-                      type:'GDJH',
-                      questionStatus:this.props.status,
-                      userId:this.props.userId,
+                      type:this.props.type,
                       keyword: this.props.keyword,
                      }
 
 
-            HttpRequest.get(api, paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/conference', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
                     this.setState({

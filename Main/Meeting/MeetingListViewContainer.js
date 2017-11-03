@@ -41,13 +41,13 @@ var LOADING = {};
                 },
                 {
                     index:1,
-                    status:'sent',
+                    status:'SEND',
                     data:[],
                     pageNo:1,
                 },
                 {
                     index:2,
-                    status:'draft',
+                    status:'DRAFT',
                     data1:[],
                     pageNo:1,
                 },
