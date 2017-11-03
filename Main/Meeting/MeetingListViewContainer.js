@@ -48,7 +48,7 @@ var LOADING = {};
                 {
                     index:2,
                     status:'draft',
-                    data:[],
+                    data1:[],
                     pageNo:1,
                 },
 
