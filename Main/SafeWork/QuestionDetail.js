@@ -158,7 +158,7 @@ export default class QuestionDetail extends Component {
 
     if (this.state.data.problemStatus == "Need_Handle" && this.props.detailType !== '1003') {
    return this.renderNewCommit();
- }else if (this.state.data.problemStatus == "Need_Check") {
+ }else if (this.state.data.problemStatus == "Need_Check" && this.props.detailType !== '1003') {
       return this.renderModeratedCommit();
  }else if (this.state.data.problemStatus == "Renovating" && this.props.detailType !== '1003') {
     return this.renderWaitCommit();
@@ -182,13 +182,13 @@ return(
 
   commit(){
 
-    if (!this.state.recDes) {
+    if (this.state.recDes.length == 0) {
         Global.alert('请输入整改描述')
         return
     }
 
 
-    if (!this.state.newFileArr) {
+    if (this.state.newFileArr.length <= 1) {
         Global.alert('请提交整改照片')
         return
     }
@@ -654,6 +654,59 @@ historyData.hseCheckTime = item['solveDate'];
 
   }
 
+  // 待审核查看
+  Need_HandleQuery(){
+
+      var itemAry = [];//视图数组
+
+      var displayAry = [
+        {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
+        {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
+        {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
+        {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
+        {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
+        {title:'责任部门',content:this.state.data.responsibleDept,id:'5',noLine:true},
+        {title:'责任班组',content:this.state.data.responsibleTeam,id:'6',noLine:true},
+        {title:'截止日期',content:Global.formatDate(this.state.data.targetDate),id:'7',noLine:true},
+        {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
+        {title:'历史状态',content:"",id:'9',noLine:true},
+        {title:'问题提交',content:Global.formatDate(this.state.data.createDate),id:'10',noLine:true},
+        {title:'问题审核',content:Global.formatDate(historyData.handleTime),id:'11',noLine:true},
+        {title:'整改完成',content:Global.formatDate(historyData.teamSolveTime),id:'12',noLine:true},
+        {title:'当前状态',content:"等待审核",id:'13',noLine:true},
+      ];
+
+      // 遍历
+      for (var i = 0; i<displayAry.length; i++) {
+       if (displayAry[i].type == 'devider') {
+              itemAry.push(
+                 <View style={styles.divider}/>
+              );
+          }else{
+              itemAry.push(
+                  <DisplayItemView
+                   key={displayAry[i].id}
+                   title={displayAry[i].title}
+                   detail={displayAry[i].content}
+                   noLine={displayAry[i].noLine}
+                  />
+              );
+          }
+      }
+
+      const imgs = [{
+        url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
+      }]
+
+      itemAry.splice(8,0,  this.renderFileView("故障照片",problemFiles))
+
+    return itemAry;
+
+
+
+
+  }
+
 //待处理
   Moderated(){
 
@@ -771,7 +824,7 @@ historyData.hseCheckTime = item['solveDate'];
       {title:'历史状态',content:"",id:'10',noLine:true},
       {title:'问题提交',content:Global.formatDate(this.state.data.createDate),id:'11',noLine:true},
       {title:'问题审核',content:Global.formatDate(historyData.handleTime),id:'12',noLine:true},
-      {title:'整改完成',content:Global.formatDate(historyData.teamSolveTime),id:'13',noLine:true},
+      {title:'整改完成',content:Global.formatDate(this.state.data.finishDate),id:'13',noLine:true},
       {title:'当前状态',content:"已完成",id:'14',noLine:true},
     ];
 
@@ -1032,7 +1085,11 @@ historyData.hseCheckTime = item['solveDate'];
 
    }else if (this.state.data.problemStatus == "Need_Check") {
 
+     if (this.props.detailType == "1003") {
+     return this.Need_HandleQuery()
+     }else {
     return this.Moderated()
+     }
 
   }else if (this.state.data.problemStatus == "Finish" || this.state.data.type == "1007" || this.state.data.type) {
   return this.RectificationComplete()
