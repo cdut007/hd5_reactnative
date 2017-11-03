@@ -53,7 +53,7 @@ export default class WitnessDetailView extends Component {
     }
 
      onGetDataSuccess(response){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
          this.state.data.rollingPlan = response.responseResult
          this.setState({
              data:this.state.data,
@@ -61,7 +61,7 @@ export default class WitnessDetailView extends Component {
      }
 
     executeNetWorkRequest(id){
-         console.log('executeNetWorkRequest:work id = ' + id);
+         Global.log('executeNetWorkRequest:work id = ' + id);
          var paramBody = {
              }
 
@@ -71,17 +71,17 @@ export default class WitnessDetailView extends Component {
             try {
                 var errorInfo = JSON.parse(e);
                 if (errorInfo != null) {
-                 console.log(errorInfo)
+                 Global.log(errorInfo)
                 } else {
-                    console.log(e)
+                    Global.log(e)
                 }
             }
             catch(err)
             {
-                console.log(err)
+                Global.log(err)
             }
 
-            console.log('executeNetWorkRequest error:' + e)
+            Global.log('executeNetWorkRequest error:' + e)
         })
     }
 
@@ -184,7 +184,7 @@ export default class WitnessDetailView extends Component {
 )
     }
     getStatus(status){
-         console.log('status ========'+status)
+         Global.log('status ========'+status)
             return Global.getWitnesstatus(status)
     }
 
@@ -256,7 +256,7 @@ export default class WitnessDetailView extends Component {
 
 
     onItemClick(menu){
-         console.log('menu:work id = ' + menu.id);
+         Global.log('menu:work id = ' + menu.id);
         if (menu.id == '9') {
             this.go2WorkStepDetail();
         } else if (menu.id == '9a') {
@@ -278,7 +278,7 @@ export default class WitnessDetailView extends Component {
             }
             catch(err)
             {
-                console.log(err)
+                Global.log(err)
             }
         }
 

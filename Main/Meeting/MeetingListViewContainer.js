@@ -129,7 +129,7 @@ export default class MeetingListViewContainer extends Component {
     }
 
     onSearchChanged(text){
-        console.log('text=='+text);
+        Global.log('text=='+text);
         this.setState({keyword:text})
         if (this._meeting_list_ref) {
             if (timer) {

@@ -80,7 +80,7 @@ export default class CreateMeetingView extends Component {
                 }
                 catch(err)
                 {
-                    console.log("error======"+err)
+                    Global.log("error======"+err)
                 }
                     if (errorInfo != null) {
                         if (errorInfo.code == -1002||
@@ -95,7 +95,7 @@ export default class CreateMeetingView extends Component {
                     }
 
 
-                console.log('push meeting error:' + e)
+                Global.log('push meeting error:' + e)
             })
     }
 
@@ -128,7 +128,7 @@ onChooseMemberClick(){
 }
 
 onSelectedDate(date){
- console.log("date=="+date.getTime());
+ Global.log("date=="+date.getTime());
  this.state.choose_date = date.getTime();
  this.setState({displayDate:Global.formatDate(this.state.choose_date)})
 // this.setState({...this.state});

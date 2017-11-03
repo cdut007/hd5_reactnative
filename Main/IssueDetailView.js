@@ -93,7 +93,7 @@ export default class IssueDetailView extends Component {
     }
 
      onGetDataSuccess(response){
-        console.log('onGetDataSuccess@@@@')
+        Global.log('onGetDataSuccess@@@@')
             var membersArray = []
             if (response.responseResult.userList) {
               this.state.memberIds = response.responseResult.userList
@@ -118,10 +118,10 @@ export default class IssueDetailView extends Component {
                    this.timeDelay(data);
                },
                onPickerCancel: data => {
-                   console.log(data);
+                   Global.log(data);
                },
                onPickerSelect: data => {
-                   console.log(data);
+                   Global.log(data);
                }
         });
         Picker.show();
@@ -142,22 +142,22 @@ export default class IssueDetailView extends Component {
           designatedUserId: this.state.data.designee.id,
           delayHour: hours,
         }
-        HttpRequest.post('/question/timeDelay', paramBody, this.onDelaySuccess.bind(this), 
+        HttpRequest.post('/question/timeDelay', paramBody, this.onDelaySuccess.bind(this),
             (e) => {
                 this.setState({loadingVisible: false,});
                 try {
                   var errorInfo = JSON.parse(e);
                   if (errorInfo != null) {
-                   console.log(errorInfo)
+                   Global.log(errorInfo)
                   } else {
-                      console.log(e)
+                      Global.log(e)
                   }
                 }
                 catch(err)
                 {
-                    console.log(err)
+                    Global.log(err)
                 }
-                console.log('executeNetWorkRequest error:' + e)
+                Global.log('executeNetWorkRequest error:' + e)
             }
         )
     }
@@ -180,10 +180,10 @@ export default class IssueDetailView extends Component {
                    this.startProblem();
                },
                onPickerCancel: data => {
-                   console.log(data);
+                   Global.log(data);
                },
                onPickerSelect: data => {
-                   console.log(data);
+                   Global.log(data);
                }
            });
            Picker.show();
@@ -191,7 +191,7 @@ export default class IssueDetailView extends Component {
     }
 
     requestFeedbackUI(id){
-         console.log('executeNetWorkRequest:work id = ' + id);
+         Global.log('executeNetWorkRequest:work id = ' + id);
          var paramBody = {
              questionId:id
              }
@@ -202,17 +202,17 @@ export default class IssueDetailView extends Component {
             try {
                 var errorInfo = JSON.parse(e);
                 if (errorInfo != null) {
-                 console.log(errorInfo)
+                 Global.log(errorInfo)
                 } else {
-                    console.log(e)
+                    Global.log(e)
                 }
             }
             catch(err)
             {
-                console.log(err)
+                Global.log(err)
             }
 
-            console.log('executeNetWorkRequest error:' + e)
+            Global.log('executeNetWorkRequest error:' + e)
         })
     }
 
@@ -275,7 +275,7 @@ startFeedbackProblem(){
                     Global.alert(e)
                 }
                 catch (err) {
-                    console.log(err)
+                    Global.log(err)
                 }
 
                 this.setState({
@@ -296,7 +296,7 @@ rejectSolution(reason){
                        try {
                           Global.alert(e)
                         }catch (err) {
-                          console.log(err)
+                          Global.log(err)
                         }
                         this.setState({
                           loadingVisible: false
@@ -318,7 +318,7 @@ answerSolution(result){
                        try {
                           Global.alert(e)
                         }catch (err) {
-                          console.log(err)
+                          Global.log(err)
                         }
                         this.setState({
                           loadingVisible: false
@@ -328,7 +328,7 @@ answerSolution(result){
 
 onAnswerSuccess(response){
       DeviceEventEmitter.emit('operate_issue','operate_issue');
-      console.log('onCommitIssueSuccess:' + JSON.stringify(response))
+      Global.log('onCommitIssueSuccess:' + JSON.stringify(response))
       this.setState({
           loadingVisible: false
       })
@@ -337,7 +337,7 @@ onAnswerSuccess(response){
 
 onCommitIssueSuccess(response) {
       DeviceEventEmitter.emit('operate_issue','operate_issue');
-      console.log('onCommitIssueSuccess:' + JSON.stringify(response))
+      Global.log('onCommitIssueSuccess:' + JSON.stringify(response))
       this.setState({
           loadingVisible: false
       })
@@ -379,7 +379,7 @@ startProblem(){
             }
             catch(err)
             {
-                console.log("error======"+err)
+                Global.log("error======"+err)
             }
                 if (errorInfo != null) {
                     if (errorInfo.code == -1002||
@@ -394,7 +394,7 @@ startProblem(){
                 }
 
 
-            console.log('Login error:' + e)
+            Global.log('Login error:' + e)
         })
 
 }
@@ -659,15 +659,15 @@ startProblem(){
 
         let showPicker = () => {
             ImagePicker.showImagePicker(options, (response) => {
-                //   console.log('Response = ', response);
+                //   Global.log('Response = ', response);
                 if (response.didCancel) {
-                    console.log('User cancelled image picker');
+                    Global.log('User cancelled image picker');
                 }
                 else if (response.error) {
-                    console.log('ImagePicker Error: ', response.error);
+                    Global.log('ImagePicker Error: ', response.error);
                 }
                 else if (response.customButton) {
-                    console.log('User tapped custom button: ', response.customButton);
+                    Global.log('User tapped custom button: ', response.customButton);
                 }
                 else {
                     // You can display the image using either data:
@@ -813,7 +813,7 @@ startProblem(){
 
 
     onItemClick(menu){
-         console.log('menu:work id = ' + menu.id);
+         Global.log('menu:work id = ' + menu.id);
         if (menu.id == '9') {
 
         } if (menu.id == 'c') {
@@ -830,7 +830,7 @@ startProblem(){
             }
             catch(err)
             {
-                console.log(err)
+                Global.log(err)
             }
         }
 
@@ -839,7 +839,7 @@ startProblem(){
     onSelectedMember(member){
             this.state.rolve_member = member[0]
             this.setState({...this.state});
-            console.log(JSON.stringify(member)+"member====");
+            Global.log(JSON.stringify(member)+"member====");
 
         }
 

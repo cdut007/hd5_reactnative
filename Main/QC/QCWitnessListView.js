@@ -79,21 +79,21 @@ export default class QCWitnessListView extends Component {
 
 
         _onRefresh() {
-            console.log("_onRefresh() --> ");
+            Global.log("_onRefresh() --> ");
             this.setState({isRefreshing:true})
 
             this.executePlanRequest(1);
         }
 
         _loadMoreData() {
-            console.log("_loadMoreData() --> ");
+            Global.log("_loadMoreData() --> ");
              pageNo = parseInt(this.state.items.length / pagesize) + 1;
             this.executePlanRequest(pageNo);
         }
 
         _toEnd() {
-            console.log("触发加载更多 toEnd() --> ");
-            //console.log("加载更多？ ",userReducer.isLoadingMore, userReducer.products.length, userReducer.totalProductCount,userReducer.isRefreshing);
+            Global.log("触发加载更多 toEnd() --> ");
+            //Global.log("加载更多？ ",userReducer.isLoadingMore, userReducer.products.length, userReducer.totalProductCount,userReducer.isRefreshing);
             //ListView滚动到底部，根据是否正在加载更多 是否正在刷新 是否已加载全部来判断是否执行加载更多
             if (this.state.items.length >= this.state.totalCount || this.state.isRefreshing) {//userReducer.isLoadingMore ||
                 return;
@@ -136,7 +136,7 @@ export default class QCWitnessListView extends Component {
        QcissueDeals.remove();
   }
     onGetDataSuccess(response,paramBody){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
          query = '';
@@ -153,7 +153,7 @@ export default class QCWitnessListView extends Component {
                 isRefreshing:false,
             });
            // do not update state if the query is stale
-           console.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
+           Global.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
            return;
          }
 
@@ -225,7 +225,7 @@ export default class QCWitnessListView extends Component {
 
     executePlanRequest(index){
 
-      console.log('executePlanRequest pageNo:'+index)
+      Global.log('executePlanRequest pageNo:'+index)
                 var loading = false;
                 if (this.state.items.length == 0) {
                         loading = true
@@ -250,7 +250,7 @@ export default class QCWitnessListView extends Component {
                      if (this.props.keyword) {
                          paramBody.keyword = this.props.keyword
                      }
-                     
+
             HttpRequest.get('/witness', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
@@ -262,17 +262,17 @@ export default class QCWitnessListView extends Component {
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
-                         console.log(errorInfo)
+                         Global.log(errorInfo)
                         } else {
-                            console.log(e)
+                            Global.log(e)
                         }
                     }
                     catch(err)
                     {
-                        console.log(err)
+                        Global.log(err)
                     }
 
-                    console.log('Task error:' + e)
+                    Global.log('Task error:' + e)
                 })
     }
 

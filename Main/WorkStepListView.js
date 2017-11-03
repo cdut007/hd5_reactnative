@@ -59,7 +59,7 @@ export default class WorkStepListView extends Component {
     }
 
      onGetDataSuccess(response){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
 
          this.setState({
              data:response.responseResult,
@@ -67,7 +67,7 @@ export default class WorkStepListView extends Component {
      }
 
     executeNetWorkRequest(id){
-         console.log('executeNetWorkRequest:work id = ' + id);
+         Global.log('executeNetWorkRequest:work id = ' + id);
          var paramBody = {
              }
 
@@ -77,17 +77,17 @@ export default class WorkStepListView extends Component {
             try {
                 var errorInfo = JSON.parse(e);
                 if (errorInfo != null) {
-                 console.log(errorInfo)
+                 Global.log(errorInfo)
                 } else {
-                    console.log(e)
+                    Global.log(e)
                 }
             }
             catch(err)
             {
-                console.log(err)
+                Global.log(err)
             }
 
-            console.log('executeNetWorkRequest error:' + e)
+            Global.log('executeNetWorkRequest error:' + e)
         })
     }
 
@@ -123,7 +123,7 @@ export default class WorkStepListView extends Component {
                         if (item.selected) {
                             selectItems.push(item)
 
-                            console.log('selected==='+item.id)
+                            Global.log('selected==='+item.id)
                         }
                     })
         if (selectItems.length == 0) {
@@ -311,7 +311,7 @@ export default class WorkStepListView extends Component {
                    uncheckedImage={require('../images/choose_icon.png')}
                    checked={item.selected == null ? false : item.selected}
                    onChange={(checked) => {
-                       console.log(checked+'check item=='+item.id+';selected='+item.selected)
+                       Global.log(checked+'check item=='+item.id+';selected='+item.selected)
                        item.selected = !checked
                        this.setState({ ...this.state })
 

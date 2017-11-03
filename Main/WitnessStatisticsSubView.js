@@ -66,7 +66,7 @@ export default class WitnessStatisticsSubView extends Component {
         {
             if (!errs && result && result.length)
             {
-                 console.log('read k_witness_team_info_statistics_monitor_@@@@'+result)
+                 Global.log('read k_witness_team_info_statistics_monitor_@@@@'+result)
                 var monitor = JSON.parse(result);
                 if (monitor) {
                     Global.UserInfo.witnessmonitor = monitor ;
@@ -87,7 +87,7 @@ export default class WitnessStatisticsSubView extends Component {
     }
 
     onGetDataSuccess(response,body){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
          query = '';
@@ -100,10 +100,10 @@ export default class WitnessStatisticsSubView extends Component {
         if (monitor) {
             AsyncStorage.setItem('k_witness_team_info_statistics_monitor_'+body.userId+"_"+body.type, JSON.stringify(monitor), (error, result) => {
                 if (error) {
-                    console.log('save k_witness_team_info_statistics_monitor_ faild.')
+                    Global.log('save k_witness_team_info_statistics_monitor_ faild.')
                 }
 
-                console.log('save k_witness_team_info_statistics_monitor_: sucess')
+                Global.log('save k_witness_team_info_statistics_monitor_: sucess')
 
             });
             this.setState({
@@ -137,7 +137,7 @@ export default class WitnessStatisticsSubView extends Component {
               }
               if (!this.hasMore() || this.state.isLoadingTail) {
                 // We're already fetching or have all the elements so noop
-                console.log('not has more, or load end')
+                Global.log('not has more, or load end')
                 this.setState({
                   isLoadingTail: true,
                   isLoading: false,
@@ -146,7 +146,7 @@ export default class WitnessStatisticsSubView extends Component {
               }
 
               if (LOADING[query]) {
-                console.log('query already loading')
+                Global.log('query already loading')
                 return;
               }
 
@@ -176,7 +176,7 @@ export default class WitnessStatisticsSubView extends Component {
 
     executeWitnessRequest(){
 
-      console.log('executeWitnessRequest:')
+      Global.log('executeWitnessRequest:')
 
                  this.setState({
                    isLoading: true,
@@ -199,17 +199,17 @@ export default class WitnessStatisticsSubView extends Component {
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
-                         console.log(errorInfo)
+                         Global.log(errorInfo)
                         } else {
-                            console.log(e)
+                            Global.log(e)
                         }
                     }
                     catch(err)
                     {
-                        console.log(err)
+                        Global.log(err)
                     }
 
-                    console.log('Task error:' + e)
+                    Global.log('Task error:' + e)
                 })
     }
 

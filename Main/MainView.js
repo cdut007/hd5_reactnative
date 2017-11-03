@@ -49,22 +49,22 @@ export default class MainView extends Component {
           this.setState({
             pushMsg: map.message
           });
-          console.log("extras: " + map.extras);
+          Global.log("extras: " + map.extras);
         });
         JPushModule.addReceiveNotificationListener((map) => {
-          console.log("alertContent: " + map.alertContent);
-          console.log("extras: " + map.extras);
+          Global.log("alertContent: " + map.alertContent);
+          Global.log("extras: " + map.extras);
           // var extra = JSON.parse(map.extras);
-          // console.log(extra.key + ": " + extra.value);
+          // Global.log(extra.key + ": " + extra.value);
         });
         JPushModule.addReceiveOpenNotificationListener((map) => {
-          console.log("Opening notification!");
-          console.log("map.extra: " + map.extras);
+          Global.log("Opening notification!");
+          Global.log("map.extra: " + map.extras);
           //this.jumpSecondActivity();
           // JPushModule.jumpToPushActivity("SecondActivity");
         });
         JPushModule.addGetRegistrationIdListener((registrationId) => {
-          console.log("Device register succeed, registrationId " + registrationId);
+          Global.log("Device register succeed, registrationId " + registrationId);
         });
 
        }
@@ -83,7 +83,7 @@ export default class MainView extends Component {
                 me.setState({hasLogin: true})
                 var infoJson = JSON.parse(result);
                 Global.UserInfo = infoJson.responseResult;
-                console.log('UserInfo: ' + result)
+                Global.log('UserInfo: ' + result)
             }
             else
             {

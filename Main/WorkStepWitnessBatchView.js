@@ -61,7 +61,7 @@ export default class WorkStepWitnessBatchView extends Component {
     }
 
      onGetDataSuccess(response){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
 
          this.setState({
              data:response.responseResult,
@@ -148,7 +148,7 @@ export default class WorkStepWitnessBatchView extends Component {
                 }
                 catch(err)
                 {
-                    console.log("error======"+err)
+                    Global.log("error======"+err)
                 }
                     if (errorInfo != null) {
                         if (errorInfo.code == -1002||
@@ -163,7 +163,7 @@ export default class WorkStepWitnessBatchView extends Component {
                     }
 
 
-                console.log(' error:' + e)
+                Global.log(' error:' + e)
             })
     }
 
@@ -201,7 +201,7 @@ export default class WorkStepWitnessBatchView extends Component {
 
     onSelectedDate(index,date){
     var data = this.state.data[index];
-     console.log("date=="+date.getTime()+';last time data.choose_date='+JSON.stringify(data));
+     Global.log("date=="+date.getTime()+';last time data.choose_date='+JSON.stringify(data));
      data.choose_date = date.getTime();
      data.displayDate = Global.formatFullDateDisplay(data.choose_date);
 
@@ -223,9 +223,9 @@ export default class WorkStepWitnessBatchView extends Component {
 
 
         var data = this.state.data[index];
-        console.log(JSON.stringify(address)+"address===="+JSON.stringify(data));
+        Global.log(JSON.stringify(address)+"address===="+JSON.stringify(data));
 
-        console.log("address=="+';last data.choose_address='+data.choose_address);
+        Global.log("address=="+';last data.choose_address='+data.choose_address);
         data.choose_address = address[0];
         data.displayAddress = address[0];
         let newArray = this.state.data.slice();

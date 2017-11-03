@@ -204,7 +204,7 @@ export default class QCMyWitnessContainer extends Component {
     }
 
     onSearchChanged(text){
-    console.log('text=='+text);
+    Global.log('text=='+text);
     this.setState({keyword:text})
     if (this._plan_list_ref) {
         setTimeout(() => {
@@ -227,7 +227,7 @@ export default class QCMyWitnessContainer extends Component {
     }
 
     onGetDataSuccess(response,paramBody){
-         console.log('statistics onGetDataSuccess@@@@')
+         Global.log('statistics onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
          query = '';
@@ -243,7 +243,7 @@ export default class QCMyWitnessContainer extends Component {
 
     executeStatisticsRequest(status){
 
-      console.log('executeStatisticsRequest')
+      Global.log('executeStatisticsRequest')
 
 
                  var userId = ''
@@ -265,17 +265,17 @@ export default class QCMyWitnessContainer extends Component {
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
-                         console.log(errorInfo)
+                         Global.log(errorInfo)
                         } else {
-                            console.log(e)
+                            Global.log(e)
                         }
                     }
                     catch(err)
                     {
-                        console.log(err)
+                        Global.log(err)
                     }
 
-                    console.log('Task error:' + e)
+                    Global.log('Task error:' + e)
                 })
     }
 

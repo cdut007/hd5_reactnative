@@ -68,7 +68,7 @@ export default class QCWitnessStatisticsView extends Component {
     }
 
     onGetDataSuccess(response){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
          query = '';
@@ -109,7 +109,7 @@ export default class QCWitnessStatisticsView extends Component {
               }
               if (!this.hasMore() || this.state.isLoadingTail) {
                 // We're already fetching or have all the elements so noop
-                console.log('not has more, or load end')
+                Global.log('not has more, or load end')
                 this.setState({
                   isLoadingTail: true,
                   isLoading: false,
@@ -118,7 +118,7 @@ export default class QCWitnessStatisticsView extends Component {
               }
 
               if (LOADING[query]) {
-                console.log('query already loading')
+                Global.log('query already loading')
                 return;
               }
 
@@ -148,7 +148,7 @@ export default class QCWitnessStatisticsView extends Component {
 
     executeWitnessRequest(){
 
-      console.log('executeWitnessRequest:')
+      Global.log('executeWitnessRequest:')
 
                  this.setState({
                    isLoading: true,
@@ -172,17 +172,17 @@ export default class QCWitnessStatisticsView extends Component {
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
-                         console.log(errorInfo)
+                         Global.log(errorInfo)
                         } else {
-                            console.log(e)
+                            Global.log(e)
                         }
                     }
                     catch(err)
                     {
-                        console.log(err)
+                        Global.log(err)
                     }
 
-                    console.log('Task error:' + e)
+                    Global.log('Task error:' + e)
                 })
     }
 
@@ -206,7 +206,7 @@ export default class QCWitnessStatisticsView extends Component {
     }
 
     onSearchChanged(text){
-    console.log('text=='+text);
+    Global.log('text=='+text);
     this.setState({keyword:text})
     if (this._plan_list_ref) {
         setTimeout(() => {

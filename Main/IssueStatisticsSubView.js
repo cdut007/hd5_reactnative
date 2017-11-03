@@ -74,7 +74,7 @@ export default class IssueStatisticsSubView extends Component {
     }
 
     onGetDataSuccess(response){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
          query = '';
@@ -100,7 +100,7 @@ export default class IssueStatisticsSubView extends Component {
     }
 
     onItemPress(itemData){
-        console.log('item info=='+JSON.stringify(itemData))
+        Global.log('item info=='+JSON.stringify(itemData))
         this.props.navigator.push({
             component: IssueListViewContainer,
              props: {
@@ -123,7 +123,7 @@ export default class IssueStatisticsSubView extends Component {
               }
               if (!this.hasMore() || this.state.isLoadingTail) {
                 // We're already fetching or have all the elements so noop
-                console.log('not has more, or load end')
+                Global.log('not has more, or load end')
                 this.setState({
                   isLoadingTail: true,
                   isLoading: false,
@@ -132,7 +132,7 @@ export default class IssueStatisticsSubView extends Component {
               }
 
               if (LOADING[query]) {
-                console.log('query already loading')
+                Global.log('query already loading')
                 return;
               }
 
@@ -162,7 +162,7 @@ export default class IssueStatisticsSubView extends Component {
 
     executeProblemRequest(){
 
-      console.log('executeProblemRequest:')
+      Global.log('executeProblemRequest:')
 
                  this.setState({
                    isLoading: true,
@@ -186,17 +186,17 @@ export default class IssueStatisticsSubView extends Component {
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
-                         console.log(errorInfo)
+                         Global.log(errorInfo)
                         } else {
-                            console.log(e)
+                            Global.log(e)
                         }
                     }
                     catch(err)
                     {
-                        console.log(err)
+                        Global.log(err)
                     }
 
-                    console.log('Task error:' + e)
+                    Global.log('Task error:' + e)
                 })
     }
 

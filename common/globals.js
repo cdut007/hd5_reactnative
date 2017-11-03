@@ -194,6 +194,9 @@ module.exports = {
             return status
         }
     },
+    log(info){
+            console.log('[hd5] '+info)
+    },
 
 
 };

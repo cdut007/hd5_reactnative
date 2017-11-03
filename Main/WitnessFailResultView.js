@@ -91,7 +91,7 @@ export default class WitnessFailResultView extends Component {
           if(files){
 
             files.map((item, i) => {
-                console.log('url====='+(HttpRequest.getDomain()+ item.url))
+                Global.log('url====='+(HttpRequest.getDomain()+ item.url))
               images.push(
                 <TouchableOpacity key={'net' + i} onPress={() => this.viewBigImages(isFeedback, i)}>
                  <ImageBackground style={{width: 70, height: 70, marginLeft: 10}} source={require('../images/temporary_img.png')}>
@@ -101,7 +101,7 @@ export default class WitnessFailResultView extends Component {
               );
             });
         }else{
-            console.log('can not find filesss')
+            Global.log('can not find filesss')
         }
           return images;
         }

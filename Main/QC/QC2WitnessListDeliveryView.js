@@ -131,17 +131,17 @@ export default class QC2WitnessListDeliveryView extends Component {
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
-                         console.log(errorInfo)
+                         Global.log(errorInfo)
                         } else {
-                            console.log(e)
+                            Global.log(e)
                         }
                     }
                     catch(err)
                     {
-                        console.log(err)
+                        Global.log(err)
                     }
 
-                    console.log('Task error:' + e)
+                    Global.log('Task error:' + e)
                 })
         }
 
@@ -151,7 +151,7 @@ export default class QC2WitnessListDeliveryView extends Component {
 
 
         _onRefresh() {
-            console.log("_onRefresh() --> ");
+            Global.log("_onRefresh() --> ");
             this.setState({isRefreshing:true})
 
             this.executePlanRequest(1);
@@ -161,14 +161,14 @@ export default class QC2WitnessListDeliveryView extends Component {
         }
 
         _loadMoreData() {
-            console.log("_loadMoreData() --> ");
+            Global.log("_loadMoreData() --> ");
              pageNo = parseInt(this.state.items.length / pagesize) + 1;
             this.executePlanRequest(pageNo);
         }
 
         _toEnd() {
-            console.log("触发加载更多 toEnd() --> ");
-            //console.log("加载更多？ ",userReducer.isLoadingMore, userReducer.products.length, userReducer.totalProductCount,userReducer.isRefreshing);
+            Global.log("触发加载更多 toEnd() --> ");
+            //Global.log("加载更多？ ",userReducer.isLoadingMore, userReducer.products.length, userReducer.totalProductCount,userReducer.isRefreshing);
             //ListView滚动到底部，根据是否正在加载更多 是否正在刷新 是否已加载全部来判断是否执行加载更多
             if (this.state.items.length >= this.state.totalCount || this.state.isRefreshing) {//userReducer.isLoadingMore ||
                 return;
@@ -225,7 +225,7 @@ export default class QC2WitnessListDeliveryView extends Component {
         uncheckedImage={require('../../images/choose_icon.png')}
         checked={item.selected == null ? false : item.selected}
         onChange={(checked) => {
-            console.log(checked+'check item=='+item.id+';selected='+item.selected)
+            Global.log(checked+'check item=='+item.id+';selected='+item.selected)
             item.selected = !checked
             let _item = Object.assign({}, this.state.items[rowID], {'selected': item.selected});
             this.state.items[rowID] = item
@@ -239,7 +239,7 @@ export default class QC2WitnessListDeliveryView extends Component {
 }
 
     onGetDataSuccess(response,paramBody){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
          query = '';
@@ -254,7 +254,7 @@ export default class QC2WitnessListDeliveryView extends Component {
                 isRefreshing:false,
             });
            // do not update state if the query is stale
-           console.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
+           Global.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
            return;
          }
 
@@ -309,7 +309,7 @@ export default class QC2WitnessListDeliveryView extends Component {
 
     executePlanRequest(index){
 
-      console.log('executePlanRequest pageNo:'+index)
+      Global.log('executePlanRequest pageNo:'+index)
                 var loading = false;
                 if (this.state.items.length == 0) {
                         loading = true
@@ -339,17 +339,17 @@ export default class QC2WitnessListDeliveryView extends Component {
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
-                         console.log(errorInfo)
+                         Global.log(errorInfo)
                         } else {
-                            console.log(e)
+                            Global.log(e)
                         }
                     }
                     catch(err)
                     {
-                        console.log(err)
+                        Global.log(err)
                     }
 
-                    console.log('Task error:' + e)
+                    Global.log('Task error:' + e)
                 })
     }
 
@@ -375,7 +375,7 @@ export default class QC2WitnessListDeliveryView extends Component {
     }
 
     onSelectedDate(date){
-     console.log("date=="+date.getTime());
+     Global.log("date=="+date.getTime());
      this.state.choose_date = date.getTime();
      this.setState({displayDate:Global.formatDate(this.state.choose_date)})
     // this.setState({...this.state});
@@ -383,7 +383,7 @@ export default class QC2WitnessListDeliveryView extends Component {
 
     onSelectedMember(member){
 
-        console.log(JSON.stringify(member)+"member====");
+        Global.log(JSON.stringify(member)+"member====");
          this.state.choose_memberQC1 = member[0]
          this.setState({displayMemberQC1:member[0]})
 
@@ -453,7 +453,7 @@ export default class QC2WitnessListDeliveryView extends Component {
                         if (item.selected) {
                             selectItems.push(item.id)
                             ids+=item.id+',';
-                            console.log('selected==='+item.id)
+                            Global.log('selected==='+item.id)
                         }
                     })
         if (selectItems.length == 0) {
@@ -495,7 +495,7 @@ export default class QC2WitnessListDeliveryView extends Component {
                 }
                 catch(err)
                 {
-                    console.log("error======"+err)
+                    Global.log("error======"+err)
                 }
                     if (errorInfo != null) {
                         if (errorInfo.code == -1002||
@@ -510,7 +510,7 @@ export default class QC2WitnessListDeliveryView extends Component {
                     }
 
 
-                console.log('onDelivery error:' + e)
+                Global.log('onDelivery error:' + e)
             })
     }
 

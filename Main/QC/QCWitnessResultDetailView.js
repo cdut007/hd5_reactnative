@@ -54,7 +54,7 @@ export default class QCWitnessResultDetailView extends Component {
 
 
     componentDidMount() {
-        console.log('QCWitnessResultDetailView====')
+        Global.log('QCWitnessResultDetailView====')
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
         this.getWitnessTeamMember();
     }
@@ -79,23 +79,23 @@ export default class QCWitnessResultDetailView extends Component {
                 try {
                     var errorInfo = JSON.parse(e);
                     if (errorInfo != null) {
-                     console.log(errorInfo)
+                     Global.log(errorInfo)
                     } else {
-                        console.log(e)
+                        Global.log(e)
                     }
                 }
                 catch(err)
                 {
-                    console.log(err)
+                    Global.log(err)
                 }
 
-                console.log('Task error:' + e)
+                Global.log('Task error:' + e)
             })
     }
 
 
      onGetDataSuccess(response){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
          this.state.data.rollingPlan = response.responseResult
          this.setState({
              data:this.state.data,
@@ -103,7 +103,7 @@ export default class QCWitnessResultDetailView extends Component {
      }
 
     executeNetWorkRequest(id){
-         console.log('executeNetWorkRequest:work id = ' + id);
+         Global.log('executeNetWorkRequest:work id = ' + id);
          var paramBody = {
              }
 
@@ -113,17 +113,17 @@ export default class QCWitnessResultDetailView extends Component {
             try {
                 var errorInfo = JSON.parse(e);
                 if (errorInfo != null) {
-                 console.log(errorInfo)
+                 Global.log(errorInfo)
                 } else {
-                    console.log(e)
+                    Global.log(e)
                 }
             }
             catch(err)
             {
-                console.log(err)
+                Global.log(err)
             }
 
-            console.log('executeNetWorkRequest error:' + e)
+            Global.log('executeNetWorkRequest error:' + e)
         })
     }
 
@@ -205,7 +205,7 @@ export default class QCWitnessResultDetailView extends Component {
                 }
                 catch(err)
                 {
-                    console.log("error======"+err)
+                    Global.log("error======"+err)
                 }
                     if (errorInfo != null) {
                         if (errorInfo.code == -1002||
@@ -220,7 +220,7 @@ export default class QCWitnessResultDetailView extends Component {
                     }
 
 
-                console.log('onDelivery error:' + e)
+                Global.log('onDelivery error:' + e)
             })
     }
 
@@ -345,7 +345,7 @@ export default class QCWitnessResultDetailView extends Component {
 
     onSelectedMember(member){
 
-        console.log(JSON.stringify(member)+"member====");
+        Global.log(JSON.stringify(member)+"member====");
          this.state.choose_memberQC1 = member[0]
          this.setState({displayMemberQC1:member[0]})
 
@@ -420,7 +420,7 @@ export default class QCWitnessResultDetailView extends Component {
 
 
     onItemClick(menu){
-         console.log('menu:work id = ' + menu.id);
+         Global.log('menu:work id = ' + menu.id);
         if (menu.id == '9') {
             this.go2WorkStepDetail();
         } else {
@@ -432,7 +432,7 @@ export default class QCWitnessResultDetailView extends Component {
             }
             catch(err)
             {
-                console.log(err)
+                Global.log(err)
             }
         }
 

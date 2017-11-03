@@ -63,7 +63,7 @@ export default class PlanDetailView extends Component {
     }
 
      onGetDataSuccess(response){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
 
          this.setState({
              data:response.responseResult,
@@ -71,7 +71,7 @@ export default class PlanDetailView extends Component {
      }
 
     executeNetWorkRequest(id){
-         console.log('executeNetWorkRequest:work id = ' + id);
+         Global.log('executeNetWorkRequest:work id = ' + id);
          var paramBody = {
              }
 
@@ -81,17 +81,17 @@ export default class PlanDetailView extends Component {
             try {
                 var errorInfo = JSON.parse(e);
                 if (errorInfo != null) {
-                 console.log(errorInfo)
+                 Global.log(errorInfo)
                 } else {
-                    console.log(e)
+                    Global.log(e)
                 }
             }
             catch(err)
             {
-                console.log(err)
+                Global.log(err)
             }
 
-            console.log('executeNetWorkRequest error:' + e)
+            Global.log('executeNetWorkRequest error:' + e)
         })
     }
 
@@ -167,22 +167,22 @@ export default class PlanDetailView extends Component {
            pickerConfirmBtnText:'保存',
            pickerCancelBtnText:'取消',
            onPickerConfirm: member => {
-               console.log(member);
+               Global.log(member);
                for (var i = 0; i < Global.UserInfo.monitor.length; i++) {
                    if (Global.UserInfo.monitor[i].user.realname == member) {
                        this.state.choose_member = Global.UserInfo.monitor[i].user.id;
 
-                        console.log(JSON.stringify(member)+"member===="+";id="+this.state.choose_member);
+                        Global.log(JSON.stringify(member)+"member===="+";id="+this.state.choose_member);
                        break;
                    }
                }
                this.startPlanOp('REASSIGN');
            },
            onPickerCancel: data => {
-               console.log(data);
+               Global.log(data);
            },
            onPickerSelect: data => {
-               console.log(data);
+               Global.log(data);
            }
        });
        Picker.show();
@@ -219,7 +219,7 @@ export default class PlanDetailView extends Component {
                }
                catch(err)
                {
-                   console.log("error======"+err)
+                   Global.log("error======"+err)
                }
                    if (errorInfo != null) {
                        if (errorInfo.code == -1002||
@@ -234,7 +234,7 @@ export default class PlanDetailView extends Component {
                    }
 
 
-               console.log('Login error:' + e)
+               Global.log('Login error:' + e)
            })
 
      }
@@ -420,7 +420,7 @@ export default class PlanDetailView extends Component {
 
 
     onItemClick(menu){
-         console.log('menu:work id = ' + menu.id);
+         Global.log('menu:work id = ' + menu.id);
         if (menu.id == '9') {
             this.go2WorkStepDetail();
         } else if (menu.id == '9a') {
@@ -442,7 +442,7 @@ export default class PlanDetailView extends Component {
             }
             catch(err)
             {
-                console.log(err)
+                Global.log(err)
             }
         }
 

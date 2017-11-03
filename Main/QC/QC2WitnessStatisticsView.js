@@ -69,7 +69,7 @@ export default class QC2WitnessStatisticsView extends Component {
         {
             if (!errs && result && result.length)
             {
-                 console.log('read k_qc2_witness_team_info_statistics_member@@@@'+result)
+                 Global.log('read k_qc2_witness_team_info_statistics_member@@@@'+result)
                 var response = JSON.parse(result);
                 if (response) {
                     var witmess_team = response.responseResult.witness_qc2;
@@ -94,7 +94,7 @@ export default class QC2WitnessStatisticsView extends Component {
     }
 
     onGetDataSuccess(response,body){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
          query = '';
@@ -106,10 +106,10 @@ export default class QC2WitnessStatisticsView extends Component {
         if (witmess_team) {
             AsyncStorage.setItem('k_qc2_witness_team_info_statistics_member'+body.memberType+"_"+body.type, JSON.stringify(response), (error, result) => {
                 if (error) {
-                    console.log('save k_qc2_witness_team_info_statistics_member faild.')
+                    Global.log('save k_qc2_witness_team_info_statistics_member faild.')
                 }
 
-                console.log('save k_qc2_witness_team_info_statistics_member: sucess')
+                Global.log('save k_qc2_witness_team_info_statistics_member: sucess')
 
             });
 
@@ -148,7 +148,7 @@ export default class QC2WitnessStatisticsView extends Component {
               }
               if (!this.hasMore() || this.state.isLoadingTail) {
                 // We're already fetching or have all the elements so noop
-                console.log('not has more, or load end')
+                Global.log('not has more, or load end')
                 this.setState({
                   isLoadingTail: true,
                   isLoading: false,
@@ -157,7 +157,7 @@ export default class QC2WitnessStatisticsView extends Component {
               }
 
               if (LOADING[query]) {
-                console.log('query already loading')
+                Global.log('query already loading')
                 return;
               }
 
@@ -187,7 +187,7 @@ export default class QC2WitnessStatisticsView extends Component {
 
     executeWitnessRequest(){
 
-      console.log('executeWitnessRequest:')
+      Global.log('executeWitnessRequest:')
 
                  this.setState({
                    isLoading: true,
@@ -210,17 +210,17 @@ export default class QC2WitnessStatisticsView extends Component {
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
-                         console.log(errorInfo)
+                         Global.log(errorInfo)
                         } else {
-                            console.log(e)
+                            Global.log(e)
                         }
                     }
                     catch(err)
                     {
-                        console.log(err)
+                        Global.log(err)
                     }
 
-                    console.log('Task error:' + e)
+                    Global.log('Task error:' + e)
                 })
     }
 
