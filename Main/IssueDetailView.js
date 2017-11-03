@@ -590,11 +590,11 @@ startProblem(){
        let status = this.state.data.status;
        switch(status){
         case 'pre':
-          return this.state.data.designee.id ? '待解决': '待指派';
+          return this.state.data.designee.id ? '待解决' : '待指派';
         case 'undo':
           return '待确认';
         case 'unsolved':
-          return '未解决';
+          return this.state.data.timeout ? '超时未解决' : '未解决';
         case 'solved':
           return '已解决';
         default:
