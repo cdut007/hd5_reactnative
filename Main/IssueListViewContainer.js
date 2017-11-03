@@ -274,7 +274,7 @@ export default class IssueListViewContainer extends Component {
                             {this.renderListView('未解决',3,solverLearderStatus[3].status)}
                         </ScrollableTabView>
                     );
-                }        
+                }
 
 
     }
@@ -295,14 +295,14 @@ export default class IssueListViewContainer extends Component {
     }
 
     onSearchChanged(text){
-        console.log('text=='+text);
+        Global.log('text=='+text);
         this.setState({keyword:text})
         if (this._issue_list_ref) {
             if (timer) {
                 clearTimeout(timer);
             }
             timer = setTimeout(() => {
-                
+
                     this._issue_list_ref._onRefresh()
             }, 1000);
         }

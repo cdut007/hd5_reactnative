@@ -36,7 +36,7 @@ export default class MeView extends Component {
         var me = this
         AsyncStorage.getItem('k_login_info',function(errs,result)
         {
-            console.log('me page k_login_info:' + result)
+            Global.log('me page k_login_info:' + result)
             if (!errs && result && result.length)
             {
                 var resultJSon = JSON.parse(result);
@@ -50,7 +50,7 @@ export default class MeView extends Component {
 
         AsyncStorage.getItem('k_domain_info',function(errs,result)
         {
-            console.log('me page k_domain_info:' + result)
+            Global.log('me page k_domain_info:' + result)
             if (!errs && result && result.length)
             {
                 var resultJSon = JSON.parse(result);

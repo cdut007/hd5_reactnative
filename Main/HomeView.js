@@ -146,19 +146,19 @@ export default class HomeView extends Component {
 
             try {
                 var errorInfo = JSON.parse(e);
-                console.log(errorInfo.description)
+                Global.log(errorInfo.description)
                 if (errorInfo != null && errorInfo.description) {
-                    console.log(errorInfo.description)
+                    Global.log(errorInfo.description)
                 } else {
-                    console.log(e)
+                    Global.log(e)
                 }
             }
             catch(err)
             {
-                console.log(err)
+                Global.log(err)
             }
 
-            console.log(' error:' + e)
+            Global.log(' error:' + e)
         })
 }
 
@@ -170,7 +170,7 @@ export default class HomeView extends Component {
     }
 
     bannerOnMomentumScrollEnd(event, state) {
-       //  console.log(`--->onMomentumScrollEnd page index:${state.index}, total:${state.total}`);
+       //  Global.log(`--->onMomentumScrollEnd page index:${state.index}, total:${state.total}`);
         this.defaultIndex = state.index;
     }
 
@@ -190,7 +190,7 @@ export default class HomeView extends Component {
 
     onBannerSuccess(response){
         this.state.banners = response.responseResult;
-        console.log('BannerSuccess:' + JSON.stringify(response.responseResult));
+        Global.log('BannerSuccess:' + JSON.stringify(response.responseResult));
         this.setState({banners:this.state.banners});
     }
 
@@ -206,13 +206,13 @@ export default class HomeView extends Component {
                     Global.alert(e)
                 }
                 catch (err) {
-                    console.log(err)
+                    Global.log(err)
                 }
             })
     }
 
     onGetModuleSuccess(response) {
-        console.log('onGetModuleSuccess:' + JSON.stringify(response))
+        Global.log('onGetModuleSuccess:' + JSON.stringify(response))
         response.responseResult.map((item, i) => {
             if (item.type) {
                 moduleType[item.type] = item
@@ -225,7 +225,7 @@ export default class HomeView extends Component {
     }
 
     onModuleItemClick(index,bottom) {
-        console.log('Did click item at:' + index)
+        Global.log('Did click item at:' + index)
         // if (true) {
         //     //test single page.
         //     this.props.navigator.push({
@@ -268,10 +268,12 @@ export default class HomeView extends Component {
               return;
             }
 
-            if (data.type != 'GDJH' && data.type != 'TFJH' && data.type != 'JXJH') {
-             Global.showToast('正在开发')
+            if (data.type == 'WZGL') {
+              Global.alert('正在开发')
               return;
             }
+
+
 
             if (Global.isCaptain(Global.UserInfo)) {
                 this.props.navigator.push({
@@ -444,7 +446,7 @@ export default class HomeView extends Component {
                          category:dayCateArr[index],
                         }
                 })
-                console.log('unkonwn roles ....')
+                Global.log('unkonwn roles ....')
             }
 
 
@@ -489,7 +491,7 @@ export default class HomeView extends Component {
 
     renderTopView() {
         var banners = JSON.stringify(this.state.banners);
-        console.log("this.state.banners="+banners)
+        Global.log("this.state.banners="+banners)
         if (this.state.banners.length == 0) {
             return (
                 <Image source={require('../images/banner_img.png')} style={styles.topView} resizeMode={Image.resizeMode.contain} />

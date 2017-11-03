@@ -15,6 +15,7 @@ var width = Dimensions.get('window').width;
      {
         content: PropTypes.string,
         topic: PropTypes.string,
+        placeholder:PropTypes.string,
         onChangeText:PropTypes.func,
         keyboard : PropTypes.string ?PropTypes.string : 'default'
     }
@@ -37,6 +38,7 @@ var width = Dimensions.get('window').width;
                 onChangeText={this.props.onChangeText}
                 underlineColorAndroid={'transparent'}
                  underlineColorAndroid='transparent'
+                 placeholder={this.props.placeholder}
                 value={this.props.content}
                 keyboardType={this.props.keyboard}
 

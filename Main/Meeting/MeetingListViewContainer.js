@@ -41,14 +41,14 @@ var LOADING = {};
                 },
                 {
                     index:1,
-                    status:'sent',
+                    status:'SEND',
                     data:[],
                     pageNo:1,
                 },
                 {
                     index:2,
-                    status:'draft',
-                    data:[],
+                    status:'DRAFT',
+                    data1:[],
                     pageNo:1,
                 },
 
@@ -86,22 +86,20 @@ export default class MeetingListViewContainer extends Component {
 
     }
 
-    //captainList
-    //duizhang NEED_SOLVED,SOLVED
-    //banzhang NEED_ASSIGN,NEED_SOLVE,SOLVED
-    //zuzhang NEED_SOLVE,NEED_CONFIRM,SOLVED
-    //solve PRE ,DONE
-    //
+
 
     rendTabs(){
 
         //if (Global.isGroup(Global.UserInfo)) {
+
+            Global.log('sssss'+this.props.data.index)
 
             return( <ScrollableTabView
                 tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
                    tabBarBackgroundColor='#FFFFFF'
                    tabBarActiveTextColor='#0755a6'
                    tabBarInactiveTextColor='#777777'
+                   initialPage={this.props.data.index}
         >
              {this.renderListView('已接收',0,meetingstatusDatas[0].status)}
              {this.renderListView('已发送',1,meetingstatusDatas[1].status)}
@@ -129,7 +127,7 @@ export default class MeetingListViewContainer extends Component {
     }
 
     onSearchChanged(text){
-        console.log('text=='+text);
+        Global.log('text=='+text);
         this.setState({keyword:text})
         if (this._meeting_list_ref) {
             if (timer) {
@@ -169,9 +167,8 @@ export default class MeetingListViewContainer extends Component {
              ref = {(c) => this._meeting_list_ref = c}
              keyword = {this.state.keyword}
              style={{alignSelf:'stretch',flex:1}}
-             type={this.props.type}
+             type={status}
              userId = {userId}
-             status={status}
              navigator={this.props.navigator}
              />
             </View>

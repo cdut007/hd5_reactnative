@@ -21,6 +21,9 @@ var Global = require('../common/globals');
 var width = Dimensions.get('window').width;
 import CommitButton from '../common/CommitButton'
 import MeetingListViewContainer from '../Main/Meeting/MeetingListViewContainer';
+
+import CreateMeetingView from '../Main/Meeting/CreateMeetingView';
+
 var meetingModuleData = [
     {
         'index': 0,
@@ -80,6 +83,12 @@ export default class MeetingView extends Component {
 
     createMeeting(type){
 
+        this.props.navigator.push({
+            component: CreateMeetingView,
+             props: {
+                 type:type,
+                }
+        })
     }
 
     onModuleItemClick(itemData) {
@@ -97,7 +106,7 @@ export default class MeetingView extends Component {
       for (var i = 0; i < moduleData.length; i++) {
           var moduleDataItem = moduleData[i]
          displayArr.push(
-         <TouchableOpacity style={styles.cell} onPress={() => { this.onModuleItemClick(moduleDataItem) }}>
+         <TouchableOpacity key={i} style={styles.cell} onPress={this.onModuleItemClick.bind(this,moduleDataItem)}>
          <View style={[{width:width/3}, styles.cell]}>
 
             <Image source={moduleDataItem.image} style={{  width: 48, height: 48,marginBottom:8 }} resizeMode={Image.resizeMode.contain} />
@@ -114,7 +123,8 @@ export default class MeetingView extends Component {
       return(<View style={{height:50,width:width,flexDirection:'row'}}>
       <View style={{height:50,flex:1}}><CommitButton title={'发布通告'}
               onPress={this.createMeeting.bind(this,'meeting')} containerStyle={{backgroundColor:'#ffffff'}} titleStyle={{color: '#f77935'}}></CommitButton></View>
-              <View onPress={this.createMeeting.bind(this,'notice')} style={{height:50,flex:1}}><CommitButton title={'发布会议'}
+              <View style={{height:50,flex:1}}><CommitButton title={'发布会议'}
+              onPress={this.createMeeting.bind(this,'notice')}
                       ></CommitButton></View>
                       </View>)
   }

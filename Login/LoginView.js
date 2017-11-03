@@ -67,7 +67,8 @@ export default class LoginView extends Component {
 
 
     onLoginPress() {
-        console.log('LoginId:' + this.state.LoginId + '  password:' + this.state.passWord)
+
+        Global.log('LoginId:' + this.state.LoginId + '  password:' + this.state.passWord)
 
 
     if (this.state.LoginId && this.state.LoginId.startWith('http:')) {
@@ -118,7 +119,7 @@ export default class LoginView extends Component {
                     }
                     catch(err)
                     {
-                        console.log("error======"+err)
+                        Global.log("error======"+err)
                     }
                         if (errorInfo != null) {
                             if (errorInfo.code == -1002||
@@ -133,7 +134,7 @@ export default class LoginView extends Component {
                         }
 
 
-                    console.log('Login error:' + e)
+                    Global.log('Login error:' + e)
                 })
         }
 
@@ -153,11 +154,11 @@ export default class LoginView extends Component {
             loadingVisible: false
         });
 
-        console.log('Login success:' + JSON.stringify(response))
+        Global.log('Login success:' + JSON.stringify(response))
         // if (response.access_token.length) {
         //     AsyncStorage.setItem('k_http_token', response.access_token, (error, result) => {
         //         if (error) {
-        //             console.log('save http token faild.')
+        //             Global.log('save http token faild.')
         //         }
         //
         //     });
@@ -165,17 +166,17 @@ export default class LoginView extends Component {
         var me = this
         AsyncStorage.setItem('k_login_info', JSON.stringify(response), (error, result) => {
             if (error) {
-                console.log('save login info faild.')
+                Global.log('save login info faild.')
             }
             me.setState({hasLogin: true})
             var infoJson = response;
             Global.UserInfo = infoJson.responseResult;
-            console.log('UserInfo: ' + result)
+            Global.log('UserInfo: ' + result)
 
         });
         AsyncStorage.setItem('k_last_login_id', this.state.LoginId, (error, result) => {
             if (error) {
-                console.log('save login info faild.')
+                Global.log('save login info faild.')
             }
         });
 
@@ -199,12 +200,12 @@ export default class LoginView extends Component {
         JPushModule.resumePush();
         JPushModule.setAlias(alias, (map) => {
                 if (map.errorCode === 0) {
-                    console.log("set alias succeed==="+alias);
+                    Global.log("set alias succeed==="+alias);
                 } else {
-                    console.log("set alias failed, errorCode: " + map.errorCode);
+                    Global.log("set alias failed, errorCode: " + map.errorCode);
                     if (map.errorCode == 6002) {
                         this.registerPush(alias)
-                        console.log("set alias timeouted register again==="+alias);
+                        Global.log("set alias timeouted register again==="+alias);
                     }
                 }
             });

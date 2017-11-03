@@ -70,21 +70,21 @@ export default class MeetingListView extends Component {
 
 
         _onRefresh() {
-            console.log("_onRefresh() --> ");
+            Global.log("_onRefresh() --> ");
             this.setState({isRefreshing:true})
 
             this.executeMeetingRequest(1);
         }
 
         _loadMoreData() {
-            console.log("_loadMoreData() --> ");
+            Global.log("_loadMoreData() --> ");
              pageNo += 1;
             this.executeMeetingRequest(pageNo);
         }
 
         _toEnd() {
-            console.log("触发加载更多 toEnd() --> ");
-            //console.log("加载更多？ ",userReducer.isLoadingMore, userReducer.products.length, userReducer.totalProductCount,userReducer.isRefreshing);
+            Global.log("触发加载更多 toEnd() --> ");
+            //Global.log("加载更多？ ",userReducer.isLoadingMore, userReducer.products.length, userReducer.totalProductCount,userReducer.isRefreshing);
             //ListView滚动到底部，根据是否正在加载更多 是否正在刷新 是否已加载全部来判断是否执行加载更多
             if (this.state.items.length >= this.state.totalCount || this.state.isRefreshing) {//userReducer.isLoadingMore ||
                 return;
@@ -112,15 +112,8 @@ export default class MeetingListView extends Component {
 
 
     componentDidMount() {
-            var items = []
-            items.push({'id':'sds'})
-                this.setState({
-                    dataSource:this.state.dataSource.cloneWithRows(items),
-                    isLoading: false,
-                    isRefreshing:false,
-                    totalCount:1
-                });
-        //this.executeMeetingRequest(1);
+
+        this.executeMeetingRequest(1);
         newMeetingSubscription = DeviceEventEmitter.addListener('new_meeting',(param) => {this._onRefresh()})
         operationSubscription = DeviceEventEmitter.addListener('operate_meeting',(param)=>{this._onRefresh();})
     }
@@ -131,7 +124,7 @@ export default class MeetingListView extends Component {
     }
 
     onGetDataSuccess(response,paramBody){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
          query = '';
@@ -146,7 +139,7 @@ export default class MeetingListView extends Component {
                 isRefreshing:false,
             });
            // do not update state if the query is stale
-           console.log('executeMeetingRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
+           Global.log('executeMeetingRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
            return;
          }
 
@@ -197,44 +190,28 @@ export default class MeetingListView extends Component {
 
     executeMeetingRequest(index){
 
-      console.log('executeMeetingRequest pageNo:'+index)
+      Global.log('executeMeetingRequest pageNo:'+index)
       var loading = false;
 
       if (this.state.items.length == 0) {
               loading = true
       }
 
-      if (true) {
-          return
-      }
+
        this.setState({
          isLoading: loading,
        });
 
-       var api = '';
-       if (Global.isGroup(Global.UserInfo)) {
-           api = '/question/teamList'
-       }else if (Global.isMonitor(Global.UserInfo)) {
-           api = '/question/monitorList'
-       }else if (Global.isSolverMember(Global.UserInfo)) {
-           api = '/question/technicianList'
-       }else if (Global.isCaptain(Global.UserInfo)) {
-           api = '/question/captainList'
-       }else if (Global.isSolverLeader(Global.UserInfo)){
-           api = '/question/technicianList'
-       }
+
 
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
-                      type:'GDJH',
-                      questionStatus:this.props.status,
-                      userId:this.props.userId,
-                      keyword: this.props.keyword,
+                      type:this.props.type,
                      }
 
 
-            HttpRequest.get(api, paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/conference', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
                     this.setState({
@@ -245,17 +222,17 @@ export default class MeetingListView extends Component {
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
-                         console.log(errorInfo)
+                         Global.log(errorInfo)
                         } else {
-                            console.log(e)
+                            Global.log(e)
                         }
                     }
                     catch(err)
                     {
-                        console.log(err)
+                        Global.log(err)
                     }
 
-                    console.log('Task error:' + e)
+                    Global.log('Task error:' + e)
                 })
     }
 

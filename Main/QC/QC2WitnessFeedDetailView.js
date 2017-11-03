@@ -92,7 +92,7 @@ export default class QC2WitnessFeedDetailView extends Component {
     }
 
      onGetDataSuccess(response){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
          this.state.data.rollingPlan = response.responseResult
          this.setState({
              data:this.state.data,
@@ -100,7 +100,7 @@ export default class QC2WitnessFeedDetailView extends Component {
      }
 
     executeNetWorkRequest(id){
-         console.log('executeNetWorkRequest:work id = ' + id);
+         Global.log('executeNetWorkRequest:work id = ' + id);
          var paramBody = {
              }
 
@@ -110,17 +110,17 @@ export default class QC2WitnessFeedDetailView extends Component {
             try {
                 var errorInfo = JSON.parse(e);
                 if (errorInfo != null) {
-                 console.log(errorInfo)
+                 Global.log(errorInfo)
                 } else {
-                    console.log(e)
+                    Global.log(e)
                 }
             }
             catch(err)
             {
-                console.log(err)
+                Global.log(err)
             }
 
-            console.log('executeNetWorkRequest error:' + e)
+            Global.log('executeNetWorkRequest error:' + e)
         })
     }
 
@@ -248,7 +248,7 @@ export default class QC2WitnessFeedDetailView extends Component {
                         Global.alert(e)
                     }
                     catch (err) {
-                        console.log(err)
+                        Global.log(err)
                     }
 
                     this.setState({
@@ -275,7 +275,7 @@ export default class QC2WitnessFeedDetailView extends Component {
                     }
                     catch(err)
                     {
-                        console.log("error======"+err)
+                        Global.log("error======"+err)
                     }
                         if (errorInfo != null) {
                             if (errorInfo.code == -1002||
@@ -290,7 +290,7 @@ export default class QC2WitnessFeedDetailView extends Component {
                         }
 
 
-                    console.log(' error:' + e)
+                    Global.log(' error:' + e)
                 })
         }
 
@@ -392,7 +392,7 @@ export default class QC2WitnessFeedDetailView extends Component {
 
 
     onItemClick(menu){
-         console.log('menu:work id = ' + menu.id);
+         Global.log('menu:work id = ' + menu.id);
         if (menu.id == '9') {
             this.go2WorkStepDetail();
         } else if (menu.id == '9a') {
@@ -414,7 +414,7 @@ export default class QC2WitnessFeedDetailView extends Component {
             }
             catch(err)
             {
-                console.log(err)
+                Global.log(err)
             }
         }
 
@@ -422,7 +422,7 @@ export default class QC2WitnessFeedDetailView extends Component {
 
 
     onChangeText(keyValue,text){
-        console.log(text+"content===="+keyValue);
+        Global.log(text+"content===="+keyValue);
         this.state[keyValue] = text;
         //this.setState({...this.state});
     }
@@ -431,7 +431,7 @@ export default class QC2WitnessFeedDetailView extends Component {
 
 
     onSelectedDate(id,date){
-     console.log(id+"date=="+date.getTime());
+     Global.log(id+"date=="+date.getTime());
 
      this.state[id] = Global.formatFullDate(date);
      this.setState({...this.state});
@@ -439,7 +439,7 @@ export default class QC2WitnessFeedDetailView extends Component {
 
     onSelectedMember(id,member){
 
-        console.log(JSON.stringify(member)+"choose====");
+        Global.log(JSON.stringify(member)+"choose====");
 
          this.state[id] = member[0];
         this.setState({...this.state});
@@ -541,15 +541,15 @@ export default class QC2WitnessFeedDetailView extends Component {
 
        let showPicker = () => {
            ImagePicker.showImagePicker(options, (response) => {
-               //   console.log('Response = ', response);
+               //   Global.log('Response = ', response);
                if (response.didCancel) {
-                   console.log('User cancelled image picker');
+                   Global.log('User cancelled image picker');
                }
                else if (response.error) {
-                   console.log('ImagePicker Error: ', response.error);
+                   Global.log('ImagePicker Error: ', response.error);
                }
                else if (response.customButton) {
-                   console.log('User tapped custom button: ', response.customButton);
+                   Global.log('User tapped custom button: ', response.customButton);
                }
                else {
                    // You can display the image using either data:

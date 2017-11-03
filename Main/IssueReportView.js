@@ -76,7 +76,7 @@ export default class IssueReportView extends Component {
     }
 
     onSelectedMember(member) {
-        console.log('onSelectedMember' + JSON.stringify(member))
+        Global.log('onSelectedMember' + JSON.stringify(member))
         this.setState({
             responsePerson: member
         })
@@ -128,7 +128,7 @@ export default class IssueReportView extends Component {
                     Global.alert(e)
                 }
                 catch (err) {
-                    console.log(err)
+                    Global.log(err)
                 }
 
                 this.setState({
@@ -140,7 +140,7 @@ export default class IssueReportView extends Component {
 
     onCommitIssueSuccess(response) {
        DeviceEventEmitter.emit('new_issue','new_issue');
-       console.log('onCommitIssueSuccess:' + JSON.stringify(response))
+       Global.log('onCommitIssueSuccess:' + JSON.stringify(response))
         this.setState({
             loadingVisible: false
         })
@@ -164,15 +164,15 @@ export default class IssueReportView extends Component {
 
         let showPicker = () => {
             ImagePicker.showImagePicker(options, (response) => {
-                //   console.log('Response = ', response);
+                //   Global.log('Response = ', response);
                 if (response.didCancel) {
-                    console.log('User cancelled image picker');
+                    Global.log('User cancelled image picker');
                 }
                 else if (response.error) {
-                    console.log('ImagePicker Error: ', response.error);
+                    Global.log('ImagePicker Error: ', response.error);
                 }
                 else if (response.customButton) {
-                    console.log('User tapped custom button: ', response.customButton);
+                    Global.log('User tapped custom button: ', response.customButton);
                 }
                 else {
                     // You can display the image using either data:

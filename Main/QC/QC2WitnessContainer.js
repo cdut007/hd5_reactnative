@@ -116,7 +116,7 @@ export default class QC2WitnessContainer extends Component {
 
 
     onSearchChanged(text){
-    console.log('text=='+text);
+    Global.log('text=='+text);
     this.setState({keyword:text})
     if (this._plan_list_ref) {
         setTimeout(() => {

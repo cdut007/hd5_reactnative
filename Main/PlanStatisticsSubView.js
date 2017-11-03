@@ -68,7 +68,7 @@ export default class PlanStatisticsSubView extends Component {
         {
             if (!errs && result && result.length)
             {
-                 console.log('read k_plan_team_info_statistics_rollingplan_@@@@'+result)
+                 Global.log('read k_plan_team_info_statistics_rollingplan_@@@@'+result)
                 var monitor = JSON.parse(result);
                 if (monitor) {
                     Global.UserInfo.monitor = monitor ;
@@ -92,9 +92,9 @@ export default class PlanStatisticsSubView extends Component {
         componentWillUnmount(){
           mSubscription.remove();
         }
-        
+
     onGetDataSuccess(response,body){
-         console.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@')
      var query = this.state.filter;
      if (!query) {
          query = '';
@@ -109,10 +109,10 @@ export default class PlanStatisticsSubView extends Component {
             Global.UserInfo.monitor = monitor;
             AsyncStorage.setItem('k_plan_team_info_statistics_rollingplan_'+body.userId+"_"+body.type, JSON.stringify(monitor), (error, result) => {
                 if (error) {
-                    console.log('save k_plan_team_info_statistics_rollingplan_ faild.')
+                    Global.log('save k_plan_team_info_statistics_rollingplan_ faild.')
                 }
 
-                console.log('save k_plan_team_info_statistics_rollingplan_: sucess')
+                Global.log('save k_plan_team_info_statistics_rollingplan_: sucess')
 
             });
 
@@ -148,7 +148,7 @@ export default class PlanStatisticsSubView extends Component {
               }
               if (!this.hasMore() || this.state.isLoadingTail) {
                 // We're already fetching or have all the elements so noop
-                console.log('not has more, or load end')
+                Global.log('not has more, or load end')
                 this.setState({
                   isLoadingTail: true,
                   isLoading: false,
@@ -157,7 +157,7 @@ export default class PlanStatisticsSubView extends Component {
               }
 
               if (LOADING[query]) {
-                console.log('query already loading')
+                Global.log('query already loading')
                 return;
               }
 
@@ -187,7 +187,7 @@ export default class PlanStatisticsSubView extends Component {
 
     executePlanRequest(){
 
-      console.log('executePlanRequest:')
+      Global.log('executePlanRequest:')
 
                  this.setState({
                    isLoading: true,
@@ -211,17 +211,17 @@ export default class PlanStatisticsSubView extends Component {
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
-                         console.log(errorInfo)
+                         Global.log(errorInfo)
                         } else {
-                            console.log(e)
+                            Global.log(e)
                         }
                     }
                     catch(err)
                     {
-                        console.log(err)
+                        Global.log(err)
                     }
 
-                    console.log('Task error:' + e)
+                    Global.log('Task error:' + e)
                 })
     }
 
