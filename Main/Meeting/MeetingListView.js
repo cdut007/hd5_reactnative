@@ -112,15 +112,8 @@ export default class MeetingListView extends Component {
 
 
     componentDidMount() {
-            var items = []
-            items.push({'id':'sds'})
-                this.setState({
-                    dataSource:this.state.dataSource.cloneWithRows(items),
-                    isLoading: false,
-                    isRefreshing:false,
-                    totalCount:1
-                });
-        //this.executeMeetingRequest(1);
+
+        this.executeMeetingRequest(1);
         newMeetingSubscription = DeviceEventEmitter.addListener('new_meeting',(param) => {this._onRefresh()})
         operationSubscription = DeviceEventEmitter.addListener('operate_meeting',(param)=>{this._onRefresh();})
     }
@@ -204,9 +197,7 @@ export default class MeetingListView extends Component {
               loading = true
       }
 
-      if (true) {
-          return
-      }
+
        this.setState({
          isLoading: loading,
        });
@@ -217,7 +208,6 @@ export default class MeetingListView extends Component {
                       pagesize:pagesize,
                       pagenum:index,
                       type:this.props.type,
-                      keyword: this.props.keyword,
                      }
 
 

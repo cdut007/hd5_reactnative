@@ -63,9 +63,9 @@ export default class CreateMeetingView extends Component {
                 recorder:'james',
                 supplies:'photo',
                 remark:'info',
-                startTime:'2013-11-12 12:00',
-                endTime:'2013-11-12 12:00',
-                alarmTime:'2015-11-11 12:00',
+                startTime:'2013-11-12 12:00:00',
+                endTime:'2013-11-12 12:00:00',
+                alarmTime:'2015-11-11 12:00:00',
                 type:'SEND',
 
             }
