@@ -13,6 +13,7 @@ import {
     TextInput,
     Platform,
     Alert,
+    DeviceEventEmitter,
 
 } from 'react-native';
 
@@ -83,7 +84,7 @@ export default class QuestionDetail extends Component {
        choose_date:null,
        displayDate:"截止日期",
        TeamTypes:null,
-       ResTeamId:null,
+       ResTeamId:this.props.data.responsibleTeam,
      }
 
   }
@@ -462,6 +463,8 @@ if (status == 1) {
       this.setState({
           loadingVisible: false
       });
+
+     DeviceEventEmitter.emit('SafeWork','SafeWork');
 
       Global.showToast(response.message)
 

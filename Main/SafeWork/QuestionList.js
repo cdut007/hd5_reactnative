@@ -12,6 +12,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     InteractionManager,
+    DeviceEventEmitter,
 } from 'react-native';
 
 import HttpRequest from '../../HttpRequest/HttpRequest'
@@ -128,9 +129,15 @@ export default class QuestionList extends Component {
 
     componentDidMount() {
 
+    SafeWorkDeal = DeviceEventEmitter.addListener('SafeWork',(param) => {this.executePlanRequest(1)})
+
         this.executePlanRequest(1);
 
     }
+
+    componentWillUnmount(){
+       SafeWorkDeal.remove();
+  }
 
     onGetDataSuccess(response,paramBody){
          console.log('onGetDataSuccess@@@@')
