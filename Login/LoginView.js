@@ -67,6 +67,7 @@ export default class LoginView extends Component {
 
 
     onLoginPress() {
+
         console.log('LoginId:' + this.state.LoginId + '  password:' + this.state.passWord)
 
 

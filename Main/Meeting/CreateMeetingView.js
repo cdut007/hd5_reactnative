@@ -23,14 +23,20 @@ import CommitButton from '../../common/CommitButton'
 
 import DisplayItemView from '../../common/DisplayItemView';
 import EnterItemView from '../../common/EnterItemView';
+import DateTimePickerView from '../../common/DateTimePickerView'
 
+import EditItemView from '../../common/EditItemView';
+import MemberSelectView from '../../common/MemberSelectView'
 
 
 
 export default class CreateMeetingView extends Component {
     constructor(props) {
         super(props)
-
+        this.state = {
+            data: {},
+            meetingTypeArry:[]
+        };
     }
 
 
@@ -59,18 +65,123 @@ export default class CreateMeetingView extends Component {
         })
     }
 
+onEditTitleContentClick(){
+
+}
+onSelectedMeetingType(){
+
+}
+
+onDepartmentChangeText(text){
+
+}
+onChooseMemberClick(){
+
+}
+
+onSelectedDate(date){
+ console.log("date=="+date.getTime());
+ this.state.choose_date = date.getTime();
+ this.setState({displayDate:Global.formatDate(this.state.choose_date)})
+// this.setState({...this.state});
+}
+
+
 
         renderItem() {
-                   // 数组
-                   var itemAry = [];
-                   // 颜色数组
-                   var displayAry = [];
+                  return(
+                      <View>
+                      <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onEditTitleContentClick.bind(this)}>
+
+                      <View style={styles.cell}>
+
+
+                        <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
+                          通告名称
+                        </Text>
+                      </View>
+
+
+                      <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/right_enter_blue.png')}></Image>
+
+                      </TouchableOpacity>
+
+                      <View
+
+                       style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+
+                      <TouchableOpacity  key={'selectMeetingType'} onPress={() => this.selectMeetingType.onPickClick()} style={{borderWidth:0.5,
+                            alignItems:'center',
+                            borderColor : '#f77935',
+                            backgroundColor : 'white',
+                            borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+
+                      <MemberSelectView
+                          key={'selectMeetingType'}
+                      ref={(c) => this.selectMeetingType = c}
+                      style={{color:'#f77935',fontSize:14,flex:1}}
+                      title={this.state.data.categoary}
+                      data={this.state.meetingTypeArry}
+                      pickerTitle={'选择会议类型'}
+                      onSelected={this.onSelectedMeetingType.bind(this)} />
+                                          <Image
+                                          style={{width:20,height:20,}}
+                                          source={require('../../images/unfold.png')}/>
+                      </TouchableOpacity>
+
+                      </View>
+
+                      <EditItemView
+                       topic={'通告发出部门'}
+                       placeholder={'请输入所属项目名称'}
+                       content={this.state.data.department}
+                       onChangeText={this.onDepartmentChangeText.bind(this)}
+                      />
+
+                      <EnterItemView
+                       title={'通告接收人员'}
+                       onPress = {this.onChooseMemberClick.bind(this)}
+                       flagArrow = {true}
+                      />
+
+                      <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+
+                      <TouchableOpacity
+                       onPress={() => this._selectD.onClick()}
+                      style={{borderWidth:0.5,
+                            alignItems:'center',
+                            borderColor : '#f77935',
+                            backgroundColor : 'white',
+                            borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+
+                      <DateTimePickerView
+                      ref={(c) => this._selectD = c}
+                          type={'date'}
+                          minTime={new Date()}
+                          title={this.state.data.startDate}
+                          style={{color:'#f77935',fontSize:14,flex:1}}
+                          onSelected={this.onSelectedDate.bind(this)}
+                      />
+                                          <Image
+                                          style={{width:20,height:20}}
+                                          source={require('../../images/unfold.png')}/>
+                      </TouchableOpacity>
+
+                      </View>
+
+
+
+
+                      </View>
+
+                  )
+
 
 
 
                    // 遍历
                    for (var i = 0; i<displayAry.length; i++) {
-                       if (displayAry[i].type == 'displayMore') {
+                       if (displayAry[i].type == 'enter') {
                            itemAry.push(
                                <EnterItemView key={displayAry[i].id}
                                 title={displayAry[i].title}

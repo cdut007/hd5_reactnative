@@ -1,3 +1,12 @@
+'use strict';
+
+var React = require('react');
+var ReactNative = require('react-native');
+var {
+
+  ToastAndroid,
+  Platform
+} = ReactNative;
 
 import Toast from 'react-native-root-toast';
 
@@ -114,6 +123,8 @@ module.exports = {
         return roleType == 'supervisor'
     },
     alert(content){
+        if (Platform.OS === 'ios'){
+            // Add a Toast on screen.
         let toast = Toast.show(content, {
             duration: Toast.durations.LONG,
             position: Toast.positions.BOTTOM,
@@ -134,29 +145,38 @@ module.exports = {
                 // calls on toast\`s hide animation end.
             }
         });
+    }else{
+         ToastAndroid.show(content+'', ToastAndroid.SHORT)
+    }
+
     },
     showToast(content){
-        // Add a Toast on screen.
-    let toast = Toast.show(content, {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-        onShow: () => {
-            // calls on toast\`s appear animation start
-        },
-        onShown: () => {
-            // calls on toast\`s appear animation end.
-        },
-        onHide: () => {
-            // calls on toast\`s hide animation start.
-        },
-        onHidden: () => {
-            // calls on toast\`s hide animation end.
-        }
-    });
+         if (Platform.OS === 'ios'){
+             // Add a Toast on screen.
+         let toast = Toast.show(content, {
+             duration: Toast.durations.LONG,
+             position: Toast.positions.BOTTOM,
+             shadow: true,
+             animation: true,
+             hideOnPress: true,
+             delay: 0,
+             onShow: () => {
+                 // calls on toast\`s appear animation start
+             },
+             onShown: () => {
+                 // calls on toast\`s appear animation end.
+             },
+             onHide: () => {
+                 // calls on toast\`s hide animation start.
+             },
+             onHidden: () => {
+                 // calls on toast\`s hide animation end.
+             }
+         });
+     }else{
+          ToastAndroid.show(content+'', ToastAndroid.SHORT)
+     }
+
     },
     clearCache(){
     UserInfo=null;

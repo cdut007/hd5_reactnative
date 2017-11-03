@@ -6,6 +6,11 @@ var apiAddr =  apiDomainAddr + '/hdxt/api'
 var httpToken = ''
 var Global = require('../common/globals');
 
+String.prototype.startWith=function(str){
+  var reg=new RegExp("^"+str);
+  return reg.test(this);
+}
+
 module.exports = {
  getDomain(){
      return apiDomainAddr
@@ -110,6 +115,9 @@ get(apiName, body,successCallback, failCallback)
           if (err == 'TypeError: Network request failed') {
               Global.showToast('网络异常')
           }
+          if ((""+err).startWith('SyntaxError: JSON Parse error')) {
+              Global.showToast('服务不可用，请稍后再试')
+          }
       });
 
   },
@@ -193,6 +201,9 @@ if (body.jsonBody) {
           .catch(function(err){
             failCallback(err);
               Xlog.info('HttpRequestPostReusltErr', ""+err);
+              if ((""+err).startWith('SyntaxError: JSON Parse error')) {
+                  Global.showToast('服务不可用，请稍后再试')
+              }
           });
     }else{
         fetch(url, {
@@ -218,6 +229,9 @@ if (body.jsonBody) {
           .catch(function(err){
                    Xlog.info('HttpRequestPostReusltErr', ""+err);
             failCallback(err);
+            if ((""+err).startWith('SyntaxError: JSON Parse error')) {
+                Global.showToast('服务不可用，请稍后再试')
+            }
           });
     }
 
@@ -270,6 +284,9 @@ if (body.jsonBody) {
             console.log("uploadInfo- error---->:"+err);
               Xlog.info('HttpRequestPostReusltErrUpload', ""+err);
             failCallback(err);
+            if ((""+err).startWith('SyntaxError: JSON Parse error')) {
+                Global.showToast('服务不可用，请稍后再试')
+            }
           });
 }
 }
