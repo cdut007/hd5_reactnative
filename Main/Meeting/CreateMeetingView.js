@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
          flexDirection: 'column',
     },
     statisticsflexContainer: {
-             height: 96,
+             height: 50,
              backgroundColor: '#ffffff',
              flexDirection: 'row',
              justifyContent: "center",
