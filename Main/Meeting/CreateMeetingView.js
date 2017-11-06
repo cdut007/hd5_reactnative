@@ -178,12 +178,11 @@ onEditTitleContentClick(){
 
 }
 
-onDepartmentChangeText(text){
-
+onChangeText(text,tag){
+    this.state.data[tag] = text;
+    this.setState({...this.state});
 }
-onChooseMemberClick(){
 
-}
 
 onSelectedDate(tag,date){
  Global.log("date=="+date.getTime());
@@ -204,7 +203,7 @@ createEnter(icon,label,desc,tag){
         textColor = '#e82628'
     }
     return(
-        <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onEnterClick.bind(this)}>
+        <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onEnterClick.bind(this,tag)}>
 
         <View style={{flex:1,paddingLeft:10,flexDirection:'row'}}>
 
@@ -224,8 +223,12 @@ createEnter(icon,label,desc,tag){
     )
 }
 
-onEnterClick(){
+onEnterClick(tag){
+    if (tag == 'subject') {
 
+    }else if (tag == 'member') {
+
+    }
 }
 
 
@@ -319,10 +322,15 @@ createChooseInfo(icon,label,desc,data,tag){
 }
 
         renderItem() {
+
+            var displayMemberInfo ='请选择参会人员'
+             if (this.state.data.members) {
+                 displayMemberInfo = '参会总人数xx人'
+             }
                   return(
                       <View>
 
-                      {this.createEnter(require('../../images/informIcon.png'),'会议主题','','subject')}
+                      {this.createEnter(require('../../images/informIcon.png'),'会议主题',this.state.data.subject,'subject')}
                       <View style={styles.line}>
                       </View>
 
@@ -336,34 +344,34 @@ createChooseInfo(icon,label,desc,data,tag){
                        topic={'所属项目'}
                        icon={require('../../images/projectIcon.png')}
                        placeholder={'请输入所属项目名称'}
-                       content={this.state.data.department}
-                       onChangeText={this.onDepartmentChangeText.bind(this)}
+                       content={this.state.data.project}
+                       onChangeText={this.onChangeText.bind(this,'project')}
                       />
 
                       <EditItemView
                        topic={'主持人'}
                        icon={require('../../images/hostIcon.png')}
                        placeholder={'请输入主持人名字'}
-                       content={this.state.data.department}
-                       onChangeText={this.onDepartmentChangeText.bind(this)}
+                       content={this.state.data.host}
+                       onChangeText={this.onChangeText.bind(this,'host')}
                       />
 
                       <EditItemView
                        topic={'记录员'}
                        icon={require('../../images/registrarIcon.png')}
                        placeholder={'请输入记录员名字'}
-                       content={this.state.data.department}
-                       onChangeText={this.onDepartmentChangeText.bind(this)}
+                       content={this.state.data.recorder}
+                       onChangeText={this.onChangeText.bind(this,'recorder')}
                       />
-                      {this.createEnter(require('../../images/participantIcon.png'),'参会人员','请选择参会人员','member')}
+                      {this.createEnter(require('../../images/participantIcon.png'),'参会人员',displayMemberInfo,'member')}
                       <View style={styles.line}>
                       </View>
                       <EditItemView
                        topic={'会议地点'}
                        icon={require('../../images/placeIcon.png')}
                        placeholder={'请输入会议地点'}
-                       content={this.state.data.department}
-                       onChangeText={this.onDepartmentChangeText.bind(this)}
+                       content={this.state.data.address}
+                       onChangeText={this.onChangeText.bind(this,'address')}
                       />
 
                       <View style={styles.space}>
@@ -383,15 +391,15 @@ createChooseInfo(icon,label,desc,data,tag){
                        icon={require('../../images/conferenceAmenitiesIcon.png')}
                        placeholder={'请输入会议用品'}
                        content={this.state.data.department}
-                       onChangeText={this.onDepartmentChangeText.bind(this)}
+                       onChangeText={this.onChangeText.bind(this,'supplies')}
                       />
 
                       <EditItemView
                        topic={'会议备注'}
                        icon={require('../../images/remarkIcon.png')}
                        placeholder={'请输入会议备注'}
-                       content={this.state.data.department}
-                       onChangeText={this.onDepartmentChangeText.bind(this)}
+                       content={this.state.data.remark}
+                       onChangeText={this.onChangeText.bind(this,'remark')}
                       />
 
 
