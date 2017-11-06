@@ -134,25 +134,38 @@ onSelectedDate(date){
 // this.setState({...this.state});
 }
 
+createEnter(label,desc,tag){
+    return(
+        <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onEnterClick.bind(this)}>
 
+        <View style={{flex:1,paddingLeft:10}}>
+
+
+          <Text numberOfLines={1} style={{color:'#777777',fontSize:12,}}>
+            {label}
+          </Text>
+        </View>
+        <Text numberOfLines={1} style={{paddingRight:20,color:'#777777',fontSize:12,}}>
+          {desc}
+        </Text>
+
+        <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/right_enter_blue.png')}></Image>
+
+        </TouchableOpacity>
+    )
+}
+onEnterClick(){
+
+}
 
         renderItem() {
                   return(
                       <View>
-                      <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onEditTitleContentClick.bind(this)}>
 
-                      <View style={styles.cell}>
-
-
-                        <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
-                          通告名称
-                        </Text>
+                      {this.createEnter('会议主题','','subject')}
+                      <View style={styles.line}>
                       </View>
 
-
-                      <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/right_enter_blue.png')}></Image>
-
-                      </TouchableOpacity>
 
                       <View
 
@@ -225,33 +238,6 @@ onSelectedDate(date){
                   )
 
 
-
-
-                   // 遍历
-                   for (var i = 0; i<displayAry.length; i++) {
-                       if (displayAry[i].type == 'enter') {
-                           itemAry.push(
-                               <EnterItemView key={displayAry[i].id}
-                                title={displayAry[i].title}
-                                onPress = {this.onItemClick.bind(this,displayAry[i])}
-                                flagArrow = {this.state.displayMore}
-                               />
-                           );
-                       } else if (displayAry[i].type == 'devider') {
-                           itemAry.push(
-                              <View style={styles.divider}/>
-                           );
-                       }else{
-                           itemAry.push(
-                               <DisplayItemView key={displayAry[i].id}
-                                title={displayAry[i].title}
-                                detail={displayAry[i].content}
-                               />
-                           );
-                       }
-
-                   }
-                   return itemAry;
                }
 
   renderFormView(){
@@ -312,6 +298,11 @@ const styles = StyleSheet.create({
     width: width,
     height: 10,
 },
+line: {
+backgroundColor: '#f2f2f2',
+width: width,
+height: 1,
+},
     divider: {
     backgroundColor: '#d6d6d6',
     width: width,
@@ -332,5 +323,6 @@ const styles = StyleSheet.create({
              flexDirection: 'row',
              justifyContent: "center",
              alignItems: 'center',
+             paddingRight:10
          },
 })
