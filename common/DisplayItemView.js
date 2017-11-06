@@ -3,6 +3,7 @@ import {
     StyleSheet,
     Text,
     View,
+    Image,
  } from 'react-native';
 
 import Dimensions from 'Dimensions'
@@ -15,10 +16,23 @@ var width = Dimensions.get('window').width;
         title: PropTypes.string,
         detail: PropTypes.string,
         noLine:PropTypes.bool,
+        icon:PropTypes.string,
     }
 
     render()
     {
+        if (this.props.icon) {
+            return(
+                <View>
+                <View style= {styles.container}>
+                <Image style={{width:24,height:24,marginRight:5}} source={this.props.icon} />
+                    <Text style= {styles.title}>{this.props.title} : </Text>
+                    <Text style= {styles.detail}>{this.props.detail}</Text>
+                </View>
+                {this.rendLine()}
+                </View>
+            )
+        }
         return(
             <View>
             <View style= {styles.container}>

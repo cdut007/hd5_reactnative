@@ -46,22 +46,27 @@ export default class MeetingDetailView extends Component {
 
   }
 
-  createEnter(label,desc,tag){
+  createEnter(icon,label,desc,tag){
+      var textColor = '#777777'
+      if (tag == 'feedback') {
+          textColor = '#e82628'
+      }
       return(
           <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onEnterClick.bind(this)}>
 
-          <View style={{flex:1,paddingLeft:10}}>
+          <View style={{flex:1,paddingLeft:10,flexDirection:'row'}}>
 
+          <Image style={{width:24,height:24,marginRight:5}} source={icon} />
 
-            <Text numberOfLines={1} style={{color:'#777777',fontSize:12,}}>
+            <Text numberOfLines={1} style={{color:'#444444',fontSize:14,}}>
               {label}
             </Text>
           </View>
-          <Text numberOfLines={1} style={{paddingRight:20,color:'#777777',fontSize:12,}}>
+          <Text numberOfLines={1} style={{paddingRight:10,color:textColor,fontSize:14,}}>
             {desc}
           </Text>
 
-          <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/right_enter_blue.png')}></Image>
+          <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/detailsIcon.png')}></Image>
 
           </TouchableOpacity>
       )
@@ -85,16 +90,16 @@ export default class MeetingDetailView extends Component {
 
                     <View style={styles.space}>
                     </View>
-                    {this.createEnter('通知反馈','20','feedback')}
+                    {this.createEnter(require('../../images/informIcon.png'),'通知反馈','20','feedback')}
                     <View style={styles.space}>
                     </View>
 
-                    {this.createEnter('会议主题','双日计划会议','subject')}
+                    {this.createEnter(require('../../images/themeIcon.png'),'会议主题','双日计划会议','subject')}
                     <View style={styles.line}>
                     </View>
 
                     <DisplayItemView
-
+                     icon={require('../../images/typesIcon.png')}
                      title={'会议类型'}
                      detail={'工程类型'}
                      noLine={false}
@@ -103,64 +108,66 @@ export default class MeetingDetailView extends Component {
 
                      title={'所属项目'}
                      detail={'移动app管理开发'}
+                     icon={require('../../images/projectIcon.png')}
+
                      noLine={false}
                     />
                     <DisplayItemView
 
                      title={'主持人'}
+                     icon={require('../../images/hostIcon.png')}
                      detail={'james'}
                      noLine={false}
                     />
                     <DisplayItemView
 
                      title={'记录员'}
+                     icon={require('../../images/registrarIcon.png')}
                      detail={'tom'}
                      noLine={false}
                     />
 
-                    {this.createEnter('参会人员','查看全部','member')}
+                    {this.createEnter(require('../../images/participantIcon.png'),'参会人员','查看全部','member')}
                     <View style={styles.line}>
                     </View>
 
-                     <View  style={styles.info}>
-                     <View style={{flexDirection:'row',alignItems:'center'}}>
-                     <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                       会议开始时间：
-                     </Text>
+                    <DisplayItemView
 
-                     <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                        2017/11/09 10:00
-                     </Text>
+                     title={'会议地点'}
+                     icon={require('../../images/placeIcon.png')}
+                     detail={'ssss'}
+                     noLine={false}
+                    />
 
-                     </View>
+                    <View style={styles.space}>
+                    </View>
 
-                     <View style={{flexDirection:'row',alignItems:'center'}}>
-                     <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                       会议结束时间：
-                     </Text>
+                    <DisplayItemView
 
-                     <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                       2017/11/09 12:00
-                     </Text>
+                     title={'会议开始时间'}
+                     detail={'2017/11/09 10:00'}
+                     noLine={false}
+                    />
+                    <DisplayItemView
 
-                     </View>
+                     title={'会议结束时间'}
+                     detail={'2017/11/09 10:00'}
+                     noLine={false}
+                    />
+                    <DisplayItemView
 
-                     <View style={{flexDirection:'row',alignItems:'center'}}>
-                     <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                       会前提醒时间：
-                     </Text>
+                     title={'会前提醒时间'}
+                     detail={'提前1小时提醒'}
+                     noLine={false}
+                    />
 
-                     <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                       提前1小时提醒
-                     </Text>
-
-                     </View>
-
-                     </View>
+                    <View style={styles.space}>
+                    </View>
 
                     <DisplayItemView
 
                      title={'会议用品'}
+                      icon={require('../../images/conferenceAmenitiesIcon.png')}
                      detail={'图纸，文件'}
                      noLine={false}
                     />
@@ -168,12 +175,13 @@ export default class MeetingDetailView extends Component {
                     <DisplayItemView
 
                      title={'会议备注'}
+                      icon={require('../../images/remarkIcon.png')}
                      detail={'请各位领导，同事准时到场'}
                      noLine={false}
                     />
 
 
-                    {this.createEnter('附件','查看全部','attach')}
+                    {this.createEnter(require('../../images/enclosureIcon.png'),'附件','查看全部','attach')}
 
                 </ScrollView>
             </View>
