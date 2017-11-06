@@ -28,6 +28,7 @@ import DateTimePickerView from '../../common/DateTimePickerView'
 import EditItemView from '../../common/EditItemView';
 import MemberSelectView from '../../common/MemberSelectView'
 import EditSubjectView from './EditSubjectView'
+import ChooseMemberView from './ChooseMemberView'
 import HttpRequest from '../../HttpRequest/HttpRequest'
 
 
@@ -228,7 +229,14 @@ onEnterClick(tag){
                 }
         })
     }else if (tag == 'member') {
-
+        this.props.navigator.push({
+            component: ChooseMemberView,
+             props: {
+                 data:this.state.data,
+                 refresh:this.refresh.bind(this),
+                 meeting:true,
+                }
+        })
     }
 }
 
