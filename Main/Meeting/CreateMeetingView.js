@@ -20,14 +20,14 @@ import LoginView from '../../Login/LoginView'
 var Global = require('../../common/globals');
 var width = Dimensions.get('window').width;
 import CommitButton from '../../common/CommitButton'
-
+import Spinner from 'react-native-loading-spinner-overlay'
 import DisplayItemView from '../../common/DisplayItemView';
 import EnterItemView from '../../common/EnterItemView';
 import DateTimePickerView from '../../common/DateTimePickerView'
 
 import EditItemView from '../../common/EditItemView';
 import MemberSelectView from '../../common/MemberSelectView'
-
+import EditSubjectView from './EditSubjectView'
 import HttpRequest from '../../HttpRequest/HttpRequest'
 
 
@@ -38,7 +38,8 @@ export default class CreateMeetingView extends Component {
         this.state = {
             data: {},
             _selectD:{},
-            meetingTypeData:meetingTypeArry
+            meetingTypeData:meetingTypeArry,
+            loadingVisible:false,
         };
     }
 
@@ -50,8 +51,9 @@ export default class CreateMeetingView extends Component {
 
 
     onPublishSuccess(response){
-
+        this.setState({loadingVisible:false})
         Global.showToast(response.message)
+        this.back()
 
     }
 
@@ -87,10 +89,10 @@ export default class CreateMeetingView extends Component {
             return
         }
 
-        if (!this.state.data.members) {
-            Global.alert('请选择参会员')
-            return
-        }
+        // if (!this.state.data.members) {
+        //     Global.alert('请选择参会员')
+        //     return
+        // }
 
         if (!this.state.data.address) {
             Global.alert('请输入会议地点')
@@ -164,22 +166,15 @@ export default class CreateMeetingView extends Component {
 
     }
 
-    onModuleItemClick(itemData) {
-        this.props.navigator.push({
-            component: MeetingListViewContainer,
-             props: {
-                 data:itemData,
-                 type:this.props.type,
-                }
-        })
-    }
+
 
 onEditTitleContentClick(){
 
 }
 
-onChangeText(text,tag){
+onChangeText(tag,text){
     this.state.data[tag] = text;
+    Global.log(tag+"text=="+text);
     this.setState({...this.state});
 }
 
@@ -225,10 +220,20 @@ createEnter(icon,label,desc,tag){
 
 onEnterClick(tag){
     if (tag == 'subject') {
-
+        this.props.navigator.push({
+            component: EditSubjectView,
+             props: {
+                 data:this.state.data,
+                 refresh:this.refresh.bind(this),
+                }
+        })
     }else if (tag == 'member') {
 
     }
+}
+
+refresh(){
+    this.setState({...this.state});
 }
 
 
@@ -458,6 +463,9 @@ createChooseInfo(icon,label,desc,data,tag){
                      {this.renderItem()}
                         </ScrollView>
                         {this.renderFormView()}
+                        <Spinner
+                            visible={this.state.loadingVisible}
+                        />
             </View>
         )
     }

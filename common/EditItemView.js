@@ -20,6 +20,8 @@ var width = Dimensions.get('window').width;
         onChangeText:PropTypes.func,
         keyboard : PropTypes.string ?PropTypes.string : 'default',
         icon:PropTypes.string,
+        editable:PropTypes.bool,
+        autoFocus:PropTypes.bool,
     }
 
     // constructor(props) {
@@ -48,6 +50,8 @@ var width = Dimensions.get('window').width;
                      placeholder={this.props.placeholder}
                     value={this.props.content}
                     keyboardType={this.props.keyboard}
+                    editable={this.props.editable}
+                    autoFocus={this.props.autoFocus}
 
                     ></TextInput>
                 </View>

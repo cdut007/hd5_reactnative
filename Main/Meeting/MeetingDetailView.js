@@ -25,6 +25,7 @@ import HttpRequest from '../../HttpRequest/HttpRequest'
 import NavBar from '../../common/NavBar'
 var Global = require('../../common/globals');
 
+import EditSubjectView from './EditSubjectView'
 import DisplayItemView from '../../common/DisplayItemView';
 import DisplayMoreItemView from '../../common/DisplayMoreItemView';
 
@@ -34,6 +35,7 @@ export default class MeetingDetailView extends Component {
         this.state = {
 
             modalVisible: false,
+            data:this.props.data,
         };
     }
 
@@ -42,7 +44,19 @@ export default class MeetingDetailView extends Component {
         this.props.navigator.pop()
     }
 
-  onEnterClick(){
+  onEnterClick(tag){
+      if (tag == 'subject') {
+          this.props.navigator.push({
+              component: EditSubjectView,
+               props: {
+                   data:this.state.data,
+                 
+                   scan:true,
+                  }
+          })
+      }else if (tag == 'member') {
+
+      }
 
   }
 
@@ -52,7 +66,7 @@ export default class MeetingDetailView extends Component {
           textColor = '#e82628'
       }
       return(
-          <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onEnterClick.bind(this)}>
+          <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onEnterClick.bind(this,tag)}>
 
           <View style={{flex:1,paddingLeft:10,flexDirection:'row'}}>
 
@@ -94,20 +108,20 @@ export default class MeetingDetailView extends Component {
                     <View style={styles.space}>
                     </View>
 
-                    {this.createEnter(require('../../images/themeIcon.png'),'会议主题','双日计划会议','subject')}
+                    {this.createEnter(require('../../images/themeIcon.png'),'会议主题',this.state.data.subject,'subject')}
                     <View style={styles.line}>
                     </View>
 
                     <DisplayItemView
                      icon={require('../../images/typesIcon.png')}
                      title={'会议类型'}
-                     detail={'工程类型'}
+                     detail={this.state.data.category}
                      noLine={false}
                     />
                     <DisplayItemView
 
                      title={'所属项目'}
-                     detail={'移动app管理开发'}
+                     detail={this.state.data.project}
                      icon={require('../../images/projectIcon.png')}
 
                      noLine={false}
@@ -116,14 +130,14 @@ export default class MeetingDetailView extends Component {
 
                      title={'主持人'}
                      icon={require('../../images/hostIcon.png')}
-                     detail={'james'}
+                     detail={this.state.data.host}
                      noLine={false}
                     />
                     <DisplayItemView
 
                      title={'记录员'}
                      icon={require('../../images/registrarIcon.png')}
-                     detail={'tom'}
+                     detail={this.state.data.recorder}
                      noLine={false}
                     />
 
@@ -135,7 +149,7 @@ export default class MeetingDetailView extends Component {
 
                      title={'会议地点'}
                      icon={require('../../images/placeIcon.png')}
-                     detail={'ssss'}
+                     detail={this.state.data.address}
                      noLine={false}
                     />
 
@@ -145,13 +159,13 @@ export default class MeetingDetailView extends Component {
                     <DisplayItemView
 
                      title={'会议开始时间'}
-                     detail={'2017/11/09 10:00'}
+                     detail={Global.formatFullDateDisplay(this.state.data.startTime)}
                      noLine={false}
                     />
                     <DisplayItemView
 
                      title={'会议结束时间'}
-                     detail={'2017/11/09 10:00'}
+                     detail={Global.formatFullDateDisplay(this.state.data.endTime)}
                      noLine={false}
                     />
                     <DisplayItemView
@@ -168,7 +182,7 @@ export default class MeetingDetailView extends Component {
 
                      title={'会议用品'}
                       icon={require('../../images/conferenceAmenitiesIcon.png')}
-                     detail={'图纸，文件'}
+                     detail={this.state.data.supplies}
                      noLine={false}
                     />
 
@@ -176,7 +190,7 @@ export default class MeetingDetailView extends Component {
 
                      title={'会议备注'}
                       icon={require('../../images/remarkIcon.png')}
-                     detail={'请各位领导，同事准时到场'}
+                     detail={this.state.data.remark}
                      noLine={false}
                     />
 
