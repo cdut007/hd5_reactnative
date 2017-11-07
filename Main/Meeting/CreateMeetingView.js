@@ -142,7 +142,10 @@ export default class CreateMeetingView extends Component {
         }
 
         ids = ids.substr(0,ids.length-1)
-
+    var conferenceId = ''
+    if (this.state.data.conferenceId) {
+        conferenceId = this.state.data.conferenceId
+    }
     this.setState({loadingVisible:true})
         var paramBody = {
                  subject:this.state.data.subject,
@@ -150,6 +153,7 @@ export default class CreateMeetingView extends Component {
                 'category': this.state.data.category,
                 'project':this.state.data.project,
                 'host':this.state.data.host,
+                id:conferenceId,
                 recorder:this.state.data.recorder,
                 supplies:this.state.data.supplies,
                 address:this.state.data.address,
