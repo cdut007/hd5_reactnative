@@ -26,6 +26,8 @@ import NavBar from '../../common/NavBar'
 var Global = require('../../common/globals');
 
 import EditSubjectView from './EditSubjectView'
+import ScanMemberListView from './ScanMemberListView'
+import FeedbackMessageView from './FeedbackMessageView'
 import DisplayItemView from '../../common/DisplayItemView';
 import DisplayMoreItemView from '../../common/DisplayMoreItemView';
 
@@ -44,18 +46,73 @@ export default class MeetingDetailView extends Component {
         this.props.navigator.pop()
     }
 
+    componentDidMount() {
+
+      this.getNewestData()
+
+    }
+
+    onGetDataSuccess(response,paramBody){
+             Global.log('onGetDataSuccess@@@@')
+            if (response.responseResult.feedback) {
+                this.props.data.feedback = response.responseResult.feedback
+                this.setState({
+                    data:this.props.data,
+                });
+            }
+
+    }
+
+    getNewestData(){
+                var paramBody = {}
+
+                HttpRequest.get('/conference/'+this.props.data.id, paramBody, this.onGetDataSuccess.bind(this),
+                    (e) => {
+
+
+                        try {
+                            var errorInfo = JSON.parse(e);
+                            if (errorInfo != null) {
+                             Global.log(errorInfo)
+                            } else {
+                                Global.log(e)
+                            }
+                        }
+                        catch(err)
+                        {
+                            Global.log(err)
+                        }
+
+                        Global.log('Task error:' + e)
+                    })
+    }
+
   onEnterClick(tag){
       if (tag == 'subject') {
           this.props.navigator.push({
               component: EditSubjectView,
                props: {
                    data:this.state.data,
-                 
+
                    scan:true,
                   }
           })
       }else if (tag == 'member') {
+          this.props.navigator.push({
+              component: ScanMemberListView,
+               props: {
+                   data:this.state.data,
 
+                  }
+          })
+      }else if (tag == 'feedback') {
+          this.props.navigator.push({
+              component: FeedbackMessageView,
+               props: {
+                   data:this.state.data,
+
+                  }
+          })
       }
 
   }
@@ -64,6 +121,9 @@ export default class MeetingDetailView extends Component {
       var textColor = '#777777'
       if (tag == 'feedback') {
           textColor = '#e82628'
+          if (desc == '0') {
+              desc =''
+          }
       }
       return(
           <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onEnterClick.bind(this,tag)}>
@@ -104,7 +164,7 @@ export default class MeetingDetailView extends Component {
 
                     <View style={styles.space}>
                     </View>
-                    {this.createEnter(require('../../images/informIcon.png'),'通知反馈','20','feedback')}
+                    {this.createEnter(require('../../images/informIcon.png'),'通知反馈',this.state.data.unread,'feedback')}
                     <View style={styles.space}>
                     </View>
 

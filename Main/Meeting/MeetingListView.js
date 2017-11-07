@@ -22,6 +22,7 @@ import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 import MeetingDetailView from './MeetingDetailView';
+import CreateMeetingView from './CreateMeetingView';
 import CardView from 'react-native-cardview'
 
 const isIOS = Platform.OS == "ios"
@@ -164,12 +165,22 @@ export default class MeetingListView extends Component {
     }
 
     onItemPress(itemData){
-        this.props.navigator.push({
-            component: MeetingDetailView,
-             props: {
-                 data:itemData,
-                }
-        })
+        if (itemData.status == 'DRAFT') {
+            this.props.navigator.push({
+                component: CreateMeetingView,
+                 props: {
+                     data:itemData,
+                    }
+            })
+        }else{
+            this.props.navigator.push({
+                component: MeetingDetailView,
+                 props: {
+                     data:itemData,
+                    }
+            })
+        }
+
     }
 
 
@@ -255,7 +266,7 @@ export default class MeetingListView extends Component {
         var itemsArray = [];
         var len = item.fileSize;
         for (var i = 0; i < 1; i++) {
-            itemsArray.push(<Image style={{marginTop:10,width:24,height:24,marginLeft:10}} source={require('../../images/problem_icon_click.png')} />)
+            itemsArray.push(<Image style={{marginTop:12,width:22,height:16,marginLeft:10}} source={require('../../images/annex_icon_copy.png')} />)
         }
 
         return itemsArray
@@ -268,6 +279,23 @@ export default class MeetingListView extends Component {
             //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
             var color = '#e82628'
 
+            if (rowData.status == 'UNSTARTED') {
+                info = '未开始'
+            }else if (rowData.status == 'PROGRESSING') {
+                info = '进行中'
+                color = '#0755a6'
+            }else if (rowData.status == 'EXPIRED') {
+                info = '已结束'
+                color = '#888888'
+            }else if (rowData.status == 'DRAFT') {
+                info = '草稿'
+                color = '#f77935'
+            }
+            var unreadInfo = ''
+            if (rowData.unread>0) {
+                unreadInfo= rowData.unread+'条未读'
+            }
+
 
                 return (
                     <CardView
@@ -279,11 +307,24 @@ export default class MeetingListView extends Component {
                         <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
 
                         <View style={[styles.statisticsflexContainer,]}>
-                        <Text numberOfLines={2} style={{color:'#282828',fontSize:14}}>
+
+                        <View style={{flexDirection: 'row',justifyContent:'flex-start'}}>
+
+                        <Text numberOfLines={2} style={{flex:1,color:'#282828',fontSize:14}}>
                          {rowData.subject}
                         </Text>
 
-                        <View style={{marginTop:10,paddingBottom:4,flexDirection: 'row',justifyContent:'flex-start',alignItems:'center'}}>
+
+                        <Text numberOfLines={1} style={{color:'#e82628',fontSize:12}}>
+                        {unreadInfo}
+                        </Text>
+
+
+                        </View>
+
+
+
+                        <View style={{marginTop:10,paddingBottom:4,flexDirection: 'row',justifyContent:'flex-start',}}>
 
                         <Text numberOfLines={1} style={{flex:1,color:'#888888',fontSize:12}}>
                         创建时间：{Global.formatDate(rowData.startTime)}
@@ -352,7 +393,7 @@ export default class MeetingListView extends Component {
                        {this.renderImages(rowData)}
                        </View>
 
-                       <Text numberOfLines={1} style={{color:'#1c1c1c',fontSize:12}}>
+                       <Text numberOfLines={1} style={{marginTop:10,color:'#0755a6',fontSize:12}}>
                        查看详情
                        </Text>
 

@@ -36,9 +36,20 @@ export default class CreateMeetingView extends Component {
     constructor(props) {
         super(props)
         var meetingTypeArry=['行政','工程','物资','技术','安全','质量','综合']
+        var data = this.props.data
+        var title = '创建会议'
+        if (data) {
+            if (data.status == 'DRAFT') {
+                title = '编辑会议'
+                data.members = data.participants
+            }
+        }else{
+            data = {}
+        }
         this.state = {
-            data: {},
+            data: data,
             _selectD:{},
+            title:title,
             meetingTypeData:meetingTypeArry,
             loadingVisible:false,
         };
@@ -70,7 +81,7 @@ export default class CreateMeetingView extends Component {
             return
         }
 
-        if (!this.state.data.meetingType) {
+        if (!this.state.data.category) {
             Global.alert('请选择会议类型')
             return
         }
@@ -110,10 +121,20 @@ export default class CreateMeetingView extends Component {
             return
         }
 
-        if (!this.state.data.alertTime) {
+        if (!this.state.data.alarmTime) {
             Global.alert('请选择会前提醒时间')
             return
         }
+
+
+        if (!this.state.data.remark) {
+            this.state.data.remark = ''
+        }
+
+        if (!this.state.data.supplies) {
+                this.state.data.supplies = ''
+        }
+
 
         var ids= ''
         for (var i = 0; i < this.state.data.members.length; i++) {
@@ -136,7 +157,7 @@ export default class CreateMeetingView extends Component {
                 participants:ids,
                 startTime:Global.formatFullDate(this.state.data.startTime),
                 endTime:Global.formatFullDate(this.state.data.endTime),
-                alarmTime:Global.formatFullDate(this.state.data.alertTime),
+                alarmTime:Global.formatFullDate(this.state.data.alarmTime),
                 type:'SEND',
 
             }
@@ -182,7 +203,7 @@ export default class CreateMeetingView extends Component {
             return
         }
 
-        if (!this.state.data.meetingType) {
+        if (!this.state.data.category) {
             Global.alert('请选择会议类型')
             return
         }
@@ -222,9 +243,17 @@ export default class CreateMeetingView extends Component {
             return
         }
 
-        if (!this.state.data.alertTime) {
+        if (!this.state.data.alarmTime) {
             Global.alert('请选择会前提醒时间')
             return
+        }
+
+        if (!this.state.data.remark) {
+            this.state.data.remark = ''
+        }
+
+        if (!this.state.data.supplies) {
+                this.state.data.supplies = ''
         }
 
         var ids= ''
@@ -248,7 +277,7 @@ export default class CreateMeetingView extends Component {
                 participants:ids,
                 startTime:Global.formatFullDate(this.state.data.startTime),
                 endTime:Global.formatFullDate(this.state.data.endTime),
-                alarmTime:Global.formatFullDate(this.state.data.alertTime),
+                alarmTime:Global.formatFullDate(this.state.data.alarmTime),
                 type:'DRAFT',
 
             }
@@ -463,7 +492,7 @@ createChooseInfo(icon,label,desc,data,tag){
                       <View style={styles.line}>
                       </View>
 
-                      {this.createChooseInfo(require('../../images/typesIcon.png'),'会议类型',this.state.data.meetingType?this.state.data.meetingType:'请选择会议类型',this.state.meetingTypeData,'meetingType')}
+                      {this.createChooseInfo(require('../../images/typesIcon.png'),'会议类型',this.state.data.category?this.state.data.category:'请选择会议类型',this.state.meetingTypeData,'meetingType')}
                       <View style={styles.line}>
                       </View>
 
@@ -511,7 +540,7 @@ createChooseInfo(icon,label,desc,data,tag){
                       {this.createChooseInfo(null,'会议结束时间',this.state.data.endTime?Global.formatFullDateDisplay(this.state.data.endTime):'请选择会议结束时间',null,'endTime')}
                       <View style={styles.line}>
                       </View>
-                      {this.createChooseInfo(null,'会前提醒时间',this.state.data.alertTime?Global.formatFullDateDisplay(this.state.data.alertTime):'请选择会前提醒时间',null,'alertTime')}
+                      {this.createChooseInfo(null,'会前提醒时间',this.state.data.alarmTime?Global.formatFullDateDisplay(this.state.data.alarmTime):'请选择会前提醒时间',null,'alarmTime')}
                       <View style={styles.line}>
                       </View>
 
@@ -519,7 +548,7 @@ createChooseInfo(icon,label,desc,data,tag){
                        topic={'会议用品'}
                        icon={require('../../images/conferenceAmenitiesIcon.png')}
                        placeholder={'请输入会议用品'}
-                       content={this.state.data.department}
+                       content={this.state.data.supplies}
                        onChangeText={this.onChangeText.bind(this,'supplies')}
                       />
 
@@ -576,7 +605,7 @@ createChooseInfo(icon,label,desc,data,tag){
         return (
             <View style={styles.container}>
                 <NavBar
-                    title="创建会议"
+                    title={this.state.title}
                     leftIcon={require('../../images/back.png')}
                     leftPress={this.back.bind(this)}
                      />
