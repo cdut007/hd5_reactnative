@@ -129,9 +129,9 @@ export default class QuestionList extends Component {
 
     componentDidMount() {
 
-    SafeWorkDeal = DeviceEventEmitter.addListener('SafeWork',(param) => {this.executePlanRequest(1)})
+    SafeWorkDeal = DeviceEventEmitter.addListener('SafeWork',(param) => {this._onRefresh.bind(this)})
 
-        this.executePlanRequest(1);
+    this.executePlanRequest(1);
 
     }
 
@@ -141,24 +141,24 @@ export default class QuestionList extends Component {
 
     onGetDataSuccess(response,paramBody){
          console.log('onGetDataSuccess@@@@')
-     var query = this.state.filter;
-     if (!query) {
-         query = '';
-     }
+    //  var query = this.state.filter;
+    //  if (!query) {
+    //      query = '';
+    //  }
 
          var datas = [];
         if(response.responseResult){
             datas = response.responseResult.data
         }
 
-        if (this.state.filter !== query) {
-            this.setState({
-                isRefreshing:false,
-            });
-           // do not update state if the query is stale
-           console.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
-           return;
-         }
+        // if (this.state.filter !== query) {
+        //     this.setState({
+        //         isRefreshing:false,
+        //     });
+        //    // do not update state if the query is stale
+        //    console.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
+        //    return;
+        //  }
 
          var status = paramBody.status
 
