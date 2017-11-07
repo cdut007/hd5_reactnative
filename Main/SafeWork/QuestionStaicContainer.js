@@ -60,14 +60,12 @@ export default class QuestionStaicContainer extends Component {
  _renderQuetionView(index,label,problemSolveStatus){
 
 this.state.detailType = index;
-this.state.problemStatus =  problemSolveStatus;
-
 return( <View  tabLabel={label} style={styles.container}>
 
        {this.renderSearchBar()}
        {this.renderContent()}
        {this.renderSlider()}
-       {this.renderQuestionList()}
+       {this.renderQuestionList(problemSolveStatus)}
 
     </View>)
 
@@ -98,7 +96,7 @@ return( <View  tabLabel={label} style={styles.container}>
            {this.renderSearchBar()}
            {this.renderContent()}
            {this.renderSlider()}
-           {this.renderQuestionList()}
+           {this.renderQuestionList(this.state.problemStatus)}
 
        </View>
 
@@ -185,7 +183,7 @@ return( <View  tabLabel={label} style={styles.container}>
   // //    this.timeoutID = this.setTimeout(() => this.executePlanRequest(pagesize,1,filter), 100);
   // }
 
-  renderQuestionList(){
+  renderQuestionList(problemStatus){
 
     var userId = '';
     if (this.props.data.user) {
@@ -199,7 +197,7 @@ return( <View  tabLabel={label} style={styles.container}>
       detailType={this.state.detailType}
       userId={userId}
       status={"UNCOMPLETE"}
-      problemStatus={this.state.problemStatus}
+      problemStatus={problemStatus}
       problemSolveStatus={this.state.problemSolveStatus}
       navigator={this.props.navigator}
       ref="myQuestionlist"

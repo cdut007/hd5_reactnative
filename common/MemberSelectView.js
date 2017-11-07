@@ -57,13 +57,15 @@ export default class MemberSelectView extends Component {
         Picker.hide();
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();
+        this.showTimePicker.remove();
+
     }
 
     componentWillMount(){
             //监听键盘弹出事件
       this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
       this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
-
+      this.showTimePicker = DeviceEventEmitter.addListener('show_timePicker',this._keyboardDidShow);
     }
 
 

@@ -55,6 +55,7 @@ var machineTypes = [];
 var PlantTypes = [];
 var DepartTypes = [];
 var TeamTypes = [];
+var selects = [];
 
 export  default class ProblemReport extends Component {
 
@@ -79,6 +80,8 @@ export  default class ProblemReport extends Component {
           question:'',
           fileArr: [{}],//装图片资源的数组
           loadingVisible:false,
+          requestTime:1,
+
       }
   }
 
@@ -95,6 +98,8 @@ export  default class ProblemReport extends Component {
   }
 
   componentDidMount(){
+
+
 
   this.featchData()
 
@@ -116,13 +121,21 @@ export  default class ProblemReport extends Component {
               loadingVisible: false
           });
 
-          console.log('Login error:' + e)
+        if (requestTime == 1) {
+               Global.alert("获取数据失败");
+               this.back.bind(this);
+
+         }
+
+          console.log('error:' + e)
 
         })
 
   }
 
   featchDataSuccess(response){
+
+    requestTime = 2;
 
     this.setState({
         loadingVisible: false
@@ -167,7 +180,6 @@ export  default class ProblemReport extends Component {
 
   })
 
-if (this.state.ResDepartId) {
 
   this.state.TeamTypes.forEach((item) => {
 
@@ -175,7 +187,24 @@ if (this.state.ResDepartId) {
 
   })
 
-}
+
+  if (this.state.machineType == '选择机组' && machineTypes.length > 0 ) {
+    this.setState({machineType:machineTypes[0]})
+
+  }
+
+  if (this.state.plantType == '选择厂房' && PlantTypes.length > 0 ) {
+
+    this.setState({plantType:PlantTypes[0]})
+
+  }
+
+  if (!this.state.ResDepartId && DepartTypes.length > 0) {
+     this.state.ResDepartId = data.responsibleDept[0]['deptId'];
+     this.setState({ResDepart:DepartTypes[0]})
+  }
+
+
 
   }
 
@@ -222,12 +251,12 @@ if (this.state.ResDepartId) {
 
     var displayAry = [
       {title:'问题',id:'questionName',content:this.state.questionName,type:'input'},
-      {title:'机组',id:'choose_machiche',pickerTitle:"选择机组",content:this.state.machineType,data:machineTypes,type:'choose'},
-      {title:'厂房',id:'choose_platHouse',pickerTitle:"选择厂房",content:this.state.plantType,data:PlantTypes,type:'choose'},
+      {title:'机组',id:'choose_machiche',pickerTitle:"选择机组",content:this.state.machineType,data:machineTypes,type:'choose',ref:this._selectMachine},
+      {title:'厂房',id:'choose_platHouse',pickerTitle:"选择厂房",content:this.state.plantType,data:PlantTypes,type:'choose',ref:this._selectPlant},
       {title:'标高',id:'elevation',content:this.state.elevation,type:'input'},
       {title:'房间号',id:'room_no',content:this.state.RoomNumber,type:'input'},
-      {title:'责任部门',id:'choose_des',pickerTitle:"选择责任部门",content:this.state.ResDepart,data:DepartTypes,type:'choose'},
-      {title:'责任班组(选填)',id:'choose_team',pickerTitle:"选择责任班组",content:this.state.ResTeam,data:TeamTypes,type:'choose'},
+      {title:'责任部门',id:'choose_des',pickerTitle:"选择责任部门",content:this.state.ResDepart,data:DepartTypes,type:'choose',ref:this._selectDepart},
+      {title:'责任班组(选填)',id:'choose_team',pickerTitle:"选择责任班组",content:this.state.ResTeam,data:TeamTypes,type:'choose',ref:this._selectTeam},
       {type:'describe'},
       {type:'file'},
 
@@ -240,7 +269,7 @@ for (var i = 0; i<displayAry.length; i++) {
   if (displayAry[i].type == 'choose') {
 
    itemAry.push(
-        this._SelectView(displayAry[i].title,displayAry[i].content,displayAry[i].data,displayAry[i].pickerTitle,displayAry[i].id)
+        this._SelectView(displayAry[i].title,displayAry[i].content,displayAry[i].data,displayAry[i].pickerTitle,displayAry[i].id,displayAry[i].ref)
    )
  }else if (displayAry[i].type == 'input') {
      itemAry.push(
@@ -469,6 +498,10 @@ _questtionDescribe(){
 
   _ontextChange(text,tag){
 
+if (text.length == 1 && text == ' ') {
+return
+}
+
   switch (tag) {
     case "elevation":
       {
@@ -488,12 +521,12 @@ _questtionDescribe(){
   }
   }
 
-  _SelectView(name,title,datas,pickerTitle,pickerType){
+  _SelectView(name,title,datas,pickerTitle,pickerType,reference){
 
       return(
         <View style={styles.topContainer}>
               <Text style={styles.title}> {name} </Text>
-              {this.renderSelectView(title,datas,pickerTitle,pickerType)}
+              {this.renderSelectView(title,datas,pickerTitle,pickerType,reference)}
         </View>
       )
 
@@ -511,13 +544,16 @@ _questtionDescribe(){
 
   }
 
-  renderSelectView(title,datas,pickerTitle,pickerType) {
+  renderSelectView(title,datas,pickerTitle,pickerType,reference) {
+
       return(
-        <View style={styles.borderStyle}>
-      <TouchableOpacity onPress={() => this._selectM.onPickClick()} style={styles.touchStyle}>
+        <View style={styles.statisticsflexContainer}>
+      <TouchableOpacity onPress={() => reference.onPickClick()}
+        style={styles.touchStyle}
+        >
         <MemberSelectView
-        ref={(c) => this._selectM = c}
-         style={styles.textStyle}
+        ref={(c) => reference = c}
+         style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
          title={title}
          data={datas}
          type={pickerType}
@@ -694,6 +730,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       backgroundColor:'#ffffff',
       marginTop: 30,
+      marginLeft:20,
     },
     margin: {
    marginTop: 30,
@@ -718,9 +755,6 @@ const styles = StyleSheet.create({
       width: width*0.5,
       height: Platform.OS === 'android' ? 44 : 36,
       flexDirection:'row',
-      borderColor : '#f77935',
-      borderWidth:0.5,
-      borderRadius : 4,
     },
     touchStyle: {
       alignItems:'center',
@@ -730,6 +764,12 @@ const styles = StyleSheet.create({
       paddingRight:10,
       paddingTop:8,
       paddingBottom:8,
+      borderColor : '#f77935',
+      backgroundColor : 'white',
+      borderRadius : 4,
+      borderWidth:0.5,
+      flexDirection:'row',
+      alignSelf:'stretch',
     },
     title: {
         width: width * 0.25,
@@ -758,4 +798,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    statisticsflexContainer: {
+            width: width*0.5,
+             height: Platform.OS === 'android' ? 44 : 36,
+             backgroundColor: '#f2f2f2',
+             flexDirection: 'row',
+         },
   });

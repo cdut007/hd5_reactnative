@@ -4,7 +4,8 @@ import {
     Text,
     View,
     TouchableHighlight,
-    TouchableOpacity
+    TouchableOpacity,
+    DeviceEventEmitter,
 } from 'react-native';
 
 import dateformat from 'dateformat'
@@ -35,6 +36,7 @@ export default class DateTimePickerView extends Component {
 
 onClick() {
 this.setState({ isDateTimePickerVisible: true })
+DeviceEventEmitter.emit('show_timePicker','show_timePicker');
 }
 
     onSelectedDate(date) {
@@ -60,6 +62,7 @@ this.setState({ isDateTimePickerVisible: true })
     }
 
 
+
     render() {
         // if (this.props.visible) {
         //     this.setState({ isDateTimePickerVisible: true })
@@ -67,7 +70,7 @@ this.setState({ isDateTimePickerVisible: true })
         // }
         return (
             <View style={[styles.container]}>
-                <TouchableOpacity style = {{alignItems: 'center', justifyContent: 'center'}} onPress={() => this.setState({ isDateTimePickerVisible: true })}>
+                <TouchableOpacity style = {{alignItems: 'center', justifyContent: 'center'}} onPress={this.onClick.bind(this)}>
                     <Text style={[this.props.style]}>{this.props.title}</Text>
                 </TouchableOpacity>
                 <DateTimePicker
