@@ -30,13 +30,13 @@ var meetingModuleData = [
         'title': '已接收',
         "type": "JS",
          "tag":'meeting',
-        'image': require('../images/receivedIcon.png')
+        'image': require('../images/received_icon.png')
     },{
         'index': 1,
         'title': '已发送',
         "type": "JS",
         "tag":'meeting',
-        'image': require('../images/sendIcon.png')
+        'image': require('../images/send_icon.png')
     },{
         'index': 2,
         'title': '草稿',
@@ -51,13 +51,13 @@ var meetingModuleData = [
             'title': '已接收',
             "type": "JS",
             "tag":'notice',
-            'image': require('../images/receivedIcon.png')
+            'image': require('../images/received_icon.png')
         },{
             'index': 1,
             'title': '已发送',
             "type": "JS",
             "tag":'notice',
-            'image': require('../images/sendIcon.png')
+            'image': require('../images/send_icon.png')
         },{
             'index': 2,
             'title': '草稿',

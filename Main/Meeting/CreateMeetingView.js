@@ -90,10 +90,10 @@ export default class CreateMeetingView extends Component {
             return
         }
 
-        // if (!this.state.data.members) {
-        //     Global.alert('请选择参会员')
-        //     return
-        // }
+        if (!this.state.data.members || this.state.data.members.length <= 0) {
+            Global.alert('请选择参会员')
+            return
+        }
 
         if (!this.state.data.address) {
             Global.alert('请输入会议地点')
@@ -115,9 +115,14 @@ export default class CreateMeetingView extends Component {
             return
         }
 
+        var ids= ''
+        for (var i = 0; i < this.state.data.members.length; i++) {
+                ids+=this.state.data.members[i].id+',';
+        }
 
+        ids = ids.substr(0,ids.length-1)
 
-
+    this.setState({loadingVisible:true})
         var paramBody = {
                  subject:this.state.data.subject,
                 'content': this.state.data.content,
@@ -126,7 +131,9 @@ export default class CreateMeetingView extends Component {
                 'host':this.state.data.host,
                 recorder:this.state.data.recorder,
                 supplies:this.state.data.supplies,
+                address:this.state.data.address,
                 remark:this.state.data.remark,
+                participants:ids,
                 startTime:Global.formatFullDate(this.state.data.startTime),
                 endTime:Global.formatFullDate(this.state.data.endTime),
                 alarmTime:Global.formatFullDate(this.state.data.alertTime),
@@ -164,6 +171,115 @@ export default class CreateMeetingView extends Component {
     }
 
     saveDraftMeeting(){
+
+        if (!this.state.data.subject) {
+            Global.alert('请输入会议主题')
+            return
+        }
+
+        if (!this.state.data.content) {
+            Global.alert('请输入会议内容')
+            return
+        }
+
+        if (!this.state.data.meetingType) {
+            Global.alert('请选择会议类型')
+            return
+        }
+
+        if (!this.state.data.project) {
+            Global.alert('请输入所属项目')
+            return
+        }
+
+        if (!this.state.data.host) {
+            Global.alert('请输入主持人')
+            return
+        }
+
+        if (!this.state.data.recorder) {
+            Global.alert('请输入记录员')
+            return
+        }
+
+        if (!this.state.data.members || this.state.data.members.length <= 0) {
+            Global.alert('请选择参会员')
+            return
+        }
+
+        if (!this.state.data.address) {
+            Global.alert('请输入会议地点')
+            return
+        }
+
+        if (!this.state.data.startTime) {
+            Global.alert('请选择会议开始时间')
+            return
+        }
+
+        if (!this.state.data.endTime) {
+            Global.alert('请选择会议结束时间')
+            return
+        }
+
+        if (!this.state.data.alertTime) {
+            Global.alert('请选择会前提醒时间')
+            return
+        }
+
+        var ids= ''
+        for (var i = 0; i < this.state.data.members.length; i++) {
+                ids+=this.state.data.members[i].id+',';
+        }
+
+        ids = ids.substr(0,ids.length-1)
+
+    this.setState({loadingVisible:true})
+        var paramBody = {
+                 subject:this.state.data.subject,
+                'content': this.state.data.content,
+                'category': this.state.data.category,
+                'project':this.state.data.project,
+                'host':this.state.data.host,
+                recorder:this.state.data.recorder,
+                supplies:this.state.data.supplies,
+                address:this.state.data.address,
+                remark:this.state.data.remark,
+                participants:ids,
+                startTime:Global.formatFullDate(this.state.data.startTime),
+                endTime:Global.formatFullDate(this.state.data.endTime),
+                alarmTime:Global.formatFullDate(this.state.data.alertTime),
+                type:'DRAFT',
+
+            }
+
+        HttpRequest.post('/conference', paramBody, this.onPublishSuccess.bind(this),
+            (e) => {
+                this.setState({
+                    loadingVisible: false
+                });
+                try {
+                    var errorInfo = JSON.parse(e);
+                }
+                catch(err)
+                {
+                    Global.log("error======"+err)
+                }
+                    if (errorInfo != null) {
+                        if (errorInfo.code == -1002||
+                         errorInfo.code == -1001) {
+                        Global.alert(errorInfo.message);
+                    }else {
+                        Global.alert(e)
+                    }
+
+                    } else {
+                        Global.alert(e)
+                    }
+
+
+                Global.log('push meeting error:' + e)
+            })
 
     }
 
@@ -338,7 +454,7 @@ createChooseInfo(icon,label,desc,data,tag){
 
             var displayMemberInfo ='请选择参会人员'
              if (this.state.data.members) {
-                 displayMemberInfo = '参会总人数xx人'
+                 displayMemberInfo = '参会总人数'+this.state.data.members.length+'人'
              }
                   return(
                       <View>
@@ -465,8 +581,6 @@ createChooseInfo(icon,label,desc,data,tag){
                     leftPress={this.back.bind(this)}
                      />
                      <ScrollView
-                     keyboardDismissMode='on-drag'
-                     keyboardShouldPersistTaps={false}
                      style={styles.mainStyle}>
                      {this.renderItem()}
                         </ScrollView>
