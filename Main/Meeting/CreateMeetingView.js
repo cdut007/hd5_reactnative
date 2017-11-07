@@ -266,9 +266,13 @@ export default class CreateMeetingView extends Component {
         }
 
         ids = ids.substr(0,ids.length-1)
-
+        var conferenceId = ''
+        if (this.state.data.conferenceId) {
+            conferenceId = this.state.data.conferenceId
+        }
     this.setState({loadingVisible:true})
         var paramBody = {
+                 id:conferenceId,
                  subject:this.state.data.subject,
                 'content': this.state.data.content,
                 'category': this.state.data.category,
