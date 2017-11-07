@@ -254,8 +254,8 @@ export default class MeetingListView extends Component {
     renderImages(item){
         var itemsArray = [];
         var len = item.fileSize;
-        for (var i = 0; i < len; i++) {
-            itemsArray.push(<Image style={{width:24,height:24,marginLeft:10}} source={require('../../images/problem_icon_click.png')} />)
+        for (var i = 0; i < 1; i++) {
+            itemsArray.push(<Image style={{marginTop:10,width:24,height:24,marginLeft:10}} source={require('../../images/problem_icon_click.png')} />)
         }
 
         return itemsArray
@@ -280,13 +280,13 @@ export default class MeetingListView extends Component {
 
                         <View style={[styles.statisticsflexContainer,]}>
                         <Text numberOfLines={2} style={{color:'#282828',fontSize:14}}>
-                        test
+                         {rowData.subject}
                         </Text>
 
                         <View style={{marginTop:10,paddingBottom:4,flexDirection: 'row',justifyContent:'flex-start',alignItems:'center'}}>
 
                         <Text numberOfLines={1} style={{flex:1,color:'#888888',fontSize:12}}>
-                        创建时间：{rowData.questionTime}
+                        创建时间：{Global.formatDate(rowData.startTime)}
                         </Text>
 
 
@@ -310,7 +310,7 @@ export default class MeetingListView extends Component {
                         </Text>
 
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                          2017-09-10 10：00
+                          {Global.formatFullDate(rowData.startTime)}
                         </Text>
 
                         </View>
@@ -344,11 +344,17 @@ export default class MeetingListView extends Component {
 
 
 
-                        <Text numberOfLines={1} style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                              附件:
-                        </Text>
+                       <View style={{flex:1,flexDirection:'row',}}>
+                       <Text numberOfLines={1} style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+                             附件:
+                       </Text>
 
-                        {this.renderImages(rowData)}
+                       {this.renderImages(rowData)}
+                       </View>
+
+                       <Text numberOfLines={1} style={{color:'#1c1c1c',fontSize:12}}>
+                       查看详情
+                       </Text>
 
                         </View>
 

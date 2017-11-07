@@ -25,6 +25,7 @@ import HttpRequest from '../../HttpRequest/HttpRequest'
 import NavBar from '../../common/NavBar'
 var Global = require('../../common/globals');
 
+import EditSubjectView from './EditSubjectView'
 import DisplayItemView from '../../common/DisplayItemView';
 import DisplayMoreItemView from '../../common/DisplayMoreItemView';
 
@@ -34,8 +35,7 @@ export default class MeetingDetailView extends Component {
         this.state = {
 
             modalVisible: false,
-            bigImages: [],
-            currentImageIndex: 0,
+            data:this.props.data,
         };
     }
 
@@ -44,15 +44,55 @@ export default class MeetingDetailView extends Component {
         this.props.navigator.pop()
     }
 
+  onEnterClick(tag){
+      if (tag == 'subject') {
+          this.props.navigator.push({
+              component: EditSubjectView,
+               props: {
+                   data:this.state.data,
+                 
+                   scan:true,
+                  }
+          })
+      }else if (tag == 'member') {
+
+      }
+
+  }
+
+  createEnter(icon,label,desc,tag){
+      var textColor = '#777777'
+      if (tag == 'feedback') {
+          textColor = '#e82628'
+      }
+      return(
+          <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onEnterClick.bind(this,tag)}>
+
+          <View style={{flex:1,paddingLeft:10,flexDirection:'row'}}>
+
+          <Image style={{width:24,height:24,marginRight:5}} source={icon} />
+
+            <Text numberOfLines={1} style={{color:'#444444',fontSize:14,}}>
+              {label}
+            </Text>
+          </View>
+          <Text numberOfLines={1} style={{paddingRight:10,color:textColor,fontSize:14,}}>
+            {desc}
+          </Text>
+
+          <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/detailsIcon.png')}></Image>
+
+          </TouchableOpacity>
+      )
+  }
+
 
 
 
     render() {
         return (
             <View style={styles.container}>
-            <Modal visible={this.state.modalVisible} transparent={true} onRequestClose={function(){}} animationType={'fade'}>
-              <ImageViewer imageUrls={this.state.bigImages} onClick={()=>{this.setState({modalVisible: false})}} index={this.state.currentImageIndex} />
-            </Modal>
+
                 <NavBar
                     title="会议详情"
                     leftIcon={require('../../images/back.png')}
@@ -62,49 +102,107 @@ export default class MeetingDetailView extends Component {
                     keyboardShouldPersistTaps={false}
                     style={styles.main_container}>
 
+                    <View style={styles.space}>
+                    </View>
+                    {this.createEnter(require('../../images/informIcon.png'),'通知反馈','20','feedback')}
+                    <View style={styles.space}>
+                    </View>
+
+                    {this.createEnter(require('../../images/themeIcon.png'),'会议主题',this.state.data.subject,'subject')}
+                    <View style={styles.line}>
+                    </View>
+
+                    <DisplayItemView
+                     icon={require('../../images/typesIcon.png')}
+                     title={'会议类型'}
+                     detail={this.state.data.category}
+                     noLine={false}
+                    />
+                    <DisplayItemView
+
+                     title={'所属项目'}
+                     detail={this.state.data.project}
+                     icon={require('../../images/projectIcon.png')}
+
+                     noLine={false}
+                    />
+                    <DisplayItemView
+
+                     title={'主持人'}
+                     icon={require('../../images/hostIcon.png')}
+                     detail={this.state.data.host}
+                     noLine={false}
+                    />
+                    <DisplayItemView
+
+                     title={'记录员'}
+                     icon={require('../../images/registrarIcon.png')}
+                     detail={this.state.data.recorder}
+                     noLine={false}
+                    />
+
+                    {this.createEnter(require('../../images/participantIcon.png'),'参会人员','查看全部','member')}
+                    <View style={styles.line}>
+                    </View>
+
+                    <DisplayItemView
+
+                     title={'会议地点'}
+                     icon={require('../../images/placeIcon.png')}
+                     detail={this.state.data.address}
+                     noLine={false}
+                    />
+
+                    <View style={styles.space}>
+                    </View>
+
+                    <DisplayItemView
+
+                     title={'会议开始时间'}
+                     detail={Global.formatFullDateDisplay(this.state.data.startTime)}
+                     noLine={false}
+                    />
+                    <DisplayItemView
+
+                     title={'会议结束时间'}
+                     detail={Global.formatFullDateDisplay(this.state.data.endTime)}
+                     noLine={false}
+                    />
+                    <DisplayItemView
+
+                     title={'会前提醒时间'}
+                     detail={'提前1小时提醒'}
+                     noLine={false}
+                    />
+
+                    <View style={styles.space}>
+                    </View>
+
+                    <DisplayItemView
+
+                     title={'会议用品'}
+                      icon={require('../../images/conferenceAmenitiesIcon.png')}
+                     detail={this.state.data.supplies}
+                     noLine={false}
+                    />
+
+                    <DisplayItemView
+
+                     title={'会议备注'}
+                      icon={require('../../images/remarkIcon.png')}
+                     detail={this.state.data.remark}
+                     noLine={false}
+                    />
+
+
+                    {this.createEnter(require('../../images/enclosureIcon.png'),'附件','查看全部','attach')}
+
                 </ScrollView>
             </View>
         )
     }
 
-    renderFiles(){
-        return (
-            <ScrollView horizontal={true} style={{marginTop: 10, marginBottom: 10}}>
-              {this.renderNetImages(this.props.data.witnessFiles, true)}
-            </ScrollView>
-        );
-        //this.props.data.witnessFiles[0].url   /hdxt/api/files/witness/_201709271313591506489239761.jpg
-        //this.props.data.witnessFiles[0].fileName
-    }
 
-
-        renderNetImages(files,isFeedback){
-          var images = [];
-          if(files){
-
-            files.map((item, i) => {
-                Global.log('url====='+(HttpRequest.getDomain()+ item.url))
-              images.push(
-                <TouchableOpacity key={'net' + i} onPress={() => this.viewBigImages(isFeedback, i)}>
-                 <ImageBackground style={{width: 70, height: 70, marginLeft: 10}} source={require('../../images/temporary_img.png')}>
-                  <Image source={{uri: HttpRequest.getDomain()+ item.url }} style={{borderRadius: 4, width: 70, height: 70, resizeMode: 'cover', marginLeft: 10,}}/>
-                  </ImageBackground>
-                </TouchableOpacity>
-              );
-            });
-        }else{
-            Global.log('can not find filesss')
-        }
-          return images;
-        }
-
-        viewBigImages(isFeedback, index){
-          var imageUrls = [];
-
-          this.props.data.witnessFiles.map((item) => {imageUrls.push({url: HttpRequest.getDomain()+ item.url})});
-
-          this.setState({modalVisible: true, bigImages: imageUrls, currentImageIndex: index})
-        }
 
 
 
@@ -124,5 +222,26 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f2f2f2',
     },
+    line: {
+    backgroundColor: '#f2f2f2',
+    width: width,
+    height: 1,
+    },
+    info: {
+     padding:10
+    },
+    space: {
+    backgroundColor: '#f2f2f2',
+    width: width,
+    height: 10,
+    },
+    statisticsflexContainer: {
+             height: 50,
+             backgroundColor: '#ffffff',
+             flexDirection: 'row',
+             justifyContent: "center",
+             alignItems: 'center',
+             paddingRight:10
+         },
 
 })

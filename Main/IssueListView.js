@@ -329,7 +329,7 @@ export default class IssueListView extends Component {
                         height: 0.5,}}/>
 
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          作业条目编号：TM01-2017-08-0001
+                          作业条目编号：{rowData.rollingPlan.workListNo}
                         </Text>
 
                         <View style={{flexDirection:'row',alignItems:'center'}}>

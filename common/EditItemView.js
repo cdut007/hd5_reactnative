@@ -4,6 +4,7 @@ import {
     Text,
     TextInput,
     View,
+    Image,
  } from 'react-native';
 
 import Dimensions from 'Dimensions'
@@ -17,7 +18,10 @@ var width = Dimensions.get('window').width;
         topic: PropTypes.string,
         placeholder:PropTypes.string,
         onChangeText:PropTypes.func,
-        keyboard : PropTypes.string ?PropTypes.string : 'default'
+        keyboard : PropTypes.string ?PropTypes.string : 'default',
+        icon:PropTypes.string,
+        editable:PropTypes.bool,
+        autoFocus:PropTypes.bool,
     }
 
     // constructor(props) {
@@ -30,6 +34,32 @@ var width = Dimensions.get('window').width;
 
     render()
     {
+
+        if (this.props.icon) {
+            return(
+
+                <View>
+                <View style= {styles.container}>
+                <Image style={{width:24,height:24,marginRight:5}} source={this.props.icon} />
+
+                    <Text style= {styles.title_with_icon}>{this.props.topic} : </Text>
+                    <TextInput style= {styles.detail}
+                    onChangeText={this.props.onChangeText}
+                    underlineColorAndroid={'transparent'}
+                     underlineColorAndroid='transparent'
+                     placeholder={this.props.placeholder}
+                    value={this.props.content}
+                    keyboardType={this.props.keyboard}
+                    editable={this.props.editable}
+                    autoFocus={this.props.autoFocus}
+
+                    ></TextInput>
+                </View>
+                <View style={styles.divider}/>
+                </View>
+            )
+        }
+
         return(
             <View>
             <View style= {styles.container}>
@@ -65,6 +95,11 @@ const styles = StyleSheet.create({
     },
     title: {
         width: width * 0.33,
+        fontSize: 14,
+        color: "#1c1c1c"
+    },
+    title_with_icon: {
+        width: width * 0.24,
         fontSize: 14,
         color: "#1c1c1c"
     },

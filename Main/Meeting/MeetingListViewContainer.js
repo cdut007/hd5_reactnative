@@ -92,7 +92,6 @@ export default class MeetingListViewContainer extends Component {
 
         //if (Global.isGroup(Global.UserInfo)) {
 
-            Global.log('sssss'+this.props.data.index)
 
             return( <ScrollableTabView
                 tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
