@@ -208,11 +208,10 @@ export default class NoticeExpiredListView extends Component {
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
-                      type:'SEND',
                      }
 
 
-            HttpRequest.get('/conference', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/expire_notice', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
                     this.setState({
@@ -275,14 +274,14 @@ export default class NoticeExpiredListView extends Component {
 
                        <View style={{flex:1,flexDirection:'row',alignSelf:'center'}}>
                        <Text numberOfLines={1} style={{color:'#0755a6',fontSize:14,}}>
-                             2017/10/30 10:20
+                             {Global.formatFullDateDisplay(rowData.publishTime)}
                        </Text>
 
 
                        </View>
 
-                       <Text numberOfLines={1} style={{color:'#0755a6',fontSize:14}}>
-                        XX项目部的文件失效通知
+                       <Text numberOfLines={1} style={{flex:1.4,color:'#0755a6',fontSize:14}}>
+                        {rowData.title}
                        </Text>
 
                         </View>

@@ -402,7 +402,7 @@ refresh(){
 createChooseInfo(icon,label,desc,data,tag){
     var textColor = '#777777'
 
-    if (tag == 'meetingType') {
+    if (tag == 'category') {
         return(
             <View style={styles.statisticsflexContainer}>
 
@@ -500,7 +500,7 @@ createChooseInfo(icon,label,desc,data,tag){
                       <View style={styles.line}>
                       </View>
 
-                      {this.createChooseInfo(require('../../images/typesIcon.png'),'会议类型',this.state.data.category?this.state.data.category:'请选择会议类型',this.state.meetingTypeData,'meetingType')}
+                      {this.createChooseInfo(require('../../images/typesIcon.png'),'会议类型',this.state.data.category?this.state.data.category:'请选择会议类型',this.state.meetingTypeData,'category')}
                       <View style={styles.line}>
                       </View>
 

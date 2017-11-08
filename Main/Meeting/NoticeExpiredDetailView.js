@@ -13,6 +13,7 @@ import {
     TouchableHighlight,
     InteractionManager,
     DeviceEventEmitter,
+    WebView
 } from 'react-native';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -51,7 +52,9 @@ export default class NoticeExpiredListView extends Component {
             filter: '',
             isRefreshing:false,
             items:[],
+            data:this.props.data,
             totalCount:0,
+            WebViewHeight:200,
 
         }
 
@@ -153,12 +156,12 @@ export default class NoticeExpiredListView extends Component {
             }
         }
 
-        this.setState({
-            dataSource:this.state.dataSource.cloneWithRows(this.state.items),
-            isLoading: false,
-            isRefreshing:false,
-            totalCount:response.responseResult.totalCounts
-        });
+        // this.setState({
+        //     dataSource:this.state.dataSource.cloneWithRows(this.state.items),
+        //     isLoading: false,
+        //     isRefreshing:false,
+        //     totalCount:response.responseResult.totalCounts
+        // });
 
     }
 
@@ -200,20 +203,13 @@ export default class NoticeExpiredListView extends Component {
 
 
                  var paramBody = {
-                      pagesize:pagesize,
-                      pagenum:index,
-                      type:'SEND',
                      }
 
 
-            HttpRequest.get('/conference', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/expire_notice'+this.props.data.id, paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
-                    this.setState({
-                      dataSource: this.state.dataSource.cloneWithRows([]),
-                      isLoading: false,
-                      isRefreshing:false,
-                    });
+
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
@@ -248,20 +244,40 @@ export default class NoticeExpiredListView extends Component {
 
     renderTop(){
 
-        return( <View style={{height:177,marginBottom:10}}>
-          <TouchableOpacity style={[styles.itemContainer,{height:176}]}>
+        return( <View style={{height:this.state.WebViewHeight + 74,marginBottom:10}}>
+          <TouchableOpacity style={[styles.itemContainer,]}>
 
-          <Text numberOfLines={4} style={{color:'#282828',fontSize:14}}>
+          {/* <Text numberOfLines={4} style={{color:'#282828',fontSize:14}}>
+
           各位领导，各部门负责人：
             下列文件已失效，不再使用，请在
             <Text style={{color:'#e82628'}}>2017年11月29日</Text>
             前，将失效文件（纸质版）退回文档组，同时请自行删除电子版文件（PDF版），以避免误用。
 
-          </Text>
+          </Text> */}
+          <WebView  style={{width:width,height:this.state.WebViewHeight}}
+
+                         source={{html: `<!DOCTYPE html><html><body style="height:100%">${this.state.data.content}<script>window.onload=function(){window.location.hash = 1;document.title = document.body.clientHeight;}</script></body></html>`}}
+                          javaScriptEnabled={true}
+                          domStorageEnabled={true}
+                          bounces={false}
+                          scrollEnabled={false}
+                          automaticallyAdjustContentInsets={true}
+                          contentInset={{top:0,left:0}}
+                          onNavigationStateChange={(title)=>{
+                            //   if(title.title != undefined) {
+                            //       this.setState({
+                            //           WebViewHeight:(parseInt(title.title)+20)
+                            //       })
+                            //   }
+                          }}
+                 >
+
+                 </WebView>
 
 
           <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-            中国五公司XX项目部
+            {this.state.data.department}
           </Text>
 
           <View style={{backgroundColor: '#d6d6d6',
@@ -276,7 +292,7 @@ export default class NoticeExpiredListView extends Component {
           </Text>
 
           <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
-          17/11/09
+         {Global.formatDate(this.state.data.writeTime)}
           </Text>
 
           </View>
@@ -303,7 +319,7 @@ export default class NoticeExpiredListView extends Component {
          </Text>
 
          <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
-        17/11/09
+        {Global.formatDate(this.state.data.approvelTime)}
          </Text>
 
          </View>
@@ -312,7 +328,7 @@ export default class NoticeExpiredListView extends Component {
          发布时间：
          </Text>
          <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
-         17/11/09 10:00am
+        {Global.formatFullDateDisplay(this.state.data.publishTime)}
          </Text>
 
           </View>
