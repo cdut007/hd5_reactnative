@@ -95,10 +95,20 @@ export default class FeedbackMessageView extends Component {
         var paramBody = {
              conferenceId:this.props.data.id,
             }
+            var uri = '/conference_op/mark'
+            if (this.props.notice) {
+                paramBody = {
+                     notificationId:this.props.data.id,
+                    
+                    }
+                    uri = '/notification_op/mark'
+
+            }
 
 
 
-   HttpRequest.post('/conference_op/mark', paramBody, this.onMarkUnreadDataSuccess.bind(this),
+
+  HttpRequest.post(uri, paramBody,this.onMarkUnreadDataSuccess.bind(this),
        (e) => {
 
 
@@ -182,7 +192,17 @@ export default class FeedbackMessageView extends Component {
              message:this.state.message,
             }
 
-        HttpRequest.post('/conference_op/feedback', paramBody, this.onFeedbackDataSuccess.bind(this),
+        var uri = '/conference_op/feedback'
+        if (this.props.notice) {
+            paramBody = {
+                 notificationId:this.props.data.id,
+                 message:this.state.message,
+                }
+                uri = '/notification_op/feedback'
+
+        }
+
+        HttpRequest.post(uri, paramBody, this.onFeedbackDataSuccess.bind(this),
             (e) => {
 
                 this.setState({loadingVisible:false})

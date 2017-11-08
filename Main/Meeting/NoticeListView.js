@@ -21,8 +21,8 @@ import LoadMoreFooter from '../../common/LoadMoreFooter.js'
 import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
-import MeetingDetailView from './MeetingDetailView';
-import CreateMeetingView from './CreateMeetingView';
+import NoticeDetailView from './NoticeDetailView';
+import CreateNoticeView from './CreateNoticeView';
 import CardView from 'react-native-cardview'
 
 const isIOS = Platform.OS == "ios"
@@ -40,7 +40,7 @@ var LOADING = {};
 import Global from '../../common/globals.js'
 
 
-export default class MeetingListView extends Component {
+export default class NoticeListView extends Component {
     constructor(props) {
         super(props)
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -133,11 +133,9 @@ export default class MeetingListView extends Component {
 
         var datas = response.responseResult.data;
 
-
-                    if (!datas) {
-                        datas = []
-
-                    }
+            if (!datas) {
+                datas = []
+            }
 
         if (this.state.filter !== query) {
             this.setState({
@@ -171,14 +169,14 @@ export default class MeetingListView extends Component {
     onItemPress(itemData){
         if (itemData.status == 'DRAFT') {
             this.props.navigator.push({
-                component: CreateMeetingView,
+                component: CreateNoticeView,
                  props: {
                      data:itemData,
                     }
             })
         }else{
             this.props.navigator.push({
-                component: MeetingDetailView,
+                component: NoticeDetailView,
                  props: {
                      data:itemData,
                     }
@@ -226,7 +224,7 @@ export default class MeetingListView extends Component {
                      }
 
 
-            HttpRequest.get('/conference', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/notification', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
                     this.setState({
@@ -360,25 +358,15 @@ export default class MeetingListView extends Component {
 
                         </View>
 
-                        <View style={{flexDirection:'row',alignItems:'center'}}>
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          会议地点：
-                        </Text>
-
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                          {rowData.address}
-                        </Text>
-
-                        </View>
 
 
                         <View style={{flexDirection:'row',alignItems:'center'}}>
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          会议主持：
+                          通告发布：
                         </Text>
 
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                          James
+                          {rowData.department}
                         </Text>
 
                         </View>
@@ -488,7 +476,7 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
             flex:1,
-            height:220,
+            height:180,
             backgroundColor:'#ffffff',
             padding:10,
             paddingRight:20,

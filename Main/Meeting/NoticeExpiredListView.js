@@ -21,8 +21,7 @@ import LoadMoreFooter from '../../common/LoadMoreFooter.js'
 import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
-import MeetingDetailView from './MeetingDetailView';
-import CreateMeetingView from './CreateMeetingView';
+import NoticeExpiredDetailView from './NoticeExpiredDetailView';
 import CardView from 'react-native-cardview'
 
 const isIOS = Platform.OS == "ios"
@@ -40,7 +39,7 @@ var LOADING = {};
 import Global from '../../common/globals.js'
 
 
-export default class MeetingListView extends Component {
+export default class NoticeExpiredListView extends Component {
     constructor(props) {
         super(props)
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -134,10 +133,6 @@ export default class MeetingListView extends Component {
         var datas = response.responseResult.data;
 
 
-                    if (!datas) {
-                        datas = []
-
-                    }
 
         if (this.state.filter !== query) {
             this.setState({
@@ -169,21 +164,12 @@ export default class MeetingListView extends Component {
     }
 
     onItemPress(itemData){
-        if (itemData.status == 'DRAFT') {
-            this.props.navigator.push({
-                component: CreateMeetingView,
-                 props: {
-                     data:itemData,
-                    }
-            })
-        }else{
-            this.props.navigator.push({
-                component: MeetingDetailView,
-                 props: {
-                     data:itemData,
-                    }
-            })
-        }
+        this.props.navigator.push({
+            component: NoticeExpiredDetailView,
+             props: {
+                 data:itemData,
+                }
+        })
 
     }
 
@@ -222,11 +208,10 @@ export default class MeetingListView extends Component {
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
-                      type:this.props.type,
                      }
 
 
-            HttpRequest.get('/conference', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/expire_notice', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
                     this.setState({
@@ -256,6 +241,10 @@ export default class MeetingListView extends Component {
     render() {
         return (
             <View style={styles.container}>
+            <NavBar
+            title={'文件失效通知'}
+            leftIcon={require('../../images/back.png')}
+            leftPress={this.back.bind(this)} />
             {this.renderListView()}
             </View>
         )
@@ -266,139 +255,33 @@ export default class MeetingListView extends Component {
         return index;
     }
 
-    renderImages(item){
-        var itemsArray = [];
-        var len = item.fileSize;
-        for (var i = 0; i < 1; i++) {
-            itemsArray.push(<Image style={{marginTop:12,width:22,height:16,marginLeft:10}} source={require('../../images/annex_icon_copy.png')} />)
-        }
 
-        return itemsArray
-
-    }
 
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
-            var info = '未开始'
-            //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
-            var color = '#e82628'
-
-            if (rowData.status == 'UNSTARTED') {
-                info = '未开始'
-            }else if (rowData.status == 'PROGRESSING') {
-                info = '进行中'
-                color = '#0755a6'
-            }else if (rowData.status == 'EXPIRED') {
-                info = '已结束'
-                color = '#888888'
-            }else if (rowData.status == 'DRAFT') {
-                info = '草稿'
-                color = '#f77935'
-            }
-            var unreadInfo = ''
-            if (rowData.unread>0) {
-                unreadInfo= rowData.unread+'条未读'
-            }
 
 
                 return (
-                    <CardView
-                      cardElevation={2}
-                      cardMaxElevation={2}
-                      cornerRadius={5}>
+
 
                        <View style={styles.itemContainer}>
-                        <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
-
-                        <View style={[styles.statisticsflexContainer,]}>
-
-                        <View style={{flexDirection: 'row',justifyContent:'flex-start'}}>
-
-                        <Text numberOfLines={2} style={{flex:1,color:'#282828',fontSize:14}}>
-                         {rowData.subject}
-                        </Text>
+                        <TouchableOpacity style={{flex:1,flexDirection:'row',alignItems:'center'}} onPress={this.onItemPress.bind(this, rowData)}>
 
 
-                        <Text numberOfLines={1} style={{color:'#e82628',fontSize:12}}>
-                        {unreadInfo}
-                        </Text>
-
-
-                        </View>
+                        <View style={{flexDirection:'row',justifyContent:'center',alignSelf:'center'}}>
 
 
 
-                        <View style={{marginTop:10,paddingBottom:4,flexDirection: 'row',justifyContent:'flex-start',}}>
-
-                        <Text numberOfLines={1} style={{flex:1,color:'#888888',fontSize:12}}>
-                        创建时间：{Global.formatDate(rowData.startTime)}
-                        </Text>
-
-
-                        <Text numberOfLines={1} style={{color:color,fontSize:12}}>
-                        {info}
-                        </Text>
-
-
-                        </View>
-
-
-                        </View>
-
-                        <View style={{backgroundColor: '#d6d6d6',
-                        width: width,
-                        height: 0.5,}}/>
-
-                        <View style={{flexDirection:'row',alignItems:'center'}}>
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          会议时间：
-                        </Text>
-
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                          {Global.formatFullDate(rowData.startTime)}
-                        </Text>
-
-                        </View>
-
-                        <View style={{flexDirection:'row',alignItems:'center'}}>
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          会议地点：
-                        </Text>
-
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                          {rowData.address}
-                        </Text>
-
-                        </View>
-
-
-                        <View style={{flexDirection:'row',alignItems:'center'}}>
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          会议主持：
-                        </Text>
-
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                          James
-                        </Text>
-
-                        </View>
-
-
-
-                        <View style={{flexDirection:'row',alignItems:'center'}}>
-
-
-
-                       <View style={{flex:1,flexDirection:'row',}}>
-                       <Text numberOfLines={1} style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                             附件:
+                       <View style={{flex:1,flexDirection:'row',alignSelf:'center'}}>
+                       <Text numberOfLines={1} style={{color:'#0755a6',fontSize:14,}}>
+                             {Global.formatFullDateDisplay(rowData.publishTime)}
                        </Text>
 
-                       {this.renderImages(rowData)}
+
                        </View>
 
-                       <Text numberOfLines={1} style={{marginTop:10,color:'#0755a6',fontSize:12}}>
-                       查看详情
+                       <Text numberOfLines={1} style={{flex:1.4,color:'#0755a6',fontSize:14}}>
+                        {rowData.title}
                        </Text>
 
                         </View>
@@ -410,7 +293,7 @@ export default class MeetingListView extends Component {
                         height: 0.5,}}/>
 
                         </View>
-                        </CardView>
+
 
                 )
 
@@ -451,7 +334,7 @@ export default class MeetingListView extends Component {
 const styles = StyleSheet.create({
     container: {
         width: width,
-        height:height-130,
+        height:height-30,
     },
     topView: {
         height: 150,
@@ -488,10 +371,12 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
             flex:1,
-            height:220,
+            height:64,
             backgroundColor:'#ffffff',
-            padding:10,
-            paddingRight:20,
+            paddingLeft:10,
+            paddingRight:10,
+            justifyContent: 'center',
+
     },
      statisticsflexContainer: {
               height: 54,

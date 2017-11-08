@@ -32,15 +32,15 @@ import ChooseMemberView from './ChooseMemberView'
 import HttpRequest from '../../HttpRequest/HttpRequest'
 
 
-export default class CreateMeetingView extends Component {
+export default class CreateNoticeView extends Component {
     constructor(props) {
         super(props)
         var meetingTypeArry=['行政','工程','物资','技术','安全','质量','综合']
         var data = this.props.data
-        var title = '创建会议'
+        var title = '创建通告'
         if (data) {
             if (data.status == 'DRAFT') {
-                title = '编辑会议'
+                title = '编辑通告'
                 data.members = data.participants
             }
         }else{
@@ -72,68 +72,49 @@ export default class CreateMeetingView extends Component {
     publishMeeting(){
 
         if (!this.state.data.subject) {
-            Global.alert('请输入会议主题')
+            Global.alert('请输入通告主题')
             return
         }
 
         if (!this.state.data.content) {
-            Global.alert('请输入会议内容')
+            Global.alert('请输入通告内容')
             return
         }
 
         if (!this.state.data.category) {
-            Global.alert('请选择会议类型')
+            Global.alert('请选择通告类型')
             return
         }
 
-        if (!this.state.data.project) {
-            Global.alert('请输入所属项目')
+        if (!this.state.data.department) {
+            Global.alert('请输入通告发出部门')
             return
         }
 
-        if (!this.state.data.host) {
-            Global.alert('请输入主持人')
-            return
-        }
 
-        if (!this.state.data.recorder) {
-            Global.alert('请输入记录员')
-            return
-        }
 
         if (!this.state.data.members || this.state.data.members.length <= 0) {
-            Global.alert('请选择参会员')
+            Global.alert('请选择通告接收人员')
             return
         }
 
-        if (!this.state.data.address) {
-            Global.alert('请输入会议地点')
-            return
-        }
 
         if (!this.state.data.startTime) {
-            Global.alert('请选择会议开始时间')
+            Global.alert('请选择通告开始时间')
             return
         }
 
         if (!this.state.data.endTime) {
-            Global.alert('请选择会议结束时间')
+            Global.alert('请选择通告结束时间')
             return
         }
 
         if (!this.state.data.alarmTime) {
-            Global.alert('请选择会前提醒时间')
+            Global.alert('请选择通告提醒时间')
             return
         }
 
 
-        if (!this.state.data.remark) {
-            this.state.data.remark = ''
-        }
-
-        if (!this.state.data.supplies) {
-                this.state.data.supplies = ''
-        }
 
 
         var ids= ''
@@ -151,13 +132,9 @@ export default class CreateMeetingView extends Component {
                  subject:this.state.data.subject,
                 'content': this.state.data.content,
                 'category': this.state.data.category,
-                'project':this.state.data.project,
-                'host':this.state.data.host,
+                'department':this.state.data.department,
+
                 id:conferenceId,
-                recorder:this.state.data.recorder,
-                supplies:this.state.data.supplies,
-                address:this.state.data.address,
-                remark:this.state.data.remark,
                 participants:ids,
                 startTime:Global.formatFullDate(this.state.data.startTime),
                 endTime:Global.formatFullDate(this.state.data.endTime),
@@ -166,7 +143,7 @@ export default class CreateMeetingView extends Component {
 
             }
 
-        HttpRequest.post('/conference', paramBody, this.onPublishSuccess.bind(this),
+        HttpRequest.post('/notification', paramBody, this.onPublishSuccess.bind(this),
             (e) => {
                 this.setState({
                     loadingVisible: false
@@ -198,67 +175,49 @@ export default class CreateMeetingView extends Component {
     saveDraftMeeting(){
 
         if (!this.state.data.subject) {
-            Global.alert('请输入会议主题')
+            Global.alert('请输入通告主题')
             return
         }
 
         if (!this.state.data.content) {
-            Global.alert('请输入会议内容')
+            Global.alert('请输入通告内容')
             return
         }
 
         if (!this.state.data.category) {
-            Global.alert('请选择会议类型')
+            Global.alert('请选择通告类型')
             return
         }
 
-        if (!this.state.data.project) {
-            Global.alert('请输入所属项目')
+        if (!this.state.data.department) {
+            Global.alert('请输入通告发出部门')
             return
         }
 
-        if (!this.state.data.host) {
-            Global.alert('请输入主持人')
-            return
-        }
 
-        if (!this.state.data.recorder) {
-            Global.alert('请输入记录员')
-            return
-        }
 
         if (!this.state.data.members || this.state.data.members.length <= 0) {
-            Global.alert('请选择参会员')
+            Global.alert('请选择通告接收人员')
             return
         }
 
-        if (!this.state.data.address) {
-            Global.alert('请输入会议地点')
-            return
-        }
 
         if (!this.state.data.startTime) {
-            Global.alert('请选择会议开始时间')
+            Global.alert('请选择通告开始时间')
             return
         }
 
         if (!this.state.data.endTime) {
-            Global.alert('请选择会议结束时间')
+            Global.alert('请选择通告结束时间')
             return
         }
 
         if (!this.state.data.alarmTime) {
-            Global.alert('请选择会前提醒时间')
+            Global.alert('请选择通告提醒时间')
             return
         }
 
-        if (!this.state.data.remark) {
-            this.state.data.remark = ''
-        }
 
-        if (!this.state.data.supplies) {
-                this.state.data.supplies = ''
-        }
 
         var ids= ''
         for (var i = 0; i < this.state.data.members.length; i++) {
@@ -276,12 +235,7 @@ export default class CreateMeetingView extends Component {
                  subject:this.state.data.subject,
                 'content': this.state.data.content,
                 'category': this.state.data.category,
-                'project':this.state.data.project,
-                'host':this.state.data.host,
-                recorder:this.state.data.recorder,
-                supplies:this.state.data.supplies,
-                address:this.state.data.address,
-                remark:this.state.data.remark,
+                'department':this.state.data.department,
                 participants:ids,
                 startTime:Global.formatFullDate(this.state.data.startTime),
                 endTime:Global.formatFullDate(this.state.data.endTime),
@@ -290,7 +244,7 @@ export default class CreateMeetingView extends Component {
 
             }
 
-        HttpRequest.post('/conference', paramBody, this.onPublishSuccess.bind(this),
+        HttpRequest.post('/notification', paramBody, this.onPublishSuccess.bind(this),
             (e) => {
                 this.setState({
                     loadingVisible: false
@@ -379,6 +333,7 @@ onEnterClick(tag){
              props: {
                  data:this.state.data,
                  refresh:this.refresh.bind(this),
+                 notice:true,
                 }
         })
     }else if (tag == 'member') {
@@ -489,84 +444,50 @@ createChooseInfo(icon,label,desc,data,tag){
 
         renderItem() {
 
-            var displayMemberInfo ='请选择参会人员'
+            var displayMemberInfo ='请选择通告接收人员'
              if (this.state.data.members) {
-                 displayMemberInfo = '参会总人数'+this.state.data.members.length+'人'
+                 displayMemberInfo = '通告总人数'+this.state.data.members.length+'人'
              }
                   return(
                       <View>
 
-                      {this.createEnter(require('../../images/informIcon.png'),'会议主题',this.state.data.subject,'subject')}
+                      {this.createEnter(require('../../images/informIcon.png'),'通告主题',this.state.data.subject,'subject')}
                       <View style={styles.line}>
                       </View>
 
-                      {this.createChooseInfo(require('../../images/typesIcon.png'),'会议类型',this.state.data.category?this.state.data.category:'请选择会议类型',this.state.meetingTypeData,'category')}
+                      {this.createChooseInfo(require('../../images/typesIcon.png'),'通告类型',this.state.data.category?this.state.data.category:'请选择通告类型',this.state.meetingTypeData,'category')}
                       <View style={styles.line}>
                       </View>
 
 
 
                       <EditItemView
-                       topic={'所属项目'}
-                       icon={require('../../images/projectIcon.png')}
-                       placeholder={'请输入所属项目名称'}
-                       content={this.state.data.project}
-                       onChangeText={this.onChangeText.bind(this,'project')}
+                       topic={'通告部门'}
+                       icon={require('../../images/department_icon.png')}
+                       placeholder={'请输入通告发出部门'}
+                       content={this.state.data.department}
+                       onChangeText={this.onChangeText.bind(this,'department')}
                       />
 
-                      <EditItemView
-                       topic={'主持人'}
-                       icon={require('../../images/hostIcon.png')}
-                       placeholder={'请输入主持人名字'}
-                       content={this.state.data.host}
-                       onChangeText={this.onChangeText.bind(this,'host')}
-                      />
 
-                      <EditItemView
-                       topic={'记录员'}
-                       icon={require('../../images/registrarIcon.png')}
-                       placeholder={'请输入记录员名字'}
-                       content={this.state.data.recorder}
-                       onChangeText={this.onChangeText.bind(this,'recorder')}
-                      />
-                      {this.createEnter(require('../../images/participantIcon.png'),'参会人员',displayMemberInfo,'member')}
+
+                      {this.createEnter(require('../../images/participantIcon.png'),'通告接收人员',displayMemberInfo,'member')}
                       <View style={styles.line}>
                       </View>
-                      <EditItemView
-                       topic={'会议地点'}
-                       icon={require('../../images/placeIcon.png')}
-                       placeholder={'请输入会议地点'}
-                       content={this.state.data.address}
-                       onChangeText={this.onChangeText.bind(this,'address')}
-                      />
+
 
                       <View style={styles.space}>
                       </View>
-                      {this.createChooseInfo(null,'会议开始时间',this.state.data.startTime?Global.formatFullDateDisplay(this.state.data.startTime):'请选择会议开始时间',null,'startTime')}
+                      {this.createChooseInfo(null,'通告开始时间',this.state.data.startTime?Global.formatFullDateDisplay(this.state.data.startTime):'请选择通告开始时间',null,'startTime')}
                       <View style={styles.line}>
                       </View>
-                      {this.createChooseInfo(null,'会议结束时间',this.state.data.endTime?Global.formatFullDateDisplay(this.state.data.endTime):'请选择会议结束时间',null,'endTime')}
+                      {this.createChooseInfo(null,'通告结束时间',this.state.data.endTime?Global.formatFullDateDisplay(this.state.data.endTime):'请选择通告结束时间',null,'endTime')}
                       <View style={styles.line}>
                       </View>
-                      {this.createChooseInfo(null,'会前提醒时间',this.state.data.alarmTime?Global.formatFullDateDisplay(this.state.data.alarmTime):'请选择会前提醒时间',null,'alarmTime')}
+                      {this.createChooseInfo(null,'通告提醒时间',this.state.data.alarmTime?Global.formatFullDateDisplay(this.state.data.alarmTime):'请选择会前提醒时间',null,'alarmTime')}
                       <View style={styles.line}>
                       </View>
 
-                      <EditItemView
-                       topic={'会议用品'}
-                       icon={require('../../images/conferenceAmenitiesIcon.png')}
-                       placeholder={'请输入会议用品'}
-                       content={this.state.data.supplies}
-                       onChangeText={this.onChangeText.bind(this,'supplies')}
-                      />
-
-                      <EditItemView
-                       topic={'会议备注'}
-                       icon={require('../../images/remarkIcon.png')}
-                       placeholder={'请输入会议备注'}
-                       content={this.state.data.remark}
-                       onChangeText={this.onChangeText.bind(this,'remark')}
-                      />
 
 
                       <TouchableOpacity onPress={this.onAddAttached.bind(this)} style={styles.flexContainer}>

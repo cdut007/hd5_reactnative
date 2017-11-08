@@ -13,6 +13,7 @@ import {
     TouchableHighlight,
     InteractionManager,
     DeviceEventEmitter,
+    WebView
 } from 'react-native';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -21,8 +22,6 @@ import LoadMoreFooter from '../../common/LoadMoreFooter.js'
 import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
-import MeetingDetailView from './MeetingDetailView';
-import CreateMeetingView from './CreateMeetingView';
 import CardView from 'react-native-cardview'
 
 const isIOS = Platform.OS == "ios"
@@ -40,7 +39,7 @@ var LOADING = {};
 import Global from '../../common/globals.js'
 
 
-export default class MeetingListView extends Component {
+export default class NoticeExpiredListView extends Component {
     constructor(props) {
         super(props)
         var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -53,7 +52,9 @@ export default class MeetingListView extends Component {
             filter: '',
             isRefreshing:false,
             items:[],
+            data:this.props.data,
             totalCount:0,
+            WebViewHeight:200,
 
         }
 
@@ -134,10 +135,6 @@ export default class MeetingListView extends Component {
         var datas = response.responseResult.data;
 
 
-                    if (!datas) {
-                        datas = []
-
-                    }
 
         if (this.state.filter !== query) {
             this.setState({
@@ -159,31 +156,17 @@ export default class MeetingListView extends Component {
             }
         }
 
-        this.setState({
-            dataSource:this.state.dataSource.cloneWithRows(this.state.items),
-            isLoading: false,
-            isRefreshing:false,
-            totalCount:response.responseResult.totalCounts
-        });
+        // this.setState({
+        //     dataSource:this.state.dataSource.cloneWithRows(this.state.items),
+        //     isLoading: false,
+        //     isRefreshing:false,
+        //     totalCount:response.responseResult.totalCounts
+        // });
 
     }
 
     onItemPress(itemData){
-        if (itemData.status == 'DRAFT') {
-            this.props.navigator.push({
-                component: CreateMeetingView,
-                 props: {
-                     data:itemData,
-                    }
-            })
-        }else{
-            this.props.navigator.push({
-                component: MeetingDetailView,
-                 props: {
-                     data:itemData,
-                    }
-            })
-        }
+
 
     }
 
@@ -220,20 +203,13 @@ export default class MeetingListView extends Component {
 
 
                  var paramBody = {
-                      pagesize:pagesize,
-                      pagenum:index,
-                      type:this.props.type,
                      }
 
 
-            HttpRequest.get('/conference', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/expire_notice'+this.props.data.id, paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
-                    this.setState({
-                      dataSource: this.state.dataSource.cloneWithRows([]),
-                      isLoading: false,
-                      isRefreshing:false,
-                    });
+
                     try {
                         var errorInfo = JSON.parse(e);
                         if (errorInfo != null) {
@@ -256,9 +232,115 @@ export default class MeetingListView extends Component {
     render() {
         return (
             <View style={styles.container}>
+            <NavBar
+            title={'文件失效通知详情'}
+            leftIcon={require('../../images/back.png')}
+            leftPress={this.back.bind(this)} />
+            {this.renderTop()}
             {this.renderListView()}
             </View>
         )
+    }
+
+    renderTop(){
+
+        return( <View style={{height:this.state.WebViewHeight + 74,marginBottom:10}}>
+          <TouchableOpacity style={[styles.itemContainer,]}>
+
+          {/* <Text numberOfLines={4} style={{color:'#282828',fontSize:14}}>
+
+          各位领导，各部门负责人：
+            下列文件已失效，不再使用，请在
+            <Text style={{color:'#e82628'}}>2017年11月29日</Text>
+            前，将失效文件（纸质版）退回文档组，同时请自行删除电子版文件（PDF版），以避免误用。
+
+          </Text> */}
+          <WebView  style={{width:width,height:this.state.WebViewHeight}}
+
+                         source={{html: `<!DOCTYPE html><html><body style="height:100%">${this.state.data.content}<script>window.onload=function(){window.location.hash = 1;document.title = document.body.clientHeight;}</script></body></html>`}}
+                          javaScriptEnabled={true}
+                          domStorageEnabled={true}
+                          bounces={false}
+                          scrollEnabled={false}
+                          automaticallyAdjustContentInsets={true}
+                          contentInset={{top:0,left:0}}
+                          onNavigationStateChange={(title)=>{
+                            //   if(title.title != undefined) {
+                            //       this.setState({
+                            //           WebViewHeight:(parseInt(title.title)+20)
+                            //       })
+                            //   }
+                          }}
+                 >
+
+                 </WebView>
+
+
+          <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+            {this.state.data.department}
+          </Text>
+
+          <View style={{backgroundColor: '#d6d6d6',
+          width: width,
+          height: 1,}}/>
+
+
+          <View style={{flexDirection:'row',alignItems:'center'}}>
+          <View style={{flex:1,flexDirection:'row',}}>
+          <Text numberOfLines={1} style={{marginTop:5,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+                编制日期：
+          </Text>
+
+          <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
+         {Global.formatDate(this.state.data.writeTime)}
+          </Text>
+
+          </View>
+
+          <Text numberOfLines={1} style={{marginTop:5,color:'#1c1c1c',fontSize:12}}>
+          编号：
+          </Text>
+          <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
+          56956788543
+          </Text>
+
+          </View>
+
+
+
+
+          <View style={{flexDirection:'row',alignItems:'center'}}>
+
+
+
+         <View style={{flex:1,flexDirection:'row',}}>
+         <Text numberOfLines={1} style={{marginTop:5,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+               审批日期：
+         </Text>
+
+         <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
+        {Global.formatDate(this.state.data.approvelTime)}
+         </Text>
+
+         </View>
+
+         <Text numberOfLines={1} style={{marginTop:5,color:'#1c1c1c',fontSize:12}}>
+         发布时间：
+         </Text>
+         <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
+        {Global.formatFullDateDisplay(this.state.data.publishTime)}
+         </Text>
+
+          </View>
+
+
+          </TouchableOpacity>
+          <View style={{backgroundColor: '#d6d6d6',
+          width: width,
+          height: 0.5,}}/>
+
+          </View>
+)
     }
 
     index(rowID){
@@ -266,122 +348,39 @@ export default class MeetingListView extends Component {
         return index;
     }
 
-    renderImages(item){
-        var itemsArray = [];
-        var len = item.fileSize;
-        for (var i = 0; i < 1; i++) {
-            itemsArray.push(<Image style={{marginTop:12,width:22,height:16,marginLeft:10}} source={require('../../images/annex_icon_copy.png')} />)
-        }
 
-        return itemsArray
-
-    }
 
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
-            var info = '未开始'
+
+            var info = '已失效'
             //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
             var color = '#e82628'
 
-            if (rowData.status == 'UNSTARTED') {
-                info = '未开始'
-            }else if (rowData.status == 'PROGRESSING') {
-                info = '进行中'
-                color = '#0755a6'
-            }else if (rowData.status == 'EXPIRED') {
-                info = '已结束'
-                color = '#888888'
-            }else if (rowData.status == 'DRAFT') {
-                info = '草稿'
-                color = '#f77935'
-            }
-            var unreadInfo = ''
-            if (rowData.unread>0) {
-                unreadInfo= rowData.unread+'条未读'
-            }
 
 
                 return (
-                    <CardView
-                      cardElevation={2}
-                      cardMaxElevation={2}
-                      cornerRadius={5}>
 
-                       <View style={styles.itemContainer}>
-                        <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
+                       <View style={{height:96}}>
+                        <TouchableOpacity style={styles.itemContainer} onPress={this.onItemPress.bind(this, rowData)}>
 
-                        <View style={[styles.statisticsflexContainer,]}>
-
-                        <View style={{flexDirection: 'row',justifyContent:'flex-start'}}>
-
-                        <Text numberOfLines={2} style={{flex:1,color:'#282828',fontSize:14}}>
-                         {rowData.subject}
+                        <Text numberOfLines={1} style={{color:'#282828',fontSize:14}}>
+                         1、文件名称文件名称文件名称文件名称文件名称
                         </Text>
 
-
-                        <Text numberOfLines={1} style={{color:'#e82628',fontSize:12}}>
-                        {unreadInfo}
-                        </Text>
-
-
-                        </View>
-
-
-
-                        <View style={{marginTop:10,paddingBottom:4,flexDirection: 'row',justifyContent:'flex-start',}}>
-
-                        <Text numberOfLines={1} style={{flex:1,color:'#888888',fontSize:12}}>
-                        创建时间：{Global.formatDate(rowData.startTime)}
-                        </Text>
-
-
-                        <Text numberOfLines={1} style={{color:color,fontSize:12}}>
-                        {info}
-                        </Text>
-
-
-                        </View>
-
-
-                        </View>
-
-                        <View style={{backgroundColor: '#d6d6d6',
-                        width: width,
-                        height: 0.5,}}/>
-
-                        <View style={{flexDirection:'row',alignItems:'center'}}>
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          会议时间：
-                        </Text>
-
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                          {Global.formatFullDate(rowData.startTime)}
-                        </Text>
-
-                        </View>
-
-                        <View style={{flexDirection:'row',alignItems:'center'}}>
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          会议地点：
-                        </Text>
-
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                          {rowData.address}
-                        </Text>
-
-                        </View>
 
 
                         <View style={{flexDirection:'row',alignItems:'center'}}>
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          会议主持：
+                          文件编号：
                         </Text>
 
-                        <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                          James
+                        <Text numberOfLines={1}  style={{marginTop:10,color:'#777777',fontSize:12,marginBottom:2,}}>
+                          98567098456789
                         </Text>
 
                         </View>
+
 
 
 
@@ -390,15 +389,21 @@ export default class MeetingListView extends Component {
 
 
                        <View style={{flex:1,flexDirection:'row',}}>
-                       <Text numberOfLines={1} style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                             附件:
+                       <Text numberOfLines={1} style={{marginTop:5,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+                             领用人:
                        </Text>
 
-                       {this.renderImages(rowData)}
+                       <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
+                       汤文栋(3份)
+                       </Text>
+
                        </View>
 
-                       <Text numberOfLines={1} style={{marginTop:10,color:'#0755a6',fontSize:12}}>
-                       查看详情
+                       <Text numberOfLines={1} style={{marginTop:5,color:'#1c1c1c',fontSize:12}}>
+                       状态：
+                       </Text>
+                       <Text numberOfLines={1} style={{marginTop:5,color:'#e82628',fontSize:12}}>
+                       已失效
                        </Text>
 
                         </View>
@@ -407,10 +412,9 @@ export default class MeetingListView extends Component {
                         </TouchableOpacity>
                         <View style={{backgroundColor: '#d6d6d6',
                         width: width,
-                        height: 0.5,}}/>
+                        height: 1,}}/>
 
                         </View>
-                        </CardView>
 
                 )
 
@@ -451,12 +455,9 @@ export default class MeetingListView extends Component {
 const styles = StyleSheet.create({
     container: {
         width: width,
-        height:height-130,
+        height:height-30,
     },
-    topView: {
-        height: 150,
-        width: width,
-    },
+
     list:
     {
         flex: 1,
@@ -488,25 +489,15 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
             flex:1,
-            height:220,
+            height:94,
             backgroundColor:'#ffffff',
             padding:10,
-            paddingRight:20,
-    },
-     statisticsflexContainer: {
-              height: 54,
-              backgroundColor: '#ffffff',
+            justifyContent: 'center',
 
-          },
-
-    cell: {
-        flex: 1,
-        height: 57.5,
-        width:width/4,
-        justifyContent: "center",
-        alignItems: 'center',
-         flexDirection: 'column',
     },
+
+
+
 
     cellLine: {
         width: 2,

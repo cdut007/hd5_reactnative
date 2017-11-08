@@ -37,6 +37,12 @@ export default class EditSubjectView extends Component {
         if (this.props.scan) {
             title = "查看会议内容"
         }
+        if (this.props.notice) {
+            title = "编辑通告内容"
+           if (this.props.scan) {
+               title = "查看通告内容"
+           }
+        }
         this.state = {
             subject: this.props.data.subject,
             content:this.props.data.content,

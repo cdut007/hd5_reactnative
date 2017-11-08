@@ -21,8 +21,11 @@ var Global = require('../common/globals');
 var width = Dimensions.get('window').width;
 import CommitButton from '../common/CommitButton'
 import MeetingListViewContainer from '../Main/Meeting/MeetingListViewContainer';
+import NoticeExpiredListView from '../Main/Meeting/NoticeExpiredListView';
 
 import CreateMeetingView from '../Main/Meeting/CreateMeetingView';
+
+import CreateNoticeView from '../Main/Meeting/CreateNoticeView';
 
 var meetingModuleData = [
     {
@@ -81,14 +84,24 @@ export default class MeetingView extends Component {
 
 
 
-    createMeeting(type){
+    createMeeting(tag){
+        if (tag == 'meeting') {
+            this.props.navigator.push({
+                component: CreateMeetingView,
+                 props: {
+                     type:tag,
+                    }
+            })
+        }else{
+            this.props.navigator.push({
+                component: CreateNoticeView,
+                 props: {
+                     type:tag,
+                    }
+            })
 
-        this.props.navigator.push({
-            component: CreateMeetingView,
-             props: {
-                 type:type,
-                }
-        })
+        }
+
     }
 
     onModuleItemClick(itemData) {
@@ -96,19 +109,29 @@ export default class MeetingView extends Component {
             component: MeetingListViewContainer,
              props: {
                  data:itemData,
-                 type:this.props.type,
+                 tag:itemData.tag,
                 }
         })
     }
 
+
+      enterExpiredNotice(){
+          this.props.navigator.push({
+              component: NoticeExpiredListView,
+               props: {
+                   type:this.props.type,
+                  }
+          })
+      }
+
     onExpriedDetailModuleItemClick(itemData) {
-        // this.props.navigator.push({
-        //     component: MeetingListViewContainer,
-        //      props: {
-        //          data:itemData,
-        //          type:this.props.type,
-        //         }
-        // })
+        this.props.navigator.push({
+            component: NoticeExpiredListView,
+             props: {
+                 data:itemData,
+                 type:this.props.type,
+                }
+        })
     }
 
   renderItems(moduleData){
@@ -146,9 +169,6 @@ export default class MeetingView extends Component {
   }
 
 
-  enterExpiredNotice(){
-
-  }
 
 
     render() {
