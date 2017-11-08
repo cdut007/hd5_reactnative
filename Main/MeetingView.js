@@ -21,6 +21,7 @@ var Global = require('../common/globals');
 var width = Dimensions.get('window').width;
 import CommitButton from '../common/CommitButton'
 import MeetingListViewContainer from '../Main/Meeting/MeetingListViewContainer';
+import NoticeExpiredListView from '../Main/Meeting/NoticeExpiredListView';
 
 import CreateMeetingView from '../Main/Meeting/CreateMeetingView';
 
@@ -101,14 +102,24 @@ export default class MeetingView extends Component {
         })
     }
 
+
+      enterExpiredNotice(){
+          this.props.navigator.push({
+              component: NoticeExpiredListView,
+               props: {
+                   type:this.props.type,
+                  }
+          })
+      }
+
     onExpriedDetailModuleItemClick(itemData) {
-        // this.props.navigator.push({
-        //     component: MeetingListViewContainer,
-        //      props: {
-        //          data:itemData,
-        //          type:this.props.type,
-        //         }
-        // })
+        this.props.navigator.push({
+            component: NoticeExpiredListView,
+             props: {
+                 data:itemData,
+                 type:this.props.type,
+                }
+        })
     }
 
   renderItems(moduleData){
@@ -146,9 +157,6 @@ export default class MeetingView extends Component {
   }
 
 
-  enterExpiredNotice(){
-
-  }
 
 
     render() {
