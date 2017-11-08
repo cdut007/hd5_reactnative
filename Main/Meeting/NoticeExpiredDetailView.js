@@ -127,41 +127,25 @@ export default class NoticeExpiredListView extends Component {
 
     onGetDataSuccess(response,paramBody){
          Global.log('onGetDataSuccess@@@@')
-     var query = this.state.filter;
-     if (!query) {
-         query = '';
-     }
 
-        var datas = response.responseResult.data;
+
+        var datas = response.responseResult.files;
 
 
 
-        if (this.state.filter !== query) {
-            this.setState({
-                isRefreshing:false,
-            });
-           // do not update state if the query is stale
-           Global.log('executeMeetingRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
-           return;
-         }
+
 
          var status = paramBody.status
 
-        if (this.state.isRefreshing) {
-            this.state.items = datas;
-            pageNo = 1;
-        }else{
-            for (var i = 0; i < datas.length; i++) {
-                this.state.items.push(datas[i])
-            }
-        }
+         this.state.items = datas;
+         pageNo = 1;
 
-        // this.setState({
-        //     dataSource:this.state.dataSource.cloneWithRows(this.state.items),
-        //     isLoading: false,
-        //     isRefreshing:false,
-        //     totalCount:response.responseResult.totalCounts
-        // });
+        this.setState({
+            dataSource:this.state.dataSource.cloneWithRows(this.state.items),
+            isLoading: false,
+            isRefreshing:false,
+            totalCount:response.responseResult.totalCounts
+        });
 
     }
 
@@ -206,7 +190,7 @@ export default class NoticeExpiredListView extends Component {
                      }
 
 
-            HttpRequest.get('/expire_notice'+this.props.data.id, paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/expire_notice/'+this.props.data.id, paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
 
@@ -301,7 +285,7 @@ export default class NoticeExpiredListView extends Component {
           编号：
           </Text>
           <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
-          56956788543
+          {this.state.data.no}
           </Text>
 
           </View>
@@ -356,6 +340,9 @@ export default class NoticeExpiredListView extends Component {
             var info = '已失效'
             //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
             var color = '#e82628'
+            if(rowData.status == 'EXPIRED'){
+
+        }
 
 
 
@@ -365,7 +352,7 @@ export default class NoticeExpiredListView extends Component {
                         <TouchableOpacity style={styles.itemContainer} onPress={this.onItemPress.bind(this, rowData)}>
 
                         <Text numberOfLines={1} style={{color:'#282828',fontSize:14}}>
-                         1、文件名称文件名称文件名称文件名称文件名称
+                         {rowData.filename}
                         </Text>
 
 
@@ -376,7 +363,7 @@ export default class NoticeExpiredListView extends Component {
                         </Text>
 
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#777777',fontSize:12,marginBottom:2,}}>
-                          98567098456789
+                          {rowData.no}
                         </Text>
 
                         </View>
@@ -394,7 +381,7 @@ export default class NoticeExpiredListView extends Component {
                        </Text>
 
                        <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
-                       汤文栋(3份)
+                        {rowData.receiver}({rowData.number}份)
                        </Text>
 
                        </View>
@@ -403,7 +390,7 @@ export default class NoticeExpiredListView extends Component {
                        状态：
                        </Text>
                        <Text numberOfLines={1} style={{marginTop:5,color:'#e82628',fontSize:12}}>
-                       已失效
+                       {info}
                        </Text>
 
                         </View>
