@@ -25,6 +25,8 @@ import NoticeExpiredListView from '../Main/Meeting/NoticeExpiredListView';
 
 import CreateMeetingView from '../Main/Meeting/CreateMeetingView';
 
+import CreateNoticeView from '../Main/Meeting/CreateNoticeView';
+
 var meetingModuleData = [
     {
         'index': 0,
@@ -82,14 +84,24 @@ export default class MeetingView extends Component {
 
 
 
-    createMeeting(type){
+    createMeeting(tag){
+        if (tag == 'meeting') {
+            this.props.navigator.push({
+                component: CreateMeetingView,
+                 props: {
+                     type:tag,
+                    }
+            })
+        }else{
+            this.props.navigator.push({
+                component: CreateNoticeView,
+                 props: {
+                     type:tag,
+                    }
+            })
 
-        this.props.navigator.push({
-            component: CreateMeetingView,
-             props: {
-                 type:type,
-                }
-        })
+        }
+
     }
 
     onModuleItemClick(itemData) {
@@ -97,7 +109,7 @@ export default class MeetingView extends Component {
             component: MeetingListViewContainer,
              props: {
                  data:itemData,
-                 type:this.props.type,
+                 tag:itemData.tag,
                 }
         })
     }

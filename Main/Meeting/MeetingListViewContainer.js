@@ -22,6 +22,7 @@ import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 import MeetingListView from './MeetingListView';
+import NoticeListView from './NoticeListView';
 import Global from '../../common/globals.js'
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -35,7 +36,7 @@ var LOADING = {};
 
     var meetingstatusDatas = [{
                     index:0,
-                    status:'receive',
+                    status:'RECEIVE',
                     data:[],
                     pageNo:1,
                 },
@@ -67,7 +68,7 @@ export default class MeetingListViewContainer extends Component {
          }
         this.state = {
             keyword: '',
-            title: "会议通告",
+            title: this.props.tag=='meeting'?"会议通知":"事物通告",
         }
 
 
@@ -160,18 +161,36 @@ export default class MeetingListViewContainer extends Component {
         if (this.props.data.user) {
             userId = this.props.data.user.id
         }
-        return (
-            <View  tabLabel={label} style={{marginTop:10,}}>
-            <MeetingListView
-             ref = {(c) => this._meeting_list_ref = c}
-             keyword = {this.state.keyword}
-             style={{alignSelf:'stretch',flex:1}}
-             type={status}
-             userId = {userId}
-             navigator={this.props.navigator}
-             />
-            </View>
-        )
+
+        if (this.props.tag == 'meeting') {
+            return (
+                <View  tabLabel={label} style={{marginTop:10,}}>
+                <MeetingListView
+                 ref = {(c) => this._meeting_list_ref = c}
+                 keyword = {this.state.keyword}
+                 style={{alignSelf:'stretch',flex:1}}
+                 type={status}
+                 userId = {userId}
+                 navigator={this.props.navigator}
+                 />
+                </View>
+            )
+        }else{
+            return (
+                <View  tabLabel={label} style={{marginTop:10,}}>
+                <NoticeListView
+                 ref = {(c) => this._meeting_list_ref = c}
+                 keyword = {this.state.keyword}
+                 style={{alignSelf:'stretch',flex:1}}
+                 type={status}
+                 userId = {userId}
+                 navigator={this.props.navigator}
+                 />
+                </View>
+            )
+        }
+
+
     }
 
 
