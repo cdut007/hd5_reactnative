@@ -266,11 +266,15 @@ export default class NoticeListView extends Component {
 
     renderImages(item){
         var itemsArray = [];
-        var len = item.fileSize;
-        for (var i = 0; i < 1; i++) {
-            itemsArray.push(<Image style={{marginTop:12,width:22,height:16,marginLeft:10}} source={require('../../images/annex_icon_copy.png')} />)
+        if (item.files) {
+            for (var i = 0; i < 1; i++) {
+                itemsArray.push(<Image style={{marginTop:12,width:22,height:16,marginLeft:10}} source={require('../../images/annex_icon_copy.png')} />)
+            }
+        }else{
+            itemsArray.push(<Text numberOfLines={1} style={{marginLeft:10,marginTop:10,color:'#777777',fontSize:12,marginBottom:2,}}>
+                  无附件
+            </Text>)
         }
-
         return itemsArray
 
     }

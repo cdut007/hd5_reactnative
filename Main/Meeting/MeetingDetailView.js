@@ -30,6 +30,7 @@ import ScanMemberListView from './ScanMemberListView'
 import FeedbackMessageView from './FeedbackMessageView'
 import DisplayItemView from '../../common/DisplayItemView';
 import DisplayMoreItemView from '../../common/DisplayMoreItemView';
+import FileResultView from './FileResultView'
 
 export default class MeetingDetailView extends Component {
     constructor(props) {
@@ -108,6 +109,14 @@ export default class MeetingDetailView extends Component {
       }else if (tag == 'feedback') {
           this.props.navigator.push({
               component: FeedbackMessageView,
+               props: {
+                   data:this.state.data,
+
+                  }
+          })
+      }else if (tag == 'attach') {
+          this.props.navigator.push({
+              component: FileResultView,
                props: {
                    data:this.state.data,
 

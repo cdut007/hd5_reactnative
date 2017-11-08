@@ -23,6 +23,7 @@ import CommitButton from '../common/CommitButton'
 import MeetingListViewContainer from '../Main/Meeting/MeetingListViewContainer';
 import NoticeExpiredListView from '../Main/Meeting/NoticeExpiredListView';
 
+import HttpRequest from '../HttpRequest/HttpRequest'
 import CreateMeetingView from '../Main/Meeting/CreateMeetingView';
 
 import CreateNoticeView from '../Main/Meeting/CreateNoticeView';
@@ -31,19 +32,19 @@ var meetingModuleData = [
     {
         'index': 0,
         'title': '已接收',
-        "type": "JS",
+        "type": "receive",
          "tag":'meeting',
         'image': require('../images/received_icon.png')
     },{
         'index': 1,
         'title': '已发送',
-        "type": "JS",
+        "type": "send",
         "tag":'meeting',
         'image': require('../images/send_icon.png')
     },{
         'index': 2,
         'title': '草稿',
-        "type": "JS",
+        "type": "draft",
         "tag":'meeting',
         'image': require('../images/draft_icon.png')
     },]
@@ -52,19 +53,19 @@ var meetingModuleData = [
         {
             'index': 0,
             'title': '已接收',
-            "type": "JS",
+            "type": "receive",
             "tag":'notice',
             'image': require('../images/received_icon.png')
         },{
             'index': 1,
             'title': '已发送',
-            "type": "JS",
+            "type": "send",
             "tag":'notice',
             'image': require('../images/send_icon.png')
         },{
             'index': 2,
             'title': '草稿',
-            "type": "JS",
+            "type": "draft",
             "tag":'notice',
             'image': require('../images/draft_icon.png')
         },]
@@ -73,6 +74,9 @@ var meetingModuleData = [
 export default class MeetingView extends Component {
     constructor(props) {
         super(props)
+        this.state={
+            expired_notice:[]
+        }
 
     }
 
@@ -103,6 +107,108 @@ export default class MeetingView extends Component {
         }
 
     }
+
+    onGetDataSuccess(response,paramBody){
+         Global.log('onGetDataSuccess@@@@')
+     var query = this.state.filter;
+     if (!query) {
+         query = '';
+     }
+
+        var datas = response.responseResult.data;
+        if (datas) {
+            this.setState({expired_notice:datas})
+        }
+
+    }
+
+    componentDidMount(){
+        var paramBody = {
+             pagesize:10,
+             pagenum:1,
+            }
+
+
+
+   HttpRequest.get('/expire_notice', paramBody, this.onGetDataSuccess.bind(this),
+       (e) => {
+
+
+           try {
+               var errorInfo = JSON.parse(e);
+               if (errorInfo != null) {
+                Global.log(errorInfo)
+               } else {
+                   Global.log(e)
+               }
+           }
+           catch(err)
+           {
+               Global.log(err)
+           }
+
+           Global.log('Task error:' + e)
+       })
+    }
+
+
+
+    onGetStatisticsDataSuccess(response,paramBody){
+         Global.log('onGetDataSuccess@@@@')
+
+
+        var conference = response.responseResult.conference;
+        if (conference) {
+            this.setState({conference:conference})
+        }
+
+        var notification = response.responseResult.notification;
+        if (notification) {
+            this.setState({notification:notification})
+        }
+
+    }
+
+
+    executeStatisticsRequest(){
+
+      Global.log('executeStatisticsRequest:')
+
+                 this.setState({
+                   isLoading: true,
+                   isLoadingTail: false,
+                 });
+
+
+                 var paramBody = {
+                     }
+
+            HttpRequest.get('/statistics/conference', paramBody, this.onGetStatisticsDataSuccess.bind(this),
+                (e) => {
+
+                    //
+                    // this.setState({
+                    //   dataSource: this.state.dataSource.cloneWithRows([]),
+                    //   isLoading: false,
+                    // });
+                    try {
+                        var errorInfo = JSON.parse(e);
+                        if (errorInfo != null) {
+                         Global.log(errorInfo)
+                        } else {
+                            Global.log(e)
+                        }
+                    }
+                    catch(err)
+                    {
+                        Global.log(err)
+                    }
+
+                    Global.log('Task error:' + e)
+                })
+    }
+
+
 
     onModuleItemClick(itemData) {
         this.props.navigator.push({
@@ -154,13 +260,14 @@ export default class MeetingView extends Component {
 
   renderExpriedItems(moduleData){
       var displayArr = []
-      for (var i = 0; i < moduleData.length; i++) {
+      var len = moduleData.length > 3 ? 3 : moduleData.length
+      for (var i = 0; i < len; i++) {
           var moduleDataItem = moduleData[i]
          displayArr.push(
          <TouchableOpacity key={i} onPress={this.onExpriedDetailModuleItemClick.bind(this,moduleDataItem)}>
          <View style={[{width:width}]}>
 
-             <Text style={{ fontSize: 14, marginTop:10,color: "#e82628" }}>2017/10/30 10:20am XX项目部的文件失效通知</Text>
+             <Text numberOfLines={1} style={{ fontSize: 14, marginTop:10,color: "#e82628" }}> {Global.formatFullDateDisplay(moduleDataItem.publishTime)} {moduleDataItem.title}</Text>
          </View>
          </TouchableOpacity>)
       }
@@ -268,7 +375,7 @@ export default class MeetingView extends Component {
                           最新
                           </Text>
 
-                            {this.renderExpriedItems(noticeModuleData)}
+                            {this.renderExpriedItems(this.state.expired_notice)}
                           </View>
 
                           </View>
