@@ -129,14 +129,13 @@ export default class QuestionList extends Component {
 
     componentDidMount() {
 
-    SafeWorkDeal = DeviceEventEmitter.addListener('SafeWork',(param) => {this._onRefresh.bind(this)})
-
+    this.SafeWorkDeal = DeviceEventEmitter.addListener('Safe_Work',(param) => {this._onRefresh()})
     this.executePlanRequest(1);
 
     }
 
     componentWillUnmount(){
-       SafeWorkDeal.remove();
+       this.SafeWorkDeal.remove();
   }
 
     onGetDataSuccess(response,paramBody){
