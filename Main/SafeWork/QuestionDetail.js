@@ -76,7 +76,7 @@ export default class QuestionDetail extends Component {
      this.state = {
        data : this.props.data,
        title: "问题详情",
-       team : this.props.data.responsibleTeam,
+       team : this.props.data.responsibleTeam ? this.props.data.responsibleTeam.deptName : null,
        fileArr : images,
        time: this.props.data.time,
        recDes:"",
@@ -84,7 +84,7 @@ export default class QuestionDetail extends Component {
        choose_date:null,
        displayDate:"截止日期",
        TeamTypes:null,
-       ResTeamId:this.props.data.responsibleTeam,
+       ResTeamId:this.props.data.responsibleTeam ? this.props.data.responsibleTeam.deptId : null,
      }
 
   }
@@ -97,8 +97,8 @@ export default class QuestionDetail extends Component {
         loadingVisible: true
     });
    var param = new FormData()
-    if (this.state.data.responsibleDept) {
-      param.append('responsibleDeptId',this.state.data.responsibleDept);
+    if (this.state.data.responsibleDept.deptId) {
+      param.append('responsibleDeptId',this.state.data.responsibleDept.deptId);
     }
 
     HttpRequest.get('/hse/createUI', param, this.featchDataSuccess.bind(this),
@@ -460,15 +460,16 @@ if (status == 1) {
   }
 
   onDeliverySuccess(response){
+
       this.setState({
           loadingVisible: false
       });
 
-     DeviceEventEmitter.emit('SafeWork','SafeWork');
-
       Global.showToast(response.message)
 
       this.back();
+
+       DeviceEventEmitter.emit('Safe_Work','Safe_Work');
 
   }
 
@@ -605,7 +606,7 @@ historyData.hseCheckTime = item['solveDate'];
       {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
       {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
       {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
-      {title:'责任部门',content:this.state.data.responsibleDept,id:'5',noLine:true},
+      {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
     ];
 
 
@@ -668,8 +669,8 @@ historyData.hseCheckTime = item['solveDate'];
         {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
         {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
         {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
-        {title:'责任部门',content:this.state.data.responsibleDept,id:'5',noLine:true},
-        {title:'责任班组',content:this.state.data.responsibleTeam,id:'6',noLine:true},
+        {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
+        {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
         {title:'截止日期',content:Global.formatDate(this.state.data.targetDate),id:'7',noLine:true},
         {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
         {title:'历史状态',content:"",id:'9',noLine:true},
@@ -721,8 +722,8 @@ historyData.hseCheckTime = item['solveDate'];
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
     {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
     {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
-    {title:'责任部门',content:this.state.data.responsibleDept,id:'5',noLine:true},
-    {title:'责任班组',content:this.state.data.responsibleTeam,id:'6',noLine:true},
+    {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
+    {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
     {title:'整改时间',content:Global.formatDate(this.state.data.targetDate),id:'7',noLine:true},
     {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
     {title:'整改描述',content:historyData.teamSolveDes,id:'9',noLine:true},
@@ -769,8 +770,8 @@ historyData.hseCheckTime = item['solveDate'];
       {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
       {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
       {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
-      {title:'责任部门',content:this.state.data.responsibleDept,id:'5',noLine:true},
-      {title:'责任班组',content:this.state.data.responsibleTeam,id:'6',noLine:true},
+      {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
+      {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
       {title:'截止日期',content:Global.formatDate(this.state.data.targetDate),id:'7',noLine:true},
       {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
       {title:'历史状态',content:"",id:'9',noLine:true},
@@ -819,8 +820,8 @@ historyData.hseCheckTime = item['solveDate'];
       {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
       {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
       {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
-      {title:'责任部门',content:this.state.data.responsibleDept,id:'5',noLine:true},
-      {title:'责任班组',content:this.state.data.responsibleTeam,id:'6',noLine:true},
+      {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
+      {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
       {title:'截止日期',content:Global.formatDate(this.state.data.targetDate),id:'7',noLine:true},
       {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
       {title:'整改描述',content:historyData.teamSolveDes,id:'9',noLine:true},
@@ -871,8 +872,8 @@ historyData.hseCheckTime = item['solveDate'];
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
     {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
     {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
-    {title:'责任部门',content:this.state.data.responsibleDept,id:'5',noLine:true},
-    {title:'责任班组',content:this.state.data.responsibleTeam,id:'6',noLine:true},
+    {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
+    {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
     {title:'问题描述',content:this.state.data.problemDescription,id:'7',noLine:true},
     {title:'历史状态',content:"",id:'8',noLine:true},
     {title:'问题提交',content:Global.formatDate(this.state.data.createDate),id:'9',noLine:true},
@@ -916,8 +917,8 @@ historyData.hseCheckTime = item['solveDate'];
       {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
       {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
       {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
-      {title:'责任部门',content:this.state.data.responsibleDept,id:'5',noLine:true},
-      {title:'责任班组',content:this.state.data.responsibleTeam,id:'6',noLine:true},
+      {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
+      {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
       {title:'问题描述',content:this.state.data.problemDescription,id:'7',noLine:true},
       {title:'历史状态',content:"",id:'8',noLine:true},
       {title:'问题提交',content:Global.formatDate(this.state.data.createDate),id:'9',noLine:true},
@@ -960,8 +961,8 @@ historyData.hseCheckTime = item['solveDate'];
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
     {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
     {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
-    {title:'责任部门',content:this.state.data.responsibleDept,id:'5',noLine:true},
-    {title:'责任班组',content:this.state.data.responsibleTeam,id:'6',noLine:true},
+    {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
+    {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
     {title:'截止日期',content:Global.formatDate(this.state.data.targetDate) ,id:'7',noLine:true},
     {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
 
