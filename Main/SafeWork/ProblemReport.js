@@ -13,6 +13,7 @@ import {
     TextInput,
     Platform,
     Alert,
+    KeyboardAvoidingView,
 
 } from 'react-native';
 
@@ -236,10 +237,14 @@ export  default class ProblemReport extends Component {
   _ContentView(){
 
    return(
+     <KeyboardAvoidingView
+    style={styles.container}
+    behavior="padding"
+        >
        <ScrollView style={styles.container}>
             {this.renderItem()}
        </ScrollView>
-
+  </KeyboardAvoidingView>
    )
 
 

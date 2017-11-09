@@ -72,14 +72,14 @@ export  default class ProblemRectification extends Component {
 
   _renderQuetionView(label,problemSolveStatus){
 
- this.state.problemStatus =  problemSolveStatus;
+ // this.state.problemStatus =  problemSolveStatus;
 
  return( <View  tabLabel={label} style={styles.container}>
 
    {this.renderSearchBar()}
    {this.renderContent()}
    {this.renderSlider()}
-  {this.renderQuestionList()}
+  {this.renderQuestionList(problemSolveStatus)}
      </View>)
 
 
@@ -152,7 +152,7 @@ export  default class ProblemRectification extends Component {
 
   }
 
-  renderQuestionList(){
+  renderQuestionList(problemSolveStatus){
 
     var userId = '';
 
@@ -166,7 +166,7 @@ export  default class ProblemRectification extends Component {
       type={this.props.type}
       detailType={this.state.detailType}
       userId={userId}
-      problemStatus={this.state.problemStatus}
+      problemStatus={problemSolveStatus}
       navigator={this.props.navigator}
       ref="myQuestionlist"
       />)

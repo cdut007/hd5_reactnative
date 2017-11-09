@@ -14,7 +14,7 @@ import {
     Platform,
     Alert,
     DeviceEventEmitter,
-
+    KeyboardAvoidingView,
 } from 'react-native';
 
 import Dimensions from 'Dimensions';
@@ -143,9 +143,13 @@ export default class QuestionDetail extends Component {
             title={this.state.title}
             leftIcon={require('../../images/back.png')}
             leftPress={this.back.bind(this)}/>
-          <ScrollView >
+            <KeyboardAvoidingView
+           style={styles.container}
+           behavior="padding">
+          <ScrollView>
                  {this.renderItem()}
           </ScrollView>
+        </KeyboardAvoidingView>
           {this.renderCommitBtn()}
           <Spinner
               visible={this.state.loadingVisible}

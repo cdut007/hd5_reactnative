@@ -628,6 +628,7 @@
 				00E356EF1AD99517003FC87E /* hd_appTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				E0910BF1E9244402B58D4621 /* Frameworks */,
+				921B59AF1FB2FCFD00EB8F80 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -643,6 +644,16 @@
 				2D02E4901E0B4A5D006451C7 /* hd_app-tvOSTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		921B59AF1FB2FCFD00EB8F80 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				8AF852AD128A4C348CB9BD03 /* libRCTJCoreModule.a */,
+				418DD7E94DB64DC898EB5A0B /* libRCTJPushModule.a */,
+				B02B8BB1A8994CC6AE500875 /* libRNDeviceInfo.a */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		922AABE41FAB230E0072609D /* Products */ = {

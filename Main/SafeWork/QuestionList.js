@@ -33,6 +33,7 @@ var height = Dimensions.get('window').height;
 var pagesize = 10;
 var pageNo = 1;
 
+
 var resultsCache = {
   dataForQuery: {},
   nextPageNumberForQuery: {},
@@ -86,6 +87,9 @@ export default class QuestionList extends Component {
         }
 
         _loadMoreData() {
+
+
+
             console.log("_loadMoreData() --> ");
              pageNo = parseInt(this.state.items.length / pagesize) + 1;
             this.executePlanRequest(pageNo);
@@ -144,6 +148,7 @@ export default class QuestionList extends Component {
     //  if (!query) {
     //      query = '';
     //  }
+
 
          var datas = [];
         if(response.responseResult){
@@ -233,7 +238,6 @@ export default class QuestionList extends Component {
    dataSource:this.state.dataSource.cloneWithRows(this.state.items),
 
  })
-    return;
 
     }else {
 
@@ -265,15 +269,11 @@ export default class QuestionList extends Component {
                    isLoading: loading,
                  });
 
-                 var userId= ''
-                 if (this.props.userId) {
-                     userId = this.props.userId;
-                 }
+
 
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
-                      userId:userId,
                      }
 
                  if (this.props.problemStatus) {
@@ -295,6 +295,7 @@ export default class QuestionList extends Component {
 
             HttpRequest.get('/hse/problemList', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
+
 
                     this.setState({
                       dataSource: this.state.dataSource.cloneWithRows([]),
