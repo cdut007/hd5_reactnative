@@ -16,7 +16,7 @@ var width = Dimensions.get('window').width;
         title: PropTypes.string,
         detail: PropTypes.string,
         noLine:PropTypes.bool,
-        icon:PropTypes.string,
+        icon:PropTypes.object,
     }
 
     render()

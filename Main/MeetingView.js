@@ -25,6 +25,7 @@ import NoticeExpiredListView from '../Main/Meeting/NoticeExpiredListView';
 
 import HttpRequest from '../HttpRequest/HttpRequest'
 import CreateMeetingView from '../Main/Meeting/CreateMeetingView';
+import EditSubjectView from '../Main/Meeting/EditSubjectView';
 
 import CreateNoticeView from '../Main/Meeting/CreateNoticeView';
 
@@ -285,8 +286,6 @@ export default class MeetingView extends Component {
                     title="会议"
                      />
                      <ScrollView
-                     keyboardDismissMode='on-drag'
-                     keyboardShouldPersistTaps={false}
                      style={styles.mainStyle}>
                      <View style={styles.itemContainer}>
                      <View style={styles.space}/>

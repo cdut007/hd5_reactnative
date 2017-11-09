@@ -29,7 +29,10 @@
     "react-native-scrollable-tab-view": "^0.7.4",
     "react-native-smart-badge": "^1.1.1",
     "react-native-tab-navigator": "^0.3.4",
-    "react-native-xlog": "^0.5.0"
+    "react-native-textinput-effects": "^0.4.1",
+    "react-native-vector-icons": "^4.4.2",
+    "react-native-xlog": "^0.5.0",
+    "react-navigation": "^1.0.0-beta.19"
   },
   "devDependencies": {
     "babel-jest": "21.0.0",
@@ -40,5 +43,4 @@
   "jest": {
     "preset": "react-native"
   }
-  
 }

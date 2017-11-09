@@ -53,7 +53,7 @@ export default class MemberSelectView extends Component {
       }
 
     componentWillUnmount(){
-        console.log('member lllllll')
+
         Picker.hide();
         this.keyboardDidShowListener.remove();
         this.keyboardDidHideListener.remove();

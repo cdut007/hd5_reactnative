@@ -7,6 +7,7 @@ import {
     Image,
     AsyncStorage,
     Platform,
+    Button
 } from 'react-native';
 
 
@@ -26,6 +27,7 @@ const openNotificationEvent = "openNotification";
 const getRegistrationIdEvent = "getRegistrationId";
 
 export default class MainView extends Component {
+
 
     constructor(props)
     {
@@ -103,21 +105,25 @@ export default class MainView extends Component {
         if (this.state.hasLogin)
         {
             return (
-                <Navigator
-                initialRoute={{component: TabView, name: "MainPage", props:{version: this.props.version}}}
-                configureScene={() => Navigator.SceneConfigs.FloatFromRight}
-                renderScene={(route, navigator) => {
-                      return <route.component navigator={navigator} {...route.props}/>
-                    }
-                }
-              />
+
+              <Navigator
+              initialRoute={{component: TabView, name: "MainPage", props:{version: this.props.version,navigation:this.props.navigation}}}
+
+              renderScene={(route, navigator) => {
+                    return <route.component navigator={navigator} {...route.props}/>
+                  }
+              }
+            />
+
+
+
             )
         }
          else {
             return (
                 <Navigator
-                initialRoute={{component: WelcomeView, name: "WelcomePage", index: this.props.index,props:{version: this.props.version}}}
-                configureScene={() => Navigator.SceneConfigs.FloatFromRight}
+                initialRoute={{component: WelcomeView, name: "WelcomePage", index: this.props.index,props:{version: this.props.version,navigation:this.props.navigation}}}
+
                 renderScene={(route, navigator) => {
                       return <route.component navigator={navigator} {...route.props}/>
                     }

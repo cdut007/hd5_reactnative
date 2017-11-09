@@ -350,7 +350,7 @@ export default class PlanWriteLastStepDetailView extends Component {
     renderDetailView(){
             return(<ScrollView
             keyboardDismissMode='on-drag'
-            keyboardShouldPersistTaps={false}
+            
             style={styles.mainStyle}>
                 {this.renderHankouInfo()}
                 {this.renderItem()}
