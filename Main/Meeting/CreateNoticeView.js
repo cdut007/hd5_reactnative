@@ -32,7 +32,7 @@ import ChooseMemberView from './ChooseMemberView'
 import HttpRequest from '../../HttpRequest/HttpRequest'
 
 const MAX_IMAGE_COUNT = 5;
-
+const dismissKeyboard = require('dismissKeyboard');
 import ImagePicker from 'react-native-image-picker'
 
 var options = {
@@ -84,6 +84,7 @@ export default class CreateNoticeView extends Component {
 
 
     back() {
+        dismissKeyboard();
         this.props.navigator.pop()
     }
 
@@ -724,7 +725,7 @@ createChooseInfo(icon,label,desc,data,tag){
                       <Text style={[styles.content,{marginLeft:5,fontSize:14,color:'#1c1c1c'}]}>
                       附件
                       </Text>
-                      
+
                       <View style={{flex:1,flexDirection:'row',justifyContent:'flex-end', alignItems: 'center',}}>
 
                       <Image style={{width:24,height:24,}} source={require('../../images/add_icon.png')} />

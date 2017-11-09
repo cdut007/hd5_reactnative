@@ -27,7 +27,6 @@ import DisplayItemView from '../../common/DisplayItemView';
 
 import DisplayMoreItemView from '../../common/DisplayMoreItemView';
 
-import EditItemView from '../../common/EditItemView';
 import CircleLabelDepartView from '../../common/CircleLabelDepartView';
 
 import ChooseMemberListView from './ChooseMemberListView'

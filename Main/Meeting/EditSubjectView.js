@@ -27,7 +27,7 @@ import DisplayItemView from '../../common/DisplayItemView';
 import DisplayMoreItemView from '../../common/DisplayMoreItemView';
 
 import EditItemView from '../../common/EditItemView';
-
+const dismissKeyboard = require('dismissKeyboard');
 
 
 export default class EditSubjectView extends Component {
@@ -52,7 +52,9 @@ export default class EditSubjectView extends Component {
 
 
     back() {
+        dismissKeyboard();
         this.props.navigator.pop()
+
     }
 
   saveTopic(){
@@ -106,8 +108,7 @@ export default class EditSubjectView extends Component {
                         style={styles.mainStyle}>
                         <EditItemView
                          topic={'所属项目'}
-                         editable={true}
-                         autoFocus={true}
+                         
                          icon={require('../../images/projectIcon.png')}
                          placeholder={'请输入所属项目名称'}
                          content={this.state.subject}

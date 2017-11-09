@@ -32,7 +32,7 @@ import ChooseMemberView from './ChooseMemberView'
 import HttpRequest from '../../HttpRequest/HttpRequest'
 
 const MAX_IMAGE_COUNT = 5;
-
+const dismissKeyboard = require('dismissKeyboard');
 import ImagePicker from 'react-native-image-picker'
 
 var options = {
@@ -84,6 +84,7 @@ export default class CreateMeetingView extends Component {
 
 
     back() {
+        dismissKeyboard();
         this.props.navigator.pop()
     }
 

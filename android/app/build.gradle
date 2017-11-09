@@ -97,8 +97,8 @@ android {
         applicationId "com.hd_app"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 34
-        versionName "1.1.32"
+        versionCode 35
+        versionName "1.1.33"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -146,6 +146,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-vector-icons')
     compile project(':react-native-device-info')
     compile project(':react-native-xlog')
     compile project(':react-native-picker')

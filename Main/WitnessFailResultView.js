@@ -59,7 +59,7 @@ export default class WitnessFailResultView extends Component {
                     leftPress={this.back.bind(this)} />
                     <ScrollView
                     keyboardDismissMode='on-drag'
-                    keyboardShouldPersistTaps={false}
+                    
                     style={styles.main_container}>
                     <DisplayItemView
                      title={'不合格类别'}

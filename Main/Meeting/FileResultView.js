@@ -59,7 +59,7 @@ export default class FileResultView extends Component {
                     leftPress={this.back.bind(this)} />
                     <ScrollView
                     keyboardDismissMode='on-drag'
-                    keyboardShouldPersistTaps={false}
+                    
                     style={styles.main_container}>
                     <DisplayItemView
                      title={'附件'}

@@ -8,12 +8,14 @@ import com.engsshi.xlog.XLogModule;
 import com.engsshi.xlog.XLogPackage;
 import com.engsshi.xlog.XLogSetting;
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.hd_app.log.LogReactPackage;
+import com.hd_app.view.edittext.EditTextReactPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.reactlibrary.RNCardViewPackage;
 import com.tencent.bugly.Bugly;
@@ -37,12 +39,14 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new VectorIconsPackage(),
             new RNDeviceInfo(),
                     new XLogPackage(),
                     new PickerViewPackage(),
                     new ImagePickerPackage(),
                     new RNCardViewPackage(),
                     new LogReactPackage(),
+                    new EditTextReactPackage(),
                      new JPushPackage(SHUTDOWN_TOAST, SHUTDOWN_LOG)
                     );
         }

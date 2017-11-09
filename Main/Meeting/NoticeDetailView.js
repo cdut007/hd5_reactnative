@@ -171,7 +171,7 @@ export default class NoticeDetailView extends Component {
                     leftPress={this.back.bind(this)} />
                     <ScrollView
                     keyboardDismissMode='on-drag'
-                    keyboardShouldPersistTaps={false}
+                    
                     style={styles.main_container}>
 
                     <View style={styles.space}>

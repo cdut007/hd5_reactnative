@@ -161,7 +161,7 @@ export default class WorkStepListView extends Component {
     renderDetailView(){
             return(<ScrollView
             keyboardDismissMode='on-drag'
-            keyboardShouldPersistTaps={false}
+            
             style={styles.mainStyle}>
             {this.renderItem()}
                    </ScrollView>);
