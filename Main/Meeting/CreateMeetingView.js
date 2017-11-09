@@ -31,6 +31,32 @@ import EditSubjectView from './EditSubjectView'
 import ChooseMemberView from './ChooseMemberView'
 import HttpRequest from '../../HttpRequest/HttpRequest'
 
+const MAX_IMAGE_COUNT = 5;
+
+import ImagePicker from 'react-native-image-picker'
+
+var options = {
+    title: '', // specify null or empty string to remove the title
+    cancelButtonTitle: '取消',
+    takePhotoButtonTitle: '拍照', // specify null or empty string to remove this button
+    chooseFromLibraryButtonTitle: '从相册选取', // specify null or empty string to remove this button
+    cameraType: 'back', // 'front' or 'back'
+    mediaType: 'photo', // 'photo' or 'video'
+    videoQuality: 'medium', // 'low', 'medium', or 'high'
+    durationLimit: 10, // video recording max time in seconds
+    maxWidth: 1920, // photos only
+    maxHeight: 1920, // photos only
+    aspectX: 2, // aspectX:aspectY, the cropping image's ratio of width to height
+    aspectY: 1, // aspectX:aspectY, the cropping image's ratio of width to height
+    quality: 1, // photos only
+    angle: 0, // photos only
+    allowsEditing: false, // Built in functionality to resize/reposition the image
+    noData: true, // photos only - disables the base64 `data` field from being generated (greatly improves performance on large photos)
+    storageOptions: { // if this key is provided, the image will get saved in the documents/pictures directory (rather than a temporary directory)
+        skipBackup: true, // image will NOT be backed up to icloud
+        path: 'images' // will save image at /Documents/images rather than the root
+    }
+};
 
 export default class CreateMeetingView extends Component {
     constructor(props) {
@@ -52,6 +78,7 @@ export default class CreateMeetingView extends Component {
             title:title,
             meetingTypeData:meetingTypeArry,
             loadingVisible:false,
+            fileArr: [{}],
         };
     }
 
@@ -147,26 +174,34 @@ export default class CreateMeetingView extends Component {
         conferenceId = this.state.data.conferenceId
     }
     this.setState({loadingVisible:true})
-        var paramBody = {
-                 subject:this.state.data.subject,
-                'content': this.state.data.content,
-                'category': this.state.data.category,
-                'project':this.state.data.project,
-                'host':this.state.data.host,
-                id:conferenceId,
-                recorder:this.state.data.recorder,
-                supplies:this.state.data.supplies,
-                address:this.state.data.address,
-                remark:this.state.data.remark,
-                participants:ids,
-                startTime:Global.formatFullDate(this.state.data.startTime),
-                endTime:Global.formatFullDate(this.state.data.endTime),
-                alarmTime:Global.formatFullDate(this.state.data.alarmTime),
-                type:'SEND',
 
-            }
+        var param = new FormData()
+        param.append('id', conferenceId)
+        param.append('subject', this.state.data.subject)
+        param.append('content', this.state.data.content)
+        param.append('category', this.state.data.category)
+        param.append('project', this.state.data.project)
+        param.append('host', this.state.data.host)
+        param.append('recorder', this.state.data.recorder)
+        param.append('supplies', this.state.data.supplies)
+        param.append('remark', this.state.data.remark)
+        param.append('address', this.state.data.address)
+        param.append('startTime',Global.formatFullDate(this.state.data.startTime))
+        param.append('endTime', Global.formatFullDate(this.state.data.endTime))
+        param.append('alarmTime', Global.formatFullDate(this.state.data.alarmTime))
+        param.append('participants',ids)
+        param.append('type','SEND')
+        if (this.state.fileArr.length>0) {
+            this.state.fileArr.map((item, i) => {
+                if (item['fileSource']) {
+                   let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
+                   param.append("file"+i,file);   //这里的files就是后台需要的key
+                }
+            });
+        }
 
-        HttpRequest.post('/conference', paramBody, this.onPublishSuccess.bind(this),
+
+        HttpRequest.uploadImage('/conference', param,  this.onPublishSuccess.bind(this),
             (e) => {
                 this.setState({
                     loadingVisible: false
@@ -271,26 +306,34 @@ export default class CreateMeetingView extends Component {
             conferenceId = this.state.data.conferenceId
         }
     this.setState({loadingVisible:true})
-        var paramBody = {
-                 id:conferenceId,
-                 subject:this.state.data.subject,
-                'content': this.state.data.content,
-                'category': this.state.data.category,
-                'project':this.state.data.project,
-                'host':this.state.data.host,
-                recorder:this.state.data.recorder,
-                supplies:this.state.data.supplies,
-                address:this.state.data.address,
-                remark:this.state.data.remark,
-                participants:ids,
-                startTime:Global.formatFullDate(this.state.data.startTime),
-                endTime:Global.formatFullDate(this.state.data.endTime),
-                alarmTime:Global.formatFullDate(this.state.data.alarmTime),
-                type:'DRAFT',
 
+    var param = new FormData()
+    param.append('id', conferenceId)
+    param.append('subject', this.state.data.subject)
+    param.append('content', this.state.data.content)
+    param.append('category', this.state.data.category)
+    param.append('project', this.state.data.project)
+    param.append('host', this.state.data.host)
+    param.append('recorder', this.state.data.recorder)
+    param.append('supplies', this.state.data.supplies)
+    param.append('remark', this.state.data.remark)
+    param.append('address', this.state.data.address)
+    param.append('startTime',Global.formatFullDate(this.state.data.startTime))
+    param.append('endTime', Global.formatFullDate(this.state.data.endTime))
+    param.append('alarmTime', Global.formatFullDate(this.state.data.alarmTime))
+    param.append('participants',ids)
+    param.append('type','DRAFT')
+    if (this.state.fileArr.length>0) {
+        this.state.fileArr.map((item, i) => {
+            if (item['fileSource']) {
+               let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
+               param.append("file"+i,file);   //这里的files就是后台需要的key
             }
+        });
+    }
 
-        HttpRequest.post('/conference', paramBody, this.onPublishSuccess.bind(this),
+
+    HttpRequest.uploadImage('/conference', param, this.onPublishSuccess.bind(this),
             (e) => {
                 this.setState({
                     loadingVisible: false
@@ -319,6 +362,100 @@ export default class CreateMeetingView extends Component {
             })
 
     }
+
+    renderFileView() {
+        return (
+            <View style={{flexDirection: 'row', flexWrap: 'wrap', width: width, paddingTop: 10, paddingRight: 10}} horizontal={true} >
+                    {this.renderImages()}
+            </View>
+        )
+    }
+
+
+    onSelectFile(idx) {
+        this.currentFileIdx = idx
+
+        let showPicker = () => {
+            ImagePicker.showImagePicker(options, (response) => {
+                //   Global.log('Response = ', response);
+                if (response.didCancel) {
+                    Global.log('User cancelled image picker');
+                }
+                else if (response.error) {
+                    Global.log('ImagePicker Error: ', response.error);
+                }
+                else if (response.customButton) {
+                    Global.log('User tapped custom button: ', response.customButton);
+                }
+                else {
+                    // You can display the image using either data:
+                    // const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
+                    var source;
+                    if (Platform.OS === 'android') {
+                         source = {uri: response.uri, isStatic: true};
+                     } else {
+                        source = {
+                           uri: response.uri.replace('file://', ''),
+                           isStatic: true
+                        };
+                    }
+
+                   var fileInfo = this.state.fileArr[this.currentFileIdx]
+                   fileInfo['fileSource'] = source.uri
+                    fileInfo['fileName'] = response.fileName
+
+                    if(this.state.fileArr.length<MAX_IMAGE_COUNT && this.state.fileArr[this.state.fileArr.length-1]['fileSource']){
+                        this.state.fileArr.push({});
+                    }
+                    this.setState({
+                        ...this.state
+                    });
+                }
+            });
+        }
+
+
+        showPicker()
+
+    }
+
+    onDeleteFile(idx) {
+
+        if(this.state.fileArr[idx]['fileSource']){
+            this.state.fileArr.splice(idx, 1)
+            this.setState({
+                ...this.state
+            })
+        }
+
+
+    }
+
+    renderImages(){
+        var imageViews = [];
+        {this.state.fileArr.map((item,i) => {
+                imageViews.push(
+                    <TouchableOpacity
+                     key={i}
+                     onPress = {() => this.onSelectFile(i) }
+                     onLongPress = { () => this.onDeleteFile(i) }
+                     style={{width: 70, height: 70, marginLeft: 10, marginBottom: 10,}}>
+                        {
+                            item['fileSource']
+                             ?
+                            (<Image resizeMode={'cover'} style={{ width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}} source={{uri: item['fileSource']}} />)
+                             :
+                            (<Image resizeMode={'cover'} style={{ width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}} source={require('../../images/add_pic_icon.png')} />)
+                        }
+                    </TouchableOpacity>
+                );
+        })}
+        if(this.state.fileArr[this.state.fileArr.length-1]['fileSource']){
+                this.state.fileArr.push({});
+            }
+        return imageViews;
+    }
+
 
 
 
@@ -571,16 +708,22 @@ createChooseInfo(icon,label,desc,data,tag){
 
                       <TouchableOpacity onPress={this.onAddAttached.bind(this)} style={styles.flexContainer}>
                       <Image style={{width:24,height:24,}} source={require('../../images/enclosureIcon.png')} />
-
+                      <Text style={[styles.content,{marginLeft:5,fontSize:14,color:'#1c1c1c'}]}>
+                      附件
+                      </Text>
 
                       <View style={{flex:1,flexDirection:'row',justifyContent:'flex-end', alignItems: 'center',}}>
 
-                      <Image style={{width:24,height:24,}} source={require('../../images/add_pic_icon.png')} />
+                      <Image style={{width:24,height:24,}} source={require('../../images/add_icon.png')} />
 
                       </View>
 
 
                       </TouchableOpacity>
+
+                      {this.renderFileView()}
+
+
 
                       <View style={styles.space}>
                       </View>
@@ -596,7 +739,7 @@ createChooseInfo(icon,label,desc,data,tag){
 
 
                onAddAttached(){
-
+                     this.onSelectFile(this.state.fileArr.length-1)
                }
 
   renderFormView(){

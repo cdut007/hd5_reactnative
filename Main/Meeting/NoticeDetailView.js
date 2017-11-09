@@ -31,6 +31,8 @@ import FeedbackMessageView from './FeedbackMessageView'
 import DisplayItemView from '../../common/DisplayItemView';
 import DisplayMoreItemView from '../../common/DisplayMoreItemView';
 
+import FileResultView from './FileResultView'
+
 export default class NoticeDetailView extends Component {
     constructor(props) {
         super(props)
@@ -108,6 +110,15 @@ export default class NoticeDetailView extends Component {
       }else if (tag == 'feedback') {
           this.props.navigator.push({
               component: FeedbackMessageView,
+               props: {
+                   data:this.state.data,
+                   notice:true,
+
+                  }
+          })
+      }else if (tag == 'attach') {
+          this.props.navigator.push({
+              component: FileResultView,
                props: {
                    data:this.state.data,
                    notice:true,

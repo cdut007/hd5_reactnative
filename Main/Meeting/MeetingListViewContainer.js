@@ -84,7 +84,68 @@ export default class MeetingListViewContainer extends Component {
 
     componentDidMount() {
 
+        this.executeStatisticsRequest()
+    }
 
+    onGetStatisticsDataSuccess(response,paramBody){
+         Global.log('onGetDataSuccess@@@@')
+
+
+        if (this.props.tag == 'meeting') {
+            var conference = response.responseResult.conference;
+            if (conference) {
+                this.setState({conference:conference})
+            }
+        }else{
+
+            var notification = response.responseResult.notification;
+            if (notification) {
+                this.setState({notification:notification})
+            }
+        }
+
+
+
+
+    }
+
+
+    executeStatisticsRequest(){
+
+      Global.log('executeStatisticsRequest:')
+
+                 this.setState({
+                   isLoading: true,
+                   isLoadingTail: false,
+                 });
+
+
+                 var paramBody = {
+                     }
+
+            HttpRequest.get('/statistics/conference', paramBody, this.onGetStatisticsDataSuccess.bind(this),
+                (e) => {
+
+                    //
+                    // this.setState({
+                    //   dataSource: this.state.dataSource.cloneWithRows([]),
+                    //   isLoading: false,
+                    // });
+                    try {
+                        var errorInfo = JSON.parse(e);
+                        if (errorInfo != null) {
+                         Global.log(errorInfo)
+                        } else {
+                            Global.log(e)
+                        }
+                    }
+                    catch(err)
+                    {
+                        Global.log(err)
+                    }
+
+                    Global.log('Task error:' + e)
+                })
     }
 
 
@@ -92,7 +153,21 @@ export default class MeetingListViewContainer extends Component {
     rendTabs(){
 
         //if (Global.isGroup(Global.UserInfo)) {
+            var receive = '', send = '', draft = ''
+            if (this.props.tag == 'meeting') {
+                if (this.state.conference) {
 
+                    receive = "("+this.state.conference.receive +")"
+                    send = "("+this.state.conference.send +")"
+                    draft = "("+this.state.conference.draft +")"
+                }
+            }else {
+                if (this.state.notification) {
+                    receive = "("+this.state.notification.receive +")"
+                    send = "("+this.state.notification.send +")"
+                    draft = "("+this.state.notification.draft +")"
+                }
+            }
 
             return( <ScrollableTabView
                 tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
@@ -101,9 +176,9 @@ export default class MeetingListViewContainer extends Component {
                    tabBarInactiveTextColor='#777777'
                    initialPage={this.props.data.index}
         >
-             {this.renderListView('已接收',0,meetingstatusDatas[0].status)}
-             {this.renderListView('已发送',1,meetingstatusDatas[1].status)}
-             {this.renderListView('草稿',2,meetingstatusDatas[2].status)}
+             {this.renderListView('已接收'+receive,0,meetingstatusDatas[0].status)}
+             {this.renderListView('已发送'+send,1,meetingstatusDatas[1].status)}
+             {this.renderListView('草稿'+draft,2,meetingstatusDatas[2].status)}
         </ScrollableTabView>
 
             )
