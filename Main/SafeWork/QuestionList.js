@@ -134,7 +134,10 @@ export default class QuestionList extends Component {
     componentDidMount() {
 
     this.SafeWorkDeal = DeviceEventEmitter.addListener('Safe_Work',(param) => {this._onRefresh()})
-    this.executePlanRequest(1);
+    InteractionManager.runAfterInteractions(() => {
+      this.executePlanRequest(1);
+    });
+
 
     }
 
