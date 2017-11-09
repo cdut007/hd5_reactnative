@@ -197,8 +197,6 @@ export  default class ProblemRectification extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
         backgroundColor: '#f2f2f2',
     },
     cell: {
