@@ -11,7 +11,8 @@ import {
     Picker,
     AsyncStorage,
     TextInput,
-    ScrollView
+    ScrollView,
+    NativeModules,
 } from 'react-native';
 
 var FilePickerManager = require('NativeModules').FilePickerManager;
@@ -489,8 +490,21 @@ export default class CreateMeetingView extends Component {
         showPicker()
 
     }
-    parseFileResponse(response){
+    async parseFileResponse(response){
         var filePath = response.path
+        try {
+           var {
+               path,
+           } = await  NativeModules.LogInterface.normalizePath(filePath);
+
+           console.log('normalizePath=====:'+path);
+           filePath =  path
+         } catch (e) {
+           console.error(e);
+           return
+         }
+
+
         var fileName = Global.getFileName(filePath)
         var fileExt = Global.getFileExtension(fileName)
         var fileType = 'file'
