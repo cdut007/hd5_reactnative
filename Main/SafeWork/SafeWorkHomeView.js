@@ -9,6 +9,7 @@ import {
     BackAndroid,
     ListView,
     TouchableOpacity,
+    ScrollView,
     // AlertIOS,
 
 } from 'react-native';
@@ -25,27 +26,36 @@ var width = Dimensions.get('window').width;
 var safeModule = [
   {
     'title':"报告问题",
-    'image': require('../../images/construction_icon.png'),
+    'image': require('../../images/reportIcon.png'),
     'index': 0,
     "type":"BGWT",
+    "right":true,
+    "bottom":true,
+
   },
   {
     'title':"问题审核",
-    'image': require('../../images/construction_icon.png'),
+    'image': require('../../images/checkIcon.png'),
     'index': 1,
     "type":"WTSH",
+    "right":false,
+    "bottom":true,
   },
   {
     'title':"问题整改",
-    'image': require('../../images/construction_icon.png'),
+    'image': require('../../images/correctionIcon.png'),
     'index': 2,
     "type":"WTZG",
+    "right":true,
+    "bottom":false,
   },
   {
     'title':"问题查阅",
-    'image': require('../../images/construction_icon.png'),
+    'image': require('../../images/lookIcon.png'),
     'index': 3,
     "type":"WTCY",
+    "right":false,
+    "bottom":false,
   },
 ]
 
@@ -83,12 +93,21 @@ export  default class SafeWorkHomeView extends Component {
               title={this.state.title}
               leftIcon={require('../../images/back.png')}
               leftPress={this.back.bind(this)}/>
-               <View style={styles.content}>
+               <ScrollView style={styles.content}>
+                      {this.renderHeaderView()}
                      {this.renderToolsView()}
-               </View>
+               </ScrollView>
 
           </View>
       )
+  }
+
+  renderHeaderView(){
+       return(
+         <View style = {{width:width,height:200,backgroundColor:'#3CDEBA',alignItems:'center',justifyContent:'center'}}>
+           <Image source={require('../../images/construction_icon.png')} style={{width:120,height:120}} resizeMode={Image.resizeMode.contain}></Image>
+         </View>
+       );
   }
 
   renderToolsView() {
@@ -102,20 +121,28 @@ export  default class SafeWorkHomeView extends Component {
                   flexDirection:'row', //改变ListView的主轴方向
                   flexWrap:'wrap', //换行
                   alignItems:'center', // 必须设置,否则换行不起作用
+                  marginLeft:30,
+                  marginRight:30,
+                  marginTop:50,
+                  marginBottom:50,
           }}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
         />
       )
-
+i
 
   }
 
   renderRow(item,sectionId,rowId){
       return(
            <View key = {item.index}
-                style={[{width:width/2,
-                          height:width/2,}, styles.toolsItem]}>
+                style={[{width:width/2-30,
+                        height:width/2-30,
+                        borderRightWidth:item.right ? 1 : 0,
+                        borderBottomWidth:item.bottom ? 1 : 0,
+                        borderColor:'#DDDDDD',
+                      }, styles.toolsItem]}>
 
                {this.renderDot(item)}
 
@@ -188,24 +215,21 @@ const styles = StyleSheet.create({
     },
     content: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
       backgroundColor: '#fff',
     },
     toolsItem: {
         backgroundColor: "#fff",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
+
     },
     item: {
-      color: "#3b3b3b",
+      color: "#FBAC2B",
       alignSelf:'center',
+      fontSize:16,
     },
     circle_outter:{
       marginBottom: 6,
-      borderRadius : 44,
-      borderWidth:1,
-      borderColor : 'darkgray',
       alignSelf:'center',
       width: 88,
       height: 88,

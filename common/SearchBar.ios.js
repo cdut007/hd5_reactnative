@@ -60,7 +60,7 @@ import React, { Component,PropTypes } from 'react';
            placeholder="搜索"
            placeholderTextColor={this.state.placeholderTextColor}
            onFocus={this.props.onFocus}
-           style={this.props.searchBarInput}
+           style={styles.searchBarInput}
          />
          <ActivityIndicator
            animating={this.props.isLoading}
@@ -76,7 +76,6 @@ import React, { Component,PropTypes } from 'react';
  var styles = StyleSheet.create({
    searchBar: {
      flexDirection: 'row',
-     alignItems: 'center',
      backgroundColor: '#f2f2f2',
      height: 44,
      flex:1
