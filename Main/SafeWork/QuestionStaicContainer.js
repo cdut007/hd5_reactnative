@@ -40,6 +40,7 @@ export default class QuestionStaicContainer extends Component {
           title: this.props.data.item.title,
           detailType:this.props.detailType,
           problemStatus:this.props.problemStatus,
+          index:0,
       }
   }
 
@@ -61,10 +62,36 @@ export default class QuestionStaicContainer extends Component {
 
   onSearchChanged(text){
 
+// alert(this.state.index);
+
+if (this.state.index == 0){
+
+if (this.refs.list_Renovating) {
+      this.refs.list_Renovating.onSearchChange(text);
+}
+}else {
+if (this.refs.list_finish) {
+      this.refs.list_finish.onSearchChange(text);
+}
+}
+
+// this.refs.current_ref.onSearchChange(text);
+//    console.log(this.state.problemStatus);
 
   }
 
   onSearchClose(){
+
+    if (this.state.index == 0){
+
+    if (this.refs.list_Renovating) {
+          this.refs.list_Renovating.onSearchChange('');
+    }
+    }else {
+    if (this.refs.list_finish) {
+          this.refs.list_finish.onSearchChange('');
+    }
+    }
 
   }
 
@@ -92,6 +119,10 @@ return( <View  tabLabel={label} style={styles.container}>
             tabBarBackgroundColor='#FFFFFF'
             tabBarActiveTextColor='#f77935'
             tabBarInactiveTextColor='#777777'
+            onChangeTab={(obj) => {
+        this.state.index = obj.i ;
+ }
+ }
  >
 
        {this._renderQuetionView(1001,"新问题","Need_Handle")}
@@ -199,6 +230,15 @@ return( <View  tabLabel={label} style={styles.container}>
         userId = this.props.data.user.id
     }
 
+    if (problemStatus == 'Need_Check') {
+
+       ref = "list_finish";
+
+    }else {
+
+        ref="list_Renovating";
+
+    }
 
    return (<QuestionList
       style={{alignSelf:'stretch',flex:1}}
@@ -209,7 +249,7 @@ return( <View  tabLabel={label} style={styles.container}>
       problemStatus={problemStatus}
       problemSolveStatus={this.state.problemSolveStatus}
       navigator={this.props.navigator}
-      ref="myQuestionlist"
+      ref={ref}
       />)
 
 

@@ -49,6 +49,7 @@ export  default class ProblemRectification extends Component {
 
       this.state = {
           title: "问题整改",
+          index : 0,
 
       }
 
@@ -61,6 +62,10 @@ export  default class ProblemRectification extends Component {
            tabBarBackgroundColor='#FFFFFF'
            tabBarActiveTextColor='#f77935'
            tabBarInactiveTextColor='#777777'
+           onChangeTab={(obj) => {
+       this.state.index = obj.i ;
+}
+}
   >
 
       {this._renderQuetionView("待处理","Renovating")}
@@ -71,8 +76,6 @@ export  default class ProblemRectification extends Component {
   }
 
   _renderQuetionView(label,problemSolveStatus){
-
- // this.state.problemStatus =  problemSolveStatus;
 
  return( <View  tabLabel={label} style={styles.container}>
 
@@ -155,6 +158,15 @@ export  default class ProblemRectification extends Component {
 
     var userId = '';
 
+ if (problemSolveStatus == 'Renovating') {
+
+       ref="list_Renovating";
+ }else {
+
+      ref = "list_finish";
+
+ }
+
     if (Global.UserInfo.id) {
         userId = Global.UserInfo.id;
     }
@@ -167,7 +179,7 @@ export  default class ProblemRectification extends Component {
       userId={userId}
       problemStatus={problemSolveStatus}
       navigator={this.props.navigator}
-      ref="myQuestionlist"
+      ref={ref}
       />)
 
 
@@ -196,10 +208,36 @@ export  default class ProblemRectification extends Component {
 
   onSearchChanged(text){
 
+// alert(this.state.index);
+
+if (this.state.index == 0){
+
+if (this.refs.list_Renovating) {
+      this.refs.list_Renovating.onSearchChange(text);
+}
+}else {
+if (this.refs.list_finish) {
+      this.refs.list_finish.onSearchChange(text);
+}
+}
+
+// this.refs.current_ref.onSearchChange(text);
+//    console.log(this.state.problemStatus);
 
   }
 
   onSearchClose(){
+
+    if (this.state.index == 0){
+
+    if (this.refs.list_Renovating) {
+          this.refs.list_Renovating.onSearchChange('');
+    }
+    }else {
+    if (this.refs.list_finish) {
+          this.refs.list_finish.onSearchChange('');
+    }
+    }
 
   }
 
