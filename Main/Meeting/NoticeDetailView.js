@@ -40,6 +40,7 @@ export default class NoticeDetailView extends Component {
 
             modalVisible: false,
             data:this.props.data,
+            alertTimeArry:[],
         };
     }
 
@@ -49,6 +50,19 @@ export default class NoticeDetailView extends Component {
     }
 
     componentDidMount() {
+
+        var me = this
+        AsyncStorage.getItem('k_extra_alert_time',function(errs,result)
+        {
+            if (!errs && result && result.length)
+            {
+                me.setState({alertTimeArry: JSON.parse(result)})
+            }
+            else
+            {
+
+            }
+        });
 
       this.getNewestData()
 
@@ -171,7 +185,7 @@ export default class NoticeDetailView extends Component {
                     leftPress={this.back.bind(this)} />
                     <ScrollView
                     keyboardDismissMode='on-drag'
-                    
+
                     style={styles.main_container}>
 
                     <View style={styles.space}>
@@ -223,7 +237,7 @@ export default class NoticeDetailView extends Component {
                     <DisplayItemView
 
                      title={'通告提醒时间'}
-                     detail={'提前1小时提醒'}
+                     detail={Global.getAlartTimeByKey(this.state.alertTimeArry,this.state.data.alarmTime)}
                      noLine={false}
                     />
 

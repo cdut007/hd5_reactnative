@@ -77,10 +77,67 @@ export default class CreateNoticeView extends Component {
             _selectD:{},
             title:title,
             meetingTypeData:meetingTypeArry,
+            alertTimeArry:[],
             loadingVisible:false,
             fileArr: [{}],
         };
     }
+
+
+        onGetExtraAlermDataSuccess(response,paramBody){
+                 Global.log('onGetExtraAlermDataSucces@@@@')
+                 var result = response.responseResult;
+                 if (!result || result.length == 0) {
+                     return
+                 }
+
+                 this.setState({alertTimeArry:result})
+
+                 AsyncStorage.setItem('k_extra_alert_time', JSON.stringify(result), (error, result) => {
+                     if (error) {
+                         Global.log('save k_department_node faild.')
+                     }
+                 });
+             }
+
+        componentDidMount(){
+
+            var me = this
+            AsyncStorage.getItem('k_extra_alert_time',function(errs,result)
+            {
+                if (!errs && result && result.length)
+                {
+                    me.setState({alertTimeArry: JSON.parse(result)})
+                }
+                else
+                {
+
+                }
+            });
+
+            var paramBody = {
+                }
+            HttpRequest.get('/extra/conference_alarm', paramBody, this.onGetExtraAlermDataSuccess.bind(this),
+                (e) => {
+
+
+                    try {
+                        var errorInfo = JSON.parse(e);
+                        if (errorInfo != null) {
+                         Global.log(errorInfo)
+                        } else {
+                            Global.log(e)
+                        }
+                    }
+                    catch(err)
+                    {
+                        Global.log(err)
+                    }
+
+                    Global.log('Task error:' + e)
+                })
+        }
+
 
 
     back() {
@@ -164,7 +221,7 @@ export default class CreateNoticeView extends Component {
                 param.append('department', this.state.data.department)
                 param.append('startTime',Global.formatFullDate(this.state.data.startTime))
                 param.append('endTime', Global.formatFullDate(this.state.data.endTime))
-                param.append('alarmTime', Global.formatFullDate(this.state.data.alarmTime))
+                param.append('alarmTime', Global.getAlartTime(this.state.alertTimeArry,this.state.data.alarmTime))
                 param.append('participants',ids)
                 param.append('type','SEND')
                 if (this.state.fileArr.length>0) {
@@ -274,7 +331,7 @@ export default class CreateNoticeView extends Component {
             param.append('department', this.state.data.department)
             param.append('startTime',Global.formatFullDate(this.state.data.startTime))
             param.append('endTime', Global.formatFullDate(this.state.data.endTime))
-            param.append('alarmTime', Global.formatFullDate(this.state.data.alarmTime))
+            param.append('alarmTime', Global.getAlartTime(this.state.alertTimeArry,this.state.data.alarmTime))
             param.append('participants',ids)
             param.append('type','DRAFT')
             if (this.state.fileArr.length>0) {
@@ -529,6 +586,16 @@ onSelectedMeetingType(tag,meetingType){
 
 }
 
+onSelectedAlertType(tag,alertType){
+
+    Global.log("alertType=="+alertType);
+    this.state.data[tag] = alertType[0];
+    this.setState({...this.state});
+
+}
+
+
+
 createEnter(icon,label,desc,tag){
     var textColor = '#777777'
     if (tag == 'feedback') {
@@ -586,47 +653,94 @@ refresh(){
 createChooseInfo(icon,label,desc,data,tag){
     var textColor = '#777777'
 
-    if (tag == 'category') {
-        return(
-            <View style={styles.statisticsflexContainer}>
+    if (tag == 'category'|| tag =='alarmTime') {
+        if (tag == 'category') {
+            return(
+                <View style={styles.statisticsflexContainer}>
 
-            <View style={{paddingRight:20,paddingLeft:10,flexDirection:'row'}}>
+                <View style={{paddingRight:20,paddingLeft:10,flexDirection:'row'}}>
 
-            <Image style={{width:24,height:24,marginRight:5}} source={icon} />
+                <Image style={{width:24,height:24,marginRight:5}} source={icon} />
 
-              <Text numberOfLines={1} style={{color:'#444444',fontSize:14,}}>
-                {label}
-              </Text>
-            </View>
+                  <Text numberOfLines={1} style={{color:'#444444',fontSize:14,}}>
+                    {label}
+                  </Text>
+                </View>
 
-            <View
-             key={tag}
-             style={[styles.cell,{alignSelf:'stretch',padding:4,}]}>
-            <TouchableOpacity  key={tag} onPress={() => this.selectMeetingType.onPickClick()} style={{borderWidth:0.5,
-                  alignItems:'center',
-                  flex: 1,
-                  height:48,
-                  borderColor : '#f77935',
-                  backgroundColor : 'white',
-                  borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+                <View
+                 key={tag}
+                 style={[styles.cell,{alignSelf:'stretch',padding:4,}]}>
+                <TouchableOpacity  key={tag} onPress={() => this.selectMeetingType.onPickClick()} style={{borderWidth:0.5,
+                      alignItems:'center',
+                      flex: 1,
+                      height:48,
+                      borderColor : '#f77935',
+                      backgroundColor : 'white',
+                      borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
 
-            <MemberSelectView
-                key={tag}
-            ref={(c) => this.selectMeetingType = c}
-            style={{color:'#f77935',fontSize:14,alignSelf:'center',flex:1}}
-            title={desc}
-            data={data}
+                <MemberSelectView
+                    key={tag}
+                ref={(c) => this.selectMeetingType = c}
+                style={{color:'#f77935',fontSize:14,alignSelf:'center',flex:1}}
+                title={desc}
+                data={data}
 
-            pickerTitle={'选择'+label}
-            onSelected={this.onSelectedMeetingType.bind(this,tag)} />
-                                <Image
-                                style={{width:20,height:20,}}
-                                source={require('../../images/unfold.png')}/>
-            </TouchableOpacity>
-            </View>
+                pickerTitle={'选择'+label}
+                onSelected={this.onSelectedMeetingType.bind(this,tag)} />
+                                    <Image
+                                    style={{width:20,height:20,}}
+                                    source={require('../../images/unfold.png')}/>
+                </TouchableOpacity>
+                </View>
 
-            </View>
-        )
+                </View>
+            )
+        }else{
+            var timeArry = []
+            for (var i = 0; i < data.length; i++) {
+                timeArry.push(data[i].value)
+            }
+            return(
+                <View style={styles.statisticsflexContainer}>
+
+                <View style={{paddingRight:20,paddingLeft:10,flexDirection:'row'}}>
+
+                <Image style={{width:24,height:24,marginRight:5}} source={icon} />
+
+                  <Text numberOfLines={1} style={{color:'#444444',fontSize:14,}}>
+                    {label}
+                  </Text>
+                </View>
+
+                <View
+                 key={tag}
+                 style={[styles.cell,{alignSelf:'stretch',padding:4,}]}>
+                <TouchableOpacity  key={tag} onPress={() => this.selectAlermType.onPickClick()} style={{borderWidth:0.5,
+                      alignItems:'center',
+                      flex: 1,
+                      height:48,
+                      borderColor : '#f77935',
+                      backgroundColor : 'white',
+                      borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+
+                <MemberSelectView
+                    key={tag}
+                ref={(c) => this.selectAlermType = c}
+                style={{color:'#f77935',fontSize:14,alignSelf:'center',flex:1}}
+                title={desc}
+                data={timeArry}
+
+                pickerTitle={'选择'+label}
+                onSelected={this.onSelectedAlertType.bind(this,tag)} />
+                                    <Image
+                                    style={{width:20,height:20,}}
+                                    source={require('../../images/unfold.png')}/>
+                </TouchableOpacity>
+                </View>
+
+                </View>
+            )
+        }
     }else{//date
         return(
             <View style={styles.statisticsflexContainer}>
@@ -713,7 +827,7 @@ createChooseInfo(icon,label,desc,data,tag){
                       {this.createChooseInfo(null,'通告结束时间',this.state.data.endTime?Global.formatFullDateDisplay(this.state.data.endTime):'请选择通告结束时间',null,'endTime')}
                       <View style={styles.line}>
                       </View>
-                      {this.createChooseInfo(null,'通告提醒时间',this.state.data.alarmTime?Global.formatFullDateDisplay(this.state.data.alarmTime):'请选择会前提醒时间',null,'alarmTime')}
+                      {this.createChooseInfo(null,'通告提醒时间',this.state.data.alarmTime?Global.formatFullDateDisplay(this.state.data.alarmTime):'请选择会前提醒时间',this.state.alertTimeArry,'alarmTime')}
                       <View style={styles.line}>
                       </View>
 

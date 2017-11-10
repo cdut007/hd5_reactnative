@@ -197,6 +197,22 @@ module.exports = {
     log(info){
             console.log('[hd5] '+info)
     },
+    getAlartTime(alertTimeArry,time){
+        for (var i = 0; i < alertTimeArry.length; i++) {
+             if (alertTimeArry[i].value == time) {
+                 return alertTimeArry[i].key
+             }
+        }
+        return 'NONE'
+    },
+    getAlartTimeByKey(alertTimeArry,time){
+        for (var i = 0; i < alertTimeArry.length; i++) {
+             if (alertTimeArry[i].key == time) {
+                 return alertTimeArry[i].value
+             }
+        }
+        return '不提醒'
+    }
 
 
 };

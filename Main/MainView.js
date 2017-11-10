@@ -71,8 +71,61 @@ export default class MainView extends Component {
 
        }
 
+       this.getConfigsFromServer()
 
 
+    }
+
+
+    onGetExtraAlermDataSuccess(response,paramBody){
+             Global.log('onGetExtraAlermDataSucces@@@@')
+             var result = response.responseResult;
+             if (!result || result.length == 0) {
+                 return
+             }
+
+             AsyncStorage.setItem('k_extra_alert_time', JSON.stringify(result), (error, result) => {
+                 if (error) {
+                     Global.log('save k_department_node faild.')
+                 }
+             });
+         }
+
+    getConfigsFromServer(){
+        var me = this
+        AsyncStorage.getItem('k_extra_alert_time',function(errs,result)
+        {
+            if (!errs && result && result.length)
+            {
+                me.setState({alertTimeArry: JSON.parse(result)})
+            }
+            else
+            {
+
+            }
+        });
+
+        var paramBody = {
+            }
+        HttpRequest.get('/extra/conference_alarm', paramBody, this.onGetExtraAlermDataSuccess.bind(this),
+            (e) => {
+
+
+                try {
+                    var errorInfo = JSON.parse(e);
+                    if (errorInfo != null) {
+                     Global.log(errorInfo)
+                    } else {
+                        Global.log(e)
+                    }
+                }
+                catch(err)
+                {
+                    Global.log(err)
+                }
+
+                Global.log('Task error:' + e)
+            })
     }
 
     getHasLogin()
