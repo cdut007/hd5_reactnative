@@ -155,6 +155,47 @@ export default class QuestionDetail extends Component {
 
   }
 
+  renderTop(time,questionName,response){
+      return(<View style={styles.topflexContainer}>
+
+      <View style={styles.cell}>
+
+        <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
+          提出时间
+        </Text>
+        <Text numberOfLines={1} style={{color:'#777777',fontSize:14,}}>
+          {Global.formatDate(time)}
+        </Text>
+      </View>
+
+
+      <View style={styles.cell}>
+
+      <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
+        问题名称
+      </Text>
+      <Text style={{color:'#777777',fontSize:14,}}>
+       {questionName}
+      </Text>
+      </View>
+
+
+
+      <View style={styles.cell}>
+
+
+      <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4,}}>
+        责任人
+      </Text>
+      <Text style={{color:'#777777',fontSize:14,}}>
+        {response}
+      </Text>
+      </View>
+
+      </View>
+)
+  }
+
   renderCommitBtn(){
 
     if (this.state.data.problemStatus == "Need_Handle" && this.props.detailType !== '1003') {
@@ -522,7 +563,7 @@ if (status == 1) {
 componentDidMount(){
 
 
- if (this.state.data.problemStatus == "Need_Handle"){
+ if (this.state.data.problemStatus == "Need_Handle" && this.props.detailType !== '1003'){
      this.featchData()
  }
 
@@ -663,8 +704,13 @@ historyData.hseCheckTime = item['solveDate'];
 
       var itemAry = [];//视图数组
 
+      itemAry.push(
+        this.renderTop(this.state.data.createDate,this.state.data.problemTitle,this.state.data.createUser)
+      )
+
       var displayAry = [
-        {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
+        {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
+        {title:'问题照片',content:problemFiles,id:'14',noLine:true,type:'img'},
         {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
         {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
         {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
@@ -672,7 +718,6 @@ historyData.hseCheckTime = item['solveDate'];
         {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
         {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
         {title:'截止日期',content:Global.formatDate(this.state.data.targetDate),id:'7',noLine:true},
-        {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
         {title:'历史状态',content:"",id:'9',noLine:true},
         {title:'问题提交',content:Global.formatDate(this.state.data.createDate),id:'10',noLine:true},
         {title:'问题审核',content:Global.formatDate(historyData.handleTime),id:'11',noLine:true},
@@ -686,23 +731,23 @@ historyData.hseCheckTime = item['solveDate'];
               itemAry.push(
                  <View style={styles.divider}/>
               );
-          }else{
+          }else if(displayAry[i].type == 'img'){
               itemAry.push(
-                  <DisplayItemView
-                   key={displayAry[i].id}
-                   title={displayAry[i].title}
-                   detail={displayAry[i].content}
-                   noLine={displayAry[i].noLine}
-                  />
+               this.renderFileView(displayAry[i].title,displayAry[i].content)
               );
+          }else {
+            itemAry.push(
+                <DisplayItemView
+                 key={displayAry[i].id}
+                 title={displayAry[i].title}
+                 detail={displayAry[i].content}
+                 noLine={displayAry[i].noLine}
+                />
+            );
           }
       }
 
-      const imgs = [{
-        url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
-      }]
-
-      itemAry.splice(8,0,  this.renderFileView("故障照片",problemFiles))
+      // itemAry.splice(8,0,  this.renderFileView("故障照片",problemFiles))
 
     return itemAry;
 
@@ -716,7 +761,15 @@ historyData.hseCheckTime = item['solveDate'];
 
   var itemAry = [];//视图数组
 
+  itemAry.push(
+    this.renderTop(this.state.data.createDate,this.state.data.problemTitle,this.state.data.createUser)
+  )
+
   var displayAry = [
+    {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
+    {title:'问题照片',content:problemFiles,id:'10',noLine:true,type:'img'},
+    {title:'整改描述',content:historyData.teamSolveDes,id:'9',noLine:true},
+    {title:'整改照片',content:solveFiles,id:'10',noLine:true,type:'img'},
     {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
     {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
@@ -725,8 +778,6 @@ historyData.hseCheckTime = item['solveDate'];
     {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
     {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
     {title:'整改时间',content:Global.formatDate(this.state.data.targetDate),id:'7',noLine:true},
-    {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
-    {title:'整改描述',content:historyData.teamSolveDes,id:'9',noLine:true},
   ];
 
 
@@ -736,24 +787,23 @@ historyData.hseCheckTime = item['solveDate'];
           itemAry.push(
              <View style={styles.divider}/>
           );
-      }else{
+      }else if(displayAry[i].type == 'img'){
           itemAry.push(
-              <DisplayItemView
-               key={displayAry[i].id}
-               title={displayAry[i].title}
-               detail={displayAry[i].content}
-               noLine={displayAry[i].noLine}
-              />
+           this.renderFileView(displayAry[i].title,displayAry[i].content)
           );
+      }else {
+        itemAry.push(
+            <DisplayItemView
+             key={displayAry[i].id}
+             title={displayAry[i].title}
+             detail={displayAry[i].content}
+             noLine={displayAry[i].noLine}
+            />
+        );
       }
   }
 
-  const imgs = [{
-    url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
-  }]
 
-  itemAry.splice(9,0,this.renderFileView("问题照片",problemFiles))
-  itemAry.push(this.renderFileView("整改照片",solveFiles))
 
   return itemAry;
 
@@ -764,7 +814,13 @@ historyData.hseCheckTime = item['solveDate'];
 
     var itemAry = [];//视图数组
 
+    itemAry.push(
+      this.renderTop(this.state.data.createDate,this.state.data.problemTitle,this.state.data.createUser)
+    )
+
     var displayAry = [
+      {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
+      {title:'问题照片',content:problemFiles,id:'8',noLine:true,type:'img'},
       {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
       {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
       {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
@@ -773,7 +829,6 @@ historyData.hseCheckTime = item['solveDate'];
       {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
       {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
       {title:'截止日期',content:Global.formatDate(this.state.data.targetDate),id:'7',noLine:true},
-      {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
       {title:'历史状态',content:"",id:'9',noLine:true},
       {title:'问题提交',content:Global.formatDate(this.state.data.createDate),id:'10',noLine:true},
       {title:'问题审核',content:Global.formatDate(historyData.handleTime),id:'11',noLine:true},
@@ -786,23 +841,22 @@ historyData.hseCheckTime = item['solveDate'];
             itemAry.push(
                <View style={styles.divider}/>
             );
-        }else{
+        }else if(displayAry[i].type == 'img'){
             itemAry.push(
-                <DisplayItemView
-                 key={displayAry[i].id}
-                 title={displayAry[i].title}
-                 detail={displayAry[i].content}
-                 noLine={displayAry[i].noLine}
-                />
+             this.renderFileView(displayAry[i].title,displayAry[i].content)
             );
+        }else {
+          itemAry.push(
+              <DisplayItemView
+               key={displayAry[i].id}
+               title={displayAry[i].title}
+               detail={displayAry[i].content}
+               noLine={displayAry[i].noLine}
+              />
+          );
         }
     }
 
-    const imgs = [{
-      url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
-    }]
-
-    itemAry.splice(8,0,  this.renderFileView("故障照片",problemFiles))
 
   return itemAry;
 
@@ -814,8 +868,15 @@ historyData.hseCheckTime = item['solveDate'];
 
     var itemAry = [];//视图数组
 
+    itemAry.push(
+      this.renderTop(this.state.data.createDate,this.state.data.problemTitle,this.state.data.createUser)
+    )
+
     var displayAry = [
-      {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
+      {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
+      {title:'问题照片',content:problemFiles,id:'14',noLine:true,type:'img'},
+      {title:'整改描述',content:historyData.teamSolveDes,id:'9',noLine:true},
+      {title:'整改照片',content:solveFiles,id:'15',noLine:true,type:'img'},
       {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
       {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
       {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
@@ -823,8 +884,6 @@ historyData.hseCheckTime = item['solveDate'];
       {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
       {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
       {title:'截止日期',content:Global.formatDate(this.state.data.targetDate),id:'7',noLine:true},
-      {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
-      {title:'整改描述',content:historyData.teamSolveDes,id:'9',noLine:true},
       {title:'历史状态',content:"",id:'10',noLine:true},
       {title:'问题提交',content:Global.formatDate(this.state.data.createDate),id:'11',noLine:true},
       {title:'问题审核',content:Global.formatDate(historyData.handleTime),id:'12',noLine:true},
@@ -838,24 +897,25 @@ historyData.hseCheckTime = item['solveDate'];
             itemAry.push(
                <View style={styles.divider}/>
             );
-        }else{
+        }else if(displayAry[i].type == 'img'){
             itemAry.push(
-                <DisplayItemView
-                 key={displayAry[i].id}
-                 title={displayAry[i].title}
-                 detail={displayAry[i].content}
-                 noLine={displayAry[i].noLine}
-                />
+             this.renderFileView(displayAry[i].title,displayAry[i].content)
             );
+        }else {
+          itemAry.push(
+              <DisplayItemView
+               key={displayAry[i].id}
+               title={displayAry[i].title}
+               detail={displayAry[i].content}
+               noLine={displayAry[i].noLine}
+              />
+          );
         }
     }
-
-    const imgs = [{
-      url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
-    }]
-
+/*
     itemAry.splice(9,0,  this.renderFileView("故障照片",problemFiles))
     itemAry.splice(11,0,  this.renderFileView("整改照片",solveFiles))
+    */
 
     return itemAry;
 
@@ -866,7 +926,13 @@ historyData.hseCheckTime = item['solveDate'];
 
   var itemAry = [];//视图数组
 
+  itemAry.push(
+    this.renderTop(this.state.data.createDate,this.state.data.problemTitle,this.state.data.createUser)
+  )
+
   var displayAry = [
+    {title:'问题描述',content:this.state.data.problemDescription,id:'7',noLine:true},
+    {title:'问题照片',content:problemFiles,id:'12',noLine:true,type:'img'},
     {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
     {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
@@ -874,7 +940,7 @@ historyData.hseCheckTime = item['solveDate'];
     {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
     {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
     {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
-    {title:'问题描述',content:this.state.data.problemDescription,id:'7',noLine:true},
+
     {title:'历史状态',content:"",id:'8',noLine:true},
     {title:'问题提交',content:Global.formatDate(this.state.data.createDate),id:'9',noLine:true},
     {title:'问题审核',content:Global.formatDate(historyData.handleTime),id:'10',noLine:true},
@@ -888,19 +954,21 @@ historyData.hseCheckTime = item['solveDate'];
           itemAry.push(
              <View style={styles.divider}/>
           );
-      }else{
+      }else if(displayAry[i].type == 'img'){
           itemAry.push(
-              <DisplayItemView
-               key={displayAry[i].id}
-               title={displayAry[i].title}
-               detail={displayAry[i].content}
-               noLine={displayAry[i].noLine}
-              />
+           this.renderFileView(displayAry[i].title,displayAry[i].content)
           );
+      }else {
+        itemAry.push(
+            <DisplayItemView
+             key={displayAry[i].id}
+             title={displayAry[i].title}
+             detail={displayAry[i].content}
+             noLine={displayAry[i].noLine}
+            />
+        );
       }
   }
-
-  itemAry.splice(8,0,  this.renderFileView("故障照片",problemFiles))
 
   return itemAry;
 
@@ -911,15 +979,19 @@ historyData.hseCheckTime = item['solveDate'];
 
     var itemAry = [];//视图数组
 
+    itemAry.push(
+      this.renderTop(this.state.data.createDate,this.state.data.problemTitle,this.state.data.createUser)
+    )
+
     var displayAry = [
-      {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
+      {title:'问题描述',content:this.state.data.problemDescription,id:'7',noLine:true},
+      {title:'问题照片',content:problemFiles,id:'12',noLine:true,type:'img'},
       {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
       {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
       {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
       {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
       {title:'责任部门',content:this.state.data.responsibleDept.deptName,id:'5',noLine:true},
       {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
-      {title:'问题描述',content:this.state.data.problemDescription,id:'7',noLine:true},
       {title:'历史状态',content:"",id:'8',noLine:true},
       {title:'问题提交',content:Global.formatDate(this.state.data.createDate),id:'9',noLine:true},
       {title:'当前状态',content:"新问题",id:'10',noLine:true},
@@ -932,19 +1004,21 @@ historyData.hseCheckTime = item['solveDate'];
             itemAry.push(
                <View style={styles.divider}/>
             );
-        }else{
+        }else if(displayAry[i].type == 'img'){
             itemAry.push(
-                <DisplayItemView
-                 key={displayAry[i].id}
-                 title={displayAry[i].title}
-                 detail={displayAry[i].content}
-                 noLine={displayAry[i].noLine}
-                />
+             this.renderFileView(displayAry[i].title,displayAry[i].content)
             );
+        }else {
+          itemAry.push(
+              <DisplayItemView
+               key={displayAry[i].id}
+               title={displayAry[i].title}
+               detail={displayAry[i].content}
+               noLine={displayAry[i].noLine}
+              />
+          );
         }
     }
-
-    itemAry.splice(8,0,  this.renderFileView("故障照片",problemFiles))
 
     return itemAry;
 
@@ -954,9 +1028,11 @@ historyData.hseCheckTime = item['solveDate'];
 
   var itemAry = [];//视图数组
 
+  itemAry.push(
+    this.renderTop(this.state.data.createDate,this.state.data.problemTitle,this.state.data.createUser)
+  )
 
   var displayAry = [
-    {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
     {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
     {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
@@ -974,15 +1050,19 @@ historyData.hseCheckTime = item['solveDate'];
           itemAry.push(
              <View style={styles.divider}/>
           );
-      }else{
+      }else if(displayAry[i].type == 'img'){
           itemAry.push(
-              <DisplayItemView
-               key={displayAry[i].id}
-               title={displayAry[i].title}
-               detail={displayAry[i].content}
-               noLine={displayAry[i].noLine}
-              />
+           this.renderFileView(displayAry[i].title,displayAry[i].content)
           );
+      }else {
+        itemAry.push(
+            <DisplayItemView
+             key={displayAry[i].id}
+             title={displayAry[i].title}
+             detail={displayAry[i].content}
+             noLine={displayAry[i].noLine}
+            />
+        );
       }
   }
 
@@ -1007,15 +1087,18 @@ historyData.hseCheckTime = item['solveDate'];
 
     var itemAry = [];//视图数组
 
+    itemAry.push(
+      this.renderTop(this.state.data.createDate,this.state.data.problemTitle,this.state.data.createUser)
+    )
+
     var displayAry = [
-      {title:'标题',content:this.state.data.machineType,id:'0',noLine:true},
+      {title:'问题描述',content:this.state.data.describe,id:'6',noLine:true},
+      {title:'整改描述',content:this.state.data.describe,id:'7',noLine:true},
       {title:'机组',content:this.state.data.machineType,id:'1',noLine:true},
       {title:'厂房',content:this.state.data.plantType,id:'2',noLine:true},
       {title:'标高',content:this.state.data.elevation,id:'3',noLine:true},
       {title:'房间号',content:this.state.data.RoomNumber,id:'4',noLine:true},
       {title:'责任部门',content:this.state.data.ResDepart,id:'5',noLine:true},
-      {title:'问题描述',content:this.state.data.describe,id:'6',noLine:true},
-      {title:'整改描述',content:this.state.data.describe,id:'7',noLine:true},
       {title:'责任班组',content:this.state.data.team,id:'8',noLine:true},
       {title:'截止日期',content:"2017/10/10",id:'9',noLine:true},
       {title:'当前状态',content:"",id:'10',noLine:true},
@@ -1046,15 +1129,19 @@ historyData.hseCheckTime = item['solveDate'];
             itemAry.push(
                <View style={styles.divider}/>
             );
-        }else{
+        }else if(displayAry[i].type == 'img'){
             itemAry.push(
-                <DisplayItemView
-                 key={displayAry[i].id}
-                 title={displayAry[i].title}
-                 detail={displayAry[i].content}
-                 noLine={displayAry[i].noLine}
-                />
+             this.renderFileView(displayAry[i].title,displayAry[i].content)
             );
+        }else {
+          itemAry.push(
+              <DisplayItemView
+               key={displayAry[i].id}
+               title={displayAry[i].title}
+               detail={displayAry[i].content}
+               noLine={displayAry[i].noLine}
+              />
+          );
         }
     }
 
@@ -1476,5 +1563,12 @@ statisticsflexContainer: {
          flexDirection: 'row',
          alignItems:'center',
      },
+
+   topflexContainer: {
+              height: 60,
+              backgroundColor: '#ffffff',
+              flexDirection: 'row',
+              marginBottom:10,
+          },
 
 })
