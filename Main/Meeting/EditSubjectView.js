@@ -111,6 +111,7 @@ export default class EditSubjectView extends Component {
 
                          icon={require('../../images/informIcon.png')}
                          placeholder={'请输入主题'}
+                         maxLength = {20}
                          content={this.state.subject}
                         onChangeText={(text) => this.setState({ subject: text })}
                         />

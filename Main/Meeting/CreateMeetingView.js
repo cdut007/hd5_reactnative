@@ -72,6 +72,7 @@ export default class CreateMeetingView extends Component {
             if (data.status == 'DRAFT') {
                 title = '编辑会议'
                 data.members = data.participants
+                data.alarmTime = Global.getAlartTimeByKey(Global.alertTimeArry,data.alarmTime)
             }
         }else{
             data = {}
@@ -97,7 +98,7 @@ export default class CreateMeetingView extends Component {
              }
 
              this.setState({alertTimeArry:result})
-
+             Global.alertTimeArry = result
              AsyncStorage.setItem('k_extra_alert_time', JSON.stringify(result), (error, result) => {
                  if (error) {
                      Global.log('save k_department_node faild.')
@@ -210,6 +211,11 @@ export default class CreateMeetingView extends Component {
             return
         }
 
+        if (this.state.data.endTime <= this.state.data.startTime) {
+            Global.alert('会议结束时间不能小于开始时间')
+            return
+        }
+
         if (!this.state.data.alarmTime) {
             Global.alert('请选择会前提醒时间')
             return
@@ -232,8 +238,8 @@ export default class CreateMeetingView extends Component {
 
         ids = ids.substr(0,ids.length-1)
     var conferenceId = ''
-    if (this.state.data.conferenceId) {
-        conferenceId = this.state.data.conferenceId
+    if (this.state.data.id) {
+        conferenceId = this.state.data.id
     }
     this.setState({loadingVisible:true})
 
@@ -343,6 +349,12 @@ export default class CreateMeetingView extends Component {
             Global.alert('请选择会议结束时间')
             return
         }
+        if (this.state.data.endTime <= this.state.data.startTime) {
+            Global.alert('会议结束时间不能小于开始时间')
+            return
+        }
+
+
 
         if (!this.state.data.alarmTime) {
             Global.alert('请选择会前提醒时间')
@@ -364,8 +376,8 @@ export default class CreateMeetingView extends Component {
 
         ids = ids.substr(0,ids.length-1)
         var conferenceId = ''
-        if (this.state.data.conferenceId) {
-            conferenceId = this.state.data.conferenceId
+        if (this.state.data.id) {
+            conferenceId = this.state.data.id
         }
     this.setState({loadingVisible:true})
 
@@ -539,6 +551,10 @@ export default class CreateMeetingView extends Component {
 
     renderImages(){
         var imageViews = [];
+        if(this.state.fileArr.length<MAX_IMAGE_COUNT && this.state.fileArr[this.state.fileArr.length-1]['fileSource']){
+                this.state.fileArr.push({});
+            }
+
         {this.state.fileArr.map((item,i) => {
                 imageViews.push(
                     <TouchableOpacity
@@ -556,9 +572,8 @@ export default class CreateMeetingView extends Component {
                     </TouchableOpacity>
                 );
         })}
-        if(this.state.fileArr[this.state.fileArr.length-1]['fileSource']){
-                this.state.fileArr.push({});
-            }
+
+
         return imageViews;
     }
 
@@ -615,7 +630,7 @@ createEnter(icon,label,desc,tag){
             {label}
           </Text>
         </View>
-        <Text numberOfLines={1} style={{paddingRight:10,color:textColor,fontSize:14,}}>
+        <Text numberOfLines={1} style={{flex:1.6,paddingRight:10,color:textColor,fontSize:14,}}>
           {desc}
         </Text>
 

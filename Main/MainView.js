@@ -42,7 +42,7 @@ export default class MainView extends Component {
     }
 
     componentDidMount(){
-        
+
 
       if (Platform.OS === 'android') {
             JPushModule.notifyJSDidLoad((resultCode) => {
@@ -110,7 +110,7 @@ export default class MainView extends Component {
         {
             if (!errs && result && result.length)
             {
-                me.setState({alertTimeArry: JSON.parse(result)})
+                Global.alertTimeArry = JSON.parse(result)
             }
             else
             {
