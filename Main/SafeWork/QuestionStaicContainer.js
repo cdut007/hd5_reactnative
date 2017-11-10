@@ -49,11 +49,23 @@ export default class QuestionStaicContainer extends Component {
               <NavBar
               title={this.state.title}
               leftIcon={require('../../images/back.png')}
+              searchMode={true}
+              onSearchChanged={(text) => this.onSearchChanged(text)}
+              onSearchClose = {this.onSearchClose.bind(this)}
               leftPress={this.back.bind(this)}/>
             {this.rendTabs()}
 
           </View>
       )
+  }
+
+  onSearchChanged(text){
+
+
+  }
+
+  onSearchClose(){
+
   }
 
 
@@ -62,7 +74,6 @@ export default class QuestionStaicContainer extends Component {
 this.state.detailType = index;
 return( <View  tabLabel={label} style={styles.container}>
 
-       {this.renderSearchBar()}
        {this.renderContent()}
        {this.renderSlider()}
        {this.renderQuestionList(problemSolveStatus)}
@@ -93,9 +104,8 @@ return( <View  tabLabel={label} style={styles.container}>
      return (
        <View style={styles.container}>
 
-           {this.renderSearchBar()}
            {this.renderContent()}
-           {this.renderSlider()}
+            {this.renderSlider()}
            {this.renderQuestionList(this.state.problemStatus)}
 
        </View>
@@ -108,7 +118,8 @@ return( <View  tabLabel={label} style={styles.container}>
 
   renderSlider(){
 
- return (<View style={{backgroundColor:'#d6d6d6',height:0.5,width:width}}>
+ return (
+   <View style={{backgroundColor:'d6d6d6',height:0.5,width:width}}>
    </View>)
 
   }
@@ -117,38 +128,36 @@ return( <View  tabLabel={label} style={styles.container}>
   renderContent(){
 
      return(
+       <View>
        <View style={styles.statisticsflexContainer}>
 
        <View style={styles.cell}>
-
         <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
            提出时间
          </Text>
-
        </View>
 
        <View style={styles.cell}>
-
        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
          问题名称
        </Text>
-
        </View>
 
        <View style={styles.cell}>
-
        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
            提出人
        </Text>
-
        </View>
 
        <View style={styles.cell}>
-
        <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
          状态
        </Text>
+       </View>
 
+       </View>
+
+       <View style={{backgroundColor:'d6d6d6',height:0.5,width:width}}>
        </View>
 
        </View>
@@ -230,6 +239,7 @@ const styles = StyleSheet.create({
              height: 57.5,
              backgroundColor: '#ffffff',
              flexDirection: 'row',
+             marginTop:10,
          },
          SearchBarStyle : {
             backgroundColor: 'rgba(244, 244, 244, 1)',

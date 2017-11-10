@@ -16,6 +16,8 @@ import Dimensions from 'Dimensions'
 import NavBar from '../../common/NavBar';
 import QuestionStaicContainer from '../SafeWork/QuestionStaicContainer'
 import Global from '../../common/globals.js';
+import TabNavigator from 'react-native-tab-navigator';
+import MeView from '.././MeView'
 
 var width = Dimensions.get('window').width;
 
@@ -64,9 +66,12 @@ export  default class ProblemReview extends Component {
       this.state = {
           title: "问题审核",
           dataSource: ds,
+          selectedTab: 'tab1',
       }
 
   }
+
+
 
   componentDidMount() {
 
@@ -77,23 +82,98 @@ export  default class ProblemReview extends Component {
 
   }
 
+  renderContent(index){
+
+  item = safeModule[index];
+
+    var data =   {
+      }
+
+      data.user = new Object();
+      data.user.id = Global.UserInfo.id;
+      data.user.dept = new Object();
+      data.user.dept.name = data.title;//change later. for dept
+      data.item = item;
+
+let View =    <QuestionStaicContainer
+          data = {data}
+    detailType = {item.detailType}
+  problemStatus = {item.problemStatus}
+          {...this.props}/>
+
+return View;
+
+     // this.props.navigator.push({
+     //     component: QuestionStaicContainer,
+     //     props: {
+     //         data:data,
+     //         detailType:item.detailType,
+     //         problemStatus:item.problemStatus,
+     //        }
+     // })
+
+
+  }
+
   back() {
       this.props.navigator.pop()
   }
 
+
   render() {
       return (
-          <View style={styles.container}>
-              <NavBar
-              title={this.state.title}
-              leftIcon={require('../../images/back.png')}
-              leftPress={this.back.bind(this)}/>
-               <View style={styles.content}>
-                     {this.renderToolsView()}
-               </View>
+          <TabNavigator>
 
-          </View>
+          <TabNavigator.Item
+              selected={this.state.selectedTab === 'tab1'}
+              title="待处理"
+              renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/pendingIcon.png')} />}
+              renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/pendingIconClick.png')} />}
+              selectedTitleStyle={styles.tabBarTintColor}
+              onPress={() => this.setState({ selectedTab: 'tab1' })}>
+              {this.renderContent(0)}
+          </TabNavigator.Item>
+
+          <TabNavigator.Item
+              selected={this.state.selectedTab === 'tab2'}
+              title="整改中"
+              renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/rectifyIcon.png')} />}
+              renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/rectifyIconClick.png')} />}
+              selectedTitleStyle={styles.tabBarTintColor}
+              onPress={() => this.setState({ selectedTab: 'tab2' })}>
+            {this.renderContent(1)}
+          </TabNavigator.Item>
+
+          <TabNavigator.Item
+              selected={this.state.selectedTab === 'tab3'}
+              title="已完成"
+              renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/completeIcon.png')} />}
+              renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/completeIconClick.png')} />}
+              selectedTitleStyle={styles.tabBarTintColor}
+              onPress={() => this.setState({ selectedTab: 'tab3' })}>
+              {this.renderContent(2)}
+          </TabNavigator.Item>
+
+          <TabNavigator.Item
+              selected={this.state.selectedTab === 'tab4'}
+              title="不需处理"
+              renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/withoutIcon.png')} />}
+              renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/withoutIconClick.png')} />}
+              selectedTitleStyle={styles.tabBarTintColor}
+              onPress={() => this.setState({ selectedTab: 'tab4' })}>
+              {this.renderContent(3)}
+          </TabNavigator.Item>
+          </TabNavigator>
       )
+  }
+
+  onSearchChanged(text){
+
+
+  }
+
+  onSearchClose(){
+
   }
 
   renderToolsView() {
@@ -195,6 +275,9 @@ const styles = StyleSheet.create({
       alignSelf:'center',
       width: 88,
       height: 88,
+    },
+    tabBarTintColor: {
+      color: "#FBAC2B",
     },
 
   });

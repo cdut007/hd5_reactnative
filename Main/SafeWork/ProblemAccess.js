@@ -78,7 +78,6 @@ export  default class ProblemRectification extends Component {
 
  return( <View  tabLabel={label} style={styles.container}>
 
-   {this.renderSearchBar()}
    {this.renderContent()}
    {this.renderSlider()}
   {this.renderQuestionList(problemSolveStatus)}
@@ -187,11 +186,24 @@ export  default class ProblemRectification extends Component {
               <NavBar
               title={this.state.title}
               leftIcon={require('../../images/back.png')}
+              searchMode={true}
+              onSearchChanged={(text) => this.onSearchChanged(text)}
+              onSearchClose = {this.onSearchClose.bind(this)}
               leftPress={this.back.bind(this)}/>
               {this.rendTabs()}
           </View>
       )
   }
+
+  onSearchChanged(text){
+
+
+  }
+
+  onSearchClose(){
+
+  }
+
 }
 
 const styles = StyleSheet.create({
@@ -211,6 +223,7 @@ const styles = StyleSheet.create({
              height: 57.5,
              backgroundColor: '#ffffff',
              flexDirection: 'row',
+             marginTop:10,
          },
          SearchBarStyle : {
             backgroundColor: 'rgba(244, 244, 244, 1)',
