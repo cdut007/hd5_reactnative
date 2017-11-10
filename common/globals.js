@@ -10,6 +10,8 @@ var {
 
 import Toast from 'react-native-root-toast';
 
+import JPushModule from 'jpush-react-native';
+
 var currentRole;
 var UserInfo;
 
@@ -212,7 +214,59 @@ module.exports = {
              }
         }
         return '不提醒'
-    }
+    },
+    registerPush(alias){
+
+      if (Platform.OS === 'android') {
+
+        JPushModule.resumePush();
+        JPushModule.setAlias(alias, (map) => {
+                if (map.errorCode === 0) {
+                    this.log("set alias succeed==="+alias);
+                } else {
+                    this.log("set alias failed, errorCode: " + map.errorCode);
+                    if (map.errorCode == 6002) {
+                        this.registerPush(alias)
+                        this.log("set alias timeouted register again==="+alias);
+                    }
+                }
+            });
+      }
+
+
+  },
+
+      getFileName(path){
+          var pos = path.lastIndexOf('/');
+          if( pos<0 )
+          return path;
+          else
+          return path.substring(pos+1);
+      }
+      ,
+
+      getFileExtension(fileName){
+          var pos = fileName.lastIndexOf('.');
+          if( pos<0 )
+          return '';
+          else
+          return fileName.substring(pos+1);
+      }
+      ,
+
+
+      checkImgType(value){
+      if (value == "") {
+
+          return false;
+      } else {
+          if (!/(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(value)) {
+
+              return false;
+          }
+      }
+      return true;
+  }  ,
 
 
 };

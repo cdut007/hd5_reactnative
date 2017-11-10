@@ -14,6 +14,7 @@ import {
     ScrollView
 } from 'react-native';
 
+var FilePickerManager = require('NativeModules').FilePickerManager;
 import NavBar from '../../common/NavBar'
 import Dimensions from 'Dimensions'
 import LoginView from '../../Login/LoginView'
@@ -38,6 +39,9 @@ import ImagePicker from 'react-native-image-picker'
 var options = {
     title: '', // specify null or empty string to remove the title
     cancelButtonTitle: '取消',
+    customButtons: [
+    {name: 'chooseFileBtn', title: '添加文件'},
+  ],
     takePhotoButtonTitle: '拍照', // specify null or empty string to remove this button
     chooseFromLibraryButtonTitle: '从相册选取', // specify null or empty string to remove this button
     cameraType: 'back', // 'front' or 'back'
@@ -430,6 +434,7 @@ export default class CreateMeetingView extends Component {
     }
 
 
+
     onSelectFile(idx) {
         this.currentFileIdx = idx
 
@@ -440,34 +445,30 @@ export default class CreateMeetingView extends Component {
                     Global.log('User cancelled image picker');
                 }
                 else if (response.error) {
-                    Global.log('ImagePicker Error: ', response.error);
+                    Global.log('ImagePicker Error: '+  response.error);
                 }
                 else if (response.customButton) {
-                    Global.log('User tapped custom button: ', response.customButton);
+                    Global.log('User tapped custom button: '+ response.customButton);
+                    if (response.customButton == 'chooseFileBtn') {
+                        FilePickerManager.showFilePicker(null,(response) => {
+                          console.log('Response = ', response);
+
+                          if (response.didCancel) {
+                            console.log('User cancelled file picker');
+                          }
+                          else if (response.error) {
+                            console.log('FilePickerManager Error: ', response.error);
+                          }
+                          else {
+                                   this.parseFileResponse(response)
+                          }
+                        });
+                    }
                 }
                 else {
                     // You can display the image using either data:
                     // const source = {uri: 'data:image/jpeg;base64,' + response.data, isStatic: true};
-                    var source;
-                    if (Platform.OS === 'android') {
-                         source = {uri: response.uri, isStatic: true};
-                     } else {
-                        source = {
-                           uri: response.uri.replace('file://', ''),
-                           isStatic: true
-                        };
-                    }
-
-                   var fileInfo = this.state.fileArr[this.currentFileIdx]
-                   fileInfo['fileSource'] = source.uri
-                    fileInfo['fileName'] = response.fileName
-
-                    if(this.state.fileArr.length<MAX_IMAGE_COUNT && this.state.fileArr[this.state.fileArr.length-1]['fileSource']){
-                        this.state.fileArr.push({});
-                    }
-                    this.setState({
-                        ...this.state
-                    });
+                    this.parseFileResponse(response)
                 }
             });
         }
@@ -475,6 +476,40 @@ export default class CreateMeetingView extends Component {
 
         showPicker()
 
+    }
+    parseFileResponse(response){
+        var filePath = response.path
+        var fileName = Global.getFileName(filePath)
+        var fileExt = Global.getFileExtension(fileName)
+        var fileType = 'file'
+        if (Global.checkImgType(fileExt)) {
+            fileType = 'image'
+        }
+
+        Global.log('filePath: '+ filePath+";fileName="+fileName+";fileExt="+fileExt+";fileType="+fileType);
+
+        var source;
+        if (Platform.OS === 'android') {
+             source = {uri: response.uri, isStatic: true};
+         } else {
+            source = {
+               uri: response.uri.replace('file://', ''),
+               isStatic: true
+            };
+        }
+
+       var fileInfo = this.state.fileArr[this.currentFileIdx]
+       fileInfo['fileSource'] = source.uri
+        fileInfo['fileName'] = fileName
+        fileInfo['fileExt'] = fileExt
+        fileInfo['fileType'] = fileType
+
+        if(this.state.fileArr.length<MAX_IMAGE_COUNT && this.state.fileArr[this.state.fileArr.length-1]['fileSource']){
+            this.state.fileArr.push({});
+        }
+        this.setState({
+            ...this.state
+        });
     }
 
     onDeleteFile(idx) {
@@ -489,6 +524,19 @@ export default class CreateMeetingView extends Component {
 
     }
 
+    renderItemFile(item){
+        if (item.fileType == 'image') {
+            return(<Image resizeMode={'cover'} style={{ width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}} source={{uri: item['fileSource']}} />)
+
+        }else{
+            return(<View style={{backgroundColor:'#ffffff',width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}}>
+                <Image resizeMode={'cover'} style={{ width: 16, height: 16}} source={require('../../images/enclosureIcon.png')} />
+                <Text style={{ fontSize:10}} >{item['fileName']}</Text>
+                </View>)
+
+        }
+    }
+
     renderImages(){
         var imageViews = [];
         {this.state.fileArr.map((item,i) => {
@@ -501,7 +549,7 @@ export default class CreateMeetingView extends Component {
                         {
                             item['fileSource']
                              ?
-                            (<Image resizeMode={'cover'} style={{ width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}} source={{uri: item['fileSource']}} />)
+                            this.renderItemFile(item)
                              :
                             (<Image resizeMode={'cover'} style={{ width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}} source={require('../../images/add_pic_icon.png')} />)
                         }

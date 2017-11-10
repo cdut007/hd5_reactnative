@@ -651,7 +651,7 @@ export default class WitnessListDeliveryView extends Component {
                         <TouchableOpacity style={styles.cell}  onPress={this.onItemPress.bind(this, rowData)}>
 
                        <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
-                          {rowData.launcherName}
+                          {rowData.weldno}
                        </Text>
 
                        </TouchableOpacity>

@@ -398,7 +398,7 @@ export default class QCWitnessListView extends Component {
 const styles = StyleSheet.create({
     container: {
         width: width,
-        height:height-200,
+        height:height-280,
     },
     topView: {
         height: 150,

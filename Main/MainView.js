@@ -25,6 +25,7 @@ const receiveCustomMsgEvent = "receivePushMsg";
 const receiveNotificationEvent = "receiveNotification";
 const openNotificationEvent = "openNotification";
 const getRegistrationIdEvent = "getRegistrationId";
+import DeviceInfo from 'react-native-device-info'
 
 export default class MainView extends Component {
 
@@ -41,6 +42,7 @@ export default class MainView extends Component {
     }
 
     componentDidMount(){
+        
 
       if (Platform.OS === 'android') {
             JPushModule.notifyJSDidLoad((resultCode) => {
@@ -51,7 +53,18 @@ export default class MainView extends Component {
           this.setState({
             pushMsg: map.message
           });
-          Global.log("extras: " + map.extras);
+          var currentDate = new Date()
+            JPushModule.sendLocalNotification(
+                {
+                    id:7,
+                    buildId:1,
+                    title:'中核移动施工',
+                    content:''+map.message,
+                    fireTime: currentDate.getTime() + 1000,
+                    extra:{},
+                }
+            )
+          Global.log("extras: " + map.extras +'; map.message='+ map.message);
         });
         JPushModule.addReceiveNotificationListener((map) => {
           Global.log("alertContent: " + map.alertContent);
@@ -139,6 +152,7 @@ export default class MainView extends Component {
                 var infoJson = JSON.parse(result);
                 Global.UserInfo = infoJson.responseResult;
                 Global.log('UserInfo: ' + result)
+                me.registerPush(Global.UserInfo.id)
             }
             else
             {
@@ -147,6 +161,13 @@ export default class MainView extends Component {
         });
 
         HttpRequest.initDomain();
+    }
+
+    registerPush(id){
+        var uuid = DeviceInfo.getUniqueID().toUpperCase()
+        var alias = uuid + "_" + id
+
+        Global.registerPush(alias)
     }
 
     render() {

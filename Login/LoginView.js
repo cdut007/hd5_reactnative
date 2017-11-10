@@ -17,7 +17,6 @@ import Dimensions from 'Dimensions';
 import Spinner from 'react-native-loading-spinner-overlay';
 import NavBar from '../common/NavBar'
 import TabView from '../Main/TabView'
-import JPushModule from 'jpush-react-native';
 import DeviceInfo from 'react-native-device-info'
 var Global = require('../common/globals');
 
@@ -183,7 +182,7 @@ export default class LoginView extends Component {
 
         var alias = paramBody.uuid + "_" + response.responseResult.id
 
-        this.registerPush(alias)
+        Global.registerPush(alias)
 
         //show main view
         this.props.navigator.resetTo({
@@ -193,26 +192,7 @@ export default class LoginView extends Component {
         })
     }
 
-    registerPush(alias){
 
-      if (Platform.OS === 'android') {
-
-        JPushModule.resumePush();
-        JPushModule.setAlias(alias, (map) => {
-                if (map.errorCode === 0) {
-                    Global.log("set alias succeed==="+alias);
-                } else {
-                    Global.log("set alias failed, errorCode: " + map.errorCode);
-                    if (map.errorCode == 6002) {
-                        this.registerPush(alias)
-                        Global.log("set alias timeouted register again==="+alias);
-                    }
-                }
-            });
-      }
-
-
-    }
 
     render() {
         return (

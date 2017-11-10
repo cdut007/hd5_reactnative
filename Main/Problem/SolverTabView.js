@@ -83,32 +83,7 @@ export default class SolverTabView extends Component
         } else{
             return(<View></View>)
             //问题领导
-            // return(
-            //         <TabNavigator>
-            //             <TabNavigator.Item
-            //                 selected={this.state.selectedTab === 'tab1'}
-            //                 title="待见证"
-            //                 renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/task_icon.png')} />}
-            //                 renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/task_icon_click.png')} />}
-            //                 badgeText=""
-            //                 selectedTitleStyle={styles.tabBarTintColor}
-            //                 onPress={() => this.setState({ selectedTab: 'tab1' })}>
-            //                 {<QCWitnessListViewContainer {...this.props}/>}
-            //             </TabNavigator.Item>
-            //             <TabNavigator.Item
-            //                 selected={this.state.selectedTab === 'tab2'}
-            //                 title="我的见证"
-            //                 renderIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/problem_icon.png')} />}
-            //                 renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../../images/problem_icon_click.png')} />}
-            //                 selectedTitleStyle={styles.tabBarTintColor}
-            //                 onPress={() => this.setState({ selectedTab: 'tab2' })}>
-            //                 {<QCMyWitnessContainer {...this.props}/>}
-            //             </TabNavigator.Item>
-            //
-            //
-            //
-            //         </TabNavigator>
-            //     )
+            
         }
 
 

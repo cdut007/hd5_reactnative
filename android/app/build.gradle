@@ -97,8 +97,8 @@ android {
         applicationId "com.hd_app"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 35
-        versionName "1.1.33"
+        versionCode 36
+        versionName "1.1.34"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -146,6 +146,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fetch-blob')
+    compile project(':react-native-file-picker')
     compile project(':react-native-vector-icons')
     compile project(':react-native-device-info')
     compile project(':react-native-xlog')

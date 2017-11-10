@@ -70,7 +70,6 @@ class SearchBar extends React.Component {
           autoCapitalize="none"
           underlineColorAndroid={'transparent'}
           autoCorrect={false}
-          autoFocus={true}
           onChangeText={this.props.onSearchChange}
           placeholder="搜索"
           placeholderTextColor={this.state.placeholderTextColor}

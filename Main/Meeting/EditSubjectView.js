@@ -107,10 +107,10 @@ export default class EditSubjectView extends Component {
                         <ScrollView
                         style={styles.mainStyle}>
                         <EditItemView
-                         topic={'所属项目'}
-                         
-                         icon={require('../../images/projectIcon.png')}
-                         placeholder={'请输入所属项目名称'}
+                         topic={'主题'}
+
+                         icon={require('../../images/informIcon.png')}
+                         placeholder={'请输入主题'}
                          content={this.state.subject}
                         onChangeText={(text) => this.setState({ subject: text })}
                         />
