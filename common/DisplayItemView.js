@@ -26,8 +26,8 @@ var width = Dimensions.get('window').width;
                 <View>
                 <View style= {styles.container}>
                 <Image style={{width:24,height:24,marginRight:5}} source={this.props.icon} />
-                    <Text style= {styles.title}>{this.props.title} : </Text>
-                    <Text style= {styles.detail}>{this.props.detail}</Text>
+                 <Text style= {styles.title}>{this.props.title} : </Text>
+                 <Text style= {styles.detail}>{this.props.detail}</Text>
                 </View>
                 {this.rendLine()}
                 </View>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     },
     detail: {
         fontSize: 14,
-        color: "#777777"
+        color: "#777777",
     },
     divider: {
     backgroundColor: '#d6d6d6',

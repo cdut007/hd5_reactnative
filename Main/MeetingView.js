@@ -268,7 +268,7 @@ export default class MeetingView extends Component {
          <TouchableOpacity key={i} onPress={this.onExpriedDetailModuleItemClick.bind(this,moduleDataItem)}>
          <View style={[{width:width}]}>
 
-             <Text numberOfLines={1} style={{ fontSize: 14, marginTop:10,color: "#e82628" }}> {Global.formatFullDateDisplay(moduleDataItem.publishTime)} {moduleDataItem.title}</Text>
+             <Text numberOfLines={1} style={{ fontSize: 14, marginTop:10,marginRight:10,color: "#e82628" }}> {Global.formatFullDateDisplay(moduleDataItem.publishTime)} {moduleDataItem.title}</Text>
          </View>
          </TouchableOpacity>)
       }

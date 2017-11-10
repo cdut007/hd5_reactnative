@@ -208,6 +208,9 @@ module.exports = {
         return 'NONE'
     },
     getAlartTimeByKey(alertTimeArry,time){
+        if (!alertTimeArry) {
+            return ''
+        }
         for (var i = 0; i < alertTimeArry.length; i++) {
              if (alertTimeArry[i].key == time) {
                  return alertTimeArry[i].value

@@ -68,6 +68,8 @@ export default class CreateNoticeView extends Component {
             if (data.status == 'DRAFT') {
                 title = '编辑通告'
                 data.members = data.participants
+                data.alarmTime = Global.getAlartTimeByKey(Global.alertTimeArry,data.alarmTime)
+
             }
         }else{
             data = {}
@@ -90,7 +92,7 @@ export default class CreateNoticeView extends Component {
                  if (!result || result.length == 0) {
                      return
                  }
-
+                 Global.alertTimeArry = result
                  this.setState({alertTimeArry:result})
 
                  AsyncStorage.setItem('k_extra_alert_time', JSON.stringify(result), (error, result) => {
@@ -194,10 +196,16 @@ export default class CreateNoticeView extends Component {
             return
         }
 
+        if (this.state.data.endTime <= this.state.data.startTime) {
+            Global.alert('通告结束时间不能小于通告开始时间')
+            return
+        }
+
         if (!this.state.data.alarmTime) {
             Global.alert('请选择通告提醒时间')
             return
         }
+
 
 
 
@@ -209,8 +217,8 @@ export default class CreateNoticeView extends Component {
 
         ids = ids.substr(0,ids.length-1)
     var conferenceId = ''
-    if (this.state.data.conferenceId) {
-        conferenceId = this.state.data.conferenceId
+    if (this.state.data.id) {
+        conferenceId = this.state.data.id
     }
     this.setState({loadingVisible:true})
         var param = new FormData()
@@ -303,6 +311,11 @@ export default class CreateNoticeView extends Component {
             return
         }
 
+        if (this.state.data.endTime <= this.state.data.startTime) {
+            Global.alert('通告结束时间不能小于通告开始时间')
+            return
+        }
+
         if (!this.state.data.alarmTime) {
             Global.alert('请选择通告提醒时间')
             return
@@ -317,8 +330,8 @@ export default class CreateNoticeView extends Component {
 
         ids = ids.substr(0,ids.length-1)
         var conferenceId = ''
-        if (this.state.data.conferenceId) {
-            conferenceId = this.state.data.conferenceId
+        if (this.state.data.id) {
+            conferenceId = this.state.data.id
         }
     this.setState({loadingVisible:true})
 
@@ -536,6 +549,9 @@ export default class CreateNoticeView extends Component {
 
     renderImages(){
         var imageViews = [];
+        if(this.state.fileArr.length<MAX_IMAGE_COUNT && this.state.fileArr[this.state.fileArr.length-1]['fileSource']){
+                this.state.fileArr.push({});
+            }
         {this.state.fileArr.map((item,i) => {
                 imageViews.push(
                     <TouchableOpacity
@@ -602,7 +618,7 @@ createEnter(icon,label,desc,tag){
         textColor = '#e82628'
     }
     return(
-        <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onEnterClick.bind(this,tag)}>
+        <TouchableOpacity style={[styles.statisticsflexContainer,]} onPress={this.onEnterClick.bind(this,tag)}>
 
         <View style={{flex:1,paddingLeft:10,flexDirection:'row'}}>
 
@@ -612,11 +628,14 @@ createEnter(icon,label,desc,tag){
             {label}
           </Text>
         </View>
-        <Text numberOfLines={1} style={{paddingRight:10,color:textColor,fontSize:14,}}>
+
+        <View style={{justifyContent:'center',alignSelf:'stretch',flex:1.6,}}>
+        <Text numberOfLines={1} style={{marginTop:12,alignSelf:'stretch',flex:1,textAlign:'right',color:textColor,fontSize:14,}}>
           {desc}
         </Text>
+        </View>
 
-        <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/detailsIcon.png')}></Image>
+        <Image style={{alignSelf:'center'}} source={require('../../images/detailsIcon.png')}></Image>
 
         </TouchableOpacity>
     )
@@ -827,7 +846,7 @@ createChooseInfo(icon,label,desc,data,tag){
                       {this.createChooseInfo(null,'通告结束时间',this.state.data.endTime?Global.formatFullDateDisplay(this.state.data.endTime):'请选择通告结束时间',null,'endTime')}
                       <View style={styles.line}>
                       </View>
-                      {this.createChooseInfo(null,'通告提醒时间',this.state.data.alarmTime?Global.formatFullDateDisplay(this.state.data.alarmTime):'请选择会前提醒时间',this.state.alertTimeArry,'alarmTime')}
+                      {this.createChooseInfo(null,'通告提醒时间',this.state.data.alarmTime?this.state.data.alarmTime:'请选择会前提醒时间',this.state.alertTimeArry,'alarmTime')}
                       <View style={styles.line}>
                       </View>
 
