@@ -161,7 +161,7 @@ export default class MeetingDetailView extends Component {
               {label}
             </Text>
           </View>
-          <Text numberOfLines={1} style={{paddingRight:10,color:textColor,fontSize:14,}}>
+          <Text numberOfLines={1} style={{flex:1.6,paddingRight:10,color:textColor,fontSize:14,}}>
             {desc}
           </Text>
 
