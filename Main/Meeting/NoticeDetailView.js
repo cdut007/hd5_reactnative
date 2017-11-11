@@ -14,6 +14,7 @@ import {
     ScrollView,
     Modal,
     ImageBackground,
+    DeviceEventEmitter,
 } from 'react-native';
 
 
@@ -122,6 +123,7 @@ export default class NoticeDetailView extends Component {
                   }
           })
       }else if (tag == 'feedback') {
+           this.props.data.unread = 0
           this.props.navigator.push({
               component: FeedbackMessageView,
                props: {

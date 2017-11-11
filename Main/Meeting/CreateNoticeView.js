@@ -11,7 +11,8 @@ import {
     Picker,
     AsyncStorage,
     TextInput,
-    ScrollView
+    ScrollView,
+    DeviceEventEmitter,
 } from 'react-native';
 
 import NavBar from '../../common/NavBar'
@@ -151,6 +152,7 @@ export default class CreateNoticeView extends Component {
 
     onPublishSuccess(response){
         this.setState({loadingVisible:false})
+        DeviceEventEmitter.emit('operate_meeting','operate_meeting');
         Global.showToast(response.message)
         this.back()
 

@@ -12,6 +12,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     InteractionManager,
+    DeviceEventEmitter,
 } from 'react-native';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -85,8 +86,13 @@ export default class MeetingListViewContainer extends Component {
     componentDidMount() {
 
         this.executeStatisticsRequest()
+        operationSubscription = DeviceEventEmitter.addListener('operate_meeting',(param)=>{this.executeStatisticsRequest()})
     }
 
+    componentWillUnmount(){
+
+      operationSubscription.remove();
+    }
     onGetStatisticsDataSuccess(response,paramBody){
          Global.log('onGetDataSuccess@@@@')
 

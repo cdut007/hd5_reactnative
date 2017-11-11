@@ -13,6 +13,7 @@ import {
     TextInput,
     ScrollView,
     NativeModules,
+    DeviceEventEmitter,
 } from 'react-native';
 
 var FilePickerManager = require('NativeModules').FilePickerManager;
@@ -156,6 +157,7 @@ export default class CreateMeetingView extends Component {
     onPublishSuccess(response){
         this.setState({loadingVisible:false})
         Global.showToast(response.message)
+        DeviceEventEmitter.emit('operate_meeting','operate_meeting');
         this.back()
 
     }
