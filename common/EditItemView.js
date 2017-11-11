@@ -71,7 +71,7 @@ import ULTextInput from './ULEditText.js'
 
     render()
     {
-        if (Platform.OS === 'ios'){
+        if (Platform.OS == 'ios'){
             if (this.props.icon) {
                 return(
 

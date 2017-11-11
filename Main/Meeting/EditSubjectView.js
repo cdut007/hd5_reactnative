@@ -10,18 +10,18 @@ import {
     TouchableHighlight,
     Picker,
     AsyncStorage,
-    TextInput,
     ScrollView
 } from 'react-native';
 
-
+import CustomTextInput from '../../common/CustomTextInput'
+import {RichTextEditor, RichTextToolbar} from 'react-native-zss-rich-text-editor';
 import CommitButton from '../../common/CommitButton'
 import NavBar from '../../common/NavBar'
 import Dimensions from 'Dimensions'
 import LoginView from '../../Login/LoginView'
 var Global = require('../../common/globals');
 var width = Dimensions.get('window').width;
-
+var height = Dimensions.get('window').height;
 import DisplayItemView from '../../common/DisplayItemView';
 
 import DisplayMoreItemView from '../../common/DisplayMoreItemView';
@@ -48,6 +48,9 @@ export default class EditSubjectView extends Component {
             content:this.props.data.content,
             title:title,
         }
+
+        this.getHTML = this.getHTML.bind(this);
+        this.setFocusHandlers = this.setFocusHandlers.bind(this);
     }
 
 
@@ -63,6 +66,27 @@ export default class EditSubjectView extends Component {
       this.props.refresh();
       this.back()
   }
+
+  onEditorInitialized() {
+   this.setFocusHandlers();
+   this.getHTML();
+ }
+
+ async getHTML() {
+   const titleHtml = await this.richtext.getTitleHtml();
+   const contentHtml = await this.richtext.getContentHtml();
+   //alert(titleHtml + ' ' + contentHtml)
+ }
+
+ setFocusHandlers() {
+   this.richtext.setTitleFocusHandler(() => {
+     //alert('title focus');
+   });
+   this.richtext.setContentFocusHandler(() => {
+     //alert('content focus');
+   });
+ }
+
 
 
     render() {
@@ -82,7 +106,7 @@ export default class EditSubjectView extends Component {
 
                         <View style={{backgroundColor: 'white', width: width, height: 150, paddingTop: 10, paddingLeft: 10,}}>
                           <Text style={{color: '#1c1c1c', fontSize: 14}}>正文:</Text>
-                          <TextInput
+                          <CustomTextInput
                               style={{flex: 1, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}}
                               underlineColorAndroid ='transparent'
                               editable={false}
@@ -90,6 +114,17 @@ export default class EditSubjectView extends Component {
                               multiline = {true}
                               onChangeText={(text) => this.setState({ content: text })}
                               value={this.state.content} />
+
+                              {/* <RichTextEditor
+                                 ref={(r)=>this.richtext = r}
+                                 style={styles.richText}
+                                 initialTitleHTML={'Title!!'}
+                                 initialContentHTML={'Hello <b>World</b> <p>this is a new paragraph</p> <p>this is another new paragraph</p>'}
+                                 editorInitializedCallback={() => this.onEditorInitialized()}
+                             />
+                             <RichTextToolbar
+                               getEditor={() => this.richtext}
+                             /> */}
                         </View>
 
                         </ScrollView>
@@ -116,15 +151,26 @@ export default class EditSubjectView extends Component {
                         onChangeText={(text) => this.setState({ subject: text })}
                         />
 
-                        <View style={{backgroundColor: 'white', width: width, height: 150, paddingTop: 10, paddingLeft: 10,}}>
-                          <Text style={{color: '#1c1c1c', fontSize: 14}}>正文:</Text>
-                          <TextInput
-                              style={{flex: 1, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}}
+                        <View style={{backgroundColor: 'white', width: width, height: height-170, paddingTop: 10,}}>
+                          <Text style={{marginLeft: 10,color: '#1c1c1c', fontSize: 14}}>正文:</Text>
+                          <CustomTextInput
+                              style={{flex: 1,marginLeft: 10, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}}
                               underlineColorAndroid ='transparent'
                               maxLength = {150}
                               multiline = {true}
                               onChangeText={(text) => this.setState({ content: text })}
                               value={this.state.content} />
+
+                              {/* <RichTextEditor
+                                 ref={(r)=>this.richtext = r}
+                                 style={{flex:1,width:width,}}
+                                 initialTitleHTML={''}
+                                 initialContentHTML={''}
+                                 editorInitializedCallback={() => this.onEditorInitialized()}
+                             />
+                             <RichTextToolbar
+                               getEditor={() => this.richtext}
+                             /> */}
                         </View>
 
                         </ScrollView>
@@ -160,4 +206,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#f2f2f2',
     },
+    mainStyle: {
+   flex: 1,
+ },
 })

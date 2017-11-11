@@ -8,6 +8,8 @@ import com.engsshi.xlog.XLogModule;
 import com.engsshi.xlog.XLogPackage;
 import com.engsshi.xlog.XLogSetting;
 import com.facebook.react.ReactApplication;
+import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
+import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.filepicker.FilePickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -41,6 +43,8 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new WebViewBridgePackage(),
+            new WebViewBridgePackage(),
             new RNFetchBlobPackage(),
             new FilePickerPackage(),
             new VectorIconsPackage(),
