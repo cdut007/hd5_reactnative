@@ -226,7 +226,10 @@ export default class MeetingListView extends Component {
                       pagenum:index,
                       type:this.props.type,
                      }
-
+                     
+                     if (this.props.keyword) {
+                         paramBody.keyword = this.props.keyword
+                     }
 
             HttpRequest.get('/conference', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
