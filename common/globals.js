@@ -219,6 +219,7 @@ module.exports = {
         return '不提醒'
     },
     registerPush(alias){
+        
 
       if (Platform.OS === 'android') {
 

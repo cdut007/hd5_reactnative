@@ -42,6 +42,7 @@ export default class ChooseMemberListView extends Component {
             filter: '',
             title: this.props.department.name,
             members:[],
+            selectAll:false,
         }
 
 
@@ -149,9 +150,10 @@ export default class ChooseMemberListView extends Component {
 
      commit(){
             var newdata = []
+            this.state.selectAll = !this.state.selectAll
           for (var i = 0; i < this.state.members.length; i++) {
               this.state.members[i].selected = true
-              let _item = Object.assign({}, this.state.members[i], {'selected': true});
+              let _item = Object.assign({}, this.state.members[i], {'selected': this.state.selectAll});
               newdata.push(_item)
           }
 
@@ -186,6 +188,7 @@ export default class ChooseMemberListView extends Component {
     onItemPress(rowData,rowID){
          //checked
          rowData.selected = !rowData.selected
+         this.state.selectAll = false
 
              let _item = Object.assign({}, this.state.members[rowID], {'selected': rowData.selected});
              this.state.members[rowID] = rowData
@@ -273,7 +276,7 @@ export default class ChooseMemberListView extends Component {
                             uncheckedImage={require('../../images/choose_icon.png')}
                             checked={rowData.selected == null ? false : rowData.selected}
                             onChange={(checked) => {
-
+                                 this.state.selectAll = false
                                 rowData.selected = !checked
 
                                     let _item = Object.assign({}, this.state.members[rowID], {'selected': rowData.selected});
