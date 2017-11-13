@@ -13,6 +13,7 @@ import {
     TouchableHighlight,
     InteractionManager,
     DeviceEventEmitter,
+    Alert
 } from 'react-native';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -166,6 +167,49 @@ export default class NoticeListView extends Component {
 
     }
 
+
+            onDeleteDataSuccess(response,paramBody){
+                 DeviceEventEmitter.emit('operate_meeting','operate_meeting');
+                    Global.showToast(response.message)
+                     Global.log('onDeleteDataSuccess@@@@')
+            }
+
+        deleteItem(itemData){
+            var paramBody={
+                ids:itemData.id
+            }
+            HttpRequest.post('/notification_op/delete', paramBody,this.onDeleteDataSuccess.bind(this),
+                 (e) => {
+
+
+                     try {
+                         var errorInfo = JSON.parse(e);
+                         if (errorInfo != null) {
+                          Global.log(errorInfo)
+                         } else {
+                             Global.log(e)
+                         }
+                     }
+                     catch(err)
+                     {
+                         Global.log(err)
+                     }
+
+                     Global.log('Task error:' + e)
+                 })
+        }
+
+        onItemLongPress(itemData){
+            if (itemData.status == 'DRAFT') {
+                 //delete
+                 Alert.alert('','确定删除草稿?',
+                           [
+                             {text:'取消',},
+                             {text:'确认',onPress:()=> {this.deleteItem(itemData)}}
+               ])
+            }
+        }
+
     onItemPress(itemData){
         if (itemData.status == 'DRAFT') {
             this.props.navigator.push({
@@ -285,6 +329,11 @@ export default class NoticeListView extends Component {
             //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
             var color = '#e82628'
 
+            var unreadInfo = ''
+            if (rowData.unread>0) {
+                unreadInfo= rowData.unread+'条未读'
+            }
+
             if (rowData.status == 'UNSTARTED') {
                 info = '未开始'
             }else if (rowData.status == 'PROGRESSING') {
@@ -296,11 +345,9 @@ export default class NoticeListView extends Component {
             }else if (rowData.status == 'DRAFT') {
                 info = '草稿'
                 color = '#f77935'
+                unreadInfo = 0
             }
-            var unreadInfo = ''
-            if (rowData.unread>0) {
-                unreadInfo= rowData.unread+'条未读'
-            }
+
 
 
                 return (
@@ -310,7 +357,7 @@ export default class NoticeListView extends Component {
                       cornerRadius={5}>
 
                        <View style={styles.itemContainer}>
-                        <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)}>
+                        <TouchableOpacity onPress={this.onItemPress.bind(this, rowData)} onLongPress={this.onItemLongPress.bind(this, rowData)}>
 
                         <View style={[styles.statisticsflexContainer,]}>
 
