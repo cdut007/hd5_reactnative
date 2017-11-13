@@ -226,7 +226,7 @@ export default class MeetingListView extends Component {
                       pagenum:index,
                       type:this.props.type,
                      }
-                     
+
                      if (this.props.keyword) {
                          paramBody.keyword = this.props.keyword
                      }
@@ -388,7 +388,7 @@ export default class MeetingListView extends Component {
                         </Text>
 
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
-                          James
+                          {rowData.host}
                         </Text>
 
                         </View>

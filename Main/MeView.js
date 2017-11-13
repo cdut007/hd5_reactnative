@@ -115,10 +115,19 @@ export default class MeView extends Component {
     render() {
         var name = '';
         var first_name_char = '';
+        var  dept='';
         if (Global.UserInfo.realname) {
             name = Global.UserInfo.realname;
             first_name_char = name.substring(0,1)
         }
+        if (Global.UserInfo.department) {
+            dept = Global.UserInfo.department.name;
+
+        }
+        if (Global.UserInfo.roles && Global.UserInfo.roles.length>0) {
+            dept = dept +'['+Global.UserInfo.roles[0].name+']'
+        }
+
         return (
             <View style={styles.container}>
             <View style={styles.headView}>
@@ -143,6 +152,14 @@ export default class MeView extends Component {
                     marginTop:4,
                     fontSize:18,}}>
                     {name}
+                    </Text>
+
+                    <Text style={{
+                    color:'#ffffff',
+                    alignSelf: 'center',
+                    marginTop:4,
+                    fontSize:18,}}>
+                    {dept}
                     </Text>
 
                 </View>
