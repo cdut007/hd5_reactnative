@@ -7,7 +7,8 @@ import {
     Image,
     AsyncStorage,
     Platform,
-    Button
+    Button,
+    DeviceEventEmitter,
 } from 'react-native';
 
 
@@ -53,6 +54,36 @@ export default class MainView extends Component {
           this.setState({
             pushMsg: map.message
           });
+    //         CONS_ASSIGN("施工分派"),
+    // CONS_REASSIGN("施工改派"),
+    // CONS_RELEASE("施工解派"),
+    // WITNESS_LAUNCH("发起见证"),
+    // WITNESS_ASSIGN("见证分派"),
+    // WITNESS_QC2_ASSIGN("QC2见证分派"),
+    // API_CALL("api调用"),
+	// CONFERENCE("发起会议"),
+	// NOTIFICATION("通知"),
+	// QUESTION_CREATE("作业问题创建"),
+	// QUESTION_ASSIGN("作业问题指派"),
+	// QUESTION_FEEDBACK("作业问题回执"),
+	// QUESTION_ANSWER("作业问题回答");
+
+
+      if (map.extras) {
+          try {
+              var categoryInfo = JSON.parse(map.extras)
+              console.log('category====='+categoryInfo.category)
+              if (categoryInfo.category == 'CONFERENCE') {
+                  DeviceEventEmitter.emit('operate_meeting','operate_meeting');
+              }
+          } catch (e) {
+               console.log('json parse error category====='+e)
+          } finally {
+
+          }
+
+
+      }
           var currentDate = new Date()
             JPushModule.sendLocalNotification(
                 {
