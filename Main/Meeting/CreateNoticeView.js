@@ -176,7 +176,7 @@ export default class CreateNoticeView extends Component {
 
 
     back() {
-        dismissKeyboard();
+        //dismissKeyboard();
         this.props.navigator.pop()
     }
 

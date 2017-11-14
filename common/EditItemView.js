@@ -49,6 +49,9 @@ import ULTextInput from './ULEditText.js'
   }
 
   componentWillUnmount () {
+      if (this._input) {
+          this._input.blur()
+      }
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
   }

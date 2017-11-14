@@ -55,7 +55,7 @@ export default class EditSubjectView extends Component {
 
 
     back() {
-        dismissKeyboard();
+        //dismissKeyboard();
         this.props.navigator.pop()
 
     }
