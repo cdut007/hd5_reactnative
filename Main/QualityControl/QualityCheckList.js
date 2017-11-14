@@ -12,6 +12,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     InteractionManager,
+    DeviceEventEmitter,
 } from 'react-native';
 
 import HttpRequest from '../../HttpRequest/HttpRequest'
@@ -22,7 +23,7 @@ import LoadingView from '../../common/LoadingView.js'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 import Global from '../../common/globals.js';
-import QuestionDetail from './QuestionDetail'
+import QuestionDetail from '../SafeWork/QuestionDetail'
 import LoadEmptyView from '../../common/LoadEmptyView'
 
 
@@ -31,6 +32,7 @@ var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var pagesize = 10;
 var pageNo = 1;
+
 
 var resultsCache = {
   dataForQuery: {},
@@ -42,7 +44,7 @@ var LOADING = {};
 
 
 
-export default class QuestionList extends Component {
+export default class QualityCheckList extends Component {
     constructor(props) {
         super(props)
 
@@ -81,13 +83,16 @@ export default class QuestionList extends Component {
             console.log("_onRefresh() --> ");
             this.setState({isRefreshing:true})
 
-            this.executeDataRequest(1);
+            this.executePlanRequest(1);
         }
 
         _loadMoreData() {
+
+
+
             console.log("_loadMoreData() --> ");
              pageNo = parseInt(this.state.items.length / pagesize) + 1;
-            this.executeDataRequest(pageNo);
+            this.executePlanRequest(pageNo);
         }
 
         _toEnd() {
@@ -105,9 +110,16 @@ export default class QuestionList extends Component {
         _renderFooter(label,index) {
             //const { userReducer } = this.props;
             //通过当前product数量和刷新状态（是否正在下拉刷新）来判断footer的显示
-            if (this.state.isRefreshing || this.state.items.length < 1) {
+            //const { userReducer } = this.props;
+            //通过当前product数量和刷新状态（是否正在下拉刷新）来判断footer的显示
+            if (this.state.isRefreshing || this.state.isLoading ) {
                 return null
             };
+
+            if (this.state.items.length < 1) {
+                return <LoadEmptyView />
+            };
+
             if (this.state.items.length < this.state.totalCount) {
                 //还有更多，默认显示‘正在加载更多...’
                 return <LoadMoreFooter />
@@ -121,30 +133,39 @@ export default class QuestionList extends Component {
 
     componentDidMount() {
 
-        this.executeDataRequest(1);
+    this.SafeWorkDeal = DeviceEventEmitter.addListener('Safe_Work',(param) => {this._onRefresh()})
+    InteractionManager.runAfterInteractions(() => {
+      this.executePlanRequest(1);
+    });
+
 
     }
 
+    componentWillUnmount(){
+       this.SafeWorkDeal.remove();
+  }
+
     onGetDataSuccess(response,paramBody){
          console.log('onGetDataSuccess@@@@')
-     var query = this.state.filter;
-     if (!query) {
-         query = '';
-     }
+    //  var query = this.state.filter;
+    //  if (!query) {
+    //      query = '';
+    //  }
+
 
          var datas = [];
         if(response.responseResult){
             datas = response.responseResult.data
         }
 
-        if (this.state.filter !== query) {
-            this.setState({
-                isRefreshing:false,
-            });
-           // do not update state if the query is stale
-           console.log('executeDataRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
-           return;
-         }
+        // if (this.state.filter !== query) {
+        //     this.setState({
+        //         isRefreshing:false,
+        //     });
+        //    // do not update state if the query is stale
+        //    console.log('executePlanRequest:pagesize this.state.filter !== query'+this.state.filter+";query="+query)
+        //    return;
+        //  }
 
          var status = paramBody.status
 
@@ -168,27 +189,27 @@ export default class QuestionList extends Component {
 
     onItemPress(itemData){
 
-     var questionData = new Object();
-
-     questionData.title = "东风破";
-     questionData.machineType = "机组20";
-     questionData.plantType = "一汽大众";
-     questionData.elevation = "165";
-     questionData.RoomNumber = "228";
-     questionData.ResDepart = "计科";
-     questionData.team = "1组";
-     questionData.type = this.props.detailType;
-     questionData.time = "20171009";
-     questionData.describe = "问题描述问题描题描述问题描述问题题描题描述问题描述问题描述";
-     questionData.rectific = "2017/10/11";
-     questionData.compelete = "2017/10/15";
-     questionData.recPass = "2017/10/17";
-     questionData.save = "2017/10/18";
+    //  var questionData = new Object();
+    //  questionData.title = "东风破";
+    //  questionData.machineType = "机组20";
+    //  questionData.plantType = "一汽大众";
+    //  questionData.elevation = "165";
+    //  questionData.RoomNumber = "228";
+    //  questionData.ResDepart = "计科";
+    //  questionData.team = "1组";
+    //  questionData.type = this.props.detailType;
+    //  questionData.time = "20171009";
+    //  questionData.describe = "问题描述问题描题描述问题描述问题题描题描述问题描述问题描述";
+    //  questionData.rectific = "2017/10/11";
+    //  questionData.compelete = "2017/10/15";
+    //  questionData.recPass = "2017/10/17";
+    //  questionData.save = "2017/10/18";
 
       this.props.navigator.push({
           component: QuestionDetail,
           props:{
-            data:questionData,
+            data:itemData,
+            detailType:this.props.detailType,
           }
       })
 
@@ -202,14 +223,14 @@ export default class QuestionList extends Component {
       }
 
 
-        onSearchChange(event) {
+        onSearchChange(text) {
 
-          //  var text = event.nativeEvent.text.toLowerCase();
-          //
-          // this.fileterArr(text);
+           var text = text.toLowerCase();
+
+          this.fileterArr(text);
 
           //  this.clearTimeout(this.timeoutID);
-          //  this.timeoutID = this.setTimeout(() => this.executeDataRequest(pagesize,1,filter), 100);
+          //  this.timeoutID = this.setTimeout(() => this.executePlanRequest(pagesize,1,filter), 100);
         }
 
         fileterArr(text){
@@ -220,12 +241,11 @@ export default class QuestionList extends Component {
    dataSource:this.state.dataSource.cloneWithRows(this.state.items),
 
  })
-    return;
 
     }else {
 
    var a2 = this.state.items.filter(
-      (item) => ((item.projectType.toLowerCase().indexOf(text) !== -1) || (item.projectNo.toLowerCase().indexOf(text) !== -1) || (item.weldno.toLowerCase().indexOf(text) !== -1) || (Global.formatDate(item.planStartDate)).toLowerCase().indexOf(text) !== -1)
+      (item) => ((Global.formatDate(item.createDate).toLowerCase().indexOf(text) !== -1) || (item.createUser.toLowerCase().indexOf(text) !== -1) || (item.problemTitle.toLowerCase().indexOf(text) !== -1) || (this.getStatus(item.problemStatus).toLowerCase().indexOf(text) !== -1))
 );
 
 
@@ -240,9 +260,9 @@ export default class QuestionList extends Component {
 
 
 
-    executeDataRequest(index){
+    executePlanRequest(index){
 
-      console.log('executeDataRequest pageNo:'+index)
+      console.log('executePlanRequest pageNo:'+index)
                 var loading = false;
                 if (this.state.items.length == 0) {
                         loading = true
@@ -252,17 +272,24 @@ export default class QuestionList extends Component {
                    isLoading: loading,
                  });
 
-                 var userId= ''
-                 if (this.props.userId) {
-                     userId = this.props.userId;
-                 }
+
 
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
-                      problemStatus:this.props.problemStatus,
-                      userId:userId,
                      }
+
+                 if (this.props.problemStatus) {
+
+                  paramBody.problemStatus = this.props.problemStatus
+
+                  }
+
+                if (this.props.probelmType) {
+
+                paramBody.probelmType = this.props.probelmType
+
+                }
 
                 if (this.props.problemSolveStatus) {
                       paramBody.problemSolveStatus = this.props.problemSolveStatus
@@ -271,6 +298,7 @@ export default class QuestionList extends Component {
 
             HttpRequest.get('/hse/problemList', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
+
 
                     this.setState({
                       dataSource: this.state.dataSource.cloneWithRows([]),
@@ -326,7 +354,7 @@ export default class QuestionList extends Component {
                         <View style={styles.cell}>
 
                           <Text numberOfLines={2}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                            {Global.formatDate(rowData.createTime)}
+                            {Global.formatDate(rowData.createDate)}
                           </Text>
 
                         </View>
@@ -335,7 +363,7 @@ export default class QuestionList extends Component {
                         <View style={styles.cell}>
 
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.id}
+                              {rowData.problemTitle}
                         </Text>
 
                         </View>
@@ -351,7 +379,7 @@ export default class QuestionList extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.problemStatus}
+                           {this.getStatus(rowData.problemStatus)}
                         </Text>
 
                         </View>
@@ -372,12 +400,32 @@ export default class QuestionList extends Component {
                 )
 
         }
+
         return (
             <View style={styles.itemView}>
                 {itemView()}
             </View>
         )
     }
+
+   //问题执行状态
+   getStatus(status){
+
+     if (status == 'Need_Handle') {
+         return '新问题'
+     }else if (status == 'Renovating') {
+         return '整改中'
+     }else if (status == 'Need_Check') {
+         return '待审核'
+     }else if (status == 'Finish') {
+         return '已完成'
+     }else if(status == 'None'){
+         return '不需处理'
+     }else {
+       return status
+     }
+   }
+
    //搜索框
    renderSearchBar(){
 

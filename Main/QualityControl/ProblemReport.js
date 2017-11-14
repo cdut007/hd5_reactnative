@@ -47,7 +47,7 @@ var options = {
 };
 var width = Dimensions.get('window').width;
 var machineTypes = ['机组1','机组2','机组3','机组4','机组5'];
-var PlantTypes = ['厂房1','厂房2','厂房3','厂房4','厂房5'];
+var PlantTypes = ['子项1','子项2','子项3','子项4','子项5'];
 var DepartTypes = [1,2,3,4,5];
 var TeamTypes = ['责任班组1','责任班组2','责任班组3','责任班组4','责任班组5'];
 
@@ -58,9 +58,10 @@ export  default class ProblemReport extends Component {
 
       this.state = {
           machineType: '选择机组',
-          plantType: '选择厂房',
+          plantType: '选择子项',
           elevation: '', //标高
           RoomNumber:'',//房间号
+          system_no:'',
           ResDepart:'选择责任部门',
           ResTeam:'选择责任班组',
           question:'',
@@ -75,7 +76,7 @@ export  default class ProblemReport extends Component {
   render() {
       return (
           <View style={styles.container}>
-          
+
                <View style={styles.content}>
                  {this._ContentView()}
                  {this._CommitButton()}
@@ -102,12 +103,13 @@ export  default class ProblemReport extends Component {
     var itemAry = [];
 
     var displayAry = [
-      {title:'机组',id:'choose_machiche',pickerTitle:"选择机组",content:this.state.machineType,data:machineTypes,type:'choose'},
-      {title:'厂房',id:'choose_platHouse',pickerTitle:"选择厂房",content:this.state.plantType,data:PlantTypes,type:'choose'},
-      {title:'标高',id:'elevation',content:this.state.elevation,type:'input'},
-      {title:'房间号',id:'room_no',content:this.state.RoomNumber,type:'input'},
-      {title:'责任部门',id:'choose_des',pickerTitle:"选择责任部门",content:this.state.ResDepart,data:DepartTypes,type:'choose'},
-      {title:'责任班组',id:'choose_team',pickerTitle:"选择责任班组",content:this.state.ResTeam,data:TeamTypes,type:'chooseOption'},
+      {title:'机组:',id:'choose_machiche',pickerTitle:"选择机组",content:this.state.machineType,data:machineTypes,type:'choose',refence:this.mac_ref},
+      {title:'子项:',id:'choose_platHouse',pickerTitle:"选择子项",content:this.state.plantType,data:PlantTypes,type:'choose',refence:this.sub_ref},
+      {title:'楼层:',id:'elevation',content:this.state.elevation,type:'input'},
+      {title:'房间号:',id:'room_no',content:this.state.RoomNumber,type:'input'},
+      {title:'系统(选填):',id:'system_no',content:this.state.system_no,type:'input'},
+      {title:'责任部门:',id:'choose_des',pickerTitle:"选择责任部门",content:this.state.ResDepart,data:DepartTypes,type:'choose',refence:this.resP_ref},
+      {title:'责任班组(选填):',id:'choose_team',pickerTitle:"选择责任班组",content:this.state.ResTeam,data:TeamTypes,type:'choose',refence:this.team_ref},
       {type:'describe'},
       {type:'file'},
 
@@ -120,7 +122,7 @@ for (var i = 0; i<displayAry.length; i++) {
   if (displayAry[i].type == 'choose') {
 
    itemAry.push(
-        this._SelectView(displayAry[i].title,displayAry[i].content,displayAry[i].data,displayAry[i].pickerTitle,displayAry[i].id)
+        this._SelectView(displayAry[i].title,displayAry[i].content,displayAry[i].data,displayAry[i].pickerTitle,displayAry[i].id,displayAry[i].refence)
    )
  }else if (displayAry[i].type == 'input') {
      itemAry.push(
@@ -141,17 +143,6 @@ for (var i = 0; i<displayAry.length; i++) {
  }
 
 }
-/*
-{this._SelectView("机组",this.state.machineType,machineTypes,"选择机组","XZJZ")}
-{this._SelectView("厂房",this.state.plantType,PlantTypes,"选择厂房","XZCF")}
-{this._inPutView("标高",this.state.elevation,"BG")}
-{this._inPutView("房间号",this.state.RoomNumber,"FJH")}
-{this._SelectView("责任部门",this.state.ResDepart,DepartTypes,"选择责任部门","ZRBM")}
-{this._SelectViewOption("责任班组",this.state.ResTeam,TeamTypes,"选择责任班组","ZRBZ")}
-{this._questtionDescribe()}
-{this.renderFileView()}
- */
-
 
  return itemAry;
 
@@ -208,15 +199,7 @@ return(
        team = this.state.ResTeam;
      }
 
-    var reportData = new Object()
-    reportData.machineType = this.state.machineType;//机组
-    reportData.plantType = this.state.plantType;//厂房
-    reportData.elevation = this.state.elevation;//标高
-    reportData.RoomNumber = this.state.RoomNumber;//房间号
-    reportData.ResDepart = this.state.ResDepart;//责任部门
-    reportData.ResTeam = team;//责任班组
-    reportData.questions = this.state.question;//问题描述
-    reportData.images = this.state.fileArr;//图片
+
 
     //  this.props.navigator.push({
     //      component: MyReport,
@@ -282,15 +265,18 @@ _questtionDescribe(){
          this.setState({RoomNumber:text})
       }
         break;
+      case "system_no":
+        this.setState({system_no:text})
+        break;
   }
   }
 
-  _SelectView(name,title,datas,pickerTitle,pickerType){
+  _SelectView(name,title,datas,pickerTitle,pickerType,refence){
 
       return(
         <View style={styles.topContainer}>
               <Text style={styles.title}> {name} </Text>
-              {this.renderSelectView(title,datas,pickerTitle,pickerType)}
+              {this.renderSelectView(title,datas,pickerTitle,pickerType,refence)}
         </View>
       )
 
@@ -308,12 +294,12 @@ _questtionDescribe(){
 
   }
 
-  renderSelectView(title,datas,pickerTitle,pickerType) {
+  renderSelectView(title,datas,pickerTitle,pickerType,refence) {
       return(
         <View style={styles.borderStyle}>
-      <TouchableOpacity onPress={() => this._selectM.onPickClick()} style={styles.touchStyle}>
+      <TouchableOpacity onPress={() => refence.onPickClick()} style={styles.touchStyle}>
         <MemberSelectView
-        ref={(c) => this._selectM = c}
+        ref={(c) => refence = c}
          style={styles.textStyle}
          title={title}
          data={datas}

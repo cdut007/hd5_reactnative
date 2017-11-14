@@ -832,7 +832,7 @@ historyData.hseCheckTime = item['solveDate'];
       {title:'历史状态',content:"",id:'9',noLine:true},
       {title:'问题提交',content:Global.formatDate(this.state.data.createDate),id:'10',noLine:true},
       {title:'问题审核',content:Global.formatDate(historyData.handleTime),id:'11',noLine:true},
-      {title:'当前状态',content:"待整改",id:'13',noLine:true},
+      {title:'当前状态',content:"整改中",id:'13',noLine:true},
     ];
 
     // 遍历
