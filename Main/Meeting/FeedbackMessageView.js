@@ -11,9 +11,9 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     AsyncStorage,
-    DeviceEventEmitter,
     BackAndroid,
-    TextInput
+    TextInput,
+    DeviceEventEmitter,
 } from 'react-native';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -64,6 +64,7 @@ export default class FeedbackMessageView extends Component {
     componentDidMount() {
         var data = []
 
+            this.props.data.unread = 0
          if (this.props.data.feedback) {
 
              this.setState({
@@ -88,6 +89,7 @@ export default class FeedbackMessageView extends Component {
     }
 
     onMarkUnreadDataSuccess(response,paramBody){
+         DeviceEventEmitter.emit('operate_meeting','operate_meeting');
              Global.log('onMarkUnreadDataSuccess@@@@')
     }
 
@@ -99,7 +101,7 @@ export default class FeedbackMessageView extends Component {
             if (this.props.notice) {
                 paramBody = {
                      notificationId:this.props.data.id,
-                    
+
                     }
                     uri = '/notification_op/mark'
 

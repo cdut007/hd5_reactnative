@@ -11,7 +11,8 @@ import {
     Picker,
     AsyncStorage,
     TextInput,
-    ScrollView
+    ScrollView,
+    DeviceEventEmitter,
 } from 'react-native';
 
 import NavBar from '../common/NavBar'
@@ -150,7 +151,15 @@ export default class MeetingView extends Component {
 
            Global.log('Task error:' + e)
        })
-    }
+       this.executeStatisticsRequest()
+
+       operationSubscription = DeviceEventEmitter.addListener('operate_meeting',(param)=>{this.executeStatisticsRequest()})
+   }
+
+   componentWillUnmount(){
+
+     operationSubscription.remove();
+   }
 
 
 
@@ -175,10 +184,7 @@ export default class MeetingView extends Component {
 
       Global.log('executeStatisticsRequest:')
 
-                 this.setState({
-                   isLoading: true,
-                   isLoadingTail: false,
-                 });
+
 
 
                  var paramBody = {
@@ -241,15 +247,39 @@ export default class MeetingView extends Component {
         })
     }
 
+  renderDot(unread,image){
+       if (unread>0) {
+           return(<View style={{
+
+           flexDirection: 'row',
+           justifyContent: 'space-between',
+
+         }}>
+               <Image source={image} style={{ width: 48, height: 48,marginTop:5,marginLeft:18,marginRight:18}} resizeMode={Image.resizeMode.contain} />
+               <Text style={{ left:58,position: 'absolute',fontSize: 12, color: "#e82628" }}>{unread}</Text>
+
+               </View>)
+       }else{
+           return(<View style={{
+         }}>
+               <Image source={image} style={{  width: 48, height: 48,}} resizeMode={Image.resizeMode.contain} />
+               </View>)
+       }
+  }
+
   renderItems(moduleData){
       var displayArr = []
       for (var i = 0; i < moduleData.length; i++) {
           var moduleDataItem = moduleData[i]
+
+
+         var unread = this.getUnreadCount(moduleDataItem)
+
          displayArr.push(
          <TouchableOpacity key={i} style={styles.cell} onPress={this.onModuleItemClick.bind(this,moduleDataItem)}>
          <View style={[{width:width/3}, styles.cell]}>
 
-            <Image source={moduleDataItem.image} style={{  width: 48, height: 48,}} resizeMode={Image.resizeMode.contain} />
+             {this.renderDot(unread,moduleDataItem.image)}
 
              <Text style={{ fontSize: 12, color: "#282828" }}>{moduleDataItem.title}</Text>
          </View>
@@ -259,9 +289,40 @@ export default class MeetingView extends Component {
       return displayArr
   }
 
+
+  getUnreadCount(moduleDataItem){
+      var unread = 0
+      if (moduleDataItem.tag == 'meeting') {
+            if (this.state.conference) {
+                if (moduleDataItem.type == 'send') {
+                    unread = this.state.conference.sendUnread
+                }else{
+                    unread = this.state.conference.receiveUnread
+                }
+
+            }
+      }else{
+          if (this.state.notification) {
+              if (moduleDataItem.type == 'send') {
+                  unread = this.state.notification.sendUnread
+              }else{
+                  unread = this.state.notification.receiveUnread
+              }
+          }
+      }
+      if (!unread) {
+          return 0
+      }
+      return unread
+
+  }
+
   renderExpriedItems(moduleData){
       var displayArr = []
       var len = moduleData.length > 3 ? 3 : moduleData.length
+
+
+
       for (var i = 0; i < len; i++) {
           var moduleDataItem = moduleData[i]
          displayArr.push(

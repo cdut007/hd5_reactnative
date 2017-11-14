@@ -229,7 +229,7 @@ export default class NoticeExpiredListView extends Component {
     renderTop(){
 
         return( <View style={{height:this.state.WebViewHeight + 74,marginBottom:10}}>
-          <TouchableOpacity style={[styles.itemContainer,]}>
+          <View style={[styles.itemContainer,]}>
 
           {/* <Text numberOfLines={4} style={{color:'#282828',fontSize:14}}>
 
@@ -318,7 +318,7 @@ export default class NoticeExpiredListView extends Component {
           </View>
 
 
-          </TouchableOpacity>
+          </View>
           <View style={{backgroundColor: '#d6d6d6',
           width: width,
           height: 0.5,}}/>
@@ -348,8 +348,8 @@ export default class NoticeExpiredListView extends Component {
 
                 return (
 
-                       <View style={{height:96}}>
-                        <TouchableOpacity style={styles.itemContainer} onPress={this.onItemPress.bind(this, rowData)}>
+                       <View style={{height:130}}>
+                        <View style={styles.itemContainer} onPress={this.onItemPress.bind(this, rowData)}>
 
                         <Text numberOfLines={1} style={{color:'#282828',fontSize:14}}>
                          {rowData.filename}
@@ -364,6 +364,17 @@ export default class NoticeExpiredListView extends Component {
 
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#777777',fontSize:12,marginBottom:2,}}>
                           {rowData.no}
+                        </Text>
+
+                        </View>
+
+                        <View style={{flexDirection:'row',alignItems:'center'}}>
+                        <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+                          版本：
+                        </Text>
+
+                        <Text numberOfLines={1}  style={{marginTop:10,color:'#777777',fontSize:12,marginBottom:2,}}>
+                          {rowData.version}
                         </Text>
 
                         </View>
@@ -396,7 +407,7 @@ export default class NoticeExpiredListView extends Component {
                         </View>
 
 
-                        </TouchableOpacity>
+                        </View>
                         <View style={{backgroundColor: '#d6d6d6',
                         width: width,
                         height: 1,}}/>
@@ -422,14 +433,7 @@ export default class NoticeExpiredListView extends Component {
             	onEndReached={this._toEnd.bind(this)}
                 onEndReachedThreshold={10}
                 enableEmptySections={true}
-                refreshControl={
-    						<RefreshControl
-    							refreshing={ this.state.isRefreshing }
-    							onRefresh={ this._onRefresh.bind(this) }
-    							tintColor="gray"
-    							colors={['#0755a6', '#0755a6', '#0755a6']}
-    							progressBackgroundColor="#ffffff"/>
-    						}/>
+                />
         )
     }
 

@@ -33,7 +33,9 @@
     "react-native-tab-navigator": "^0.3.4",
     "react-native-textinput-effects": "^0.4.1",
     "react-native-vector-icons": "^4.4.2",
+    "react-native-webview-bridge-updated": "^1.0.8",
     "react-native-xlog": "^0.5.0",
+    "react-native-zss-rich-text-editor": "^1.0.2",
     "react-navigation": "^1.0.0-beta.19"
   },
   "devDependencies": {

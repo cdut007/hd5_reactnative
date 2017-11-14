@@ -14,6 +14,7 @@ import {
     ScrollView,
     Modal,
     ImageBackground,
+    DeviceEventEmitter,
 } from 'react-native';
 
 
@@ -121,6 +122,7 @@ export default class MeetingDetailView extends Component {
                   }
           })
       }else if (tag == 'feedback') {
+          this.props.data.unread = 0
           this.props.navigator.push({
               component: FeedbackMessageView,
                props: {
@@ -159,7 +161,7 @@ export default class MeetingDetailView extends Component {
               {label}
             </Text>
           </View>
-          <Text numberOfLines={1} style={{paddingRight:10,color:textColor,fontSize:14,}}>
+          <Text numberOfLines={1} style={{flex:1.6,paddingRight:10,color:textColor,fontSize:14,}}>
             {desc}
           </Text>
 
