@@ -159,7 +159,12 @@ export default class FeedbackMessageView extends Component {
 
                 var paramBody = {}
 
-                HttpRequest.get('/conference/'+this.props.data.id, paramBody, this.onGetDataSuccess.bind(this),
+                var uri = '/conference/'
+                if (this.props.notice) {
+                    uri = '/notification/'
+                }
+
+                HttpRequest.get(uri+this.props.data.id, paramBody, this.onGetDataSuccess.bind(this),
                     (e) => {
 
 
