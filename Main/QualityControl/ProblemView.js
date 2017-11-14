@@ -25,7 +25,7 @@ import ConstMapValue from '../../common/ConstMapValue.js';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
-import QuestionList from './QuestionList'
+import QualityCheckList from './QualityCheckList'
 import ProblemReport from './ProblemReport'
 import   ScrollableTabView  from 'react-native-scrollable-tab-view';
 
@@ -106,26 +106,15 @@ export default class ProblemView extends Component {
     }
 
     onSearchChanged(text){
-    console.log('text=='+text);
-    this.setState({keyword:text})
-    if (this._plan_list_ref) {
-        setTimeout(() => {
-                this._plan_list_ref._onRefresh()
-        }, 1000 * 2);
-    }
-
+      if (this.refs.myQuestionlist) {
+            this.refs.myQuestionlist.onSearchChange(text);
+      }
     }
 
     onSearchClose(){
-        if (this.state.keyword == '') {
-            return
-        }
-        this.setState({keyword:''})
-        if (this._plan_list_ref) {
-            setTimeout(() => {
-                    this._plan_list_ref._onRefresh()
-            }, 1000 * 2);
-        }
+      if (this.refs.myQuestionlist) {
+            this.refs.myQuestionlist.onSearchChange('');
+      }
     }
 
     renderFeedbackView(label,index) {
@@ -142,18 +131,11 @@ export default class ProblemView extends Component {
 
     renderListView(label,index) {
         var userId = '';
-        // if (this.props.data.user) {
-        //     userId = this.props.data.user.id
-        // }
-        return (<QuestionList
+
+        return (<QualityCheckList
           tabLabel={label}
            style={{alignSelf:'stretch',flex:1}}
-           type={this.props.type}
-           detailType={this.state.detailType}
-           userId={userId}
-           status={"UNCOMPLETE"}
-           problemStatus={this.props.problemStatus}
-           problemSolveStatus={this.state.problemSolveStatus}
+           detailType={"1003"}
            navigator={this.props.navigator}
            ref="myQuestionlist"
            />)
