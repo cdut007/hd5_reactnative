@@ -26,6 +26,9 @@ import HttpRequest from '../../HttpRequest/HttpRequest'
 import NavBar from '../../common/NavBar'
 var Global = require('../../common/globals');
 
+import CommitButton from '../../common/CommitButton'
+import Spinner from 'react-native-loading-spinner-overlay'
+
 import EditSubjectView from './EditSubjectView'
 import ScanMemberListView from './ScanMemberListView'
 import FeedbackMessageView from './FeedbackMessageView'
@@ -42,6 +45,7 @@ export default class NoticeDetailView extends Component {
             modalVisible: false,
             data:this.props.data,
             alertTimeArry:[],
+            loadingVisible:false,
         };
     }
 
@@ -71,6 +75,8 @@ export default class NoticeDetailView extends Component {
 
     onGetDataSuccess(response,paramBody){
              Global.log('onGetDataSuccess@@@@')
+              this.setState({loadingVisible:false})
+             this.props.data.confirm = response.responseResult.confirm
             if (response.responseResult.feedback) {
                 this.props.data.feedback = response.responseResult.feedback
                 this.setState({
@@ -85,7 +91,7 @@ export default class NoticeDetailView extends Component {
 
                 HttpRequest.get('/notification/'+this.props.data.id, paramBody, this.onGetDataSuccess.bind(this),
                     (e) => {
-
+                         this.setState({loadingVisible:false})
 
                         try {
                             var errorInfo = JSON.parse(e);
@@ -123,6 +129,9 @@ export default class NoticeDetailView extends Component {
                   }
           })
       }else if (tag == 'feedback') {
+          if (!this.props.data.confirm) {
+              return
+          }
            this.props.data.unread = 0
           this.props.navigator.push({
               component: FeedbackMessageView,
@@ -147,10 +156,14 @@ export default class NoticeDetailView extends Component {
 
   createEnter(icon,label,desc,tag){
       var textColor = '#777777'
+      var needCommit = false
       if (tag == 'feedback') {
           textColor = '#e82628'
           if (desc == '0') {
               desc =''
+          }
+          if (!this.props.data.confirm) {
+              needCommit = true
           }
       }
       return(
@@ -164,15 +177,74 @@ export default class NoticeDetailView extends Component {
               {label}
             </Text>
           </View>
-          <Text numberOfLines={1} style={{flex:1.6,paddingRight:10,color:textColor,fontSize:14,}}>
+          <Text numberOfLines={1} style={{textAlign:'right',flex:1.6,paddingRight:10,color:textColor,fontSize:14,}}>
             {desc}
           </Text>
-
+           {this.renderCommit(needCommit)}
           <Image style={{alignSelf:'center',marginRight:10}} source={require('../../images/detailsIcon.png')}></Image>
 
           </TouchableOpacity>
       )
   }
+
+  onConfirmDataSuccess(response,paramBody){
+
+       DeviceEventEmitter.emit('operate_meeting','operate_meeting');
+           Global.log('onConfirmDataSuccess@@@@')
+           this.getNewestData()
+  }
+
+  markConfirmRequest(){
+
+
+
+
+      var paramBody = {
+           notificationId:this.props.data.id,
+          }
+
+
+
+this.setState({loadingVisible:true})
+
+        HttpRequest.post('/notification_op/confirm', paramBody,this.onConfirmDataSuccess.bind(this),
+             (e) => {
+
+this.setState({loadingVisible:false})
+                 try {
+                     var errorInfo = JSON.parse(e);
+                     if (errorInfo != null) {
+                      Global.log(errorInfo)
+                     } else {
+                         Global.log(e)
+                     }
+                 }
+                 catch(err)
+                 {
+                     Global.log(err)
+                 }
+
+                 Global.log('Task error:' + e)
+             })
+          }
+
+
+  commitReceive(){
+     this.markConfirmRequest()
+  }
+
+   renderCommit(needCommit){
+       if (!needCommit) {
+           return
+       }
+       return(  <TouchableOpacity  style={{justifyContent: 'center',borderRadius: 4,height:30,width:80,backgroundColor:'#f77935'}}  onPress={this.commitReceive.bind(this)}>
+       <Text style={{justifyContent: 'center',
+       textAlign:'center',
+       alignItems: 'center',
+       fontSize: 14,
+       color: "#ffffff"}}>确认接收</Text>
+       </TouchableOpacity>)
+   }
 
 
 
@@ -252,6 +324,9 @@ export default class NoticeDetailView extends Component {
                     {this.createEnter(require('../../images/enclosureIcon.png'),'附件','查看全部','attach')}
 
                 </ScrollView>
+                <Spinner
+                    visible={this.state.loadingVisible}
+                />
             </View>
         )
     }

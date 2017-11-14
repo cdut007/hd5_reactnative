@@ -347,6 +347,10 @@ export default class NoticeListView extends Component {
                 color = '#f77935'
                 unreadInfo = ''
             }
+            if (!rowData.confirm) {
+                info = '待确认'
+                color = '#e82628'
+            }
 
 
 
@@ -400,7 +404,7 @@ export default class NoticeListView extends Component {
 
                         <View style={{flexDirection:'row',alignItems:'center'}}>
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          会议时间：
+                          通告时间：
                         </Text>
 
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#888888',fontSize:12,marginBottom:2,}}>
