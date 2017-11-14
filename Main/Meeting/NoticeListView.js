@@ -345,7 +345,7 @@ export default class NoticeListView extends Component {
             }else if (rowData.status == 'DRAFT') {
                 info = '草稿'
                 color = '#f77935'
-                unreadInfo = 0
+                unreadInfo = ''
             }
 
 

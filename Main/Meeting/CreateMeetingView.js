@@ -14,6 +14,7 @@ import {
     ScrollView,
     NativeModules,
     DeviceEventEmitter,
+    ImageBackground
 } from 'react-native';
 
 var FilePickerManager = require('NativeModules').FilePickerManager;
@@ -70,13 +71,40 @@ export default class CreateMeetingView extends Component {
         var meetingTypeArry=['行政','工程','物资','技术','安全','质量','综合']
         var data = this.props.data
         var title = '创建会议'
+        var files = []
         if (data) {
             if (data.status == 'DRAFT') {
                 title = '编辑会议'
                 data.members = data.participants
                 data.alarmTime = Global.getAlartTimeByKey(Global.alertTimeArry,data.alarmTime)
+                if (data.files!=null && data.files.length > 0) {
+                       for (var i = 0; i < data.files.length; i++) {
+                           var itemFile =  data.files[i]
+
+                           var file = {}
+                           var url = itemFile.url
+
+
+
+                           var url = Global.getFileName(url)
+                           var fileExt = Global.getFileExtension(url)
+                           var fileType = 'file'
+                           if (Global.checkImgType(fileExt)) {
+                               fileType = 'image'
+                           }
+                            file['fileSource'] = HttpRequest.getDomain()+ itemFile.url
+                            file['fileName'] = itemFile.fileName + fileExt
+                            file['fileExt'] = fileExt
+                            file['fileType'] = fileType
+                            file['id'] = itemFile.id
+                           files.push(file)
+                       }
+
+                }
+                 files.push({})
             }
         }else{
+            files.push({})
             data = {}
         }
         this.state = {
@@ -86,7 +114,7 @@ export default class CreateMeetingView extends Component {
             meetingTypeData:meetingTypeArry,
             alertTimeArry:[],
             loadingVisible:false,
-            fileArr: [{}],
+            fileArr:files,
         };
     }
 
@@ -247,6 +275,22 @@ export default class CreateMeetingView extends Component {
     this.setState({loadingVisible:true})
 
         var param = new FormData()
+        var fileIds = ''
+        if (this.state.fileArr.length>0) {
+            this.state.fileArr.map((item, i) => {
+                if (item['fileSource'] && !item['id']) {
+                   let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
+                   param.append("file"+i,file);   //这里的files就是后台需要的key
+                }
+                if (item['id']) {
+                    fileIds+=item['id']+','
+                }
+            });
+        }
+
+        if (fileIds.length>0) {
+            fileIds = fileIds.substr(0,fileIds.length-1)
+        }
         param.append('id', conferenceId)
         param.append('subject', this.state.data.subject)
         param.append('content', this.state.data.content)
@@ -261,15 +305,9 @@ export default class CreateMeetingView extends Component {
         param.append('endTime', Global.formatFullDate(this.state.data.endTime))
         param.append('alarmTime', Global.getAlartTime(this.state.alertTimeArry,this.state.data.alarmTime))
         param.append('participants',ids)
+        param.append('fileIds',fileIds)
         param.append('type','SEND')
-        if (this.state.fileArr.length>0) {
-            this.state.fileArr.map((item, i) => {
-                if (item['fileSource']) {
-                   let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
-                   param.append("file"+i,file);   //这里的files就是后台需要的key
-                }
-            });
-        }
+
 
 
         HttpRequest.uploadImage('/conference', param,  this.onPublishSuccess.bind(this),
@@ -385,6 +423,24 @@ export default class CreateMeetingView extends Component {
     this.setState({loadingVisible:true})
 
     var param = new FormData()
+    var fileIds = ''
+    if (this.state.fileArr.length>0) {
+        this.state.fileArr.map((item, i) => {
+            if (item['fileSource'] && !item['id']) {
+               let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
+               param.append("file"+i,file);   //这里的files就是后台需要的key
+            }
+            if (item['id']) {
+                fileIds+=item['id']+','
+            }
+        });
+    }
+
+    if (fileIds.length>0) {
+        fileIds = fileIds.substr(0,fileIds.length-1)
+    }
+
+
     param.append('id', conferenceId)
     param.append('subject', this.state.data.subject)
     param.append('content', this.state.data.content)
@@ -399,15 +455,9 @@ export default class CreateMeetingView extends Component {
     param.append('endTime', Global.formatFullDate(this.state.data.endTime))
     param.append('alarmTime', Global.getAlartTime(this.state.alertTimeArry,this.state.data.alarmTime))
     param.append('participants',ids)
+    param.append('fileIds',fileIds)
     param.append('type','DRAFT')
-    if (this.state.fileArr.length>0) {
-        this.state.fileArr.map((item, i) => {
-            if (item['fileSource']) {
-               let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
-               param.append("file"+i,file);   //这里的files就是后台需要的key
-            }
-        });
-    }
+
 
 
     HttpRequest.uploadImage('/conference', param, this.onPublishSuccess.bind(this),
@@ -518,7 +568,7 @@ export default class CreateMeetingView extends Component {
 
         var source;
         if (Platform.OS === 'android') {
-             source = {uri: response.uri, isStatic: true};
+             source = {uri: 'file://'+filePath, isStatic: true};
          } else {
             source = {
                uri: response.uri.replace('file://', ''),
@@ -554,7 +604,7 @@ export default class CreateMeetingView extends Component {
 
     renderItemFile(item){
         if (item.fileType == 'image') {
-            return(<Image resizeMode={'cover'} style={{ width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}} source={{uri: item['fileSource']}} />)
+            return(<ImageBackground style={{width: 70, height: 70,}} source={require('../../images/temporary_img.png')}><Image resizeMode={'cover'} style={{ width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}} source={{uri: item['fileSource']}} /></ImageBackground>)
 
         }else{
             return(<View style={{backgroundColor:'#ffffff',width: 70, height: 70, borderRadius: 4, borderWidth: 0.5}}>
@@ -900,7 +950,7 @@ createChooseInfo(icon,label,desc,data,tag){
                       />
 
 
-                      <TouchableOpacity onPress={this.onAddAttached.bind(this)} style={styles.flexContainer}>
+                      <View onPress={this.onAddAttached.bind(this)} style={styles.flexContainer}>
                       <Image style={{width:24,height:24,}} source={require('../../images/enclosureIcon.png')} />
                       <Text style={[styles.content,{marginLeft:5,fontSize:14,color:'#1c1c1c'}]}>
                       附件
@@ -908,12 +958,12 @@ createChooseInfo(icon,label,desc,data,tag){
 
                       <View style={{flex:1,flexDirection:'row',justifyContent:'flex-end', alignItems: 'center',}}>
 
-                      <Image style={{width:24,height:24,}} source={require('../../images/add_icon.png')} />
+                      {/* <Image style={{width:24,height:24,}} source={require('../../images/add_icon.png')} /> */}
 
                       </View>
 
 
-                      </TouchableOpacity>
+                      </View>
 
                       {this.renderFileView()}
 
