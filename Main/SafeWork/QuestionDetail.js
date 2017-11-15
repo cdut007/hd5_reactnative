@@ -57,7 +57,8 @@ var options = {
 
 var teams = [];
 var problemFiles = [];
-var solveFiles= [];
+var solveFiles = [];
+var solveAgainFiles = [];
 
 var width = Dimensions.get('window').width;
 var historyData = new FormData()
@@ -583,6 +584,7 @@ figureFiles(){
 
 problemFiles = [];
 solveFiles = [];
+solveAgainFiles = [];
 
   this.state.data.files.forEach((item) => {
      item['url'] = item['path'];
@@ -595,14 +597,22 @@ solveFiles = [];
    problemFiles.push(item);
 
   }else if (item['fileType'] == "after") {
+
   solveFiles.push(item);
-  }
+
+}else if (item['fileType'] == "again") {
+
+  solveAgainFiles.push(item);
+
+}
 
   })
 
 }
 
 figureDatas(){
+
+historyData = new FormData();
 
   this.state.data.hseProblemSolve.forEach((item) => {
 
@@ -769,7 +779,7 @@ historyData.hseCheckTime = item['solveDate'];
     {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
     {title:'问题照片',content:problemFiles,id:'10',noLine:true,type:'img'},
     {title:'整改描述',content:historyData.teamSolveDes,id:'9',noLine:true},
-    {title:'整改照片',content:solveFiles,id:'10',noLine:true,type:'img'},
+    {title:'整改照片',content:solveFiles,id:'12',noLine:true,type:'img'},
     {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
     {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
@@ -780,6 +790,12 @@ historyData.hseCheckTime = item['solveDate'];
     {title:'整改时间',content:Global.formatDate(this.state.data.targetDate),id:'7',noLine:true},
   ];
 
+if (historyData.teamSolveAgainDes && solveAgainFiles) {
+
+displayAry.splice(4,0,{title:'再次整改描述',content:historyData.teamSolveAgainDes,id:'13',noLine:true})
+displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',noLine:true,type:'img'})
+
+}
 
   // 遍历
   for (var i = 0; i<displayAry.length; i++) {
@@ -890,6 +906,13 @@ historyData.hseCheckTime = item['solveDate'];
       {title:'整改完成',content:Global.formatDate(this.state.data.finishDate),id:'13',noLine:true},
       {title:'当前状态',content:"已完成",id:'14',noLine:true},
     ];
+
+    if (historyData.teamSolveAgainDes && solveAgainFiles) {
+
+    displayAry.splice(4,0,{title:'再次整改描述',content:historyData.teamSolveAgainDes,id:'13',noLine:true})
+    displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',noLine:true,type:'img'})
+
+    }
 
     // 遍历
     for (var i = 0; i<displayAry.length; i++) {
@@ -1041,8 +1064,15 @@ historyData.hseCheckTime = item['solveDate'];
     {title:'责任班组',content:this.state.data.responsibleTeam.deptName,id:'6',noLine:true},
     {title:'截止日期',content:Global.formatDate(this.state.data.targetDate) ,id:'7',noLine:true},
     {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
-
+    {title:'故障照片',content:problemFiles,id:'9',noLine:true,type:'img'},
   ];
+
+
+  if (historyData.teamSolveDes && solveFiles) {
+
+     displayAry.push({title:'整改描述',content:historyData.teamSolveDes,id:'10',noLine:true})
+     displayAry.push({title:'整改照片',content:solveFiles,id:'11',noLine:true,type:'img'})
+  }
 
   // 遍历
   for (var i = 0; i<displayAry.length; i++) {
@@ -1066,9 +1096,7 @@ historyData.hseCheckTime = item['solveDate'];
       }
   }
 
-  itemAry.push(
-   this.renderFileView("故障照片",problemFiles)
-  )
+
 
   itemAry.push(
     this.MutinPutView("整改描述",this.state.recDes,"ZGMS")
