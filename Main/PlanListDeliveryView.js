@@ -13,6 +13,7 @@ import {
     TouchableHighlight,
     InteractionManager,
     ScrollView,
+    DeviceEventEmitter,
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -513,6 +514,7 @@ export default class PlanListDeliveryView extends Component {
         });
         Global.showToast(response.message)
         this._onRefresh();
+        DeviceEventEmitter.emit('plan_update','plan_update');
     }
 
     renderTitleColsSpace(){
