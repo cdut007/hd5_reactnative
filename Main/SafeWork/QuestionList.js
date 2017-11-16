@@ -245,7 +245,7 @@ export default class QuestionList extends Component {
     }else {
 
    var a2 = this.state.items.filter(
-      (item) => ((Global.formatDate(item.createDate).toLowerCase().indexOf(text) !== -1) || (item.createUser.toLowerCase().indexOf(text) !== -1) || (item.problemTitle.toLowerCase().indexOf(text) !== -1) || (this.getStatus(item.problemStatus).toLowerCase().indexOf(text) !== -1))
+      (item) => ((Global.formatDate(item.createDate).toLowerCase().indexOf(text) !== -1) || (item.createUser.toLowerCase().indexOf(text) !== -1) || (item.problemTitle.toLowerCase().indexOf(text) !== -1) || (this.filStatus(item.problemStatus).toLowerCase().indexOf(text) !== -1))
 );
 
 
@@ -421,6 +421,23 @@ export default class QuestionList extends Component {
          return '已完成'
      }else if(status == 'None'){
          return '不需处理'
+     }else {
+       return status
+     }
+   }
+
+   filStatus(status){
+
+     if (status == 'Need_Handle') {
+         return 'xinwenti'
+     }else if (status == 'Renovating') {
+         return 'zhenggaizhong'
+     }else if (status == 'Need_Check') {
+         return 'daishenhe'
+     }else if (status == 'Finish') {
+         return 'yiwancheng'
+     }else if(status == 'None'){
+         return 'buxuchuli'
      }else {
        return status
      }
