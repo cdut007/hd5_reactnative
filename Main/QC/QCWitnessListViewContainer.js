@@ -74,6 +74,7 @@ export default class QCWitnessListViewContainer extends Component {
             statistics = {}
 
         }
+        this.state.statistics.total = statistics.total
         this.setState({statistics:statistics})
     }
 
@@ -132,9 +133,11 @@ export default class QCWitnessListViewContainer extends Component {
     }
 
     renderWorkStepWitnessStatisticsItem(){
-                if (!this.state.statistics.total) {
-                    this.executeStatisticsRequest('UNCOMPLETED');
-                }
+
+        if (typeof(this.state.statistics.total) == "undefined") {
+
+            this.executeStatisticsRequest('UNCOMPLETED');
+        }
                 return(<View>
                     <Text style={{color:'#1c1c1c',fontSize:16,marginBottom:10,marginLeft:10}}>
                       今日见证点总数 ({this.state.statistics.total})
