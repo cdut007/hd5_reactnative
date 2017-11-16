@@ -132,17 +132,17 @@ export default class QualityCheckList extends Component {
 
 
     componentDidMount() {
-
-    this.SafeWorkDeal = DeviceEventEmitter.addListener('Safe_Work',(param) => {this._onRefresh()})
     InteractionManager.runAfterInteractions(() => {
       this.executePlanRequest(1);
-    });
 
+    });
 
     }
 
     componentWillUnmount(){
+      /*
        this.SafeWorkDeal.remove();
+       */
   }
 
     onGetDataSuccess(response,paramBody){
@@ -205,13 +205,6 @@ export default class QualityCheckList extends Component {
     //  questionData.recPass = "2017/10/17";
     //  questionData.save = "2017/10/18";
 
-      this.props.navigator.push({
-          component: QuestionDetail,
-          props:{
-            data:itemData,
-            detailType:this.props.detailType,
-          }
-      })
 
     }
 
@@ -244,10 +237,10 @@ export default class QualityCheckList extends Component {
 
     }else {
 
-   var a2 = this.state.items.filter(
-      (item) => ((Global.formatDate(item.createDate).toLowerCase().indexOf(text) !== -1) || (item.createUser.toLowerCase().indexOf(text) !== -1) || (item.problemTitle.toLowerCase().indexOf(text) !== -1) || (this.getStatus(item.problemStatus).toLowerCase().indexOf(text) !== -1))
-);
+      var a2 = this.state.items.filter(
 
+         (item) => ((item.id.toString().indexOf(text) !== -1) ||  (item.unit.toLowerCase().indexOf(text) !== -1) || (this.filStatus(item.status).toLowerCase().indexOf(text) !== -1))
+   );
 
      this.setState({
          dataSource:this.state.dataSource.cloneWithRows(a2),
@@ -255,8 +248,6 @@ export default class QualityCheckList extends Component {
 
     }
   }
-
-
 
 
 
@@ -279,24 +270,15 @@ export default class QualityCheckList extends Component {
                       pagenum:index,
                      }
 
-                 if (this.props.problemStatus) {
+                 if (this.props.status) {
 
-                  paramBody.problemStatus = this.props.problemStatus
+                  paramBody.status = this.props.status;
 
                   }
 
-                if (this.props.probelmType) {
-
-                paramBody.probelmType = this.props.probelmType
-
-                }
-
-                if (this.props.problemSolveStatus) {
-                      paramBody.problemSolveStatus = this.props.problemSolveStatus
-              }
 
 
-            HttpRequest.get('/hse/problemList', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/qualityControl/getList', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
 
@@ -353,17 +335,8 @@ export default class QualityCheckList extends Component {
 
                         <View style={styles.cell}>
 
-                          <Text numberOfLines={2}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
-                            {Global.formatDate(rowData.createDate)}
-                          </Text>
-
-                        </View>
-
-
-                        <View style={styles.cell}>
-
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.problemTitle}
+                              {rowData.id}
                         </Text>
 
                         </View>
@@ -371,7 +344,7 @@ export default class QualityCheckList extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.createUser}
+                           {rowData.unit}
                         </Text>
 
                         </View>
@@ -379,12 +352,10 @@ export default class QualityCheckList extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {this.getStatus(rowData.problemStatus)}
+                           {this.getStatus(rowData.status)}
                         </Text>
 
                         </View>
-
-
 
 
                         </View>
@@ -411,16 +382,37 @@ export default class QualityCheckList extends Component {
    //问题执行状态
    getStatus(status){
 
-     if (status == 'Need_Handle') {
-         return '新问题'
-     }else if (status == 'Renovating') {
-         return '整改中'
-     }else if (status == 'Need_Check') {
+     if (status == 'PreQCLeaderAssign') {
+         return '待分派'
+     }else if (status == 'PreQCverify') {
          return '待审核'
-     }else if (status == 'Finish') {
+     }else if (status == 'PreRenovete') {
+         return '待整改'
+     }else if (status == 'Finished') {
          return '已完成'
-     }else if(status == 'None'){
-         return '不需处理'
+     }else if(status == 'Closed'){
+         return '已关闭'
+     }else if (status == 'PreQCAssign') {
+      return '待指派'
+     }else {
+       return status
+     }
+   }
+
+   filStatus(status){
+
+     if (status == 'PreQCLeaderAssign') {
+         return 'daifenpai'
+     }else if (status == 'PreQCverify') {
+         return 'daishenhe'
+     }else if (status == 'PreRenovete') {
+         return 'daizhenggai'
+     }else if (status == 'Finished') {
+         return 'yiwancheng'
+     }else if(status == 'Closed'){
+         return 'yiguanbi'
+     }else if (status == 'PreQCAssign') {
+      return 'daizhipai'
      }else {
        return status
      }
@@ -516,7 +508,7 @@ const styles = StyleSheet.create({
     cell: {
         flex: 1,
         height: 48,
-        width:width/4,
+        width:width/3,
         justifyContent: "center",
         alignItems: 'center',
          flexDirection: 'column',

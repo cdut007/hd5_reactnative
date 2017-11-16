@@ -13,6 +13,7 @@ import {
     TextInput,
     Platform,
     Alert,
+    InteractionManager,
 
 } from 'react-native';
 
@@ -20,6 +21,9 @@ import Dimensions from 'Dimensions'
 import NavBar from '../../common/NavBar';
 import MemberSelectView from '../../common/MemberSelectView'
 import ImagePicker from 'react-native-image-picker'
+import Spinner from 'react-native-loading-spinner-overlay'
+import HttpRequest from '../../HttpRequest/HttpRequest'
+import Global from '../../common/globals'
 
 const MAX_IMAGE_COUNT = 5;
 
@@ -46,10 +50,11 @@ var options = {
     }
 };
 var width = Dimensions.get('window').width;
-var machineTypes = ['机组1','机组2','机组3','机组4','机组5'];
+
+var machineTypes = [];
+var DepartTypes = [];
+var TeamTypes = [];
 var PlantTypes = ['子项1','子项2','子项3','子项4','子项5'];
-var DepartTypes = [1,2,3,4,5];
-var TeamTypes = ['责任班组1','责任班组2','责任班组3','责任班组4','责任班组5'];
 
 export  default class ProblemReport extends Component {
 
@@ -57,20 +62,144 @@ export  default class ProblemReport extends Component {
       super(props)
 
       this.state = {
+          title: "报告问题",
           machineType: '选择机组',
           plantType: '选择子项',
+          questionName:'',
           elevation: '', //标高
           RoomNumber:'',//房间号
-          system_no:'',
           ResDepart:'选择责任部门',
+          ResDepartId:null,
+          ResTeamId:null,
           ResTeam:'选择责任班组',
+          DepartTypes:null,
+          TeamTypes:null,
+          machineTypes:null,
+          PlantTypes:null,
           question:'',
           fileArr: [{}],//装图片资源的数组
+          loadingVisible:false,
+          requestTime:1,
+          system_no:'',
+
       }
   }
 
   back() {
       this.props.navigator.pop()
+  }
+
+  componentDidMount(){
+
+    InteractionManager.runAfterInteractions(() => {
+      this.featchData();
+    });
+
+  }
+
+  featchData(){
+
+    this.setState({
+        loadingVisible: true
+    });
+   var param = new FormData()
+    if (this.state.ResDepartId) {
+      param.append('responsibleDeptId',this.state.ResDepartId);
+    }
+
+    HttpRequest.get('/hse/createUI', param, this.featchDataSuccess.bind(this),
+        (e) => {
+          this.setState({
+              loadingVisible: false
+          });
+
+        if (requestTime == 1) {
+               Global.alert("获取数据失败");
+               this.back.bind(this);
+
+         }
+
+          console.log('error:' + e)
+
+        })
+
+  }
+
+  featchDataSuccess(response){
+
+    requestTime = 2;
+
+    this.setState({
+        loadingVisible: false
+    });
+
+   if (response.responseResult) {
+
+    this.figureData(response.responseResult)
+
+   }
+
+
+  }
+
+  figureData(data){
+
+  machineTypes = [];
+  DepartTypes = [];
+  TeamTypes = [];
+
+    this.state.machineTypes = data.unit;
+    // this.state.PlantTypes = data.wrokshop;
+    this.state.DepartTypes = data.responsibleDept;
+    this.state.TeamTypes = data.responsibleTeam;
+
+    this.state.machineTypes.forEach((item) => {
+
+         machineTypes.push(item)
+
+    })
+/*
+    this.state.PlantTypes.forEach((item) => {
+
+         PlantTypes.push(item)
+
+    })
+*/
+
+  this.state.DepartTypes.forEach((item) => {
+
+  DepartTypes.push(item['deptName'])
+
+  })
+
+
+  this.state.TeamTypes.forEach((item) => {
+
+  TeamTypes.push(item['deptName'])
+
+  })
+
+
+  if (this.state.machineType == '选择机组' && machineTypes.length > 0 ) {
+    this.setState({machineType:machineTypes[0]})
+
+  }
+
+/*
+  if (this.state.plantType == '选择厂房' && PlantTypes.length > 0 ) {
+
+    this.setState({plantType:PlantTypes[0]})
+
+  }
+  */
+
+  if (!this.state.ResDepartId && DepartTypes.length > 0) {
+     this.state.ResDepartId = data.responsibleDept[0]['deptId'];
+     this.setState({ResDepart:DepartTypes[0]})
+  }
+
+
+
   }
 
   render() {
@@ -81,7 +210,9 @@ export  default class ProblemReport extends Component {
                  {this._ContentView()}
                  {this._CommitButton()}
                </View>
-
+               <Spinner
+                   visible={this.state.loadingVisible}
+               />
           </View>
       )
   }
@@ -172,7 +303,7 @@ return(
       return;
     }
     if (!this.state.elevation.length) {
-      alert("请输入标高");
+      alert("请输入楼层");
       return;
     }
     if (!this.state.RoomNumber.length) {
@@ -194,19 +325,90 @@ return(
 
      let team;
      if (this.state.ResTeam == '选择责任班组') {
-       team = "        ";
+       team = "";
      }else {
        team = this.state.ResTeam;
      }
 
+     Alert.alert('','确认提交?',
+               [
+                 {text:'取消',},
+                 {text:'确认',onPress:()=> {this.confirmCommit()}}
+   ])
+
+  }
+
+  confirmCommit(){
+
+    this.setState({
+        loadingVisible: true
+   })
+
+   var param = new FormData()
+   param.append('unit', this.state.machineType);
+   param.append('subitem', this.state.plantType);
+   param.append('floor', this.state.elevation);
+   param.append('roomnum', this.state.RoomNumber);
+
+   param.append('problemDescription', this.state.question);
+   param.append('responsibleDept', this.state.ResDepartId);
+
+ if (this.state.ResTeamId) {
+
+  param.append('responsibleTeam',this.state.ResTeamId);
+
+ }
+
+if (this.state.system_no.length) {
+     param.append('system', this.state.system_no);
+}
 
 
-    //  this.props.navigator.push({
-    //      component: MyReport,
-    //      props: {
-    //          data:reportData,
-    //         }
-    //  })
+
+   this.state.fileArr.map((item, i) => {
+       if (item['fileSource']) {
+          let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
+          param.append("file",file);   //这里的files就是后台需要的key
+       }
+   });
+
+   HttpRequest.uploadImage('/qualityControl/create', param, this.onCommitIssueSuccess.bind(this),
+       (e) => {
+         this.setState({
+             loadingVisible: false
+         });
+         try {
+             var errorInfo = JSON.parse(e);
+         }
+         catch(err)
+         {
+             console.log("error======"+err)
+         }
+             if (errorInfo != null) {
+                 if (errorInfo.code == -1002||
+                  errorInfo.code == -1001) {
+                 Global.showToast(errorInfo.message);
+             }else {
+                 Global.showToast(e)
+             }
+
+             } else {
+                 Global.showToast(e)
+             }
+
+         console.log('Login error:' + e)
+       })
+
+  }
+
+  onCommitIssueSuccess(response) {
+
+    this.setState({
+        loadingVisible: false
+    })
+
+     Global.alert(response.message)
+     this.props.navigator.pop()
 
   }
 
@@ -416,18 +618,55 @@ _questtionDescribe(){
        break;
       case "choose_des":
       {
-         this.setState({ResDepart:data[0]})
+         this.figureDes(data);
       }
         break;
         case "choose_team":
         {
-          this.setState({ResTeam:data[0]})
+        this.figureTeam(data);
         }
           break;
    }
 
       // this.setState({machineType: data[0]})
   }
+
+
+  figureDes(data){
+
+  this.setState({ResDepart:data[0]})
+
+  this.state.DepartTypes.forEach((item) => {
+
+    if (item['deptName']  == this.state.ResDepart) {
+
+      this.state.ResDepartId = item['deptId'];
+
+    }
+
+  })
+
+  this.state.ResTeamId = null;
+  this.state.ResTeam = '选择责任班组';
+
+  this.featchData();
+
+}
+  figureTeam(data){
+
+  this.setState({ResTeam:data[0]})
+
+  this.state.TeamTypes.forEach((item) => {
+
+    if (item['deptName']  == this.state.ResTeam) {
+
+      this.state.ResTeamId = item['deptId'];
+
+    }
+
+  })
+
+}
 
 
 }
