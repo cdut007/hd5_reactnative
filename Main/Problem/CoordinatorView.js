@@ -27,6 +27,7 @@ export default class SolverLeaderView extends Component{
 	}
 
 	componentDidMount(){
+		// this.setState({dataSource: this.state.dataSource.cloneWithRows([{user:{id:288,realname: 'Sam',dept:{name:'一班'}},statistics:{total: 100,pre:30,done:70}}])})
 		this.requestStatistics();
 	}
 
@@ -55,7 +56,7 @@ export default class SolverLeaderView extends Component{
 
 	onGetDataSuccess(response){
 		if(response.responseResult){
-			let results = response.responseResult.supervisor;
+			let results = response.responseResult.monitor;
 			this.setState({
 				loadingVisible: false,
 				dataSource: this.state.dataSource.cloneWithRows(results),
@@ -85,7 +86,7 @@ export default class SolverLeaderView extends Component{
 	renderEmpty(){
 		if(this.state.dataSource.getRowCount() <= 0) {
            	return (
-           	    <Text style={{fontSize: 14, flex: 1, fontWeight: 'bold'}}>Empty</Text>
+           	    <Text style={{fontSize: 14, flex: 1, fontStyle: 'bold'}}>Empty</Text>
            	);  			
         }
 	}
@@ -105,10 +106,8 @@ export default class SolverLeaderView extends Component{
 				</View>
 				<View style={{width: width, height: 0.5, backgroundColor: '#d6d6d6'}} />
 				<View style={{width: width, height: 57.5, flexDirection: 'row',}}>
-					{this.renderCell('未处理', rowData.statistics.pre, '#1c1c1c')}
-					{this.renderCell('已回执', rowData.statistics.done, '#1c1c1c')}
-					{this.renderCell('已解决', rowData.statistics.solved, '#1c1c1c')}
-					{this.renderCell('未解决', rowData.statistics.unsolved, '#e82628')}
+					{this.renderCell('待指派的问题', rowData.statistics.needAssign, '#1c1c1c')}
+					{this.renderCell('已指派的问题', rowData.statistics.solved, '#1c1c1c')}
 				</View>
 			</TouchableOpacity>
 		);
