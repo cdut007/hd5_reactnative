@@ -11,8 +11,10 @@ import {
     TouchableOpacity,
     ScrollView,
     TextInput,
-    Platform
-
+    Platform,
+    Alert,
+    DeviceEventEmitter,
+    KeyboardAvoidingView,
 } from 'react-native';
 
 import Dimensions from 'Dimensions';
@@ -21,6 +23,12 @@ import DisplayItemView from '../../common/DisplayItemView'
 import ImageShowsUtil from '../../common/ImageShowUtil'
 import CommitButton from '../../common/CommitButton'
 import ImagePicker from 'react-native-image-picker'
+import Global from '../../common/globals'
+import DateTimePickerView from '../../common/DateTimePickerView'
+import dateformat from 'dateformat'
+import HttpRequest from '../../HttpRequest/HttpRequest'
+import Spinner from 'react-native-loading-spinner-overlay'
+import MemberSelectView from '../../common/MemberSelectView'
 
 const MAX_IMAGE_COUNT = 5;
 
@@ -47,29 +55,29 @@ var options = {
     }
 };
 
-var width = Dimensions.get('window').width;
+var teams = [];
+var problemFiles = [];
+var solveFiles = [];
+var solveAgainFiles = [];
 
-const images = [{
-  url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
-},
-{
-  url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
-}]
+var width = Dimensions.get('window').width;
+var historyData = new FormData()
+
 
 export default class QuestionDetail extends Component {
+
+
   constructor(props) {
     super(props)
 
      this.state = {
        data : this.props.data,
-       title: "问题详情",
-       team : this.props.data.team,
-       fileArr : images,
-       time: this.props.data.time,
-       recDes:"",
-       newFileArr:[{}]//新的图片
      }
 
+  }
+
+  back() {
+      this.props.navigator.pop()
   }
 
   render(){
@@ -77,721 +85,182 @@ export default class QuestionDetail extends Component {
     return (
         <View style={styles.container}>
             <NavBar
-            title={this.state.title}
+            title={this.props.data.id}
             leftIcon={require('../../images/back.png')}
             leftPress={this.back.bind(this)}/>
-          <ScrollView >
-                 {this.renderItem()}
-          </ScrollView>
-          {this.renderCommitBtn()}
+            <ScrollView>
+                   {this.renderItem()}
+            </ScrollView>
         </View>
     )
 
   }
-
-  renderCommitBtn(){
-
-    if (this.state.data.type == "1001") {
-   return this.renderNewCommit();
- }else if (this.state.data.type == "1002") {
-      return this.renderModeratedCommit();
- }else if (this.state.data.type == "1006") {
-    return this.renderWaitCommit();
- }
-
-
-  }
-
-  renderWaitCommit(){
-
-return(
-    <View style={{height:50,width:width,flexDirection:'row'}}>
-    <CommitButton title={'提交整改结果'}>
-    </CommitButton>
-    </View>
-)
-
-  }
-
-  renderModeratedCommit(){
-
-    return(
-      <View style={{height:50,width:width,flexDirection:'row'}}>
-    <View style={{height:50,flex:1}}>
-      <CommitButton
-        title={'重新整改'}
-      containerStyle={{backgroundColor:'#ffffff'}}
-        titleStyle={{color: '#f77935'}}>
-      </CommitButton>
-      </View>
-      <View style={{height:50,flex:1}}>
-        <CommitButton
-          title={'通过'}>
-        </CommitButton>
-      </View>
-      </View>)
-
-  }
-
-  renderNewCommit(){
-
-    return(
-      <View style={{height:50,width:width,flexDirection:'row'}}>
-    <View style={{height:50,flex:1}}>
-      <CommitButton
-        title={'不需处理'}
-      containerStyle={{backgroundColor:'#ffffff'}}
-        titleStyle={{color: '#f77935'}}>
-      </CommitButton>
-      </View>
-      <View style={{height:50,flex:1}}>
-        <CommitButton
-          title={'分派'}>
-        </CommitButton>
-      </View>
-      </View>)
-  }
-
-
-  //新问题
-  renderNewQuestion(){
-
-    var itemAry = [];//视图数组
-
-    var displayAry = [
-      {title:'标题',content:this.state.data.machineType,id:'0',noLine:true},
-      {title:'机组',content:this.state.data.machineType,id:'1',noLine:true},
-      {title:'厂房',content:this.state.data.plantType,id:'2',noLine:true},
-      {title:'标高',content:this.state.data.elevation,id:'3',noLine:true},
-      {title:'房间号',content:this.state.data.RoomNumber,id:'4',noLine:true},
-      {title:'责任部门',content:this.state.data.ResDepart,id:'5',noLine:true},
-    ];
-
-
-    // 遍历
-    for (var i = 0; i<displayAry.length; i++) {
-     if (displayAry[i].type == 'devider') {
-            itemAry.push(
-               <View style={styles.divider}/>
-            );
-        }else{
-            itemAry.push(
-                <DisplayItemView
-                 key={displayAry[i].id}
-                 title={displayAry[i].title}
-                 detail={displayAry[i].content}
-                 noLine={displayAry[i].noLine}
-                />
-            );
-        }
-    }
-
-    itemAry.push(
-      this.OPinPutView("责任班组:",this.state.team,"BZ")
-    );
-
-    itemAry.push(
-       <View style={styles.divider}/>
-    );
-
-    itemAry.push(
-        <DisplayItemView
-         key={6}
-         title={"问题描述"}
-         detail={this.state.data.describe}
-         noLine={true}
-        />
-    );
-
-    itemAry.push(
-      this.renderFileView("照片",images)
-    );
-
-    itemAry.push(
-     this.inPutView("整改时间:",this.state.time,"SJ")
-    );
-
-    return itemAry;
-
-
-  }
-
-//待处理
-  Moderated(){
-
-  var itemAry = [];//视图数组
-
-  var displayAry = [
-    {title:'标题',content:this.state.data.machineType,id:'0',noLine:true},
-    {title:'机组',content:this.state.data.machineType,id:'1',noLine:true},
-    {title:'厂房',content:this.state.data.plantType,id:'2',noLine:true},
-    {title:'标高',content:this.state.data.elevation,id:'3',noLine:true},
-    {title:'房间号',content:this.state.data.RoomNumber,id:'4',noLine:true},
-    {title:'责任部门',content:this.state.data.ResDepart,id:'5',noLine:true},
-    {title:'责任班组',content:this.state.data.team,id:'6',noLine:true},
-    {title:'问题描述',content:this.state.data.describe,id:'7',noLine:true},
-    {title:'整改时间',content:this.state.data.describe,id:'8',noLine:true},
-    {title:'整改描述',content:this.state.data.describe,id:'9',noLine:true},
-  ];
-
-
-  // 遍历
-  for (var i = 0; i<displayAry.length; i++) {
-   if (displayAry[i].type == 'devider') {
-          itemAry.push(
-             <View style={styles.divider}/>
-          );
-      }else{
-          itemAry.push(
-              <DisplayItemView
-               key={displayAry[i].id}
-               title={displayAry[i].title}
-               detail={displayAry[i].content}
-               noLine={displayAry[i].noLine}
-              />
-          );
-      }
-  }
-
-  const imgs = [{
-    url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
-  }]
-
-  itemAry.splice(8,0,  this.renderFileView("照片",images))
-  itemAry.push(this.renderFileView("整改照片",imgs))
-
-  return itemAry;
-
-  }
-
-  //整改中
-  Rectification(){
-
-    var itemAry = [];//视图数组
-
-    var displayAry = [
-      {title:'标题',content:this.state.data.machineType,id:'0',noLine:true},
-      {title:'机组',content:this.state.data.machineType,id:'1',noLine:true},
-      {title:'厂房',content:this.state.data.plantType,id:'2',noLine:true},
-      {title:'标高',content:this.state.data.elevation,id:'3',noLine:true},
-      {title:'房间号',content:this.state.data.RoomNumber,id:'4',noLine:true},
-      {title:'责任部门',content:this.state.data.ResDepart,id:'5',noLine:true},
-      {title:'问题描述',content:this.state.data.describe,id:'6',noLine:true},
-      {title:'整改描述',content:this.state.data.describe,id:'7',noLine:true},
-      {title:'责任班组',content:this.state.data.team,id:'8',noLine:true},
-      {title:'截止日期',content:"2017/10/10",id:'9',noLine:true},
-      {title:'当前状态',content:"",id:'10',noLine:true},
-      {title:'问题提交',content:"2017/10/10",id:'11',noLine:true},
-      {title:'问题审核',content:"2017/10/10",id:'12',noLine:true},
-      {title:'接受整改',content:"2017/10/10",id:'13',noLine:true},
-      {title:'待整改',content:"",id:'14',noLine:true},
-    ];
-
-    // 遍历
-    for (var i = 0; i<displayAry.length; i++) {
-     if (displayAry[i].type == 'devider') {
-            itemAry.push(
-               <View style={styles.divider}/>
-            );
-        }else{
-            itemAry.push(
-                <DisplayItemView
-                 key={displayAry[i].id}
-                 title={displayAry[i].title}
-                 detail={displayAry[i].content}
-                 noLine={displayAry[i].noLine}
-                />
-            );
-        }
-    }
-
-    const imgs = [{
-      url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
-    }]
-
-    itemAry.splice(9,0,  this.renderFileView("故障照片",images))
-    itemAry.splice(10,0,  this.renderFileView("整改照片",imgs))
-
-  return itemAry;
-
-  }
-
-//整改完成
-  RectificationComplete(){
-
-    var itemAry = [];//视图数组
-
-    var displayAry = [
-      {title:'标题',content:this.state.data.machineType,id:'0',noLine:true},
-      {title:'机组',content:this.state.data.machineType,id:'1',noLine:true},
-      {title:'厂房',content:this.state.data.plantType,id:'2',noLine:true},
-      {title:'标高',content:this.state.data.elevation,id:'3',noLine:true},
-      {title:'房间号',content:this.state.data.RoomNumber,id:'4',noLine:true},
-      {title:'责任部门',content:this.state.data.ResDepart,id:'5',noLine:true},
-      {title:'问题描述',content:this.state.data.describe,id:'6',noLine:true},
-      {title:'整改描述',content:this.state.data.describe,id:'7',noLine:true},
-      {title:'责任班组',content:this.state.data.team,id:'8',noLine:true},
-      {title:'截止日期',content:"2017/10/10",id:'9',noLine:true},
-      {title:'当前状态',content:"",id:'10',noLine:true},
-      {title:'问题提交',content:"2017/10/10",id:'11',noLine:true},
-      {title:'问题审核',content:"2017/10/10",id:'12',noLine:true},
-      {title:'问题整改',content:"2017/10/10",id:'13',noLine:true},
-      {title:'整改完成',content:"2017/10/10",id:'14',noLine:true},
-    ];
-
-    // 遍历
-    for (var i = 0; i<displayAry.length; i++) {
-     if (displayAry[i].type == 'devider') {
-            itemAry.push(
-               <View style={styles.divider}/>
-            );
-        }else{
-            itemAry.push(
-                <DisplayItemView
-                 key={displayAry[i].id}
-                 title={displayAry[i].title}
-                 detail={displayAry[i].content}
-                 noLine={displayAry[i].noLine}
-                />
-            );
-        }
-    }
-
-    const imgs = [{
-      url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
-    }]
-
-    itemAry.splice(9,0,  this.renderFileView("故障照片",images))
-    itemAry.splice(10,0,  this.renderFileView("整改照片",imgs))
-
-    return itemAry;
-
-  }
-
-  DoNotDeal(){
-
-  var itemAry = [];//视图数组
-
-  var displayAry = [
-    {title:'标题',content:this.state.data.machineType,id:'0',noLine:true},
-    {title:'机组',content:this.state.data.machineType,id:'1',noLine:true},
-    {title:'厂房',content:this.state.data.plantType,id:'2',noLine:true},
-    {title:'标高',content:this.state.data.elevation,id:'3',noLine:true},
-    {title:'房间号',content:this.state.data.RoomNumber,id:'4',noLine:true},
-    {title:'责任部门',content:this.state.data.ResDepart,id:'5',noLine:true},
-    {title:'问题描述',content:this.state.data.describe,id:'6',noLine:true},
-    {title:'整改描述',content:this.state.data.describe,id:'7',noLine:true},
-    {title:'责任班组',content:this.state.data.team,id:'8',noLine:true},
-    {title:'当前状态',content:"",id:'9',noLine:true},
-    {title:'问题提交',content:"2017/10/10",id:'10',noLine:true},
-    {title:'问题审核',content:"2017/10/10",id:'11',noLine:true},
-    {title:'问题审核',content:"不需处理",id:'12',noLine:true},
-
-  ];
-
-  // 遍历
-  for (var i = 0; i<displayAry.length; i++) {
-   if (displayAry[i].type == 'devider') {
-          itemAry.push(
-             <View style={styles.divider}/>
-          );
-      }else{
-          itemAry.push(
-              <DisplayItemView
-               key={displayAry[i].id}
-               title={displayAry[i].title}
-               detail={displayAry[i].content}
-               noLine={displayAry[i].noLine}
-              />
-          );
-      }
-  }
-
-  itemAry.splice(9,0,  this.renderFileView("故障照片",images))
-
-  return itemAry;
-
-  }
-
-  WaitDeal(){
-
-  var itemAry = [];//视图数组
-
-  var displayAry = [
-    {title:'标题',content:this.state.data.machineType,id:'0',noLine:true},
-    {title:'机组',content:this.state.data.machineType,id:'1',noLine:true},
-    {title:'厂房',content:this.state.data.plantType,id:'2',noLine:true},
-    {title:'标高',content:this.state.data.elevation,id:'3',noLine:true},
-    {title:'房间号',content:this.state.data.RoomNumber,id:'4',noLine:true},
-    {title:'责任部门',content:this.state.data.ResDepart,id:'5',noLine:true},
-    {title:'责任班组',content:this.state.data.team,id:'6',noLine:true},
-    {title:'问题描述',content:this.state.data.describe,id:'7',noLine:true},
-    {title:'处理时间',content:"2017/10/10",id:'8',noLine:true},
-  ];
-
-  // 遍历
-  for (var i = 0; i<displayAry.length; i++) {
-   if (displayAry[i].type == 'devider') {
-          itemAry.push(
-             <View style={styles.divider}/>
-          );
-      }else{
-          itemAry.push(
-              <DisplayItemView
-               key={displayAry[i].id}
-               title={displayAry[i].title}
-               detail={displayAry[i].content}
-               noLine={displayAry[i].noLine}
-              />
-          );
-      }
-  }
-
-  itemAry.splice(8,0,  this.renderFileView("故障照片",images))
-
-  itemAry.push(
-    this.MutinPutView("整改描述",this.state.recDes,"ZGMS")
-  )
-
-  itemAry.push(
-    this.renderNewFileView("整改照片")
-  )
-
-
-  return itemAry;
-
-  }
-
-  myQuestion(){
-
-    var itemAry = [];//视图数组
-
-    var displayAry = [
-      {title:'标题',content:this.state.data.machineType,id:'0',noLine:true},
-      {title:'机组',content:this.state.data.machineType,id:'1',noLine:true},
-      {title:'厂房',content:this.state.data.plantType,id:'2',noLine:true},
-      {title:'标高',content:this.state.data.elevation,id:'3',noLine:true},
-      {title:'房间号',content:this.state.data.RoomNumber,id:'4',noLine:true},
-      {title:'责任部门',content:this.state.data.ResDepart,id:'5',noLine:true},
-      {title:'问题描述',content:this.state.data.describe,id:'6',noLine:true},
-      {title:'整改描述',content:this.state.data.describe,id:'7',noLine:true},
-      {title:'责任班组',content:this.state.data.team,id:'8',noLine:true},
-      {title:'截止日期',content:"2017/10/10",id:'9',noLine:true},
-      {title:'当前状态',content:"",id:'10',noLine:true},
-      {title:'问题提交',content:"2017/10/10",id:'11',noLine:true},
-      {title:'问题审核',content:"2017/10/10",id:'12',noLine:true},
-    ];
-
-    if (this.state.data.rectific) {
-      displayAry.push({title:'问题整改',content:this.state.data.rectific,id:'13',noLine:true})
-    }
-
-    if (this.state.data.compelete) {
-        displayAry.push({title:'整改完成',content:this.state.data.compelete,id:'14',noLine:true})
-    }
-
-    if (this.state.data.recPass) {
-        displayAry.push({title:'整改审核',content:this.state.data.recPass,id:'15',noLine:true})
-    }
-
-    if (this.state.data.save) {
-        displayAry.push({title:'存档',content:this.state.data.save,id:'16',noLine:true})
-    }
-
-
-    // 遍历
-    for (var i = 0; i<displayAry.length; i++) {
-     if (displayAry[i].type == 'devider') {
-            itemAry.push(
-               <View style={styles.divider}/>
-            );
-        }else{
-            itemAry.push(
-                <DisplayItemView
-                 key={displayAry[i].id}
-                 title={displayAry[i].title}
-                 detail={displayAry[i].content}
-                 noLine={displayAry[i].noLine}
-                />
-            );
-        }
-    }
-
-    const imgs = [{
-      url: 'https://avatars2.githubusercontent.com/u/7970947?v=3&s=460'
-    }]
-
-    itemAry.splice(9,0,  this.renderFileView("故障照片",images))
-    itemAry.splice(10,0,  this.renderFileView("整改照片",imgs))
-
-    return itemAry;
-
-
-  }
-
-
-   onCommit() {
-
-   }
 
   renderItem(){
 
-   if (this.state.data.type == "1001") {
+      var itemAry = [];//视图数组
 
-      return  this.renderNewQuestion()
+      var displayAry = [
+        {title:'机组',content:this.state.data.unit,id:'8',noLine:true},
+        {title:'子项',content:this.state.data.subitem,id:'10',noLine:true},
+        {title:'楼层',content:this.state.data.floor,id:'9',noLine:true},
+        {title:'房间号',content:this.state.data.roomnum,id:'12',noLine:true},
+        {title:'系统',content:this.state.data.system,id:'0',noLine:true},
+        {title:'责任部门',content:this.state.data.responsibleDept ? this.state.data.responsibleDept.deptName : this.state.data.responsibleDept,id:'1',noLine:true},
+        {title:'责任班组',content:this.state.data.responsibleTeam ? this.state.data.responsibleTeam.deptName : this.state.data.responsibleTeam,id:'2',noLine:true},
+        {title:'问题描述',content:this.state.data.problemDescription,id:'11',noLine:true},
+        {title:'问题照片',content:problemFiles,id:'11',noLine:true,type:'img'},
+      ];
 
-   }else if (this.state.data.type == "1002") {
 
-    return this.Moderated()
+  if (this.state.data.renovateDescription && solveFiles.length) {
+    displayAry.push({title:'整改描述',content:this.state.data.renovateDescription,id:'18',noLine:true})
+    displayAry.push( {title:'整改照片',content:problemFiles,id:'12',noLine:true,type:'img'})
+  }
 
-  }else if (this.state.data.type == "1003") {
+  if (this.state.data.qcUser) {
+      displayAry.push({title:'QC',content:this.state.data.qcUser,id:'13',noLine:true})
+  }
 
-  return this.Rectification()
+  if (this.state.data.renovateTeam) {
+    displayAry.push({title:'整改队伍',content:this.state.data.renovateTeam,id:'14',noLine:true})
+  }
 
-}else if (this.state.data.type == "1004" || this.state.data.type == "1007" || this.state.data.type) {
-  return this.RectificationComplete()
-}else if (this.state.data.type == "1005") {
-  return this.DoNotDeal()
-}else if (this.state.data.type == "1006") {
-  return this.WaitDeal()
-}else if (this.state.data.type == "1008") {
-  return this.myQuestion()
-}
-
+  if (this.state.data.notes) {
+    displayAry.push({title:'问题描述',content:this.state.data.notes,id:'15',noLine:true})
   }
 
 
-
-  OPinPutView(name,inputs,tag){
-
-    return (
-      <View style={styles.topContainer}>
-            <Text style={styles.title}> {name} </Text>
-           {this.renderInputView(inputs,tag)}
-           <Text> (选填) </Text>
-      </View>
-
-    )
-
-  }
-
-  inPutView(name,inputs,tag){
-
-    return (
-      <View style={styles.topContainer}>
-            <Text style={styles.title}> {name} </Text>
-           {this.renderInputView(inputs,tag)}
-      </View>
-    )
-
-  }
-
-  MutinPutView(name,inputs,tag){
-
-    return (
-      <View style={styles.topContainer}>
-            <Text style={styles.title}> {name} </Text>
-           {this.MutirenderInputView(inputs,tag)}
-      </View>
-    )
-
-  }
-
-  MutirenderInputView(inputs,tag){
-
-return(
-  <View style={styles.MutiborderStyle}>
-  <TouchableOpacity style={styles.touchStyle}>
-    <TextInput
-        style={{flex: 1, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}}
-        underlineColorAndroid ='transparent'
-        multiline = {true}
-        onChangeText={(text) => this._ontextChange(text,tag) }
-        value={inputs} />
- </TouchableOpacity>
-  </View>
-)
-
-}
-
-  renderInputView(inputs,tag){
-
-return(
-  <View style={styles.borderStyle}>
-  <TouchableOpacity style={styles.touchStyle}>
-    <TextInput
-        style={{flex: 1, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}}
-        underlineColorAndroid ='transparent'
-        multiline = {true}
-        onChangeText={(text) => this._ontextChange(text,tag) }
-        value={inputs} />
- </TouchableOpacity>
-  </View>
-)
-
-}
-
-renderFileView(title,imgs) {
-
-
-    return (
-        <View style={{alignItems:'center',flexDirection: 'row', flexWrap: 'wrap', width: width, paddingTop: 10, paddingRight: 10}} horizontal={true} >
-                <Text style={{marginTop:10,marginBottom:10}}> {title} </Text>
-                {this.renderImages(imgs)}
-
-        </View>
-    )
-}
-
-renderImages(imgs){
-
-  var imageViews = [];
-  {imgs.map( (item,i) => {
-
-     imageViews.push(
-       <TouchableOpacity
-          key={i}
-          style={{width:70,height:70,marginLeft:10,marginBottom:10}}
-          onPress={this.imageClick.bind(this,i)}>
-          <Image resizeMode={'cover'} style={{width:70,height:70,borderWidth:0.5,borderRadius:4}} source={{uri:item['url']}}/>
-
-       </TouchableOpacity>
-     );
-  })}
- return imageViews;
-}
-
-imageClick(index){
-
-  this.props.navigator.push({
-      component: ImageShowsUtil,
-      props: {
-          images:this.state.fileArr,
-          imageIndex:index,
-         }
-  })
-
-}
+ displayAry.push({title:'问题状态',content:this.getStatus(this.state.data.status),id:'16',noLine:true})
 
 
 
+      // 遍历
+      for (var i = 0; i<displayAry.length; i++) {
+       if (displayAry[i].type == 'devider') {
+              itemAry.push(
+                 <View style={styles.divider}/>
+              );
+          }else if(displayAry[i].type == 'img'){
+              itemAry.push(
+               this.renderFileView(displayAry[i].title,displayAry[i].content)
+              );
+          }else {
+            itemAry.push(
+                <DisplayItemView
+                 key={displayAry[i].id}
+                 title={displayAry[i].title}
+                 detail={displayAry[i].content}
+                 noLine={displayAry[i].noLine}
+                />
+            );
+          }
+      }
 
-renderNewFileView(title) {
-    return (
-        <View style={{alignItems:'center',flexDirection: 'row', flexWrap: 'wrap', width: width, paddingTop: 10, paddingRight: 10}} horizontal={true} >
-                <Text> {title} </Text>
-                {this.renderNewImages()}
+      return itemAry;
 
-        </View>
-    )
-}
+      }
 
-renderNewImages(){
-  var imageViews = [];
-  {this.state.newFileArr.map( (item,i) => {
+      renderFileView(title,imgs) {
 
-     imageViews.push(
-       <TouchableOpacity
-          key={i}
-          onPress={() => this.onSelectNewFile(i)}
-          onLongPress={() => this.onDeleteNewFile(i)}
-          style={{width:70,height:70,marginLeft:10,marginBottom:10}}>
-               {item['fileSource']
-               ?(<Image resizeMode={'cover'} style={{width:70,height:70,borderWidth:0.5,borderRadius:4}} source={{uri:item['fileSource']}}/>)
-               :(<Image resizeMode={'cover'} style={{width:70,height:70,borderWidth:0.5,borderRadius:4}} source={require('../../images/add_pic_icon.png')}/>)
-                }
-       </TouchableOpacity>
-     );
 
-     if(this.state.newFileArr[this.state.newFileArr.length-1]['fileSource']){
-             this.state.newFileArr.push({});
-         }
-  })}
- return imageViews;
-}
+          return (
+              <View style={{alignItems:'center',flexDirection: 'row', flexWrap: 'wrap', width: width, paddingTop: 10, paddingRight: 10}} horizontal={true} >
+                      <Text style={{marginTop:10,marginBottom:10}}> {title} </Text>
+                      {this.renderImages(imgs)}
 
-//选择图片
-onSelectNewFile(idx) {
+              </View>
+          )
+      }
 
-this.currentFileIdx = idx;
+      renderImages(imgs){
 
-ImagePicker.showImagePicker(options,(response) => {
+        var imageViews = [];
+        {imgs.map( (item,i) => {
 
- if (response.didCancel) {
-   console.log("cancelled");
- }else if (response.error) {
-   console.log("error");
- }else if (response.customButton) {
-   console.log("customButton");
- }else {
-   var source;
-   if (Platform.OS === 'android') {
-     source = {uri:response.uri,isStatic:true};
-   }else {
-     source = {
-        uri: response.uri.replace('file://', ''),
-        isStatic: true
-     };
+           imageViews.push(
+             <TouchableOpacity
+                key={i}
+                style={{width:70,height:70,marginLeft:10,marginBottom:10}}
+                onPress={this.imageClick.bind(this,i,imgs)}>
+                <Image resizeMode={'cover'} style={{width:70,height:70,borderWidth:0.5,borderRadius:4}} source={{uri:item['url']}}/>
 
-   }
+             </TouchableOpacity>
+           );
+        })}
+       return imageViews;
+      }
 
-   var fileInfo = this.state.newFileArr[this.currentFileIdx]
-   fileInfo['fileSource'] = source.uri;
-   fileInfo['fileName'] = response.fileName;
-   fileInfo['url'] = source.uri;
+      imageClick(index,imgs){
 
-   if(this.state.newFileArr.length<MAX_IMAGE_COUNT && this.state.newFileArr[this.state.newFileArr.length-1]['fileSource']){
-       this.state.newFileArr.push({});
-   }
+        this.props.navigator.push({
+            component: ImageShowsUtil,
+            props: {
+                images:imgs,
+                imageIndex:index,
+               }
+        })
 
-   this.setState({
-       ...this.state
-   });
+      }
 
- }
+      //问题执行状态
+      getStatus(status){
 
-});
+        if (status == 'PreQCLeaderAssign') {
+            return '待分派'
+        }else if (status == 'PreQCverify') {
+            return '待审核'
+        }else if (status == 'PreRenovete') {
+            return '待整改'
+        }else if (status == 'Finished') {
+            return '已完成'
+        }else if(status == 'Closed'){
+            return '已关闭'
+        }else if (status == 'PreQCAssign') {
+         return '待指派'
+        }else {
+          return status
+        }
+      }
 
-}
+      componentWillMount(){
 
-onDeleteNewFile(idx){
+      // this.figureDatas();
 
-  if(this.state.newFileArr[idx]['fileSource']){
-      this.state.newFileArr.splice(idx, 1)
-      this.setState({
-          ...this.state
+      this.figureFiles();
+
+      }
+
+      figureFiles(){
+
+      problemFiles = [];
+      solveFiles = [];
+      solveAgainFiles = [];
+
+        this.state.data.files.forEach((item) => {
+           item['url'] = item['path'];
       })
-  }
 
-}
+        this.state.data.files.forEach((item) => {
 
-_ontextChange(text,tag){
+        if (item['fileType'] == "before") {
 
-switch (tag) {
-  case "BZ":
-    {
-        this.setState({team:text})
-    }
-    break;
-  case "SJ":
-  {
-    this.setState({time:text})
-  }
-    break;
-  case "ZGMS":
-  {
-    this.setState({recDes:text})
-  }
+         problemFiles.push(item);
 
-    break;
-}
-}
+        }else if (item['fileType'] == "after") {
 
-  back(){
+        solveFiles.push(item);
 
-   this.props.navigator.pop();
+      }else if (item['fileType'] == "again") {
 
-  }
+        solveAgainFiles.push(item);
+
+      }
+
+        })
+
+      }
+
 
 }
 
@@ -862,6 +331,26 @@ const styles = StyleSheet.create({
   width: width,
   height: 0.5,
   marginLeft:10,
-}
+},
+cell: {
+    flex: 1,
+    height: 57.5,
+    width:width/4,
+    justifyContent: "center",
+    alignItems: 'center',
+     flexDirection: 'column',
+        backgroundColor: '#ffffff',
+},
+statisticsflexContainer: {
+         flexDirection: 'row',
+         alignItems:'center',
+     },
+
+   topflexContainer: {
+              height: 60,
+              backgroundColor: '#ffffff',
+              flexDirection: 'row',
+              marginBottom:10,
+          },
 
 })

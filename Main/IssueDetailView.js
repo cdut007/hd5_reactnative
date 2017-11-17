@@ -198,7 +198,7 @@ export default class IssueDetailView extends Component {
 
     HttpRequest.get('/question/feedbackUI', paramBody, this.onGetDataSuccess.bind(this),
         (e) => {
-
+            this.setState({loadingVisible: false})
             try {
                 var errorInfo = JSON.parse(e);
                 if (errorInfo != null) {
@@ -347,7 +347,11 @@ onCommitIssueSuccess(response) {
 
 startProblem(){
     if (!this.state.rolve_member) {
-        Global.alert('请选择问题解决人')
+        if(Global.isMonitor(Global.UserInfo)){
+          Global.alert('请选择队部协调工程师')
+        }else if(Global.isCoordinator(Global.UserInfo)){
+          Global.alert('请选择问题解决人')
+        }
         return
     }
     var id = ''
@@ -434,6 +438,15 @@ startProblem(){
               return false;
           }
 
+      isCoordinatorDelivery(){
+        if(Global.isCoordinator(Global.UserInfo)){
+          if(this.state.data.status == 'pre' && !this.state.data.coordinate.id){
+            return true;
+          }
+        }
+        return false;
+      }
+
       isSolverSubmit(){
             if(Global.isSolverMember(Global.UserInfo)){
               if(this.state.data.status == 'pre'){
@@ -453,7 +466,7 @@ startProblem(){
           }
 
     renderBottomButton(){
-            if (this.isMonitorDelivery()) {
+            if (this.isMonitorDelivery() || this.isCoordinatorDelivery()) {
                 return(
                   <View style={{height:50,width:width,flexDirection:'row'}}>
                     <View style={{height:50,flex:1}}>
@@ -523,7 +536,7 @@ startProblem(){
     renderTop(){
         if(this.isSolverSubmit()){
           return this.renderFeedbackUI();
-        }else if(this.isMonitorDelivery()||Global.isSolverMember(Global.UserInfo)){
+        }else if(this.isMonitorDelivery() || Global.isSolverMember(Global.UserInfo) || this.isCoordinatorDelivery()){
           return;
         }
         return this.renderHeader();
@@ -846,7 +859,11 @@ startProblem(){
     renderMemberItem(displayItem){
         var displayMember = displayItem.content
         if (!displayItem.content) {
-            displayMember = '选择问题解决人'
+            if (Global.isCoordinator(Global.UserInfo)){
+              displayMember = '选择问题解决人'
+            }else {
+              displayMember = '选择队部协调工程师'
+            }
         }
         return(<View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
 
@@ -861,7 +878,7 @@ startProblem(){
             style={{color:'#f77935',fontSize:14,flex:1}}
             title={displayMember}
             data={this.state.members}
-             pickerTitle={'选择人员'}
+             pickerTitle={displayMember}
             onSelected={this.onSelectedMember.bind(this)} />
                                 <Image
                                 style={{width:20,height:20,}}
@@ -885,7 +902,7 @@ startProblem(){
                }
 
           var displayAry = []
-           if (this.isMonitorDelivery()) {
+           if (this.isMonitorDelivery() || this.isCoordinatorDelivery()) {
               displayAry.push({title:'选择问题解决人',content:this.state.rolve_member,id:'c7',type:'problem_member'})
               displayAry.push({title:'提问时间',content:this.state.data.questionTime,id:'c9'})
            }else{
