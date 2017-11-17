@@ -431,7 +431,7 @@ startProblem(){
 
       isMonitorDelivery(){
               if (Global.isMonitor(Global.UserInfo)) {
-                if (this.state.data.status == 'pre' && !this.state.data.designee.id) {
+                if (this.state.data.status == 'pre' && !this.state.data.coordinate.id) {
                   return true
                 }
               }
@@ -440,7 +440,7 @@ startProblem(){
 
       isCoordinatorDelivery(){
         if(Global.isCoordinator(Global.UserInfo)){
-          if(this.state.data.status == 'pre' && !this.state.data.coordinate.id){
+          if(this.state.data.status == 'pre' && !this.state.data.designee.id){
             return true;
           }
         }
