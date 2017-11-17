@@ -498,7 +498,7 @@ _questtionDescribe(){
 
   renderSelectView(title,datas,pickerTitle,pickerType,refence) {
       return(
-        <View style={styles.borderStyle}>
+        <View style={styles.statisticsflexContainer}>
       <TouchableOpacity onPress={() => refence.onPickClick()} style={styles.touchStyle}>
         <MemberSelectView
         ref={(c) => refence = c}
@@ -706,7 +706,7 @@ const styles = StyleSheet.create({
       alignItems:'center',
       backgroundColor: '#f2f2f2',
       width: width*0.5,
-      height: 36,
+      height: Platform.OS === 'android' ? 44 : 36,
       flexDirection:'row',
       borderColor : '#f77935',
       borderWidth:0.5,
@@ -748,4 +748,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    statisticsflexContainer: {
+            width: width*0.5,
+             height: Platform.OS === 'android' ? 44 : 36,
+             backgroundColor: '#f2f2f2',
+             flexDirection: 'row',
+         },
   });

@@ -59,6 +59,7 @@ export default class QualityCheckList extends Component {
             isRefreshing:false,
             items:[],
             totalCount:0,
+            insearch:false,
         }
 
     }
@@ -96,6 +97,12 @@ export default class QualityCheckList extends Component {
         }
 
         _toEnd() {
+
+    if (this.state.insearch) {
+      this.state.insearch = false;
+      return;
+    }
+
             console.log("触发加载更多 toEnd() --> ");
             //console.log("加载更多？ ",userReducer.isLoadingMore, userReducer.products.length, userReducer.totalProductCount,userReducer.isRefreshing);
             //ListView滚动到底部，根据是否正在加载更多 是否正在刷新 是否已加载全部来判断是否执行加载更多
@@ -219,6 +226,8 @@ export default class QualityCheckList extends Component {
 
         fileterArr(text){
 
+this.state.insearch = true;
+
     if (text === '') {
 
  this.setState({
@@ -230,7 +239,7 @@ export default class QualityCheckList extends Component {
 
       var a2 = this.state.items.filter(
 
-         (item) => ((item.id.toString().indexOf(text) !== -1) ||  (item.unit.toLowerCase().indexOf(text) !== -1) || (this.filStatus(item.status).toLowerCase().indexOf(text) !== -1))
+         (item) => ((item.id.toString().indexOf(text) !== -1) ||  (item.unit.toLowerCase().indexOf(text) !== -1) || (this.getStatus(item.status).indexOf(text) !== -1))
    );
 
      this.setState({

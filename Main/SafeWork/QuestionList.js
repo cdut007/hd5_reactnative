@@ -59,6 +59,7 @@ export default class QuestionList extends Component {
             isRefreshing:false,
             items:[],
             totalCount:0,
+            insearch:false,
         }
 
     }
@@ -96,6 +97,12 @@ export default class QuestionList extends Component {
         }
 
         _toEnd() {
+
+          if (this.state.insearch) {
+            this.state.insearch = false;
+            return;
+          }
+
             console.log("触发加载更多 toEnd() --> ");
             //console.log("加载更多？ ",userReducer.isLoadingMore, userReducer.products.length, userReducer.totalProductCount,userReducer.isRefreshing);
             //ListView滚动到底部，根据是否正在加载更多 是否正在刷新 是否已加载全部来判断是否执行加载更多
@@ -235,6 +242,9 @@ export default class QuestionList extends Component {
 
         fileterArr(text){
 
+
+this.state.insearch = true;
+
     if (text === '') {
 
  this.setState({
@@ -245,7 +255,7 @@ export default class QuestionList extends Component {
     }else {
 
    var a2 = this.state.items.filter(
-      (item) => ((Global.formatDate(item.createDate).toLowerCase().indexOf(text) !== -1) || (item.createUser.toLowerCase().indexOf(text) !== -1) || (item.problemTitle.toLowerCase().indexOf(text) !== -1) || (this.filStatus(item.problemStatus).toLowerCase().indexOf(text) !== -1))
+      (item) => ((Global.formatDate(item.createDate).toLowerCase().indexOf(text) !== -1) || (item.createUser.toLowerCase().indexOf(text) !== -1) ||  (item.problemTitle.toLowerCase().indexOf(text) !== -1) || (this.getStatus(item.problemStatus).indexOf(text) !== -1))
 );
 
 
