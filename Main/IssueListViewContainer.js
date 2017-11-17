@@ -152,6 +152,19 @@ var solverLearderStatus = [{
                     pageNo:1,
                 },
 ];
+var coordinatorStatus = [{
+                    index:0,
+                    status:'NEED_ASSIGN',
+                    data:[],
+                    pageNo:1,
+                },
+                {
+                    index:1,
+                    status:'ASSIGNED',
+                    data:[],
+                    pageNo:1,
+                },
+];
 
 
 export default class IssueListViewContainer extends Component {
@@ -272,6 +285,17 @@ export default class IssueListViewContainer extends Component {
                             {this.renderListView('已回执',1,solverLearderStatus[1].status)}
                             {this.renderListView('已解决',2,solverLearderStatus[2].status)}
                             {this.renderListView('未解决',3,solverLearderStatus[3].status)}
+                        </ScrollableTabView>
+                    );
+                }else if(Global.isCoordinator(Global.UserInfo)){
+                    return(
+                        <ScrollableTabView
+                            tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
+                            tabBarBackgroundColor='#FFFFFF'
+                            tabBarActiveTextColor='#0755a6'
+                            tabBarInactiveTextColor='#777777'>
+                            {this.renderListView('待指派的问题',0,coordinatorStatus[0].status)}
+                            {this.renderListView('已指派的问题',1,coordinatorStatus[1].status)}
                         </ScrollableTabView>
                     );
                 }

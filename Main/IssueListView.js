@@ -210,6 +210,8 @@ export default class IssueListView extends Component {
            api = '/question/captainList'
        }else if (Global.isSolverLeader(Global.UserInfo)){
            api = '/question/technicianList'
+       }else if(Global.isCoordinator(Global.UserInfo)){
+           api = '/question/coordinateList'
        }
 
                  var paramBody = {

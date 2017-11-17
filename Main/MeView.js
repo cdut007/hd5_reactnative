@@ -22,7 +22,8 @@ const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var account = Object();
 var Global = require('../common/globals');
-
+var currentTime = 0;
+var currentTimeCount = 0;
 export default class MeView extends Component {
     constructor(props) {
         super(props);
@@ -112,6 +113,30 @@ export default class MeView extends Component {
 
         }
 
+        enableTester(){
+            var nowTime = (new Date()).valueOf();
+            if (nowTime - currentTime < 500) {
+                if (currentTimeCount>=6) {
+                    currentTimeCount = 0
+                }
+                currentTimeCount++
+            }else{
+                currentTimeCount = 0
+            }
+            currentTime = nowTime
+
+            if (currentTimeCount == 6) {
+                if (!Global.testerDebug) {
+                    Global.testerDebug = true
+                    Global.showAlert("打开调试模式")
+                }else{
+                    Global.testerDebug = false
+                    Global.showAlert("关闭调试模式")
+                }
+
+            }
+        }
+
     render() {
         var name = '';
         var first_name_char = '';
@@ -131,9 +156,12 @@ export default class MeView extends Component {
         return (
             <View style={styles.container}>
             <View style={styles.headView}>
+                    <TouchableOpacity activeOpacity={1} onPress={this.enableTester.bind(this)}
+                    style={[styles.headView, { position: 'absolute', left: 0, right: 0, }]}>
                     <Image style={[styles.headView, { position: 'absolute', left: 0, right: 0, }]}
                            source={require('../images/me_bj.jpg')}
                     />
+                    </TouchableOpacity>
 
                     <View style ={[styles.circle_outter,{marginTop:54,alignSelf: 'center',alignItems:'center',justifyContent:'center'}]}>
                     <View style ={[styles.circle,{marginLeft:2.5,position: 'absolute', left: 0, right: 0,alignSelf: 'center',backgroundColor:'#ffffff'}]}></View>
