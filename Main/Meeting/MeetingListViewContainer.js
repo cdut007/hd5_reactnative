@@ -198,7 +198,7 @@ export default class MeetingListViewContainer extends Component {
                 <NavBar
                 title={this.state.title}
                 leftIcon={require('../../images/back.png')}
-                searchMode={true}
+                searchMode={false}
                 onSearchChanged={(text) => this.onSearchChanged(text)}
                 onSearchClose = {this.onSearchClose.bind(this)}
                 leftPress={this.back.bind(this)} />
