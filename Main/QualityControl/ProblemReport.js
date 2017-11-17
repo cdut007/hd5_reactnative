@@ -298,8 +298,8 @@ return(
       return;
     }
 
-    if (this.state.plantType == '选择厂房') {
-      alert("请选择厂房");
+    if (this.state.plantType == '选择子项') {
+      alert("请选择子项");
       return;
     }
     if (!this.state.elevation.length) {

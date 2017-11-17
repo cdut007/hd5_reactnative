@@ -23,7 +23,7 @@ import LoadingView from '../../common/LoadingView.js'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 import Global from '../../common/globals.js';
-import QuestionDetail from '../SafeWork/QuestionDetail'
+import QuestionDetail from '../QualityControl/QuestionDetail'
 import LoadEmptyView from '../../common/LoadEmptyView'
 
 
@@ -189,22 +189,13 @@ export default class QualityCheckList extends Component {
 
     onItemPress(itemData){
 
-    //  var questionData = new Object();
-    //  questionData.title = "东风破";
-    //  questionData.machineType = "机组20";
-    //  questionData.plantType = "一汽大众";
-    //  questionData.elevation = "165";
-    //  questionData.RoomNumber = "228";
-    //  questionData.ResDepart = "计科";
-    //  questionData.team = "1组";
-    //  questionData.type = this.props.detailType;
-    //  questionData.time = "20171009";
-    //  questionData.describe = "问题描述问题描题描述问题描述问题题描题描述问题描述问题描述";
-    //  questionData.rectific = "2017/10/11";
-    //  questionData.compelete = "2017/10/15";
-    //  questionData.recPass = "2017/10/17";
-    //  questionData.save = "2017/10/18";
-
+    this.props.navigator.push({
+        component: QuestionDetail,
+        props:{
+          data:itemData,
+          detailType:this.props.detailType,
+        }
+    })
 
     }
 

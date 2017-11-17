@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         paddingTop:8,
         backgroundColor:'#ffffff',
         paddingBottom:8,
-        height: 48,
+        minHeight:48,
         alignItems: 'center',
 
     },
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     },
     detail: {
         fontSize: 14,
+        width: width * 0.6,
         color: "#777777",
     },
     divider: {
