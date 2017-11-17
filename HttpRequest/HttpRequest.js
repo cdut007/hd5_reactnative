@@ -96,6 +96,9 @@ get(apiName, body,successCallback, failCallback)
       .then((responseText) => {
         console.log("get request response:"+responseText);
          Xlog.info('HttpRequestGetReuslt', responseText);
+         if (Global.testerDebug) {
+             Global.showAlert(url+""+responseText)
+         }
         var response = JSON.parse(responseText);
         if (response.code == 1000) {
             successCallback(response,body);
@@ -112,6 +115,9 @@ get(apiName, body,successCallback, failCallback)
       .catch(function(err){
         failCallback(err);
           Xlog.info('HttpRequestGetReusltErr', ""+err);
+          if (Global.testerDebug) {
+              Global.showAlert(url+"Error:"+err)
+          }
           if (err == 'TypeError: Network request failed') {
               Global.showToast('网络异常')
           }
@@ -182,6 +188,10 @@ if (body.jsonBody) {
           .then((responseText) => {
             console.log(responseText);
                  Xlog.info('HttpRequestPostReuslt', responseText);
+                 if (Global.testerDebug) {
+                     Global.showAlert(url+"PostResult:"+responseText)
+                 }
+
             var response = JSON.parse(responseText);
             if (response.code == 1000) {
                 successCallback(response,param);
@@ -199,6 +209,9 @@ if (body.jsonBody) {
           .catch(function(err){
             failCallback(err);
               Xlog.info('HttpRequestPostReusltErr', ""+err);
+              if (Global.testerDebug) {
+                  Global.showAlert(url+"post Error:"+err)
+              }
               if ((""+err).startWith('SyntaxError: JSON Parse error')) {
                   Global.showToast('服务不可用，请稍后再试')
               }
@@ -210,6 +223,9 @@ if (body.jsonBody) {
           .then((responseText) => {
             console.log(responseText);
                  Xlog.info('HttpRequestPostReuslt', responseText);
+                 if (Global.testerDebug) {
+                     Global.showAlert(url+" post:"+responseText)
+                 }
             var response = JSON.parse(responseText);
             if (response.code == 1000) {
                 successCallback(response,body);
@@ -226,6 +242,9 @@ if (body.jsonBody) {
           })
           .catch(function(err){
                    Xlog.info('HttpRequestPostReusltErr', ""+err);
+                   if (Global.testerDebug) {
+                       Global.showAlert(url+"post Error:"+responseText)
+                   }
             failCallback(err);
             if ((""+err).startWith('SyntaxError: JSON Parse error')) {
                 Global.showToast('服务不可用，请稍后再试')
@@ -264,6 +283,9 @@ if (body.jsonBody) {
        .then((response) => response.text())
           .then((responseText) => {
             console.log("uploadInfo---->:"+responseText);
+            if (Global.testerDebug) {
+                Global.showAlert(url+ "upload:"+responseText)
+            }
             var response = JSON.parse(responseText);
             if (response.code == 1000) {
                 successCallback(response,formData);
@@ -281,6 +303,9 @@ if (body.jsonBody) {
           .catch(function(err){
             console.log("uploadInfo- error---->:"+err);
               Xlog.info('HttpRequestPostReusltErrUpload', ""+err);
+              if (Global.testerDebug) {
+                  Global.showAlert(url+ "upload Error:"+err)
+              }
             failCallback(err);
             if ((""+err).startWith('SyntaxError: JSON Parse error')) {
                 Global.showToast('服务不可用，请稍后再试')

@@ -78,15 +78,11 @@ export default class ProblemView extends Component {
                tabBarInactiveTextColor='#777777'>
 
          {this.renderFeedbackView('报告问题',0)}
-         {this.renderListView('问题追踪',1)}
+         {this._renderQuetionView('问题追踪',1)}
     </ScrollableTabView>
 
         )
-        if (Global.isGroup(Global.UserInfo)) {//for group
 
-        }else{
-
-        }
 
     }
 
@@ -129,16 +125,65 @@ export default class ProblemView extends Component {
         )
     }
 
-    renderListView(label,index) {
+    _renderQuetionView(label){
+
+   return( <View  tabLabel={label} style={styles.container}>
+
+
+     {this.renderContent()}
+     {this.renderListView()}
+
+       </View>)
+
+
+    }
+
+    renderListView() {
+
         var userId = '';
 
         return (<QualityCheckList
-          tabLabel={label}
            style={{alignSelf:'stretch',flex:1}}
            detailType={"1003"}
            navigator={this.props.navigator}
            ref="myQuestionlist"
            />)
+    }
+
+    renderContent(){
+
+       return(
+         <View>
+         <View style={styles.statisticsflexContainer}>
+
+         <View style={styles.cell}>
+          <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+             问题编号
+           </Text>
+         </View>
+
+         <View style={styles.cell}>
+         <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+           机组
+         </Text>
+         </View>
+
+
+         <View style={styles.cell}>
+         <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+           状态
+         </Text>
+         </View>
+
+         </View>
+
+         <View style={{backgroundColor:'d6d6d6',height:0.5,width:width}}>
+         </View>
+
+         </View>
+
+       )
+
     }
 
 
@@ -197,7 +242,7 @@ const styles = StyleSheet.create({
     cell: {
         flex: 1,
         height: 57.5,
-        width:width/4,
+        width:width/3,
         justifyContent: "center",
         alignItems: 'center',
          flexDirection: 'column',

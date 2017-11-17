@@ -700,6 +700,7 @@ return
   })
 
   this.state.ResTeamId = null;
+  this.state.ResTeam = '选择责任班组';
 
   this.featchData();
 

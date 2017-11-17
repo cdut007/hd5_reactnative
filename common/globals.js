@@ -15,6 +15,8 @@ import JPushModule from 'jpush-react-native';
 var currentRole;
 var UserInfo;
 
+var testerDebug = false
+
 
 
 Date.prototype.format = function(fmt)
@@ -226,7 +228,7 @@ module.exports = {
         return '不提醒'
     },
     registerPush(alias){
-        
+
 
       if (Platform.OS === 'android') {
 
@@ -278,6 +280,9 @@ module.exports = {
       }
       return true;
   }  ,
+  showAlert(content){
+      alert(''+content)
+  }
 
 
 };

@@ -563,11 +563,9 @@ if (status == 1) {
 
 componentDidMount(){
 
-
  if (this.state.data.problemStatus == "Need_Handle" && this.props.detailType !== '1003'){
      this.featchData()
  }
-
 
 }
 componentWillMount(){
