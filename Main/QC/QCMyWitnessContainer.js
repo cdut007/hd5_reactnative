@@ -100,6 +100,7 @@ export default class QCMyWitnessContainer extends Component {
             title: title,
             keyword:'',
             statistics:{},
+            update:false,
         }
 
 
@@ -116,7 +117,7 @@ export default class QCMyWitnessContainer extends Component {
     componentDidMount() {
 
         witness_update = DeviceEventEmitter.addListener('witness_update',(param) => {
-            this.state.statistics.total = null
+            this.state.update = true
             this.setState({...this.state})
 
         })
@@ -248,6 +249,7 @@ export default class QCMyWitnessContainer extends Component {
             statistics = {}
 
         }
+        this.state.update = false
         this.state.statistics.total = statistics.total
         this.setState({statistics:statistics})
     }
@@ -293,7 +295,7 @@ export default class QCMyWitnessContainer extends Component {
 
     renderWorkStepWitnessStatisticsItem(status){
             if (status == 'UNCOMPLETED') {
-                if (typeof(this.state.statistics.total) == "undefined") {
+                if (typeof(this.state.statistics.total) == "undefined" || this.state.update) {
                     this.executeStatisticsRequest('UNCOMPLETED');
                 }
                 return(<View>

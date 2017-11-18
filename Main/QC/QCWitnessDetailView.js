@@ -140,12 +140,62 @@ export default class QCWitnessDetailView extends Component {
 
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
 
+        witness_update = DeviceEventEmitter.addListener('witness_update',(param) => {
+             var witness_result = param
+             if (witness_result) {
+                 if (witness_result.result == 'UNQUALIFIED') {
+                     if ( witness_result.rollingPlanId == this.props.data.rollingPlanId &&
+                         witness_result.workStepId == this.props.data.id
+                     ) {
+                        console.log('不合格的工序见证');
+                        this.props.data.status = 'WITNESSED'
+                        this.props.data.result = 'UNQUALIFIED'
+                     }
 
+
+                 }else if (witness_result.result == 'QUALIFIED') {
+                     if ( witness_result.rollingPlanId == this.props.data.rollingPlanId &&
+                         witness_result.workStepId == this.props.data.id
+                     ) {
+                        console.log('合格的工序见证');
+                        var allqualified = false
+                        if (Global.isQC2Member(Global.UserInfo)) {
+                             displayAry = []
+                             if (this.state.data.subWitness) {
+                                 for (var i = 0; i < this.state.data.subWitness.length; i++) {
+                                       var subWitness = this.state.data.subWitness[i]
+                                       if (!subWitness.witnesser) {
+                                           continue
+                                       }
+                                       if (subWitness.result == 'QUALIFIED') {
+                                           allqualified = true
+                                       }else{
+                                           allqualified = false
+                                           break
+                                       }
+                                 }
+
+                             }
+
+                        }
+
+                        if (allqualified) {
+                            this.props.data.status = 'WITNESSED'
+                            this.props.data.result = 'QUALIFIED'
+                        }
+                     }
+                 }
+             }
+            this.setState({...this.state})
+
+        })
     }
+
+
 
    componentWillUnmount(){
 
-
+        witness_update.remove();
 
    }
      onGetDataSuccess(response){
@@ -529,93 +579,6 @@ export default class QCWitnessDetailView extends Component {
             </ScrollView>);
     }
 
-    getQCCheckStatus(sign){
-        if (sign == 0) {
-			return "未确认";
-		}else if (sign == 1) {
-			return "确认";
-		}else if (sign == 2) {
-			return "退回";
-		}
-        return '';
-    }
-
-    go2WorkStepDetail(){
-
-    }
-
-    go2ZhijiaUpdate(){
-
-    }
-
-    issueFeedBack(){
-         this.props.navigator.push({
-            component: IssueReportView,
-             props: {
-                 data:this.state.data,
-                }
-        })
-    }
-
-    issueDetail(){
-        // this.props.navigator.push({
-        //     component: PlanIssueListView,
-        //      props: {
-        //
-        //          data:this.state.data,
-        //         }
-        // })
-    }
-
-    witnessDealBatTask(){
-        this.props.navigator.push({
-            component: SingleWorkRollDealBatWitnessView,
-             props: {
-                 data:this.state.data,
-                }
-        })
-    }
-
-    go2ItemDetail(menu){
-        this.props.navigator.push({
-            component: CommonContentView,
-             props: {
-                 title:menu.title,
-                 content:menu.content,
-                }
-        })
-    }
-
-
-    onItemClick(menu){
-         Global.log('menu:work id = ' + menu.id);
-        if (menu.id == '9') {
-            this.go2WorkStepDetail();
-        } else if (menu.id == '9a') {
-            this.go2ZhijiaUpdate();
-        } else if (menu.id == 'c') {
-            this.setState({displayMore:!this.state.displayMore});
-        } else if (menu.id == '10') {
-            this.issueFeedBack();
-        } else if (menu.id == '-1') {
-            this.issueDetail();
-        } else if (menu.id == 'e9') {
-            this.witnessDealBatTask();
-        } else {
-            try {
-                var  index = parseInt(menu.id);
-                if (index >=11 && index<= 15) {
-                    this.go2ItemDetail(menu);
-                }
-            }
-            catch(err)
-            {
-                Global.log(err)
-            }
-        }
-
-    }
-
 
     onChangeText(keyValue,text){
         if (keyValue.startWith('input_dosage-')) {
@@ -907,6 +870,8 @@ export default class QCWitnessDetailView extends Component {
    }
 
    onWitnessFeedPress(witnessInfo){
+       witnessInfo.rollingPlanId = this.props.data.rollingPlanId
+       witnessInfo.workStepId = this.props.data.id
        this.props.navigator.push({
            component: QC2WitnessFeedDetailView,
             props: {

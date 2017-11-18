@@ -130,10 +130,13 @@ export default class PlanListView extends Component {
 
         this.executePlanRequest(1);
         mSubscription = DeviceEventEmitter.addListener('plan_update',(param)=>{this._onRefresh();})
+        mWorkStepSubscription = DeviceEventEmitter.addListener('workstep_update',(param)=>{this._onRefresh();})
+
     }
 
         componentWillUnmount(){
           mSubscription.remove();
+          mWorkStepSubscription.remove();
         }
 
 

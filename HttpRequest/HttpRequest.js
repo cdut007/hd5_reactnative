@@ -30,6 +30,8 @@ module.exports = {
           {
 
           }
+
+          //apiAddr =  'http://192.168.99.36:8080' + '/hdxt/api' ;
       });
 
  },

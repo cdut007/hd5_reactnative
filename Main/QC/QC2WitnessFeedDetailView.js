@@ -222,7 +222,7 @@ export default class QC2WitnessFeedDetailView extends Component {
         }
 
 
-        DeviceEventEmitter.emit('witness_update','witness_update');
+        DeviceEventEmitter.emit('witness_update',this.props.data);
         this.back();
 
     }

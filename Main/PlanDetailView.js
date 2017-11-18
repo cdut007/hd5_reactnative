@@ -60,17 +60,31 @@ export default class PlanDetailView extends Component {
     componentDidMount() {
 
         this.executeNetWorkRequest(this.props.data.id);
+        workstep_update = DeviceEventEmitter.addListener('workstep_update',(param) => {
+             Global.log('plan detail DeviceEventEmitter@@@@')
+            this.executeNetWorkRequest(this.props.data.id);
+
+        })
+
+
     }
+
+    componentWillUnmount(){
+       workstep_update.remove();
+  }
 
      onGetDataSuccess(response){
          Global.log('onGetDataSuccess@@@@')
+         if (response.responseResult) {
+             this.setState({
+                 data:response.responseResult,
+             });
+         }
 
-         this.setState({
-             data:response.responseResult,
-         });
      }
 
     executeNetWorkRequest(id){
+
          Global.log('executeNetWorkRequest:work id = ' + id);
          var paramBody = {
              }
@@ -127,13 +141,13 @@ export default class PlanDetailView extends Component {
 
         renderFormView(){
                 //1  fininshed retun, jsut san
-               if (this.props.data.status == 'COMPLETED') {
+               if (this.state.data.status == 'COMPLETED') {
 
                     return
                }
 
 
-               if ( (this.props.data.status == 'UNASSIGNED' || !this.props.data.consteam ) && Global.isMonitor(Global.UserInfo)) {
+               if ( (this.state.data.status == 'UNASSIGNED' || !this.props.data.consteam ) && Global.isMonitor(Global.UserInfo)) {
 
                    return
                }
@@ -326,7 +340,7 @@ export default class PlanDetailView extends Component {
           当前状态
         </Text>
         <Text style={{color:'#e82628',fontSize:14,}}>
-          {this.getStatus(this.props.data.status)}
+          {this.getStatus(this.state.data.status)}
         </Text>
         </View>
 
@@ -354,7 +368,7 @@ export default class PlanDetailView extends Component {
     renderDetailView(){
             return(<ScrollView
             keyboardDismissMode='on-drag'
-            
+
             style={styles.mainStyle}>
                 {this.renderItem()}
                 {this.renderMoreItem()}

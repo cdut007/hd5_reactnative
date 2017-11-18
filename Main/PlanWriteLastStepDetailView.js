@@ -28,6 +28,7 @@ import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
 import ConstMapValue from '../common/ConstMapValue.js';
 
+import EditAddressItemView from '../common/EditAddressItemView';
 import Global from '../common/globals.js'
 import DateTimePickerView from '../common/DateTimePickerView'
 import MemberSelectView from '../common/MemberSelectView'
@@ -48,11 +49,11 @@ export default class PlanWriteLastStepDetailView extends Component {
             isTaskConfirm:this.props.isTaskConfirm,
             displayMore:false,
             choose_date:null,
-            choose_hankouNo:null,
             displayDate:'选择焊接时间',
-            displayHankouNo:'选择焊工号',
+            displayHankouNo:null,
             members:[],
             membersReponse:null,
+            localHankouNoMembers:[],
         };
     }
 
@@ -61,6 +62,73 @@ export default class PlanWriteLastStepDetailView extends Component {
 
         this.executeNetWorkRequest(this.props.data.id);
         this.getWelderTeamMember();
+        workstep_update = DeviceEventEmitter.addListener('workstep_update',(param) => {
+             Global.log('plan detail DeviceEventEmitter@@@@')
+            this.executeNetWorkRequest(this.props.data.id);
+
+        })
+
+
+        var me = this
+        AsyncStorage.getItem('k_hankou_member_'+Global.UserInfo.id,function(errs,result)
+        {
+            if (!errs && result && result.length)
+            {
+                 Global.log('read k_hankou_member_@@@@'+result)
+                var localHankouNoMembers = JSON.parse(result);
+                if (localHankouNoMembers) {
+                    me.setState({
+                       localHankouNoMembers:localHankouNoMembers,
+                    });
+
+                }
+
+            }
+            else
+            {
+
+            }
+        });
+
+
+    }
+
+    updateMembers(){
+        var localHankouNoMembers = []
+        if (this.state.localHankouNoMembers) {
+            localHankouNoMembers = this.state.localHankouNoMembers.slice()
+        }
+
+        var displayHankouNo = this.state.displayHankouNo
+
+        if (!displayHankouNo) {
+            return
+        }
+
+        var hasHankouMember = false
+        for (var i = 0; i < localHankouNoMembers.length; i++) {
+            if (localHankouNoMembers[i] == displayHankouNo) {
+                 hasHankouMember =true
+                 break
+            }
+        }
+        if (!hasHankouMember) {
+            localHankouNoMembers.push(displayHankouNo)
+        }
+
+
+        AsyncStorage.setItem('k_hankou_member_'+Global.UserInfo.id, JSON.stringify(localHankouNoMembers), (error, result) => {
+            if (error) {
+                Global.log('save k_hankou_member_record_ faild.')
+            }
+
+            Global.log('save k_hankou_member_record_: sucess')
+
+        });
+    }
+
+    componentWillUnmount(){
+       workstep_update.remove();
     }
 
 
@@ -102,10 +170,12 @@ export default class PlanWriteLastStepDetailView extends Component {
 
      onGetDataSuccess(response){
          Global.log('onGetDataSuccess@@@@')
+         if (response.responseResult) {
+             this.setState({
+                 data:response.responseResult,
+             });
+         }
 
-         this.setState({
-             data:response.responseResult,
-         });
      }
 
     executeNetWorkRequest(id){
@@ -182,22 +252,17 @@ export default class PlanWriteLastStepDetailView extends Component {
     }
 
     startHankou(){
+
         if (!this.state.choose_date) {
             Global.alert('请选择焊接时间')
             return
         }
 
-        if (!this.state.choose_hankouNo) {
-            Global.alert('请选择焊工号')
+        if (!this.state.displayHankouNo) {
+            Global.alert('请输入焊工号')
             return
         }
-        var choose_hankouNo = null;
-        for (var i = 0; i < this.state.membersReponse.length; i++) {
-            if (this.state.choose_hankouNo == this.state.membersReponse[i].realname) {
-                choose_hankouNo = this.state.membersReponse[i].id;
-                break
-            }
-        }
+
 
         this.setState({
             loadingVisible: true
@@ -205,11 +270,11 @@ export default class PlanWriteLastStepDetailView extends Component {
 
         var paramBody = {
                 'id': this.state.data.id,
-                'welderId': choose_hankouNo,
+                'welder': this.state.displayHankouNo,
                 'weldDate':Global.formatFullDate(this.state.choose_date),
             }
 
-        HttpRequest.post('/rollingplan_op/backfill', paramBody, this.onDeliverySuccess.bind(this),
+        HttpRequest.post('/v2/rollingplan_op/backfill', paramBody, this.onDeliverySuccess.bind(this),
             (e) => {
                 this.setState({
                     loadingVisible: false
@@ -239,6 +304,7 @@ export default class PlanWriteLastStepDetailView extends Component {
     }
 
     onDeliverySuccess(response){
+        this.updateMembers()
         this.setState({
             loadingVisible: false
         });
@@ -250,9 +316,10 @@ export default class PlanWriteLastStepDetailView extends Component {
 
 
     renderFormView(){
+
             //1  fininshed retun, jsut san
 
-            if (this.props.data.status != 'COMPLETED' ) {
+            if (this.state.data.status != 'COMPLETED' ) {
 
                 if (this.state.data.problemFlag){
                     return(<View style={{height:50,width:width,flexDirection:'row'}}>
@@ -322,7 +389,7 @@ export default class PlanWriteLastStepDetailView extends Component {
           当前状态
         </Text>
         <Text style={{color:'#e82628',fontSize:14,}}>
-          {this.getStatus(this.props.data.status)}
+          {this.getStatus(this.state.data.status)}
         </Text>
         </View>
 
@@ -350,7 +417,7 @@ export default class PlanWriteLastStepDetailView extends Component {
     renderDetailView(){
             return(<ScrollView
             keyboardDismissMode='on-drag'
-            
+
             style={styles.mainStyle}>
                 {this.renderHankouInfo()}
                 {this.renderItem()}
@@ -367,8 +434,8 @@ export default class PlanWriteLastStepDetailView extends Component {
     }
 
     onSelectedMember(member){
-        this.state.choose_hankouNo = member[0];
-        this.setState({displayHankouNo:member[0]});
+        this.state.displayHankouNo = member;
+        this.setState({displayHankouNo:member});
         Global.log(JSON.stringify(member)+"member====");
 
     }
@@ -376,14 +443,17 @@ export default class PlanWriteLastStepDetailView extends Component {
 
     renderHankouInfo(){
         if (this.state.data.backFill) {
-            return(            <View style={[{marginTop:10,alignItems:'center',},styles.statisticsflexContainer]}>
+            return( <View style={[styles.statisticsflexContainer,{height:120,justifyContent:'center',alignItems:'center',flexDirection:'column'}]}>
 
-                        <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
-
+                        <View      style={[styles.cell,{alignItems:'center',padding:10,height:40,backgroundColor:'white',flexDirection:'row'}]}>
+                         <Text style= {{width: width * 0.27,fontSize: 14,color: "#1c1c1c"}}>焊接时间: </Text>
                         <TouchableOpacity
                          onPress={() => this._selectD.onClick()}
                         style={{borderWidth:0.5,
                               alignItems:'center',
+                              height:40,
+                              marginTop:5,
+                              flex:1,
                               borderColor : '#f77935',
                               backgroundColor : 'white',
                               borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
@@ -397,35 +467,29 @@ export default class PlanWriteLastStepDetailView extends Component {
                             style={{color:'#f77935',fontSize:14,flex:1}}
                             onSelected={this.onSelectedDate.bind(this)}
                         />
-                                            <Image
-                                            style={{width:20,height:20}}
-                                            source={require('../images/unfold.png')}/>
+                        <Image
+                        style={{width:20,height:20}}
+                        source={require('../images/unfold.png')}/>
                         </TouchableOpacity>
 
                         </View>
 
+                        <View style={{height:50,}}>
 
-                        <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+                              <EditAddressItemView
 
-                        <TouchableOpacity onPress={() => this._selectM.onPickClick()} style={{borderWidth:0.5,
-                              alignItems:'center',
-                              borderColor : '#f77935',
-                              backgroundColor : 'white',
-                              borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+                               chooseMode={true}
+                               chooseData={this.state.localHankouNoMembers}
+                               onVauleChanged={this.onSelectedMember.bind(this)}
+                               topic={'焊口号'}
+                               placeholder={'输入焊口号'}
+                               content={this.state.displayHankouNo}
+                               onChangeText={this.onSelectedMember.bind(this)}
+                              />
 
-                        <MemberSelectView
-                        ref={(c) => this._selectM = c}
-                        style={{color:'#f77935',fontSize:14,flex:1}}
-                        title={this.state.displayHankouNo}
-                        data={this.state.members}
-                         pickerTitle={'选择焊口号'}
-                        onSelected={this.onSelectedMember.bind(this)} />
-                                            <Image
-                                            style={{width:20,height:20,}}
-                                            source={require('../images/unfold.png')}/>
-                        </TouchableOpacity>
 
                         </View>
+
 
                         </View>)
         }
