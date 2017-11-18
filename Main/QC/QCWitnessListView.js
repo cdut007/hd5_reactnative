@@ -127,7 +127,7 @@ export default class QCWitnessListView extends Component {
 
     componentDidMount() {
 
-    QcissueDeals = DeviceEventEmitter.addListener('Qc_issueDeals',(param) => {this.executePlanRequest(1)})
+    QcissueDeals = DeviceEventEmitter.addListener('witness_update',(param) => {this._onRefresh()})
     this.executePlanRequest(1);
 
     }

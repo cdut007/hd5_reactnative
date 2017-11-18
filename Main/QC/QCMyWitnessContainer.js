@@ -12,6 +12,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     InteractionManager,
+    DeviceEventEmitter,
 } from 'react-native';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -114,8 +115,17 @@ export default class QCMyWitnessContainer extends Component {
 
     componentDidMount() {
 
+        witness_update = DeviceEventEmitter.addListener('witness_update',(param) => {
+            this.state.statistics.total = null
+            this.setState({...this.state})
+
+        })
 
     }
+
+    componentWillUnmount(){
+       witness_update.remove();
+  }
 
 
 

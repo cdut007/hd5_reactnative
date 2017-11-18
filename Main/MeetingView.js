@@ -296,6 +296,8 @@ export default class MeetingView extends Component {
             if (this.state.conference) {
                 if (moduleDataItem.type == 'send') {
                     unread = this.state.conference.sendUnread
+                }else if(moduleDataItem.type == 'draft'){
+                    unread = 0
                 }else{
                     unread = this.state.conference.receiveUnread
                 }
@@ -305,6 +307,8 @@ export default class MeetingView extends Component {
           if (this.state.notification) {
               if (moduleDataItem.type == 'send') {
                   unread = this.state.notification.sendUnread
+              }else if(moduleDataItem.type == 'draft'){
+                  unread = 0
               }else{
                   unread = this.state.notification.receiveUnread
               }

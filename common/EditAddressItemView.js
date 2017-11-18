@@ -6,16 +6,18 @@ import {
     Image,
     Keyboard,
     TextInput,
-    Platform
+    Platform,
+    TouchableOpacity,
+    DeviceEventEmitter
 
  } from 'react-native';
 
 import Dimensions from 'Dimensions'
 var width = Dimensions.get('window').width;
-
+import Picker from 'react-native-picker';
 import ULTextInput from './ULEditText.js'
 
- export default class EditItemView extends Component
+ export default class EditAddressItemView extends Component
  {
      static propTypes =
      {
@@ -23,6 +25,7 @@ import ULTextInput from './ULEditText.js'
         topic: PropTypes.string,
         placeholder:PropTypes.string,
         onChangeText:PropTypes.func,
+        onVauleChanged:PropTypes.func,
         keyboard : PropTypes.object,
         icon:PropTypes.string,
         editable:PropTypes.bool,
@@ -42,6 +45,8 @@ import ULTextInput from './ULEditText.js'
   componentWillMount () {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
+    this.showTimePicker = DeviceEventEmitter.addListener('show_timePicker',this._keyboardDidShow);
+
   }
 
   componentDidMount(){
@@ -49,11 +54,13 @@ import ULTextInput from './ULEditText.js'
   }
 
   componentWillUnmount () {
+          Picker.hide();
       if (this._input) {
           this._input.blur()
       }
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+    this.showTimePicker.remove();
   }
 
   _keyboardDidShow () {
@@ -72,42 +79,70 @@ import ULTextInput from './ULEditText.js'
       console.log('input text has foucesed--'+this._input.isFocused());
   }
 
+  // renderItem(data){
+  //     var items = []
+  //     for (var i = 0; i < data.length; i++) {
+  //         items.push(<Picker.Item label={data[i]} value={data[i]} />)
+  //     }
+  //     return items
+  // }
+
+  onAddressPress(){
+      this.setState({picker:true})
+      this.onPickClick()
+  }
+
+
+  onPickClick(){
+      if (!this.props.chooseData || this.props.chooseData.length  == 0 ) {
+          return
+      }
+
+
+      Picker.init({
+     pickerData: this.props.chooseData,
+     pickerTitleText:this.props.pickerTitle,
+     pickerConfirmBtnText:'保存',
+     pickerCancelBtnText:'取消',
+     onPickerConfirm: data => {
+         console.log(data);
+         this.props.onVauleChanged(data[0])
+     },
+     onPickerCancel: data => {
+         console.log(data);
+     },
+     onPickerSelect: data => {
+         console.log(data);
+     }
+ });
+ Picker.show();
+  }
+
+  renderPicker(){
+
+//       if (this.state.picker && this.props.chooseData) {
+//           return(<Picker
+//               selectedValue={this.props.selectedValue}
+//               onValueChange={value=>this.onChooseItem(value)}>
+//               {this.renderItem(this.props.chooseData)}
+// </Picker>
+// )
+//       }
+  }
+
     render()
     {
         if (Platform.OS == 'ios'){
-            if (this.props.icon) {
-                return(
-
-                    <View    onLayout={this._onLayout}>
-                    <View style= {styles.container}>
-                    <Image style={{width:24,height:24,marginRight:5}} source={this.props.icon} />
-
-                        <Text style= {styles.title_with_icon}>{this.props.topic} : </Text>
-                        <TextInput
-                         ref={(c) => this._input = c}
-                         {...this.props}
-                        style= {styles.detail}
-                        onChangeText={this.props.onChangeText}
-                        underlineColorAndroid={'transparent'}
-                         placeholder={this.props.placeholder}
-                        value={this.props.content}
-                        keyboardType={this.state.keyboard}
-                        editable={this.props.editable}
-                        autoFocus={this.props.autoFocus}
-                        onFocus={this.onFocus.bind(this)}
-                        onSubmitEditing={Keyboard.dismiss}
-
-                        ></TextInput>
-                    </View>
-                    <View style={styles.divider}/>
-                    </View>
-                )
-            }
 
             return(
                 <View>
                 <View style= {styles.container}>
-                    <Text style= {styles.title}>{this.props.topic} : </Text>
+                <TouchableOpacity onPress={this.onAddressPress.bind(this)}
+                    style={styles.btn}>
+                    <Text style={styles.title} >
+                        {this.props.topic} :
+                </Text>
+                </TouchableOpacity>
                     <TextInput style= {styles.detail}
                     onChangeText={this.props.onChangeText}
                     underlineColorAndroid={'transparent'}
@@ -122,39 +157,16 @@ import ULTextInput from './ULEditText.js'
                 </View>
             )
         }else {
-            if (this.props.icon) {
-                return(
-
-                    <View    onLayout={this._onLayout}>
-                    <View style= {styles.container}>
-                    <Image style={{width:24,height:24,marginRight:5}} source={this.props.icon} />
-
-                        <Text style= {styles.title_with_icon}>{this.props.topic} : </Text>
-                        <ULTextInput
-                         ref={(c) => this._input = c}
-                         {...this.props}
-                        style= {styles.detail}
-                        onChangeText={this.props.onChangeText}
-                        underlineColorAndroid={'transparent'}
-                         placeholder={this.props.placeholder}
-                        value={this.props.content}
-                        keyboardType={this.state.keyboard}
-                        editable={this.props.editable}
-                        autoFocus={this.props.autoFocus}
-                        onFocus={this.onFocus.bind(this)}
-                        onSubmitEditing={Keyboard.dismiss}
-
-                        ></ULTextInput>
-                    </View>
-                    <View style={styles.divider}/>
-                    </View>
-                )
-            }
 
             return(
                 <View>
                 <View style= {styles.container}>
-                    <Text style= {styles.title}>{this.props.topic} : </Text>
+                <TouchableOpacity onPress={this.onAddressPress.bind(this)}
+                    style={styles.btn}>
+                    <Text style={styles.title} >
+                        {this.props.topic} :
+                </Text>
+                </TouchableOpacity>
                     <ULTextInput  ref={(c) => this._input = c}
                      {...this.props}
                      style= {styles.detail}
@@ -171,6 +183,7 @@ import ULTextInput from './ULEditText.js'
 
                     ></ULTextInput>
                 </View>
+                {this.renderPicker()}
                 <View style={styles.divider}/>
                 </View>
             )
@@ -180,6 +193,20 @@ import ULTextInput from './ULEditText.js'
  }
 
 const styles = StyleSheet.create({
+    btn:
+    {
+        flexDirection:'row',
+        width: 90,
+        alignSelf: 'center',
+        margin: 4,
+        height: 30,
+        borderColor: '#0755a6',
+        borderWidth: 1,
+        borderRadius: 3,
+        justifyContent:'center',
+        backgroundColor:'#0755a6',
+        alignItems: 'center',
+    },
     container: {
         flex: 1,
         justifyContent: 'flex-start',
@@ -193,9 +220,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     title: {
-        width: width * 0.33,
+
         fontSize: 14,
-        color: "#1c1c1c"
+        color: "white"
     },
     title_with_icon: {
         width: width * 0.24,

@@ -32,6 +32,7 @@ import DateTimePickerView from '../../common/DateTimePickerView'
 import MemberSelectView from '../../common/MemberSelectView'
 import WitnessFailResultView from '../../Main/WitnessFailResultView';
 
+import EditAddressItemView from '../../common/EditAddressItemView';
 import QC2WitnessFeedDetailView from './QC2WitnessFeedDetailView'
 import Spinner from 'react-native-loading-spinner-overlay'
 
@@ -64,6 +65,11 @@ var options = {
 };
 import ImagePicker from 'react-native-image-picker'
 
+String.prototype.startWith=function(str){
+  var reg=new RegExp("^"+str);
+  return reg.test(this);
+}
+
 export default class QCWitnessDetailView extends Component {
     constructor(props) {
         super(props);
@@ -76,20 +82,61 @@ export default class QCWitnessDetailView extends Component {
             choose_address:null,
             choose_date:null,
             input_witnessdesc:null,
-            input_dosage:null,
             choose_result:null,
             remark:null,
             fileArr: [{}],
             witnessAddresses:data.witnessAddresses,
             witness_resules:['合格','不合格'],
-            witnessNotOkResultType:'不合格原因2',
-            witnessNotOkResultTypes: ['不合格原因1','不合格原因2'],
+            witnessNotOkResultType:null,
+            witnessNotOkResultTypes: [],
             loadingVisible:false,
         };
     }
 
 
     componentDidMount() {
+
+        var me = this
+        AsyncStorage.getItem('k_witness_address_record_'+Global.UserInfo.id,function(errs,result)
+        {
+            if (!errs && result && result.length)
+            {
+                 Global.log('read k_witness_address_record_@@@@'+result)
+                var address = JSON.parse(result);
+                if (address) {
+                    me.setState({
+                       witnessaddressdata:address,
+                    });
+
+                }
+
+            }
+            else
+            {
+
+            }
+        });
+
+        AsyncStorage.getItem('k_witness_not_ok_type_record_'+Global.UserInfo.id,function(errs,result)
+        {
+            if (!errs && result && result.length)
+            {
+                 Global.log('read k_witness_not_ok_type_record_@@@@'+result)
+                var witnessNotOkResultTypes = JSON.parse(result);
+                if (witnessNotOkResultTypes) {
+                    me.setState({
+                       witnessNotOkResultTypes:witnessNotOkResultTypes,
+                    });
+
+                }
+
+            }
+            else
+            {
+
+            }
+        });
+
 
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
 
@@ -166,6 +213,7 @@ export default class QCWitnessDetailView extends Component {
     }
 
     onDeliverySuccess(response){
+        this.updateAddress()
         this.setState({
             loadingVisible: false
         })
@@ -173,14 +221,76 @@ export default class QCWitnessDetailView extends Component {
 
     }
 
+    updateAddress(){
+
+        var not_ok_type = this.state.witnessNotOkResultType
+
+
+        var witnessNotOkResultTypes = this.state.witnessNotOkResultTypes
+        if (!witnessNotOkResultTypes) {
+            witnessNotOkResultTypes = []
+        }
+        witnessNotOkResultTypes = witnessNotOkResultTypes.slice()
+        var hasNewNotOk = false
+        for (var i = 0; i < witnessNotOkResultTypes.length; i++) {
+            if (witnessNotOkResultTypes[i] == not_ok_type) {
+                 hasNewNotOk =true
+                 break
+            }
+        }
+        if (!hasNewNotOk && not_ok_type) {
+            witnessNotOkResultTypes.push(not_ok_type)
+        }
+
+
+        AsyncStorage.setItem('k_witness_not_ok_type_record_'+Global.UserInfo.id, JSON.stringify(witnessNotOkResultTypes), (error, result) => {
+            if (error) {
+                Global.log('save k_witness_not_ok_type_record_ faild.')
+            }
+
+            Global.log('save k_witness_not_ok_type_record_: sucess')
+
+        });
+
+        var address = this.state.choose_address
+
+
+        var witnessAddresses = this.state.witnessaddressdata
+        if (!witnessAddresses) {
+            witnessAddresses = []
+        }
+        witnessAddresses = witnessAddresses.slice()
+        var hasAddress = false
+        for (var i = 0; i < witnessAddresses.length; i++) {
+            if (witnessAddresses[i] == address) {
+                 hasAddress =true
+                 break
+            }
+        }
+        if (!hasAddress && address) {
+            witnessAddresses.push(address)
+        }
+
+
+        AsyncStorage.setItem('k_witness_address_record_'+Global.UserInfo.id, JSON.stringify(witnessAddresses), (error, result) => {
+            if (error) {
+                Global.log('save k_witness_address_record_ faild.')
+            }
+
+            Global.log('save k_witness_address_record_: sucess')
+
+        });
+    }
+
     startWitness(){
+
         if (!this.state.choose_date) {
             Global.alert('请选择见证日期')
             return
         }
 
         if (!this.state.choose_address) {
-            Global.alert('请选择见证地点')
+            Global.alert('请输入见证地点')
             return
         }
         var result = '3'
@@ -194,7 +304,7 @@ export default class QCWitnessDetailView extends Component {
             }else{
                 result = '1'
                 if (!this.state.witnessNotOkResultType) {
-                    Global.alert('请选择不合格原因')
+                    Global.alert('请填写不合格原因类型')
                     return
                 }
                 if (!this.state.remark) {
@@ -210,11 +320,25 @@ export default class QCWitnessDetailView extends Component {
         }
 
 
-
+        var materiaJsonlList='';
         if (!Global.isQC2SubMember(Global.UserInfo) && !Global.isQC2SubMember(Global.UserInfo)) {
-            if (!this.state.input_dosage) {
-                Global.alert('请填写实际用量')
-                return
+            if (this.state.data.rollingPlan.materialList) {
+                // Global.alert('请填写实际用量')
+                // return
+
+                var materialList = this.state.data.rollingPlan.materialList
+                for (var i = 0; i < materialList.length; i++) {
+                    var dosage = materialList[i].actualDosage
+                    if (!dosage) {
+                        dosage = ''
+                    }
+                    materiaJsonlList+=materialList[i].id+'_'+dosage+","
+                }
+
+                if (materiaJsonlList.length>0) {
+                    materiaJsonlList = materiaJsonlList.substr(0,materiaJsonlList.length-1)
+                }
+
             }
 
         }
@@ -239,10 +363,12 @@ export default class QCWitnessDetailView extends Component {
             param.append('witnessaddress', this.state.choose_address)
             param.append('witnessdate', this.state.choose_date)
             param.append('witnessdesc', this.state.input_witnessdesc)
-            param.append('dosage', this.state.input_dosage)
             param.append('isok', result)
             param.append('remark', this.state.remark)
             param.append('failType', this.state.witnessNotOkResultType)
+            if (materiaJsonlList.length>0) {
+                param.append('materiaJsonlList',materiaJsonlList)
+            }
 
         if (this.state.fileArr.length>0) {
                 this.state.fileArr.map((item, i) => {
@@ -272,9 +398,13 @@ export default class QCWitnessDetailView extends Component {
                      witnessaddress:this.state.choose_address,
                      witnessdate:this.state.choose_date,
                      witnessdesc:this.state.input_witnessdesc,
-                     dosage:this.state.input_dosage,
                      isok:result,
                 }
+
+                if (materiaJsonlList.length>0) {
+                    paramBody.materiaJsonlList = materiaJsonlList
+                }
+
 
             HttpRequest.post('/witness_op/result', paramBody, this.onDeliverySuccess.bind(this),
                 (e) => {
@@ -488,6 +618,18 @@ export default class QCWitnessDetailView extends Component {
 
 
     onChangeText(keyValue,text){
+        if (keyValue.startWith('input_dosage-')) {
+            var materialList = this.state.data.rollingPlan.materialList
+            for (var i = 0; i < materialList.length; i++) {
+                if (keyValue == 'input_dosage-'+materialList[i].id) {
+                     Global.log(text+"input_dosage-content===="+keyValue);
+                     this.state.data.rollingPlan.materialList[i].actualDosage = text;
+                     this.setState({...this.state});
+                    return
+                }
+            }
+
+        }
         Global.log(text+"content===="+keyValue);
         this.state[keyValue] = text;
         this.setState({...this.state});
@@ -501,6 +643,16 @@ export default class QCWitnessDetailView extends Component {
 
      this.state[id] = Global.formatFullDate(date);
      this.setState({...this.state});
+    }
+
+    onSelectedAddress(id,address){
+
+
+        Global.log(JSON.stringify(address)+"choose====");
+
+         this.state[id] = address;
+        this.setState({...this.state});
+
     }
 
     onSelectedMember(id,member){
@@ -544,6 +696,28 @@ export default class QCWitnessDetailView extends Component {
               </View>)
 
       }else{
+          if (id == 'choose_address') {
+              return(
+                  <View>
+                  <EditAddressItemView
+                  key={id+'selectM'}
+                   chooseMode={true}
+                   chooseData={this.state.witnessaddressdata}
+                   selectedValue={data.displayAddress}
+                   onVauleChanged={this.onSelectedAddress.bind(this,id)}
+                   ref={(c) => this._selectM = c}
+                   topic={'见证地点'}
+                   placeholder={'输入见证地点'}
+                   content={content}
+                   onChangeText={this.onSelectedAddress.bind(this,id)}
+                  />
+                  <View style={{backgroundColor: '#d6d6d6',
+                      width: width,
+                      height: 0.5,
+                      marginLeft:10,}}/>
+                   </View>
+              )
+          }else{
 
           return(<View>
               <View style= {{flex: 1,
@@ -573,6 +747,7 @@ export default class QCWitnessDetailView extends Component {
               </View>)
 
       }
+  }
 
    }
 
@@ -687,38 +862,26 @@ export default class QCWitnessDetailView extends Component {
    }
 
    renderSelectView(){
-       return(<View style={{alignItems:'center',padding:10,backgroundColor:'#f2f2f2', width: width,  height: 56}}>
+       return(<View style={{alignItems:'center',backgroundColor:'#f2f2f2', width: width,  height: 54}}>
 
-               <TouchableOpacity onPress={() => this._selectM.onPickClick()} style={{
-                     borderWidth:0.5,
-                     alignItems:'center',
-                     borderColor : '#f77935',
-                     backgroundColor : 'white',
-                     borderRadius : 4,
-                     flexDirection:'row',
-                     flex: 1,
-                     paddingLeft:10,
-                     paddingRight:10,
-                     paddingTop:8,
-                     paddingBottom:8}}>
+           <EditAddressItemView
 
-                   <MemberSelectView
-                   ref={(c) => this._selectM = c}
-                    style={{color:'#f77935',fontSize:14,flex:1}}
-                    title={this.state.witnessNotOkResultType}
-                    data={this.state.witnessNotOkResultTypes}
-                    pickerTitle={'不合格原因类型'}
-                    onSelected={(data) => this.onSelectedType(data)}/>
+            chooseMode={true}
+            chooseData={this.state.witnessNotOkResultTypes}
+            onVauleChanged={this.onSelectedType.bind(this)}
+            ref={(c) => this._selectM = c}
+            topic={'不合格类型'}
+            placeholder={'填写不合格原因'}
+            content={this.state.witnessNotOkResultType}
+            onChangeText={this.onSelectedType.bind(this)}
+           />
 
-                   <Image style={{width:20,height:20,}} source={require('../../images/unfold.png')}/>
-
-               </TouchableOpacity>
 
            </View>)
    }
 
    onSelectedType(data){
-       this.setState({witnessNotOkResultType: data[0]})
+       this.setState({witnessNotOkResultType: data})
    }
 
 
@@ -864,6 +1027,26 @@ export default class QCWitnessDetailView extends Component {
        }
 
 
+       createMaterialListItems(displayAry){
+           var materialList = this.state.data.rollingPlan.materialList
+           for (var i = 0; i < materialList.length; i++) {
+               var item = materialList[i]
+               displayAry.push({title:'物项名称',content:item.materialName,id:'b2-'+i},);
+               displayAry.push({title:'物项编号',content:item.materialIdentifier,id:'b3-'+i},);
+
+               displayAry.push({title:'实际用量',id:'input_dosage-'+item.id,content:item.actualDosage,type:'input',keyboard:'numeric'});
+
+               displayAry.push({title:'计划用量',content:item.planDosage,id:'b1-'+i},);
+
+               displayAry.push({title:'规格型号',content:item.specificationModel,id:'b4-'+i},);
+               displayAry.push({title:'单位',content:item.unit,id:'b5'+i},);
+
+               displayAry.push({type:'devider'},);
+           }
+           return displayAry
+       }
+
+
     renderItem() {
                // 数组
                var itemAry = [];
@@ -875,7 +1058,7 @@ export default class QCWitnessDetailView extends Component {
 
                var address = this.state.choose_address
                if (!address) {
-                   address = '选择见证地点'
+                   address = ''
                }
 
                var result = this.state.choose_result
@@ -912,16 +1095,10 @@ export default class QCWitnessDetailView extends Component {
                 }
 
                 if (!Global.isQC2SubMember(Global.UserInfo)&&!Global.isQC2Member(Global.UserInfo)) {
-                    displayAry.push({title:'实际用量',id:'input_dosage',content:this.state.input_dosage,type:'input',keyboard:'numeric'});
+                    if (this.state.data.rollingPlan.materialList) {
+                        this.createMaterialListItems(displayAry)
+                    }
 
-                    displayAry.push({title:'计划用量',content:this.state.data.rollingPlan.planAmount,id:'b1'},);
-                    displayAry.push({title:'物项名称',content:this.state.data.rollingPlan.itemName,id:'b2'},);
-                    displayAry.push({title:'物项编号',content:this.state.data.rollingPlan.itemNo,id:'b3'},);
-
-                    displayAry.push({title:'规格型号',content:this.state.data.rollingPlan.speification,id:'b4'},);
-                    displayAry.push({title:'单位',content:this.state.data.rollingPlan.projectUnit,id:'b5'},);
-
-                    displayAry.push({type:'devider'},);
                 }
 
 

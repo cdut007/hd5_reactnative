@@ -59,7 +59,7 @@ export default class WitnessFailResultView extends Component {
                     leftPress={this.back.bind(this)} />
                     <ScrollView
                     keyboardDismissMode='on-drag'
-                    
+
                     style={styles.main_container}>
                     <DisplayItemView
                      title={'不合格类别'}
@@ -92,10 +92,14 @@ export default class WitnessFailResultView extends Component {
 
             files.map((item, i) => {
                 Global.log('url====='+(HttpRequest.getDomain()+ item.url))
+                var uri = HttpRequest.getDomain()+ item.url
+                if (item.uri) {
+                    uri = item.uri
+                }
               images.push(
                 <TouchableOpacity key={'net' + i} onPress={() => this.viewBigImages(isFeedback, i)}>
                  <ImageBackground style={{width: 70, height: 70, marginLeft: 10}} source={require('../images/temporary_img.png')}>
-                  <Image source={{uri: HttpRequest.getDomain()+ item.url }} style={{borderRadius: 4, width: 70, height: 70, resizeMode: 'cover', marginLeft: 10,}}/>
+                  <Image source={{uri: uri}} style={{borderRadius: 4, width: 70, height: 70, resizeMode: 'cover', marginLeft: 10,}}/>
                   </ImageBackground>
                 </TouchableOpacity>
               );
@@ -109,7 +113,15 @@ export default class WitnessFailResultView extends Component {
         viewBigImages(isFeedback, index){
           var imageUrls = [];
 
-          this.props.data.witnessFiles.map((item) => {imageUrls.push({url: HttpRequest.getDomain()+ item.url})});
+          this.props.data.witnessFiles.map((item) => {
+              if (item.uri) {
+                   imageUrls.push({url: item.uri})
+              }else{
+                   imageUrls.push({url: HttpRequest.getDomain()+ item.url})
+              }
+
+
+          });
 
           this.setState({modalVisible: true, bigImages: imageUrls, currentImageIndex: index})
         }
