@@ -11,6 +11,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     AsyncStorage,
+    DeviceEventEmitter
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -80,7 +81,13 @@ export default class WitnessStatisticsView extends Component {
             }
         });
         this.executeWitnessRequest();
+        mSubscription = DeviceEventEmitter.addListener('witness_update',(param)=>{this.executeWitnessRequest();})
 
+
+    }
+    
+    componentWillUnmount(){
+      mSubscription.remove();
     }
 
     onGetDataSuccess(response,body){

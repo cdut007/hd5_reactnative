@@ -13,6 +13,7 @@ import {
     TouchableHighlight,
     InteractionManager,
     ScrollView,
+    DeviceEventEmitter,
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -542,6 +543,7 @@ export default class WitnessListDeliveryView extends Component {
     }
 
     onDeliverySuccess(response){
+        DeviceEventEmitter.emit('witness_update','witness_update');
         this.setState({
             loadingVisible: false
         });

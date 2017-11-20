@@ -12,6 +12,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     InteractionManager,
+    DeviceEventEmitter,
 } from 'react-native';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -43,6 +44,7 @@ export default class QCWitnessListViewContainer extends Component {
             title: "待见证",
             keyword:'',
             statistics:{},
+            update:false,
         }
 
 
@@ -55,12 +57,19 @@ export default class QCWitnessListViewContainer extends Component {
 
 
 
+        componentDidMount() {
 
-    componentDidMount() {
+            witness_update = DeviceEventEmitter.addListener('witness_update',(param) => {
+                this.state.update = true
+                this.setState({...this.state})
 
+            })
 
-    }
+        }
 
+        componentWillUnmount(){
+           witness_update.remove();
+      }
 
     onGetDataSuccess(response,paramBody){
          Global.log('statistics onGetDataSuccess@@@@')
@@ -74,6 +83,7 @@ export default class QCWitnessListViewContainer extends Component {
             statistics = {}
 
         }
+        this.state.update = false
         this.state.statistics.total = statistics.total
         this.setState({statistics:statistics})
     }
@@ -134,7 +144,7 @@ export default class QCWitnessListViewContainer extends Component {
 
     renderWorkStepWitnessStatisticsItem(){
 
-        if (typeof(this.state.statistics.total) == "undefined") {
+        if (typeof(this.state.statistics.total) == "undefined"|| this.state.update) {
 
             this.executeStatisticsRequest('UNCOMPLETED');
         }
