@@ -228,7 +228,12 @@ export default class QCWitnessListDeliveryView extends Component {
 
         var datas = response.responseResult.data;
 
-
+         if (!datas) {
+             this.setState({
+                 isRefreshing:false,
+             });
+            return
+         }
 
         if (this.state.filter !== query) {
             this.setState({
