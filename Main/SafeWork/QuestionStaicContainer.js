@@ -114,7 +114,7 @@ return( <View  tabLabel={label} style={styles.container}>
 
    if (this.props.detailType == '1001') {
 
-     return( <ScrollableTabView
+     return( <ScrollableTabView locked={true}
          tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
             tabBarBackgroundColor='#FFFFFF'
             tabBarActiveTextColor='#f77935'

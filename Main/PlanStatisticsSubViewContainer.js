@@ -172,7 +172,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
 
     rendTabs(){
         if (Global.isGroup(Global.UserInfo)) {//for group
-            return( <ScrollableTabView
+            return( <ScrollableTabView locked={true}
                 tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
                    tabBarBackgroundColor='#FFFFFF'
                    tabBarActiveTextColor='#f77935'
@@ -184,7 +184,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
 
             )
         }else{
-            return( <ScrollableTabView
+            return( <ScrollableTabView locked={true}
                 tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
                    tabBarBackgroundColor='#FFFFFF'
                    tabBarActiveTextColor='#f77935'

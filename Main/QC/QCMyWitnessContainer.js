@@ -132,7 +132,7 @@ export default class QCMyWitnessContainer extends Component {
 
     rendTabs(){
             if (Global.isQCTeam(Global.UserInfo)) {
-                return( <ScrollableTabView
+                return( <ScrollableTabView locked={true}
                     tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
                        tabBarBackgroundColor='#FFFFFF'
                        tabBarActiveTextColor='#f77935'
@@ -144,7 +144,7 @@ export default class QCMyWitnessContainer extends Component {
             </ScrollableTabView>
                 )
             }else if (Global.isQC2Team(Global.UserInfo)) {
-                return( <ScrollableTabView
+                return( <ScrollableTabView locked={true}
                     tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
                        tabBarBackgroundColor='#FFFFFF'
                        tabBarActiveTextColor='#f77935'
@@ -157,7 +157,7 @@ export default class QCMyWitnessContainer extends Component {
                 )
             }else if (Global.isQC2Member(Global.UserInfo)) {
                 if (this.props.scanQC2Member) {
-                    return( <ScrollableTabView
+                    return( <ScrollableTabView locked={true}
                         tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
                            tabBarBackgroundColor='#FFFFFF'
                            tabBarActiveTextColor='#f77935'
@@ -169,7 +169,7 @@ export default class QCMyWitnessContainer extends Component {
                 </ScrollableTabView>
                     )
                 }else{
-                    return( <ScrollableTabView
+                    return( <ScrollableTabView locked={true}
                         tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
                            tabBarBackgroundColor='#FFFFFF'
                            tabBarActiveTextColor='#f77935'
@@ -184,7 +184,7 @@ export default class QCMyWitnessContainer extends Component {
                 }
 
                 }else{
-                return( <ScrollableTabView
+                return( <ScrollableTabView locked={true}
                     tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
                        tabBarBackgroundColor='#FFFFFF'
                        tabBarActiveTextColor='#f77935'

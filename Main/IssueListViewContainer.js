@@ -208,7 +208,7 @@ export default class IssueListViewContainer extends Component {
 
         if (Global.isGroup(Global.UserInfo)) {
 
-            return( <ScrollableTabView
+            return( <ScrollableTabView locked={true}
                 tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
                    tabBarBackgroundColor='#FFFFFF'
                    tabBarActiveTextColor='#0755a6'
@@ -222,7 +222,7 @@ export default class IssueListViewContainer extends Component {
             )
         }else  if (Global.isCaptain(Global.UserInfo)) {
 
-                return( <ScrollableTabView
+                return( <ScrollableTabView locked={true}
                     tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
                        tabBarBackgroundColor='#FFFFFF'
                        tabBarActiveTextColor='#0755a6'
@@ -235,7 +235,7 @@ export default class IssueListViewContainer extends Component {
                 )
             }else  if (Global.isMonitor(Global.UserInfo)) {
 
-                    return( <ScrollableTabView
+                    return( <ScrollableTabView locked={true}
                         tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
                            tabBarBackgroundColor='#FFFFFF'
                            tabBarActiveTextColor='#0755a6'
@@ -250,7 +250,7 @@ export default class IssueListViewContainer extends Component {
                 }else  if (Global.isSolverMember(Global.UserInfo)) {
 
                             if (this.props.isMyIssue) {
-                                return( <ScrollableTabView
+                                return( <ScrollableTabView locked={true}
                                     tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
                                        tabBarBackgroundColor='#FFFFFF'
                                        tabBarActiveTextColor='#0755a6'
@@ -262,7 +262,7 @@ export default class IssueListViewContainer extends Component {
 
                                 )
                             }else{
-                                return( <ScrollableTabView
+                                return( <ScrollableTabView locked={true}
                                     tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
                                        tabBarBackgroundColor='#FFFFFF'
                                        tabBarActiveTextColor='#0755a6'
@@ -276,7 +276,7 @@ export default class IssueListViewContainer extends Component {
                             }
                 }else if(Global.isSolverLeader(Global.UserInfo)){
                     return(
-                        <ScrollableTabView
+                        <ScrollableTabView locked={true}
                             tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
                             tabBarBackgroundColor='#FFFFFF'
                             tabBarActiveTextColor='#0755a6'
@@ -289,7 +289,7 @@ export default class IssueListViewContainer extends Component {
                     );
                 }else if(Global.isCoordinator(Global.UserInfo)){
                     return(
-                        <ScrollableTabView
+                        <ScrollableTabView locked={true}
                             tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
                             tabBarBackgroundColor='#FFFFFF'
                             tabBarActiveTextColor='#0755a6'

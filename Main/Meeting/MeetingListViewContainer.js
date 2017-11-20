@@ -175,7 +175,7 @@ export default class MeetingListViewContainer extends Component {
                 }
             }
 
-            return( <ScrollableTabView
+            return( <ScrollableTabView locked={true}
                 tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
                    tabBarBackgroundColor='#FFFFFF'
                    tabBarActiveTextColor='#f77935'

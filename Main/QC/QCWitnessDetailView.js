@@ -398,15 +398,7 @@ export default class QCWitnessDetailView extends Component {
 
         }
 
-        var bodyArray=[]
-        for (var i = 0; i < this.state.data.length; i++) {
-            var elemnt = new Object()
-
-            elemnt.id = this.state.data[i].id
-            elemnt.witnessaddress = this.state.data[i].choose_address
-            elemnt.witnessdate = Global.formatFullDate(this.state.data[i].choose_date)
-            bodyArray.push(elemnt)
-        }
+    
 
         this.setState({
             loadingVisible: true

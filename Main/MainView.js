@@ -73,8 +73,26 @@ export default class MainView extends Component {
           try {
               var categoryInfo = JSON.parse(map.extras)
               console.log('category====='+categoryInfo.category)
-              if (categoryInfo.category == 'CONFERENCE') {
+              if (categoryInfo.category == 'CONFERENCE'||categoryInfo.category == 'NOTIFICATION') {
                   DeviceEventEmitter.emit('operate_meeting','operate_meeting');
+              }else if (categoryInfo.category == 'CONS_ASSIGN'
+              ||categoryInfo.category == 'CONS_RELEASE'
+              ||categoryInfo.category == 'CONS_REASSIGN'
+          ) {
+                  DeviceEventEmitter.emit('plan_update','plan_update');
+              }else if (categoryInfo.category == 'WITNESS_LAUNCH'||
+                categoryInfo.category == 'WITNESS_ASSIGN'||
+                categoryInfo.category == 'WITNESS_QC2_ASSIGN'
+          ) {
+                  DeviceEventEmitter.emit('witness_update','witness_update');
+                  DeviceEventEmitter.emit('workstep_update','workstep_update');
+              }else if (categoryInfo.category == 'QUESTION_CREATE'||
+              categoryInfo.category == 'QUESTION_ASSIGN'||
+              categoryInfo.category == 'QUESTION_FEEDBACK'||
+              categoryInfo.category == 'QUESTION_ANSWER') {
+                  DeviceEventEmitter.emit('new_issue','new_issue');
+                  DeviceEventEmitter.emit('operate_issue','operate_issue');
+
               }
           } catch (e) {
                console.log('json parse error category====='+e)
@@ -85,9 +103,10 @@ export default class MainView extends Component {
 
       }
           var currentDate = new Date()
+          var count = parseInt(currentDate.getTime()/1000)
             JPushModule.sendLocalNotification(
                 {
-                    id:7,
+                    id:count,
                     buildId:1,
                     title:'中核移动施工',
                     content:''+map.message,

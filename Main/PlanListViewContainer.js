@@ -89,7 +89,7 @@ export default class PlanListViewContainer extends Component {
 
 
     rendTabs(){
-        return( <ScrollableTabView
+        return( <ScrollableTabView locked={true}
             tabBarUnderlineStyle={{backgroundColor: '#0755a6'}}
                tabBarBackgroundColor='#FFFFFF'
                tabBarActiveTextColor='#0755a6'

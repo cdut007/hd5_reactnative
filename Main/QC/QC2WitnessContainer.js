@@ -84,7 +84,7 @@ export default class QC2WitnessContainer extends Component {
 
 
     rendTabs(){
-        return( <ScrollableTabView
+        return( <ScrollableTabView locked={true}
             tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
                tabBarBackgroundColor='#FFFFFF'
                tabBarActiveTextColor='#f77935'
