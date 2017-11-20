@@ -269,6 +269,11 @@ export default class QCWitnessDetailView extends Component {
         })
         Global.showToast(response.message)
 
+                //update
+        DeviceEventEmitter.emit('workstep_update','workstep_update');
+        DeviceEventEmitter.emit('witness_update','witness_update');
+        this.back();
+
     }
 
     updateAddress(){

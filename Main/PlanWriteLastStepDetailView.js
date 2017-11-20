@@ -318,7 +318,7 @@ export default class PlanWriteLastStepDetailView extends Component {
     renderFormView(){
 
             //1  fininshed retun, jsut san
-
+            console.log('this.state.data.status ======'+this.state.data.status )
             if (this.state.data.status != 'COMPLETED' ) {
 
                 if (this.state.data.problemFlag){
