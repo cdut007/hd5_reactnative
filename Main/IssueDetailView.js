@@ -560,11 +560,13 @@ startProblem(){
         var info = '未指派'
         //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
         var color = '#777777'
+        if ((this.props.data.coordinate && this.props.data.coordinate.realname)) {
+            info = this.props.data.coordinate.realname
+            color = '#777777'
+        }
         if (this.props.data.status!='pre' || (this.props.data.designee && this.props.data.designee.realname)) {
             info = this.props.data.designee.realname
             color = '#777777'
-        }else{
-
         }
         return(
             <View style={{flexDirection: 'column', backgroundColor: 'white'}}>
@@ -603,7 +605,7 @@ startProblem(){
        let status = this.state.data.status;
        switch(status){
         case 'pre':
-          return this.state.data.designee.id ? '待解决' : '待指派';
+          return this.state.data.coordinate.id ? '待解决' : '待指派';
         case 'undo':
           return '待确认';
         case 'unsolved':

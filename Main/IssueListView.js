@@ -288,6 +288,10 @@ export default class IssueListView extends Component {
                     info = '未处理'
                     color = '#e82628'
                 }else{
+                    if (rowData.coordinate&&rowData.coordinate.realname ) {
+                        info = '指派给:'+rowData.coordinate.realname
+                        color = '#0755a6'
+                    }
                     if (rowData.designee&&rowData.designee.realname ) {
                         info = '指派给:'+rowData.designee.realname
                         color = '#0755a6'
