@@ -124,7 +124,7 @@ export default class NavBar extends Component{
                 </TouchableOpacity>
 
                 </View>
-                <View style={{backgroundColor:"#d6d6d6",height:0.5,alignSelf:'stretch',flex:1}}>
+                <View style={[{backgroundColor:"#d6d6d6",height:0.5,alignSelf:'stretch',flex:1}, this.props.lineStyle]}>
                 </View>
             </View>)
 
@@ -142,7 +142,7 @@ export default class NavBar extends Component{
                 <Animated.Text numberOfLines={1} style={[styles.title, this.props.titleStyle]}>{this.props.title}</Animated.Text>
                 {this.renderBtn(right_tag)}
                 </View>
-                <View style={{backgroundColor:"#d6d6d6",height:0.5,alignSelf:'stretch',flex:1}}>
+                <View style={[{backgroundColor:"#d6d6d6",height:0.5,alignSelf:'stretch',flex:1}, this.props.lineStyle]}>
                 </View>
             </View>
 

@@ -313,5 +313,20 @@ if (body.jsonBody) {
                 Global.showToast('服务不可用，请稍后再试')
             }
           });
-}
+},
+  printError(error){
+    try {
+      var errorInfo = JSON.parse(error);
+      if (errorInfo != null) {
+        Global.log(errorInfo)
+      } else {
+        Global.log(error)
+      }           
+    }
+    catch(error)
+    {
+      Global.log(error)
+    }          
+    Global.log('Network error:' + error)
+  }
 }

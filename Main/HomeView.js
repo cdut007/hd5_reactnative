@@ -25,6 +25,7 @@ import SafeWorkHomeView from './SafeWork/SafeWorkHomeView'
 import QualityControlHomeView from './QualityControl/QualityControlHomeView'
 import SolverLeaderView from './Problem/SolverLeaderView'
 import CoordinatorView from './Problem/CoordinatorView'
+import ResouceManageView from './ResourceManagement/ResouceManageView'
 
 
 const isIOS = Platform.OS == "ios"
@@ -270,7 +271,15 @@ export default class HomeView extends Component {
             }
 
             if (data.type == 'WZGL') {
-              Global.alert('正在开发')
+               this.props.navigator.push({
+                  component: ResouceManageView,
+                   props: {
+                       data:data,
+                       type:data.type,
+                       typeStr:typeSegArr[this.state.selectedTypeIndex],
+                       category:dayCateArr[index],
+                      }
+              })
               return;
             }
 

@@ -66,6 +66,7 @@
 		F12690CEF09E4A9BB5244372 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B9AD6B8FC7794D24BCFFDFD1 /* MaterialCommunityIcons.ttf */; };
 		F3F4C04EACB3460C9F0BE7E5 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5CEBC6D3F4B41AB92D78BAC /* libRNFetchBlob.a */; };
 		256112B42DAE4C069018D571 /* libXLogForRN.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0906B2BC1FF0409A8C6075FC /* libXLogForRN.a */; };
+		0CA510B9ACAE4A21ACE78A82 /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EA901D473B14854B14E758E /* libRCTCamera.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -436,6 +437,8 @@
 		F6FE8970F834479D8EA3BE02 /* CoreFoundation.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		0B1BA66A80DF475DA978C44F /* XLogForRN.xcodeproj */ = {isa = PBXFileReference; name = "XLogForRN.xcodeproj"; path = "../node_modules/react-native-xlog/ios/XLogForRN.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		0906B2BC1FF0409A8C6075FC /* libXLogForRN.a */ = {isa = PBXFileReference; name = "libXLogForRN.a"; path = "libXLogForRN.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		3438FD370CAF4905B82EA6C4 /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; name = "RCTCamera.xcodeproj"; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		7EA901D473B14854B14E758E /* libRCTCamera.a */ = {isa = PBXFileReference; name = "libRCTCamera.a"; path = "libRCTCamera.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -484,6 +487,7 @@
 				140AD394E79E4DBF85F4B20B /* libRNVectorIcons.a in Frameworks */,
 				F3F4C04EACB3460C9F0BE7E5 /* libRNFetchBlob.a in Frameworks */,
 				256112B42DAE4C069018D571 /* libXLogForRN.a in Frameworks */,
+				0CA510B9ACAE4A21ACE78A82 /* libRCTCamera.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -683,6 +687,7 @@
 				0031AB1A949A49EAB7C05134 /* RNVectorIcons.xcodeproj */,
 				D464028FE44B483A87435FE9 /* RNFetchBlob.xcodeproj */,
 				0B1BA66A80DF475DA978C44F /* XLogForRN.xcodeproj */,
+				3438FD370CAF4905B82EA6C4 /* RCTCamera.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1495,6 +1500,7 @@
 					"$(SRCROOT)/../node_modules/react-native-webview-bridge/ios",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
+					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
 				);
 				INFOPLIST_FILE = hd_appTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1540,6 +1546,7 @@
 					"$(SRCROOT)/../node_modules/react-native-webview-bridge/ios",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
+					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
 				);
 				INFOPLIST_FILE = hd_appTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1586,6 +1593,7 @@
 					"$(SRCROOT)/../node_modules/react-native-webview-bridge/ios",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
+					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
 				);
 				INFOPLIST_FILE = hd_app/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1617,6 +1625,7 @@
 					"$(SRCROOT)/../node_modules/react-native-webview-bridge/ios",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
+					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
 				);
 				INFOPLIST_FILE = hd_app/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1654,6 +1663,7 @@
 					"$(SRCROOT)/../node_modules/react-native-webview-bridge/ios",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
+					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
 				);
 				INFOPLIST_FILE = "hd_app-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1707,6 +1717,7 @@
 					"$(SRCROOT)/../node_modules/react-native-webview-bridge/ios",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
+					"$(SRCROOT)\..\node_modules\react-native-camera\ios",
 				);
 				INFOPLIST_FILE = "hd_app-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

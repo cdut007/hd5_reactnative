@@ -8,6 +8,7 @@ import com.engsshi.xlog.XLogModule;
 import com.engsshi.xlog.XLogPackage;
 import com.engsshi.xlog.XLogSetting;
 import com.facebook.react.ReactApplication;
+import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
 import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
@@ -43,6 +44,7 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+            new RCTCameraPackage(),
             new WebViewBridgePackage(),
             new WebViewBridgePackage(),
             new RNFetchBlobPackage(),
