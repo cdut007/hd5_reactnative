@@ -412,37 +412,37 @@ return(
   onCommit() {
 
  if (!this.state.questionName.length) {
-         alert("请输入问题名称");
+         Global.alert("请输入问题名称");
          return
  }
 
     if (this.state.machineType == '选择机组') {
-      alert("请选择机组");
+      Global.alert("请选择机组");
       return;
     }
 
     if (this.state.plantType == '选择厂房') {
-      alert("请选择厂房");
+      Global.alert("请选择厂房");
       return;
     }
     if (!this.state.elevation.length) {
-      alert("请输入标高");
+      Global.alert("请输入标高");
       return;
     }
     if (!this.state.RoomNumber.length) {
-      alert("请输入房间号");
+      Global.alert("请输入房间号");
       return;
     }
      if (!this.state.ResDepartId) {
-       alert("请选择责任部门");
+       Global.alert("请选择责任部门");
        return;
      }
      if (!this.state.question.length) {
-       alert("请输入问题描述");
+      Global.alert("请输入问题描述");
        return;
      }
      if(this.state.fileArr.length<=1){
-         alert('请选择至少一张问题图片');
+         Global.alert('请选择至少一张问题图片');
          return;
      }
 

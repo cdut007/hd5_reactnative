@@ -29,14 +29,7 @@ import QualityCheckList from './QualityCheckList'
 import ProblemReport from './ProblemReport'
 import   ScrollableTabView  from 'react-native-scrollable-tab-view';
 
-
-
 var LOADING = {};
-
-
-
-
-
 
 
 export default class ProblemView extends Component {
@@ -117,7 +110,7 @@ export default class ProblemView extends Component {
         return (
             <ProblemReport
             tabLabel={label}
-             style={{alignSelf:'stretch',flex:1}}
+             style={{flex:1}}
              type={this.props.type}
              navigator={this.props.navigator}
              />
