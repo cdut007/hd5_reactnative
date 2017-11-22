@@ -25,7 +25,7 @@ import SafeWorkHomeView from './SafeWork/SafeWorkHomeView'
 import QualityControlHomeView from './QualityControl/QualityControlHomeView'
 import SolverLeaderView from './Problem/SolverLeaderView'
 import CoordinatorView from './Problem/CoordinatorView'
-import ResouceManageView from './ResourceManagement/ResouceManageView'
+import ResourceManageView from './ResourceManagement/ResourceManageView'
 
 
 const isIOS = Platform.OS == "ios"
@@ -272,7 +272,7 @@ export default class HomeView extends Component {
 
             if (data.type == 'WZGL') {
                this.props.navigator.push({
-                  component: ResouceManageView,
+                  component: ResourceManageView,
                    props: {
                        data:data,
                        type:data.type,

@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
-import {View, Text, SectionList, Image, FlatList} from 'react-native';
+import {View, Text, SectionList, Image, FlatList, TouchableOpacity} from 'react-native';
 
 import NavBar from '../../common/NavBar';
 import SeparateComponent from '../../common/SeparateComponent';
 import Dimensions from 'Dimensions';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import HttpRequest from '../../HttpRequest/HttpRequest';
+import DepartmentDetailView from './DepartmentDetailView';
+import ResourceDetailView from './ResourceDetailView';
 
 const width = Dimensions.get('window').width;
 
@@ -60,8 +62,8 @@ export default class DailyReportView extends Component{
                     tabBarBackgroundColor='#FFFFFF'
                     tabBarActiveTextColor='#f77935'
                     tabBarInactiveTextColor='#777777'>
-                    <InStoreView tabLabel={this.state.inStore} />
-					<OutStoreView tabLabel={this.state.outStore} />
+                    <InStoreView tabLabel={this.state.inStore} {...this.props} />
+					<OutStoreView tabLabel={this.state.outStore} {...this.props} />
                 </ScrollableTabView>
 			</View>
 		);
@@ -99,7 +101,7 @@ class InStoreView extends Component{
 			param,
 			(response) => {
 				var result = response.responseResult;
-				isHasMore = result.pageNum*result.pageSize < result.totalCounts;
+				let isHasMore = result.pageNum*result.pageSize < result.totalCounts;
 				if(inPagenum==1){
 					this.state.inData = result.data;
 				}else{
@@ -141,13 +143,15 @@ class InStoreView extends Component{
 
 	renderInItem(item,color){
 		return(
-			<View style={{width:width, height:48, flexDirection:'row', backgroundColor:'#fff', alignItems:'center'}}>
-				<Text style={{flex:1, textAlign:'center', color: color}}>{item.name}</Text>
-				<Text style={{flex:1, textAlign:'center', color: color}}>{item.specificationNo}</Text>
-				<Text style={{flex:1, textAlign:'center', color: color}}>{item.warehouse}</Text>	
-				<Text style={{flex:1, textAlign:'center', color: color}}>{item.location}</Text>	
-				<Text style={{flex:1, textAlign:'center', color: color}}>{item.number}</Text>			
-			</View>
+			<TouchableOpacity onPress={() => {this.props.navigator.push({component:ResourceDetailView,props:{type:2,item:item}})}}>
+				<View style={{width:width, height:48, flexDirection:'row', backgroundColor:'#fff', alignItems:'center'}}>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.name}</Text>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.specificationNo}</Text>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.warehouse}</Text>	
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.location}</Text>	
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.number}</Text>			
+				</View>
+			</TouchableOpacity>
 		);
 	}
 
@@ -205,12 +209,14 @@ class OutStoreView extends Component{
 
 	renderOutItem(item,index){
 		return(
-			<View style={{backgroundColor:'#fff', flexDirection:'row', width:width, height:48, alignItems:'center'}}>
-				<Image source={departmentImages[(index)%8]} style={{width:34, height:34, marginLeft:10, marginRight:10}} />
-				<Text style={{flex:1, color:'#555', fontSize:16, fontWeight:'bold'}}>{item.department.name}</Text>
-				<Text style={{fontSize:14, color:'#e82628'}}>{item.output}</Text>
-				<Image source={require('../../images/detailsIcon.png')} style={{width:20, height:20, marginRight:10}} />
-			</View>
+			<TouchableOpacity onPress={() => {this.props.navigator.push({component:DepartmentDetailView, props:{item:item, title:item.department.name, type:1}})}}>
+				<View style={{backgroundColor:'#fff', flexDirection:'row', width:width, height:48, alignItems:'center'}}>
+					<Image source={departmentImages[(index)%8]} style={{width:34, height:34, marginLeft:10, marginRight:10}} />
+					<Text style={{flex:1, color:'#555', fontSize:16, fontWeight:'bold'}}>{item.department.name}</Text>
+					<Text style={{fontSize:14, color:'#e82628'}}>{item.output}</Text>
+					<Image source={require('../../images/detailsIcon.png')} style={{width:20, height:20, marginRight:10}} />
+				</View>
+			</TouchableOpacity>
 		);
 	}
 }
