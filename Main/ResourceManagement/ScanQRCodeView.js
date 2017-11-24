@@ -114,7 +114,7 @@ export default class ScanQRCodeView extends Component{
         "confirmCount": 62,
         "totalPrice": 2728,
         "keeper": "保管员-1",
-        "invoiceDate": 930240000000,
+        "invoiceDate": 1511516214000,
         "signDate": 1152633600000,
         "department": {
           "id": 104,
@@ -155,7 +155,7 @@ export default class ScanQRCodeView extends Component{
         "confirmCount": 62,
         "totalPrice": 2728,
         "keeper": "保管员-1",
-        "invoiceDate": 930240000000,
+        "invoiceDate": 1511516214000,
         "signDate": 1152633600000,
         "department": {
           "id": 104,
@@ -217,7 +217,7 @@ export default class ScanQRCodeView extends Component{
         "confirmCount": 62,
         "totalPrice": 2728,
         "keeper": "保管员-1",
-        "invoiceDate": 930240000000,
+        "invoiceDate": 1511516214000,
         "signDate": 1152633600000,
         "department": {
           "id": 104,
