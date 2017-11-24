@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import Dimensions from 'Dimensions';
-import moment from 'moment';
 
 import NavBar from '../../common/NavBar';
 import SeparateComponent from '../../common/SeparateComponent';
@@ -61,7 +60,7 @@ export default class ResourceDetailView extends Component{
 				displayArr.push({title:'数量',content:this.props.item.number})
 				break;	
 			case 4:
-				displayArr.push({title:'开票日期',content:moment(this.props.item.invoiceDate).format('YYYY/MM/DD')})
+				displayArr.push({title:'开票日期',content:new Date(this.props.item.invoiceDate).format('yyyy/MM/dd')})
 				displayArr.push({title:'物项名称',content:this.props.item.material.name})
 				displayArr.push({title:'出库单位',content:this.props.item.department.name})
 				displayArr.push({title:'领料员',content:this.props.item.receiver})
@@ -72,13 +71,13 @@ export default class ResourceDetailView extends Component{
 				displayArr.push({title:'数量',content:this.props.item.number})
 				break;
 			case 6:
-				displayArr.push({title:'开票日期',content:moment(this.props.item.invoiceDate).format('YYYY/MM/DD')})
+				displayArr.push({title:'开票日期',content:new Date(this.props.item.invoiceDate).format('yyyy/MM/dd')})
 				displayArr.push({title:'物项名称',content:this.props.item.material.name})
 				displayArr.push({title:'出库单位',content:this.props.item.department.name})
 				displayArr.push({title:'领料员',content:this.props.item.receiver})
 				break;
 			case 7:
-				displayArr.push({title:'退库日期',content:moment(this.props.item.invoiceDate).format('YYYY/MM/DD')})
+				displayArr.push({title:'退库日期',content:new Date(this.props.item.invoiceDate).format('yyyy/MM/dd')})
 				displayArr.push({title:'物项名称',content:this.props.item.material.name})
 				displayArr.push({title:'退库单位',content:this.props.item.department.name})
 				displayArr.push({title:'退库员',content:this.props.item.receiver})
@@ -121,17 +120,17 @@ export default class ResourceDetailView extends Component{
 			case 1:
 				displayArr.push({title1:'出库量:',content1:this.props.item.extractCount,title2:'核实量:',content2:this.props.item.confirmCount})
 				displayArr.push({title1:'单价(¥):',content1:this.props.item.material.price,title2:'总金额(¥):',content2:this.props.item.totalPrice})
-				displayArr.push({title1:'保管员:',content1:this.props.item.keeper,title2:'计划签发:',content2:moment(this.props.item.signDate).format('YYYY/MM/DD')})
+				displayArr.push({title1:'保管员:',content1:this.props.item.keeper,title2:'计划签发:',content2:new Date(this.props.item.signDate).format('yyyy/MM/dd')})
 				break;
 			case 4:
 				displayArr.push({title1:'出库量:',content1:this.props.item.extractCount,title2:'出库单号:',content2:this.props.item.extractNo})
 				displayArr.push({title1:'单价(¥):',content1:this.props.item.material.price,title2:'总金额(¥):',content2:this.props.item.totalPrice})
-				displayArr.push({title1:'保管员:',content1:this.props.item.keeper,title2:'计划签发:',content2:moment(this.props.item.signDate).format('YYYY/MM/DD')})
+				displayArr.push({title1:'保管员:',content1:this.props.item.keeper,title2:'计划签发:',content2:new Date(this.props.item.signDate).format('yyyy/MM/dd')})
 				break;
 			case 6:
 				displayArr.push({title1:'出库量:',content1:this.props.item.extractCount,title2:'核实量:',content2:this.props.item.confirmCount})
 				displayArr.push({title1:'单价(¥):',content1:this.props.item.material.price,title2:'总金额(¥):',content2:this.props.item.totalPrice})
-				displayArr.push({title1:'保管员:',content1:this.props.item.keeper,title2:'计划签发:',content2:moment(this.props.item.signDate).format('YYYY/MM/DD')})
+				displayArr.push({title1:'保管员:',content1:this.props.item.keeper,title2:'计划签发:',content2:new Date(this.props.item.signDate).format('yyyy/MM/dd')})
 				break;
 			case 7:
 				displayArr.push({title1:'退库量:',content1:this.props.item.extractCount,title2:'退库单号:',content2:this.props.item.extractNo})
