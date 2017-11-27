@@ -262,8 +262,34 @@ export default class WorkStepWitnessListView extends Component {
     }
 
 
+     add(dataStore,item) {
+         if (!item) {
+             return dataStore
+         }
+
+    if (dataStore.indexOf(item) > -1) {
+        return dataStore;
+    } else {
+        dataStore.push(item);
+        return dataStore;
+    }
+}
+
+
 
     renderRow(rowData, sectionID, rowID) {
+        var noticePointTypeStr = ''
+        var dataStore= []
+        this.add(dataStore,rowData.noticeQC1)
+        this.add(dataStore,rowData.noticeQC2)
+        this.add(dataStore,rowData.noticeCZECQC)
+        this.add(dataStore,rowData.noticeCZECQA)
+        this.add(dataStore,rowData.noticePAEC)
+
+        for (var i = 0; i < dataStore.length; i++) {
+            noticePointTypeStr+=dataStore[i]
+        }
+
         itemView = () => {
 
                 return (
@@ -294,7 +320,7 @@ export default class WorkStepWitnessListView extends Component {
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:10,marginBottom:2,}}>
-                           {rowData.noticeQC1} {rowData.noticeQC2}
+                           {noticePointTypeStr}
                         </Text>
 
                         </View>
