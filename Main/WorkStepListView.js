@@ -232,9 +232,20 @@ export default class WorkStepListView extends Component {
 
 
            onWitnessPress(itemData){
+               if (itemData.witessAgain) {
+                   this.props.navigator.push({
+                       component: WitnessDetailView,
+                        props: {
+                            data:itemData,
+                           }
+                   })
+                   return
+               }
+
                if (itemData.hasCheckedBtn) {
                    return
                }
+
                this.props.navigator.push({
                    component: WitnessDetailView,
                     props: {
@@ -322,6 +333,7 @@ export default class WorkStepListView extends Component {
            }
 
            item.hasCheckedBtn = true
+            item.witessAgain = witessAgain
 
            return (<View style= {styles.desc_check}>
                {this.renderCheckLabel(witessAgain)}
