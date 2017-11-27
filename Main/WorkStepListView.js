@@ -161,7 +161,7 @@ export default class WorkStepListView extends Component {
     renderDetailView(){
             return(<ScrollView
             keyboardDismissMode='on-drag'
-            
+
             style={styles.mainStyle}>
             {this.renderItem()}
                    </ScrollView>);
@@ -248,8 +248,10 @@ export default class WorkStepListView extends Component {
 
                    <View>
                    <TouchableOpacity style= {styles.item_container} onPress={this.onWitnessPress.bind(this,data)}>
-                       <Text style= {styles.title}>{data.stepno}{'、'} {data.stepname}</Text>
+                       <View style={{flex:4}}>
+                       <Text style= {[styles.step_title,{margin:5}]}>{data.stepno}{'、'} {data.stepname}</Text>
                         {this.renderQC(data)}
+                       </View>
                        {this.renderCheckBox(data)}
                    </TouchableOpacity>
                    <View style={styles.divider_line}/>
@@ -264,17 +266,35 @@ export default class WorkStepListView extends Component {
                    return
                }
 
-               if (item.noticeQC1 && item.noticeQC2) {
-                   return(<Text style= {styles.detail}>QC1({item.noticeQC1}) QC2({item.noticeQC2})</Text>)
+               var noticePoint = ''
+
+
+               if (item.noticeQC1) {
+                   noticePoint+='QC1('+item.noticeQC1+')  ';
+
+               }
+               if (item.noticeQC2) {
+                   noticePoint+='QC2('+item.noticeQC2+')  ';
+
+               }
+               if (item.noticeCZECQC) {
+                   noticePoint+='CZECQC('+item.noticeCZECQC+')  ';
+
+               }
+               if (item.noticeCZECQA) {
+                   noticePoint+='CZECQA('+item.noticeCZECQA+')  ';
+
+               }
+               if (item.noticePAEC) {
+                   noticePoint+='PAEC('+item.noticePAEC+')  ';
+
                }
 
-               if (item.noticeQC1 && !item.noticeQC2) {
-                   return(<Text style= {styles.detail}>QC1({item.noticeQC1})</Text>)
+
+               if (noticePoint!='') {
+                   return(<Text style= {[styles.detail,{marginLeft:10,fontSize:10}]}>{noticePoint}</Text>)
                }
 
-               if (!item.noticeQC1 && item.noticeQC2) {
-                   return(<Text style= {styles.detail}>QC2({item.noticeQC2})</Text>)
-               }
 
 
            }
@@ -357,7 +377,7 @@ const styles = StyleSheet.create({
     paddingTop:8,
     backgroundColor:'#ffffff',
     paddingBottom:8,
-    height: 48,
+    height: 68,
     alignItems: 'center',
 
 },
@@ -405,6 +425,11 @@ const styles = StyleSheet.create({
             },
             title: {
                 width: width * 0.45,
+                fontSize: 14,
+                color: "#1c1c1c"
+            },
+            step_title: {
+
                 fontSize: 14,
                 color: "#1c1c1c"
             },
