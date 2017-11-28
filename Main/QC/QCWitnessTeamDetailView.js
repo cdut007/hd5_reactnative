@@ -38,7 +38,9 @@ export default class QCWitnessTeamDetailView extends Component {
     constructor(props) {
         super(props);
         var data = this.props.data
-        data.rollingPlan = new Object()
+        if (!data.rollingPlan) {
+            data.rollingPlan = new Object()
+        } 
         var displayInfo = '选择QC1'
         if (Global.isQC2Team(Global.UserInfo)) {
             displayInfo = '选择QC2'
@@ -312,7 +314,7 @@ export default class QCWitnessTeamDetailView extends Component {
     renderDetailView(){
             return(<ScrollView
             keyboardDismissMode='on-drag'
-            
+
             style={styles.mainStyle}>
             {this.renderChooseOptions()}
                 {this.renderItem()}

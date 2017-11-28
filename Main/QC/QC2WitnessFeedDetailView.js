@@ -67,7 +67,9 @@ export default class QC2WitnessFeedDetailView extends Component {
     constructor(props) {
         super(props);
         var data = this.props.data
-        data.rollingPlan = new Object()
+        if (!data.rollingPlan) {
+            data.rollingPlan = new Object()
+        }
         this.state = {
             title: '见证回填',
             isHankouType:1,
