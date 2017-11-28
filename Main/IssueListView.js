@@ -144,7 +144,7 @@ export default class IssueListView extends Component {
 
          var status = paramBody.status
 
-        if (this.state.isRefreshing) {
+        if (this.state.isRefreshing || paramBody.pagenum == 1) {
             this.state.items = datas;
             pageNo = 1;
         }else{
