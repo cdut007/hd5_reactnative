@@ -66,11 +66,9 @@ var options = {
 export default class IssueDetailView extends Component {
     constructor(props) {
         super(props);
-        var data = this.props.data
-        data.rollingPlan = new Object()
         this.state = {
             title: '问题详情',
-            data:data,
+            data:this.props.data,
             rolve_member:null,
             members:[],
             memberIds:[],
