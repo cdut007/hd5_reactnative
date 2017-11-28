@@ -268,7 +268,7 @@ export default class IssueListView extends Component {
         var itemsArray = [];
         var len = item.fileSize;
         for (var i = 0; i < len; i++) {
-            itemsArray.push(<Image style={{width:24,height:24,marginLeft:10}} source={require('../images/problem_icon_click.png')} />)
+            itemsArray.push(<Image key={i} style={{width:24,height:24,marginLeft:10}} source={require('../images/problem_icon_click.png')} />)
         }
 
         return itemsArray
