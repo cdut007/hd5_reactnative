@@ -260,7 +260,7 @@ export default class QC2WitnessListDeliveryView extends Component {
 
          var status = paramBody.status
 
-        if (this.state.isRefreshing) {
+        if (this.state.isRefreshing || pageNo == 1 ) {
             this.state.items = datas;
             pageNo = 1;
         }else{
