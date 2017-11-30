@@ -39,7 +39,9 @@ export default class WitnessDetailView extends Component {
     constructor(props) {
         super(props);
         var data = this.props.data
-        data.rollingPlan = new Object()
+        if (!data.rollingPlan) {
+            data.rollingPlan = new Object()
+        } 
         this.state = {
             title: '见证详情',
             data:data,
@@ -191,7 +193,7 @@ export default class WitnessDetailView extends Component {
     renderDetailView(){
             return(<ScrollView
             keyboardDismissMode='on-drag'
-            
+
             style={styles.mainStyle}>
                 {this.renderItem()}
                    </ScrollView>);

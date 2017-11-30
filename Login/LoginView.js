@@ -199,6 +199,7 @@ export default class LoginView extends Component {
 
 
             <View style={styles.rootcontainer}>
+
             <Image style={{position:'absolute',left:0,top:0,resizeMode:'stretch', alignItems:'center',
                             width:width,height:height,
                   justifyContent:'center',

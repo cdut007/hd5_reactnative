@@ -1005,6 +1005,7 @@ createChooseInfo(icon,label,desc,data,tag){
                     leftPress={this.back.bind(this)}
                      />
                      <ScrollView
+                     
                      style={styles.mainStyle}>
                      {this.renderItem()}
                         </ScrollView>

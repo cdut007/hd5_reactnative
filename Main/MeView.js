@@ -10,6 +10,7 @@ import {
     TouchableHighlight,
     AsyncStorage,
     NativeModules,
+    TextInput
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar';
@@ -189,6 +190,7 @@ export default class MeView extends Component {
                     fontSize:18,}}>
                     {dept}
                     </Text>
+
 
                 </View>
 

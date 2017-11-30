@@ -209,9 +209,9 @@ public class ReactEditText extends EditText {
     Log.i("editText","request foucs~~~~~"+mIsJSSettingFocus);
     // Always return true if we are already focused. This is used by android in certain places,
     // such as text selection.
-    // if (isFocused()) {
-    //   return true;
-    // }
+    if (isFocused()) {
+      return true;
+    }
 
 
     if (!mIsJSSettingFocus) {

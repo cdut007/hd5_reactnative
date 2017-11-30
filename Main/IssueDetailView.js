@@ -66,11 +66,9 @@ var options = {
 export default class IssueDetailView extends Component {
     constructor(props) {
         super(props);
-        var data = this.props.data
-        data.rollingPlan = new Object()
         this.state = {
             title: '问题详情',
-            data:data,
+            data:this.props.data,
             rolve_member:null,
             members:[],
             memberIds:[],
@@ -774,7 +772,7 @@ startProblem(){
               <ImageBackground style={{width: 70, height: 70, marginLeft: 10}} source={require('../images/temporary_img.png')}>
                 <Image
                   style = {{width: 70, height: 70, borderRadius: 4, resizeMode: 'cover'}}
-                  source = {{uri: item.path}} />
+                  source = {{uri: HttpRequest.getDomain() + item.path}} />
               </ImageBackground>
             </TouchableOpacity>
 
@@ -787,9 +785,9 @@ startProblem(){
     viewBigImages(isFeedback, index){
       var imageUrls = [];
       if(isFeedback){
-        this.state.data.feedback[0].files.map((item) => {imageUrls.push({url: item.path})});
+        this.state.data.feedback[0].files.map((item) => {imageUrls.push({url:  HttpRequest.getDomain() + item.path})});
       }else{
-        this.state.data.files.map((item) => {imageUrls.push({url: item.path})});
+        this.state.data.files.map((item) => {imageUrls.push({url:  HttpRequest.getDomain() + item.path})});
       }
       this.setState({modalVisible: true, bigImages: imageUrls, currentImageIndex: index})
     }

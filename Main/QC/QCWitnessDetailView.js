@@ -74,7 +74,9 @@ export default class QCWitnessDetailView extends Component {
     constructor(props) {
         super(props);
         var data = this.props.data
-        data.rollingPlan = new Object()
+        if (!data.rollingPlan) {
+            data.rollingPlan = new Object()
+        } 
         this.state = {
             title: '见证详情',
             isHankouType:1,
