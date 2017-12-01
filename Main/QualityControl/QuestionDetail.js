@@ -238,7 +238,7 @@ export default class QuestionDetail extends Component {
       solveAgainFiles = [];
 
         this.state.data.files.forEach((item) => {
-           item['url'] = item['path'];
+           item['url'] = HttpRequest.getDomain() + item['path'];
       })
 
         this.state.data.files.forEach((item) => {
