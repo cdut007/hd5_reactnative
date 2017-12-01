@@ -152,7 +152,9 @@ export default class PlanListView extends Component {
             datas = response.responseResult.data
         }
 
-
+        if (!datas) {
+            datas = []
+        }
 
 
         if (this.state.filter !== query) {
