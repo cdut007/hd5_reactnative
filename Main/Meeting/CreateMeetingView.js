@@ -708,9 +708,12 @@ createEnter(icon,label,desc,tag){
 
 onEnterClick(tag){
     if (tag == 'subject') {
+        var scan = this.state.data.source == 'WEB'?true:false
         this.props.navigator.push({
             component: EditSubjectView,
              props: {
+                 web:scan,
+                 scan:scan,
                  data:this.state.data,
                  refresh:this.refresh.bind(this),
                 }
@@ -1005,7 +1008,7 @@ createChooseInfo(icon,label,desc,data,tag){
                     leftPress={this.back.bind(this)}
                      />
                      <ScrollView
-                     
+
                      style={styles.mainStyle}>
                      {this.renderItem()}
                         </ScrollView>

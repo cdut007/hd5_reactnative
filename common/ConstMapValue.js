@@ -113,7 +113,7 @@ module.exports = {
          displayAry.push({title:'房间号',content:data.roomNo,id:'x6'});
          displayAry.push({title:'工程量编号',content:data.projectNo,id:'x7'});
          displayAry.push({title:'工程量类别',content:data.projectType,id:'x8'});
-         displayAry.push({title:'ITP编号',content:data.itpNo,id:'x9'},);
+         //displayAry.push({title:'ITP编号',content:data.itpNo,id:'x9'},);
          displayAry.push({title:'ITP名称',content:data.itpName,id:'x10'},);
 
             if (type == 'GDJH') {

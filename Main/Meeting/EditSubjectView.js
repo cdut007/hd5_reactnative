@@ -10,7 +10,8 @@ import {
     TouchableHighlight,
     Picker,
     AsyncStorage,
-    ScrollView
+    ScrollView,
+    WebView
 } from 'react-native';
 
 import CustomTextInput from '../../common/CustomTextInput'
@@ -91,47 +92,86 @@ export default class EditSubjectView extends Component {
 
     render() {
         if (this.props.scan) {
-            return (
-                <View style={styles.container}>
-                    <NavBar
-                        title={this.state.title}
-                        leftIcon={require('../../images/back.png')}
-                        leftPress={this.back.bind(this)} />
-                        <ScrollView
-                        style={styles.mainStyle}>
-                        <DisplayItemView
-                         title={'主题'}
-                         detail={this.state.subject}
-                        />
+                if (this.props.web) {
+                    return (
+                        <View style={styles.container}>
+                            <NavBar
+                                title={this.state.title}
+                                leftIcon={require('../../images/back.png')}
+                                leftPress={this.back.bind(this)} />
+                                <ScrollView
+                                style={styles.mainStyle}>
+                                <DisplayItemView
+                                 title={'主题'}
+                                 detail={this.state.subject}
+                                />
 
-                        <View style={{backgroundColor: 'white', width: width, height: 150, paddingTop: 10, paddingLeft: 10,}}>
-                          <Text style={{color: '#1c1c1c', fontSize: 14}}>正文:</Text>
-                          <CustomTextInput
-                              style={{flex: 1, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}}
-                              underlineColorAndroid ='transparent'
-                              editable={false}
-                              maxLength = {150}
-                              multiline = {true}
-                              onChangeText={(text) => this.setState({ content: text })}
-                              value={this.state.content} />
+                                <View style={{backgroundColor: 'white', width: width, height: height-130, paddingTop: 10, paddingLeft: 10,}}>
+                                  <Text style={{color: '#1c1c1c', fontSize: 14}}>正文:</Text>
 
-                              {/* <RichTextEditor
-                                 ref={(r)=>this.richtext = r}
-                                 style={styles.richText}
-                                 initialTitleHTML={'Title!!'}
-                                 initialContentHTML={'Hello <b>World</b> <p>this is a new paragraph</p> <p>this is another new paragraph</p>'}
-                                 editorInitializedCallback={() => this.onEditorInitialized()}
-                             />
-                             <RichTextToolbar
-                               getEditor={() => this.richtext}
-                             /> */}
+                                      <WebView  style={{width:width,flex:1}}
+
+                                                     source={{html: this.state.content}}
+                                                      javaScriptEnabled={true}
+                                                      domStorageEnabled={true}
+                                                      bounces={false}
+                                                      scrollEnabled={false}
+                                                      automaticallyAdjustContentInsets={true}
+                                                      contentInset={{top:0,left:0}}
+
+                                             >
+
+                                             </WebView>
+                                </View>
+
+                                </ScrollView>
+                                {this.renderFormView()}
+
                         </View>
+                    )
+                }else{
+                    return (
+                        <View style={styles.container}>
+                            <NavBar
+                                title={this.state.title}
+                                leftIcon={require('../../images/back.png')}
+                                leftPress={this.back.bind(this)} />
+                                <ScrollView
+                                style={styles.mainStyle}>
+                                <DisplayItemView
+                                 title={'主题'}
+                                 detail={this.state.subject}
+                                />
 
-                        </ScrollView>
-                        {this.renderFormView()}
+                                <View style={{backgroundColor: 'white', width: width, height: 150, paddingTop: 10, paddingLeft: 10,}}>
+                                  <Text style={{color: '#1c1c1c', fontSize: 14}}>正文:</Text>
+                                  <CustomTextInput
+                                      style={{flex: 1, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}}
+                                      underlineColorAndroid ='transparent'
+                                      editable={false}
+                                      maxLength = {150}
+                                      multiline = {true}
+                                      onChangeText={(text) => this.setState({ content: text })}
+                                      value={this.state.content} />
 
-                </View>
-            )
+                                      {/* <RichTextEditor
+                                         ref={(r)=>this.richtext = r}
+                                         style={styles.richText}
+                                         initialTitleHTML={'Title!!'}
+                                         initialContentHTML={'Hello <b>World</b> <p>this is a new paragraph</p> <p>this is another new paragraph</p>'}
+                                         editorInitializedCallback={() => this.onEditorInitialized()}
+                                     />
+                                     <RichTextToolbar
+                                       getEditor={() => this.richtext}
+                                     /> */}
+                                </View>
+
+                                </ScrollView>
+                                {this.renderFormView()}
+
+                        </View>
+                    )
+                }
         }else{
             return (
                 <View style={styles.container}>

@@ -99,7 +99,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
 
 
 
-    renderGroupPlanView(label,index) {
+    renderGroupPlanView(label,status) {
             var plan_col_map = ConstMapValue.Plan_Col_Map(this.props.type)
         return (
             <View  tabLabel={label} style={{marginTop:10,}}>
@@ -162,7 +162,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
              type={this.props.type}
              ref={(c) => this._plan_list_ref = c}
               keyword={this.state.keyword}
-             status={groupStatusDatas[index].status}
+             status={status}
              navigator={this.props.navigator}
              />
             </View>
@@ -178,8 +178,8 @@ export default class PlanStatisticsSubViewContainer extends Component {
                    tabBarActiveTextColor='#f77935'
                    tabBarInactiveTextColor='#777777'
         >
-             {this.renderGroupPlanView('未完成任务',0)}
-             {this.renderGroupPlanView('已完成任务',1)}
+             {this.renderUnassignedView('未完成任务',groupStatusDatas[0].status)}
+             {this.renderGroupPlanView('已完成任务',groupStatusDatas[1].status)}
         </ScrollableTabView>
 
             )
@@ -190,8 +190,8 @@ export default class PlanStatisticsSubViewContainer extends Component {
                    tabBarActiveTextColor='#f77935'
                    tabBarInactiveTextColor='#777777'
         >
-             {this.renderAssignedListView('已分派任务',0)}
-             {this.renderUnassignedView('待分配任务',1)}
+             {this.renderAssignedListView('已分派任务',statusDatas[0].status)}
+             {this.renderUnassignedView('待分配任务',statusDatas[1].status)}
         </ScrollableTabView>
 
             )
@@ -222,7 +222,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
             clearTimeout(timer);
         }
         timer = setTimeout(() => {
-            
+
                 this._plan_list_ref._onRefresh()
         }, 1000);
     }
@@ -245,7 +245,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
     }
 
 
-     renderUnassignedView(label,index) {
+     renderUnassignedView(label,status) {
          var userId = '';
          if (this.props.data.user) {
              userId = this.props.data.user.id
@@ -257,7 +257,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
              style={{alignSelf:'stretch',flex:1}}
              type={this.props.type}
              ref={(c) => this._plan_list_ref = c}
-             status={statusDatas[index].status}
+             status={status}
              userId={userId}
              keyword={this.state.keyword}
              navigator={this.props.navigator}
@@ -266,7 +266,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
         )
     }
 
-    renderAssignedListView(label,index) {
+    renderAssignedListView(label,status) {
         var userId = '';
         if (this.props.data.user) {
             userId = this.props.data.user.id
@@ -278,7 +278,7 @@ export default class PlanStatisticsSubViewContainer extends Component {
              type={this.props.type}
              data = {this.props.data}
              userId={userId}
-             status={statusDatas[index].status}
+             status={status}
              navigator={this.props.navigator}
              />
 

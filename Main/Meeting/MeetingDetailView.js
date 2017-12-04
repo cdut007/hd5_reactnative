@@ -105,11 +105,12 @@ export default class MeetingDetailView extends Component {
 
   onEnterClick(tag){
       if (tag == 'subject') {
+              var web = this.state.data.source == 'WEB'?true:false
           this.props.navigator.push({
               component: EditSubjectView,
                props: {
                    data:this.state.data,
-
+                   web:web,
                    scan:true,
                   }
           })
