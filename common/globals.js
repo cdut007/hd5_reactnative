@@ -43,14 +43,23 @@ module.exports = {
     STAGING_BASE_URL:'http://ucstage.sealedchat.com:8008/api',
     ICON_URL:'http://ucstage.sealedchat.com:8008/api',
     formatDate(time){
+        if (!time) {
+            return ''
+        }
         var curTime = new Date(time).format("yyyy/MM/dd");
         return curTime
     },
     formatFullDate(time){
+        if (!time) {
+            return ''
+        }
         var curTime = new Date(time).format("yyyy-MM-dd hh:mm:ss");
         return curTime
     },
     formatFullDateDisplay(time){
+        if (!time) {
+            return ''
+        }
         var curTime = new Date(time).format("yyyy-MM-dd hh:mm");
         return curTime
     },
@@ -201,6 +210,8 @@ module.exports = {
             return '未完成'
         }else if (status == 'PROGRESSING') {
             return '未完成'
+        }else if (status == 'UNPROGRESSING') {
+            return '未开始'
         }else {
             return status
         }

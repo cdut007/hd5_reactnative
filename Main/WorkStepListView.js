@@ -200,6 +200,10 @@ export default class WorkStepListView extends Component {
 
            ];
 
+           if (this.props.batch) {
+               displayAry=[]
+           }
+
 
                // 遍历
                for (var i = 0; i<displayAry.length; i++) {

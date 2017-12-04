@@ -29,6 +29,7 @@ import CheckBox from 'react-native-checkbox'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LoadEmptyView from '../common/LoadEmptyView.js'
 import ConstMapValue from '../common/ConstMapValue.js';
+import WorkStepListView from './WorkStepListView';
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -438,7 +439,40 @@ export default class PlanListDeliveryView extends Component {
             return(<View style={{height:50,}}><CommitButton title={'确认分派'}
                     onPress={this.startDelivery.bind(this)}></CommitButton></View>
         )
-        }
+    }else if (this.isPlanBatchWitness()) {
+        return(<View style={{height:50,}}><CommitButton title={'批量见证'}
+                onPress={this.startWitness.bind(this)}></CommitButton></View>
+    )
+    }
+    }
+
+    startWitness(){
+
+                var selectItems = []
+                var ids='';
+                var oneitem;
+                this.state.items.map((item, i) => {
+                                if (item.selected) {
+                                    oneitem=item
+                                    selectItems.push(item.id)
+                                    ids+=item.id+',';
+                                    Global.log(item.selected+'status ，selected==='+item.id)
+                                }
+                            })
+                if (selectItems.length == 0) {
+                    Global.alert('请选择任务')
+                    return
+                }
+                ids = ids.substr(0,ids.length-1)
+
+                this.props.navigator.push({
+                    component: WorkStepListView,
+                     props: {
+                         data:oneitem,
+                         batch:true,
+                        }
+                })
+
     }
 
     startDelivery(){
@@ -517,10 +551,20 @@ export default class PlanListDeliveryView extends Component {
         DeviceEventEmitter.emit('plan_update','plan_update');
     }
 
+    isPlanBatchWitness(){
+        if (Global.isGroup(Global.UserInfo) && this.props.status == 'UNCOMPLETE') {
+            return true
+        }
+
+        return false
+    }
+
     renderTitleColsSpace(){
         if (Global.isMonitor(Global.UserInfo)) {
             // return(<View style={[styles.cell,{flex:0.5}]}>
             // </View>)
+            return (this.renderTitleColsCheckBox(null,-1))
+        }else if (this.isPlanBatchWitness()) {
             return (this.renderTitleColsCheckBox(null,-1))
         }
     }
@@ -592,7 +636,7 @@ export default class PlanListDeliveryView extends Component {
         return index;
     }
     renderTitleColsCheckBox(rowData,rowID){
-        if (Global.isMonitor(Global.UserInfo)) {
+        if (Global.isMonitor(Global.UserInfo) || this.isPlanBatchWitness()) {
             return(<View style={[styles.cell,{flex:0.5,}]}>
             <View style={{  alignItems: 'center', justifyContent: 'center', }}>
                         {this.renderCheckBox(rowData,rowID)}
