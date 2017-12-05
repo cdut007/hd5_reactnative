@@ -43,6 +43,7 @@ export default class BatchWorkStepListView extends Component {
         this.state = {
             title: '选择工序',
             data:[],
+            loadingEnd:false,
         };
     }
 
@@ -62,6 +63,7 @@ export default class BatchWorkStepListView extends Component {
 
          this.setState({
              data:response.responseResult,
+             loadingEnd:true,
          });
      }
 
@@ -73,7 +75,7 @@ export default class BatchWorkStepListView extends Component {
 
     HttpRequest.get('/workstep/workStepList', paramBody, this.onGetDataSuccess.bind(this),
         (e) => {
-
+            this.setState({ loadingEnd:true})
             try {
                 var errorInfo = JSON.parse(e);
                 if (errorInfo != null) {
@@ -217,9 +219,16 @@ export default class BatchWorkStepListView extends Component {
                   <View style={styles.divider}/>
                );
                if (!this.state.data || this.state.data.length == 0) {
-                     itemAry.push(<View style= {{flex:1}}>
-                               <Text style= {[styles.step_title,{margin:5}]}>暂无数据</Text>
-                               </View>)
+                   if (this.state.loadingEnd) {
+                       itemAry.push(<View style= {{flex:1}}>
+                                 <Text style= {[styles.step_title,{margin:5}]}>暂无数据</Text>
+                                 </View>)
+                   }else{
+                       itemAry.push(<View style= {{flex:1}}>
+                                 <Text style= {[styles.step_title,{margin:5}]}>正在加载...</Text>
+                                 </View>)
+                   }
+
                }else{
                    for (var i = 0; i < this.state.data.length; i++) {
                        itemAry.push(this.renderWorkStepItem(i,this.state.data[i]))
@@ -260,7 +269,7 @@ export default class BatchWorkStepListView extends Component {
                    <View>
                    <TouchableOpacity style= {styles.item_container} onPress={this.onWitnessPress.bind(this,data)}>
                        <View style={{flex:4}}>
-                       <Text style= {[styles.step_title,{margin:5}]}>{data.stepIdentifier}{'、'} {data.stepName}</Text>
+                       <Text style= {[styles.step_title,{margin:5}]}>{data.stepIdentifier}{'、'} {data.stepname}</Text>
                         {this.renderQC(data)}
                        </View>
                        {this.renderCheckBox(data)}

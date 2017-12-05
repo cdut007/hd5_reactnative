@@ -236,9 +236,9 @@ export default class WorkStepListView extends Component {
            onWitnessPress(itemData){
                console.log('witessAgain===='+itemData.witessAgain+';itemData.hasCheckedBtn=='+itemData.hasCheckedBtn)
 
-              if (typeof(itemData.witessAgain) == "undefined"&& typeof(itemData.hasCheckedBtn) == "undefined"){
-                  return
-              }
+            //   if (typeof(itemData.witessAgain) == "undefined"&& typeof(itemData.hasCheckedBtn) == "undefined"){
+            //       return
+            //   }
 
                if (itemData.witessAgain) {
                    this.props.navigator.push({

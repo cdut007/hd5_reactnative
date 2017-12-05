@@ -76,7 +76,7 @@ export default class QCWitnessDetailView extends Component {
         var data = this.props.data
         if (!data.rollingPlan) {
             data.rollingPlan = new Object()
-        } 
+        }
         this.state = {
             title: '见证详情',
             isHankouType:1,
@@ -1039,7 +1039,10 @@ export default class QCWitnessDetailView extends Component {
 
            ];
 
-            // if (Global.isQC2Member(Global.UserInfo)) {
+           //回填显示历史见证记录。
+           
+
+             if (Global.isQC2Member(Global.UserInfo)) {
                   displayAry = []
                   if (this.state.data.subWitness) {
                       for (var i = 0; i < this.state.data.subWitness.length; i++) {
@@ -1051,8 +1054,9 @@ export default class QCWitnessDetailView extends Component {
                       }
                       displayAry.push({type:'devider'},);
                   }
+             }
 
-            // }
+
 
                 if (this.state.choose_result == '不合格') {
                  displayAry.push({title:'不合格绘制',id:'not_ok',type:'not_ok'});

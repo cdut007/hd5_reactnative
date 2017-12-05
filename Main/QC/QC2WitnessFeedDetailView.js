@@ -77,6 +77,7 @@ export default class QC2WitnessFeedDetailView extends Component {
             choose_address:null,
             choose_date:null,
             input_witnessdesc:null,
+            substitute:null,
             input_dosage:null,
             choose_result:null,
             remark:null,
@@ -328,6 +329,16 @@ export default class QC2WitnessFeedDetailView extends Component {
             }
         }
 
+         if (Global.isQC2Member(Global.UserInfo)) {
+
+                if (!this.state.substitute) {
+                    Global.alert('请输入代替见证人')
+                    return
+                }
+
+        }
+
+
 
         this.setState({
             loadingVisible: true
@@ -339,6 +350,7 @@ export default class QC2WitnessFeedDetailView extends Component {
             param.append('witnessaddress', this.state.choose_address)
             param.append('witnessdate',  Global.formatFullDate(this.state.choose_date))
             param.append('witnessdesc', this.state.input_witnessdesc)
+            param.append('substitute',this.state.substitute)
             param.append('dosage', this.state.input_dosage)
             param.append('isok', result)
             param.append('remark', this.state.remark)
@@ -371,6 +383,7 @@ export default class QC2WitnessFeedDetailView extends Component {
                      witnessaddress:this.state.choose_address,
                      witnessdate:Global.formatFullDate(this.state.choose_date),
                      witnessdesc:this.state.input_witnessdesc,
+                     substitute:this.state.substitute,
                      dosage:this.state.input_dosage,
                      isok:result,
                 }
@@ -833,6 +846,11 @@ export default class QC2WitnessFeedDetailView extends Component {
                  {type:'devider'},
 
            ];
+
+           if (Global.isQC2Member(Global.UserInfo)) {
+               {title:'代替见证人',id:'substitute',content:this.state.substitute,type:'input'},
+
+           }
 
 
 
