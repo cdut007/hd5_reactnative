@@ -234,6 +234,9 @@ export default class WorkStepListView extends Component {
 
 
            onWitnessPress(itemData){
+               console.log('witessAgain===='+itemData.witessAgain+';itemData.hasCheckedBtn=='+itemData.hasCheckedBtn)
+
+               
                if (itemData.witessAgain) {
                    this.props.navigator.push({
                        component: WitnessDetailView,
@@ -262,7 +265,7 @@ export default class WorkStepListView extends Component {
                    <View>
                    <TouchableOpacity style= {styles.item_container} onPress={this.onWitnessPress.bind(this,data)}>
                        <View style={{flex:4}}>
-                       <Text style= {[styles.step_title,{margin:5}]}>{data.stepno}{'、'} {data.stepname}</Text>
+                       <Text style= {[styles.step_title,{margin:5}]}>{data.stepIdentifier}{'、'} {data.stepname}</Text>
                         {this.renderQC(data)}
                        </View>
                        {this.renderCheckBox(data)}
