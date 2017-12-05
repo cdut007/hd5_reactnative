@@ -158,6 +158,14 @@ module.exports = {
         var roleType = user.roles[0].roleType[0]
         return roleType == 'QC1'
     },
+    isHSE(user){
+        if (!user) {
+            console.log('maybe crash recycle from the memery cache, can read data again ??')
+            return false
+        }
+        var roleType = user.department.name;
+        return roleType == 'HSE部'
+    },
 
     alert(content){
         if (Platform.OS === 'ios'){
