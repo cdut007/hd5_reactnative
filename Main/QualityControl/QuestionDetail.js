@@ -29,6 +29,7 @@ import dateformat from 'dateformat'
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Spinner from 'react-native-loading-spinner-overlay'
 import MemberSelectView from '../../common/MemberSelectView'
+import CloseProblem from '../QualityControl/CloseProblem'
 
 const MAX_IMAGE_COUNT = 5;
 
@@ -59,6 +60,8 @@ var teams = [];
 var problemFiles = [];
 var solveFiles = [];
 var solveAgainFiles = [];
+var assinList = [];
+
 
 var width = Dimensions.get('window').width;
 var historyData = new FormData()
@@ -72,6 +75,10 @@ export default class QuestionDetail extends Component {
 
      this.state = {
        data : this.props.data,
+       loadingVisible:false,
+       qcdetail:"选择QC1",
+       assignList:null,
+       qcdetailId:null,
      }
 
   }
@@ -91,10 +98,239 @@ export default class QuestionDetail extends Component {
             <ScrollView>
                    {this.renderItem()}
             </ScrollView>
+                {this.renderCommitBtn()}
+            <Spinner
+                visible={this.state.loadingVisible}
+              />
         </View>
     )
 
   }
+
+
+
+renderCommitBtn(){
+
+  if ( Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreQCLeaderAssign') {
+        return   this.renderWaitCommit();
+  }else if ( Global.isQC1(Global.UserInfo) && this.state.data.status == 'PreQCAssign') {
+       return this.renderQcAssign();
+  }
+
+}
+
+renderQcAssign(){
+
+  return(
+    <View style={{height:50,width:width,flexDirection:'row'}}>
+  <View style={{height:50,flex:1}}>
+    <CommitButton
+      title={'关闭'}
+      onPress={this.reject.bind(this)}
+    containerStyle={{backgroundColor:'#ffffff'}}
+      titleStyle={{color: '#f77935'}}
+>
+    </CommitButton>
+    </View>
+    <View style={{height:50,flex:1}}>
+      <CommitButton
+        title={'整改'}
+        onPress={this.verify.bind(this)}
+        >
+      </CommitButton>
+    </View>
+    </View>)
+
+}
+
+//按钮点击的处理
+reject(){
+
+  this.props.navigator.push({
+      component: CloseProblem,
+       props: {
+           data:this.state.data,
+          }
+  })
+
+}
+verify(){
+
+
+  Alert.alert('','确认整改?',
+            [
+              {text:'取消',},
+              {text:'确认',onPress:()=> {this.confirmVeify()}}
+])
+}
+
+confirmReject(){
+
+  this.setState({
+           loadingVisible: true
+       });
+
+       var paramBody = {
+                'problemId' : this.state.data.id,
+           }
+
+  HttpRequest.post('/qualityControl/qcVerify', paramBody, this.onDeliverySuccess.bind(this),
+      (e) => {
+        this.setState({
+            loadingVisible: false
+        });
+        try {
+            var errorInfo = JSON.parse(e);
+        }
+        catch(err)
+        {
+            console.log("error======"+err)
+        }
+            if (errorInfo != null) {
+                if (errorInfo.code == -1002||
+                 errorInfo.code == -1001) {
+                Global.showToast(errorInfo.message);
+            }else {
+              Global.showToast(e)
+            }
+
+            } else {
+                Global.showToast(e)
+            }
+
+        console.log('Login error:' + e)
+      })
+
+}
+confirmVeify(){
+
+
+  this.setState({
+           loadingVisible: true
+       });
+
+       var paramBody = {
+                'problemId' : this.state.data.id,
+           }
+
+
+
+  HttpRequest.post('/qualityControl/qcAssign', paramBody, this.onDeliverySuccess.bind(this),
+      (e) => {
+        this.setState({
+            loadingVisible: false
+        });
+        try {
+            var errorInfo = JSON.parse(e);
+        }
+        catch(err)
+        {
+            console.log("error======"+err)
+        }
+            if (errorInfo != null) {
+                if (errorInfo.code == -1002||
+                 errorInfo.code == -1001) {
+                Global.showToast(errorInfo.message);
+            }else {
+              Global.showToast(e)
+            }
+
+            } else {
+                Global.showToast(e)
+            }
+
+        console.log('Login error:' + e)
+      })
+
+}
+
+renderWaitCommit(){
+
+return(
+  <View style={{height:50,width:width,flexDirection:'row'}}>
+  <CommitButton title={'分派'}
+  onPress={this.commit.bind(this)}
+    >
+  </CommitButton>
+  </View>
+)
+
+}
+
+commit(){
+
+  if (!this.state.qcdetailId) {
+    Global.alert("请选择QC1");
+    return;
+  }
+
+
+  Alert.alert('','确认提交?',
+            [
+              {text:'取消',},
+              {text:'确认',onPress:()=> {this.confirmCommit()}}
+])
+
+}
+
+confirmCommit(){
+
+  this.setState({
+      loadingVisible: true
+ })
+
+ var paramBody = {
+          'qcProblrmId' : this.state.data.id,
+          'assignedId' :  this.state.qcdetailId,
+     }
+
+ HttpRequest.post('/qualityControl/qcLeaderAssign', paramBody, this.onDeliverySuccess.bind(this),
+     (e) => {
+       this.setState({
+           loadingVisible: false
+       });
+       try {
+           var errorInfo = JSON.parse(e);
+       }
+       catch(err)
+       {
+           console.log("error======"+err)
+       }
+           if (errorInfo != null) {
+               if (errorInfo.code == -1002||
+                errorInfo.code == -1001) {
+               Global.showToast(errorInfo.message);
+           }else {
+             Global.showToast(e)
+           }
+
+           } else {
+               Global.showToast(e)
+           }
+
+       console.log('Login error:' + e)
+
+     })
+
+
+
+}
+
+onDeliverySuccess(response){
+
+    this.setState({
+        loadingVisible: false
+    });
+
+    Global.showToast(response.message)
+
+    this.back();
+
+}
+
+back() {
+    this.props.navigator.pop()
+}
 
   renderItem(){
 
@@ -155,6 +391,11 @@ export default class QuestionDetail extends Component {
                 />
             );
           }
+      }
+
+
+      if ( Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreQCLeaderAssign') {
+        itemAry.push(this.renderSelectView(this.state.qcdetail,assinList,"选择QC"))
       }
 
       return itemAry;
@@ -223,9 +464,58 @@ export default class QuestionDetail extends Component {
         }
       }
 
+      componentDidMount(){
+
+      if ( Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreQCLeaderAssign'){
+             {this.featchData()}
+      }
+
+      }
+
+      featchData(){
+
+        this.setState({
+            loadingVisible: true
+        });
+
+       var param = new FormData()
+
+       var url =  '/qualityControl/getList/' + this.state.data.id;
+
+        HttpRequest.get(url, param, this.featchDataSuccess.bind(this),
+            (e) => {
+              this.setState({
+                  loadingVisible: false
+              });
+
+           Global.alert("获取数据失败");
+           this.back();
+              console.log('Login error:' + e)
+            })
+
+      }
+
+      featchDataSuccess(response){
+
+        this.setState({
+            loadingVisible: false
+        });
+
+        this.state.assignList = response.responseResult.userList;
+
+        this.state.assignList.forEach((item) => {
+
+        assinList.push(item['realname'])
+
+        })
+
+      }
+
+
       componentWillMount(){
 
       // this.figureDatas();
+
 
       this.figureFiles();
 
@@ -236,6 +526,7 @@ export default class QuestionDetail extends Component {
       problemFiles = [];
       solveFiles = [];
       solveAgainFiles = [];
+      assinList = [];
 
         this.state.data.files.forEach((item) => {
            item['url'] = HttpRequest.getDomain() + item['path'];
@@ -259,6 +550,57 @@ export default class QuestionDetail extends Component {
 
         })
 
+      }
+
+    onSelectedMember(data){
+
+      this.setState({qcdetail:data[0]})
+
+      this.state.assignList.forEach((item) => {
+
+        if (item['realname']  == this.state.qcdetail) {
+
+          this.state.qcdetailId = item['id'];
+
+        }
+
+      })
+
+ }
+
+      renderSelectView(title,datas,pickerTitle) {
+        return(
+            <View style={[{marginTop:10,alignItems:'center',},styles.statisticsflexContainer]}>
+
+            <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+
+            <TouchableOpacity
+            onPress={() => this._selectM.onPickClick()}
+            style={{borderWidth:0.5,
+                  alignItems:'center',
+                  borderColor : '#f77935',
+                  backgroundColor : 'white',
+                  borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+
+                  <MemberSelectView
+                  ref={(c) => this._selectM = c}
+                  style={{color:'#f77935',fontSize:14,flex:1,textAlign:'left'}}
+                  title={title}
+                  data={datas}
+                  pickerTitle={pickerTitle}
+                  onSelected={this.onSelectedMember.bind(this)} />
+                                <Image
+                                style={{width:20,height:20}}
+                                source={require('../../images/unfold.png')}/>
+            </TouchableOpacity>
+
+            </View>
+
+
+
+            </View>
+
+        )
       }
 
 
@@ -346,11 +688,31 @@ statisticsflexContainer: {
          alignItems:'center',
      },
 
+     selectContainer: {
+             width: width,
+              height: 50,
+              backgroundColor: 'white',
+              flexDirection: 'row',
+              borderColor:'#f77935',
+              borderWidth:1,
+              marginTop:10,
+              marginLeft:10,
+              marginRight:10,
+          },
+
    topflexContainer: {
               height: 60,
               backgroundColor: '#ffffff',
               flexDirection: 'row',
               marginBottom:10,
+          },
+          textStyle: {
+            color: '#f77935',
+            fontSize: 14,
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'center',
           },
 
 })

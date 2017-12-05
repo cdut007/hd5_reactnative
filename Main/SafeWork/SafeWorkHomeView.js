@@ -20,6 +20,7 @@ import ProblemReview from '../SafeWork/ProblemReview'
 import ProblemRectification from '../SafeWork/ProbleRectification'
 import ProblemAceess from '../SafeWork/ProblemAccess'
 import ProblemReport from '../SafeWork/ProblemReport'
+import Global from '../../common/globals'
 
 var width = Dimensions.get('window').width;
 
@@ -153,6 +154,11 @@ i
   _itemClick(item){
 
 // AlertIOS.Global.alert(item.type,item.title);
+
+if (item.type == "WTSH" && !Global.isHSE(Global.UserInfo)) {
+   Global.alert("当前用户不是HSE部门成员,无法执行该操作");
+   return;
+}
 
 var Component;
 
