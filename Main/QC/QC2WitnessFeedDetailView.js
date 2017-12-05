@@ -848,7 +848,7 @@ export default class QC2WitnessFeedDetailView extends Component {
            ];
 
            if (Global.isQC2Member(Global.UserInfo)) {
-               {title:'代替见证人',id:'substitute',content:this.state.substitute,type:'input'},
+               displayAry.push({title:'代替见证人',id:'substitute',content:this.state.substitute,type:'input'});
 
            }
 
