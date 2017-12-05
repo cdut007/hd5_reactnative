@@ -236,7 +236,10 @@ export default class WorkStepListView extends Component {
            onWitnessPress(itemData){
                console.log('witessAgain===='+itemData.witessAgain+';itemData.hasCheckedBtn=='+itemData.hasCheckedBtn)
 
-               
+              if (typeof(itemData.witessAgain) == "undefined"&& typeof(itemData.hasCheckedBtn) == "undefined"){
+                  return
+              }
+
                if (itemData.witessAgain) {
                    this.props.navigator.push({
                        component: WitnessDetailView,
@@ -250,6 +253,7 @@ export default class WorkStepListView extends Component {
                if (itemData.hasCheckedBtn) {
                    return
                }
+
 
                this.props.navigator.push({
                    component: WitnessDetailView,
