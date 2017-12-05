@@ -35,14 +35,13 @@ var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var account = Object();
 
-export default class WorkStepListView extends Component {
+export default class BatchWorkStepListView extends Component {
     constructor(props) {
         super(props);
 
 
         this.state = {
             title: '选择工序',
-            plan_data:this.props.data,
             data:[],
         };
     }
@@ -50,9 +49,9 @@ export default class WorkStepListView extends Component {
 
 
     componentDidMount() {
-        this.Subscription = DeviceEventEmitter.addListener('workstep_update',(param) => {    this.executeNetWorkRequest(this.state.plan_data.id) })
+        this.Subscription = DeviceEventEmitter.addListener('workstep_update',(param) => {    this.executeNetWorkRequest(this.props.ids) })
 
-        this.executeNetWorkRequest(this.state.plan_data.id);
+        this.executeNetWorkRequest(this.props.ids);
     }
     componentWillUnmount(){
       this.Subscription.remove();
@@ -69,9 +68,10 @@ export default class WorkStepListView extends Component {
     executeNetWorkRequest(id){
          Global.log('executeNetWorkRequest:work id = ' + id);
          var paramBody = {
+              ids:id
              }
 
-    HttpRequest.get('/workstep/rollingplan/'+id, paramBody, this.onGetDataSuccess.bind(this),
+    HttpRequest.get('/workstep/workStepList', paramBody, this.onGetDataSuccess.bind(this),
         (e) => {
 
             try {
@@ -192,15 +192,7 @@ export default class WorkStepListView extends Component {
                // 数组
                var itemAry = [];
                // 颜色数组
-               var displayAry = [{title:'施工日期',content:this.state.plan_data.weldno,id:'0',noLine:true},
-               {title:'工程量编号',content:this.state.plan_data.projectNo,id:'1',noLine:true},
-                {title:'焊口/支架',content:this.state.plan_data.weldno,id:'2',noLine:true},
-                 {title:'工程量类别',content:this.state.plan_data.projectType,id:'3',noLine:true},
-                {title:'作业条目编号',content:this.state.plan_data.workListNo,id:'4',noLine:true},
-
-           ];
-
-
+               var  displayAry=[]
 
 
                // 遍历
@@ -224,36 +216,42 @@ export default class WorkStepListView extends Component {
                itemAry.push(
                   <View style={styles.divider}/>
                );
-
-               for (var i = 0; i < this.state.data.length; i++) {
-                   itemAry.push(this.renderWorkStepItem(i,this.state.data[i]))
+               if (!this.state.data || this.state.data.length == 0) {
+                     itemAry.push(<View style= {{flex:1}}>
+                               <Text style= {[styles.step_title,{margin:5}]}>暂无数据</Text>
+                               </View>)
+               }else{
+                   for (var i = 0; i < this.state.data.length; i++) {
+                       itemAry.push(this.renderWorkStepItem(i,this.state.data[i]))
+                   }
                }
+
 
                return itemAry;
            }
 
 
            onWitnessPress(itemData){
-               if (itemData.witessAgain) {
-                   this.props.navigator.push({
-                       component: WitnessDetailView,
-                        props: {
-                            data:itemData,
-                           }
-                   })
-                   return
-               }
+            //    if (itemData.witessAgain) {
+            //        this.props.navigator.push({
+            //            component: WitnessDetailView,
+            //             props: {
+            //                 data:itemData,
+            //                }
+            //        })
+            //        return
+            //    }
 
                if (itemData.hasCheckedBtn) {
                    return
                }
 
-               this.props.navigator.push({
-                   component: WitnessDetailView,
-                    props: {
-                        data:itemData,
-                       }
-               })
+            //    this.props.navigator.push({
+            //        component: WitnessDetailView,
+            //         props: {
+            //             data:itemData,
+            //            }
+            //    })
            }
 
            renderWorkStepItem(index,data){
@@ -262,7 +260,7 @@ export default class WorkStepListView extends Component {
                    <View>
                    <TouchableOpacity style= {styles.item_container} onPress={this.onWitnessPress.bind(this,data)}>
                        <View style={{flex:4}}>
-                       <Text style= {[styles.step_title,{margin:5}]}>{data.stepno}{'、'} {data.stepname}</Text>
+                       <Text style= {[styles.step_title,{margin:5}]}>{data.stepIdentifier}{'、'} {data.stepName}</Text>
                         {this.renderQC(data)}
                        </View>
                        {this.renderCheckBox(data)}
@@ -275,31 +273,31 @@ export default class WorkStepListView extends Component {
            }
 
            renderQC(item){
-              if (item.noticeQC1 == null && item.noticeQC2 == null){
+              if (item.noticeaqc1 == null && item.noticeaqc2 == null){
                    return
                }
 
                var noticePoint = ''
 
 
-               if (item.noticeQC1) {
-                   noticePoint+='QC1('+item.noticeQC1+')  ';
+               if (item.noticeaqc1) {
+                   noticePoint+='QC1('+item.noticeaqc1+')  ';
 
                }
-               if (item.noticeQC2) {
-                   noticePoint+='QC2('+item.noticeQC2+')  ';
+               if (item.noticeaqc2) {
+                   noticePoint+='QC2('+item.noticeaqc2+')  ';
 
                }
-               if (item.noticeCZECQC) {
-                   noticePoint+='CZECQC('+item.noticeCZECQC+')  ';
+               if (item.noticeczecqc) {
+                   noticePoint+='CZECQC('+item.noticeczecqc+')  ';
 
                }
-               if (item.noticeCZECQA) {
-                   noticePoint+='CZECQA('+item.noticeCZECQA+')  ';
+               if (item.noticeczecqa) {
+                   noticePoint+='CZECQA('+item.noticeczecqa+')  ';
 
                }
-               if (item.noticePAEC) {
-                   noticePoint+='PAEC('+item.noticePAEC+')  ';
+               if (item.noticepaec) {
+                   noticePoint+='PAEC('+item.noticepaec+')  ';
 
                }
 
@@ -314,25 +312,23 @@ export default class WorkStepListView extends Component {
 
         renderCheckBox(item) {
 
-           if (Global.isCaptain(Global.UserInfo)) {
-                   return
-               }
+
 
            if (item.stepflag == 'DONE') {
                return (<Text style= {styles.desc}>合格</Text>)
-           }else if (item.noticeQC1 == null && item.noticeQC2 == null){
+           }else if (item.noticeaqc1 == null && item.noticeaqc2 == null){
                return
            }
 
            var witessAgain = false
-           if (item.launchData) {
-               if (item.result != 'UNQUALIFIED') {
-                    return  (<Text style= {styles.desc}>见证中</Text>)
-               }else{
-                   witessAgain = true
-               }
-
-           }
+        //    if (item.launchData) {
+        //        if (item.result != 'UNQUALIFIED') {
+        //             return  (<Text style= {styles.desc}>见证中</Text>)
+        //        }else{
+        //            witessAgain = true
+        //        }
+           //
+        //    }
 
            item.hasCheckedBtn = true
             item.witessAgain = witessAgain

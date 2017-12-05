@@ -24,12 +24,13 @@ import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
 import PlanDetailView from './PlanDetailView';
+import PlanWriteLastStepDetailView from './PlanWriteLastStepDetailView';
 import CommitButton from '../common/CommitButton'
 import CheckBox from 'react-native-checkbox'
 import Spinner from 'react-native-loading-spinner-overlay'
 import LoadEmptyView from '../common/LoadEmptyView.js'
 import ConstMapValue from '../common/ConstMapValue.js';
-import WorkStepListView from './WorkStepListView';
+import BatchWorkStepListView from './BatchWorkStepListView';
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
@@ -252,13 +253,25 @@ export default class PlanListDeliveryView extends Component {
     }
 
     onItemPress(itemData){
-        this.props.navigator.push({
-            component: PlanDetailView,
-             props: {
-                 data:itemData,
-                  type:this.props.type,
-                }
-        })
+
+        if (this.isPlanBatchWitness()) {
+            this.props.navigator.push({
+                component: PlanWriteLastStepDetailView,
+                 props: {
+                     data:itemData,
+                      type:this.props.type,
+                    }
+            })
+        }else{
+            this.props.navigator.push({
+                component: PlanDetailView,
+                 props: {
+                     data:itemData,
+                      type:this.props.type,
+                    }
+            })
+        }
+
     }
 
 
@@ -466,10 +479,10 @@ export default class PlanListDeliveryView extends Component {
                 ids = ids.substr(0,ids.length-1)
 
                 this.props.navigator.push({
-                    component: WorkStepListView,
+                    component: BatchWorkStepListView,
                      props: {
                          data:oneitem,
-                         batch:true,
+                         ids:ids,
                         }
                 })
 
