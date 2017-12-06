@@ -735,7 +735,6 @@ export default class QC2WitnessFeedDetailView extends Component {
            });
        }
 
-
        showPicker()
 
    }
@@ -851,8 +850,6 @@ export default class QC2WitnessFeedDetailView extends Component {
                displayAry.push({title:'代替见证人',id:'substitute',content:this.state.substitute,type:'input'});
 
            }
-
-
 
                 if (this.state.choose_result == '不合格') {
                  displayAry.push({title:'不合格绘制',id:'not_ok',type:'not_ok'});

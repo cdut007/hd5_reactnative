@@ -92,6 +92,7 @@ export default class QCWitnessDetailView extends Component {
             witnessNotOkResultType:null,
             witnessNotOkResultTypes: [],
             loadingVisible:false,
+            witnessHistoryInfo:null,
         };
     }
 
@@ -141,6 +142,7 @@ export default class QCWitnessDetailView extends Component {
 
 
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
+        this.executeWorkStepWitnessRequest(this.props.data.workStepId);
 
         witness_update = DeviceEventEmitter.addListener('witness_update',(param) => {
              var witness_result = param
@@ -208,6 +210,41 @@ export default class QCWitnessDetailView extends Component {
          this.setState({
              data:this.state.data,
          });
+     }
+
+     onGetWorkStepDataSuccess(response){
+         Global.log('onGetWorkStepDataSuccess@@@@')
+         this.state.witnessHistoryInfo = response.responseResult.witnessInfo
+         Global.log('subWitnessInfo = ' , this.state.witnessHistoryInfo);
+
+         this.setState({
+             witnessHistoryInfo:this.state.witnessHistoryInfo,
+         });
+     }
+
+     executeWorkStepWitnessRequest(id){
+         Global.log('executeWorkStepWitnessRequest:work id = ' + id);
+         var paramBody = {
+             }
+
+    HttpRequest.get('/workstep/'+id, paramBody, this.onGetWorkStepDataSuccess.bind(this),
+        (e) => {
+
+            try {
+                var errorInfo = JSON.parse(e);
+                if (errorInfo != null) {
+                 Global.log(errorInfo)
+                } else {
+                    Global.log(e)
+                }
+            }
+            catch(err)
+            {
+                Global.log(err)
+            }
+
+            Global.log('executeWorkStepWitnessRequest error:' + e)
+        })
      }
 
     executeNetWorkRequest(id){
@@ -1039,8 +1076,9 @@ export default class QCWitnessDetailView extends Component {
 
            ];
 
-           //回填显示历史见证记录。
-           
+
+
+
 
              if (Global.isQC2Member(Global.UserInfo)) {
                   displayAry = []
@@ -1055,7 +1093,18 @@ export default class QCWitnessDetailView extends Component {
                       displayAry.push({type:'devider'},);
                   }
              }
+             //回填显示历史见证记录。
+             if (this.state.witnessHistoryInfo) {
+                  displayAry.unshift({type:'devider'},);
+                 for (var i = this.state.witnessHistoryInfo.length-1; i >= 0; i--) {
+                       var subWitness = this.state.witnessHistoryInfo[i]
+                       if (!subWitness.witnesser || (subWitness.result != 'QUALIFIED' && subWitness.result != 'UNQUALIFIED')) {
+                           continue
+                       }
+                       displayAry.unshift({data:subWitness,id:'m'+i,type:'witnessHistory'})
+                 }
 
+             }
 
 
                 if (this.state.choose_result == '不合格') {
@@ -1107,7 +1156,12 @@ export default class QCWitnessDetailView extends Component {
                         itemAry.push(
                            <View style={[styles.divider,{height:1}]}/>
                         );
-                    }else{
+                    }else  if (displayAry[i].type == 'witnessHistory') {
+                         itemAry.push(this.witnessItemInfo(displayAry[i].data));
+                         itemAry.push(
+                            <View style={[styles.divider,{height:1}]}/>
+                         );
+                     }else{
                        itemAry.push(
                            <DisplayItemView key={displayAry[i].id}
                             title={displayAry[i].title}
