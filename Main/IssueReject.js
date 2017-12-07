@@ -15,9 +15,9 @@ export default class IssueReject extends Component{
 
 	render(){
 		return(
-			<View style = {{flex: 1, flexDirection: 'column'}}>
+			<View style = {{flex: 1, flexDirection: 'column', backgroundColor:'#f2f2f2'}}>
 				<NavBar
-					title = '退回理由'
+					title = {this.props.title}
 					leftIcon={require('../images/back.png')}
 	              	leftPress={this.back.bind(this)} />
 	            <TextInput
@@ -25,11 +25,11 @@ export default class IssueReject extends Component{
 	            	underlineColorAndroid = 'transparent' 
 	            	multiline = {true} 
 	            	onChangeText = {(text) => this.setState({message: text})}
-	            	placeholder = '请输入退回理由'
+	            	placeholder = {this.props.placeholder}
 	            	placeholderTextColor = '#777777'/>
 	            <CommitButton
 	            	containerStyle = {{flex: 0}}
-	            	title = '确认退回'
+	            	title = {this.props.buttonTitle}
 	            	onPress = {() => this.confirm()} />     
 			</View>
 		);
@@ -42,7 +42,7 @@ export default class IssueReject extends Component{
 	confirm(){
 		Keyboard.dismiss();
 		if(this.state.message == ''){
-			alert('请输入退回理由');
+			alert(this.props.placeholder);
 			return;
 		}
 		this.props.callback(this.state.message);

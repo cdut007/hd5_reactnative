@@ -200,7 +200,9 @@ export default class IssueListView extends Component {
        });
 
        var api = '';
-       if (Global.isGroup(Global.UserInfo)) {
+       if(this.props.isMyIssue){
+           api = '/question/myQuestionList'
+       }else if (Global.isGroup(Global.UserInfo)) {
            api = '/question/teamList'
        }else if (Global.isMonitor(Global.UserInfo)) {
            api = '/question/monitorList'
@@ -219,8 +221,8 @@ export default class IssueListView extends Component {
                       pagenum:index,
                       type:this.props.type,
                       questionStatus:this.props.status,
-                      userId:this.props.userId,
-                      keyword: this.props.keyword,
+                      userId:this.props.userId ? this.props.userId : '',
+                      keyword: this.props.keyword ? this.props.keyword : '',
                      }
 
 

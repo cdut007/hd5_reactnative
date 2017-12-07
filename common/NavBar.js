@@ -76,6 +76,12 @@ export default class NavBar extends Component{
             name: this.props.rightIcon,
             onPress: this.props.rightPress
           })
+        }else if(this.props.rightText && this.props.rightText != ''){
+          return(
+            <TouchableOpacity onPress={() => this.props.rightPress()}>
+              <Text style={{color:'#0755a6',fontSize:14,paddingRight:10,paddingLeft:10}}>{this.props.rightText}</Text>
+            </TouchableOpacity>
+          );
         }else{
           return (<View style={styles.btn}></View>)
         }

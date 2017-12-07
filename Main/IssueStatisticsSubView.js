@@ -11,6 +11,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
 } from 'react-native';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar'
@@ -19,6 +20,7 @@ import px2dp from '../common/util'
 import SearchBar from '../common/SearchBar';
 import dateformat from 'dateformat'
 import IssueListViewContainer from './IssueListViewContainer';
+import IssueRightTabView from './IssueRightTabView';
 import Global from '../common/globals.js'
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -207,9 +209,36 @@ export default class IssueStatisticsSubView extends Component {
                 title={this.state.title}
                 leftIcon={require('../images/back.png')}
                 leftPress={this.back.bind(this)} />
-               {this.renderListView()}
+               {this.renderContent()}
             </View>
         )
+    }
+
+    renderContent(){
+      if(Global.isMonitor(Global.UserInfo)){
+        return(
+          <ScrollableTabView 
+              locked={true}
+              tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
+              tabBarBackgroundColor='#FFFFFF'
+              tabBarActiveTextColor='#f77935'
+              tabBarInactiveTextColor='#777777'>
+                <ListView
+                  tabLabel={'问题列表'}
+                  dataSource={this.state.dataSource}
+                  renderRow={this.renderRow.bind(this)}
+                  renderFooter={this.renderFooter.bind(this)}
+                  onEndReached={this.onEndReached.bind(this)}
+                  automaticallyAdjustContentInsets={false}
+                  keyboardDismissMode="on-drag"
+                  keyboardShouldPersistTaps={true}
+                  showsVerticalScrollIndicator={false}/>    
+                <IssueRightTabView {...this.props} tabLabel={'我的问题'}/>      
+          </ScrollableTabView>
+        );
+      }else{
+        this.renderListView();
+      }
     }
 
     index(rowID){
