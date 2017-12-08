@@ -464,7 +464,7 @@ export default class QCWitnessResultDetailView extends Component {
 
             if (witnessInfo.result == 'QUALIFIED') {
                 return(
-                    <View style={styles.statisticsflexContainer}>
+                    <View style={styles.witnessflexContainer}>
 
                     <View style={styles.cell}>
 
@@ -491,7 +491,7 @@ export default class QCWitnessResultDetailView extends Component {
                 )
             }else if (witnessInfo.result == 'UNQUALIFIED'){
                 return(
-                    <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onWitnessPress.bind(this,witnessInfo)}>
+                    <TouchableOpacity style={styles.witnessflexContainer} onPress={this.onWitnessPress.bind(this,witnessInfo)}>
 
                     <View style={styles.cell}>
 
@@ -656,6 +656,13 @@ const styles = StyleSheet.create({
                 backgroundColor: '#ffffff',
                 flexDirection: 'row',
             },
+
+            witnessflexContainer: {
+                     height: 90,
+                     alignItems:'center',
+                     backgroundColor: '#ffffff',
+                     flexDirection: 'row',
+                 },
 
       cell: {
           flex: 1,

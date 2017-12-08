@@ -214,6 +214,7 @@ export default class QC2WitnessFeedDetailView extends Component {
         this.props.data.result = this.state.choose_result == '合格' ? 'QUALIFIED' : 'UNQUALIFIED' ;
         this.props.data.failType = this.state.witnessNotOkResultType
         this.props.data.remark = this.state.remark
+        this.props.data.substitute = this.state.substitute
         if (this.state.fileArr) {
             var witnessFiles = []
             this.state.fileArr.map((item,i) => {
@@ -292,10 +293,10 @@ export default class QC2WitnessFeedDetailView extends Component {
     }
 
     isQC2SubMemberId(){
-        if (!this.props.data.witnesser) {
+            if (!this.props.data) {
             return false
         }
-        return Global.UserInfo.id != this.props.data.witnesser.id;
+        return this.props.data.noticePoint != 'QC2';
     }
 
 
