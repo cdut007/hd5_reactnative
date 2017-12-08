@@ -918,15 +918,22 @@ export default class QCWitnessDetailView extends Component {
 
 
        witnessItemInfo(witnessInfo){
+           var substitute = witnessInfo.substitute;
+           if (!substitute) {
+               substitute=''
+           }else{
+               substitute='--替代见证人'+substitute
+           }
 
            if (witnessInfo.result == 'QUALIFIED') {
+
                return(
                    <View style={styles.statisticsflexContainer}>
 
                    <View style={styles.cell}>
 
                      <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                       {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
+                       {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType}) {substitute}
                      </Text>
                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
                        见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
@@ -953,7 +960,7 @@ export default class QCWitnessDetailView extends Component {
                    <View style={styles.cell}>
 
                      <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                               {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
+                               {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType}) {substitute}
                      </Text>
                      <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
                        见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}

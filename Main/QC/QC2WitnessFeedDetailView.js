@@ -291,6 +291,13 @@ export default class QC2WitnessFeedDetailView extends Component {
         });
     }
 
+    isQC2SubMemberId(){
+        if (!this.props.data.witnesser) {
+            return false
+        }
+        return Global.UserInfo.id != this.props.data.witnesser.id;
+    }
+
 
     startWitness(){
 
@@ -329,7 +336,7 @@ export default class QC2WitnessFeedDetailView extends Component {
             }
         }
 
-         if (Global.isQC2Member(Global.UserInfo)) {
+         if (Global.isQC2Member(Global.UserInfo) && this.isQC2SubMemberId()) {
 
                 if (!this.state.substitute) {
                     Global.alert('请输入代替见证人')
@@ -846,7 +853,7 @@ export default class QC2WitnessFeedDetailView extends Component {
 
            ];
 
-           if (Global.isQC2Member(Global.UserInfo)) {
+           if (Global.isQC2Member(Global.UserInfo) && this.isQC2SubMemberId()) {
                displayAry.push({title:'代替见证人',id:'substitute',content:this.state.substitute,type:'input'});
 
            }

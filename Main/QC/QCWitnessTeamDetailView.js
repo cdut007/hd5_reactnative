@@ -40,7 +40,7 @@ export default class QCWitnessTeamDetailView extends Component {
         var data = this.props.data
         if (!data.rollingPlan) {
             data.rollingPlan = new Object()
-        } 
+        }
         var displayInfo = '选择QC1'
         if (Global.isQC2Team(Global.UserInfo)) {
             displayInfo = '选择QC2'
@@ -434,7 +434,12 @@ getNoticeType(noticePoint){
 
         witnessItemInfo(witnessInfo){
 
-            //witnessInfo.result = '不合格'
+            var substitute = witnessInfo.substitute;
+            if (!substitute) {
+                substitute=''
+            }else{
+                substitute='--替代见证人'+substitute
+            }
 
             if (witnessInfo.result == '合格') {
                 return(
@@ -443,7 +448,7 @@ getNoticeType(noticePoint){
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
+                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType}) {substitute}
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
                         见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
@@ -470,7 +475,7 @@ getNoticeType(noticePoint){
                     <View style={styles.cell}>
 
                       <Text style={{color:'#1c1c1c',fontSize:14,marginBottom:4}}>
-                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType})
+                                    {this.getNoticeType(witnessInfo.noticePoint)}-{witnessInfo.witnesser.realname}({witnessInfo.noticeType}) {substitute}
                       </Text>
                       <Text numberOfLines={2} style={{color:'#777777',fontSize:12,}}>
                         见证时间：{Global.formatFullDateDisplay(witnessInfo.realWitnessDate)}
