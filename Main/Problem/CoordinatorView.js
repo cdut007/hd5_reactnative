@@ -8,13 +8,14 @@ import CircleLabelHeadView from '../../common/CircleLabelHeadView';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import IssueListViewContainer from '../IssueListViewContainer';
 import HttpRequest from '../../HttpRequest/HttpRequest';
+import IssueRightTabView from '../IssueRightTabView';
 
 import Spinner from 'react-native-loading-spinner-overlay';
 
 var width = Dimensions.get('window').width;
 
 
-export default class SolverLeaderView extends Component{
+export default class CoordinatorView extends Component{
 
 	constructor(props){
 		super(props);
@@ -71,13 +72,22 @@ export default class SolverLeaderView extends Component{
 	                title={'管道问题'}
 	                leftIcon={require('../../images/back.png')}
 	                leftPress={this.back.bind(this)} />
-				<ListView
-					dataSource = {this.state.dataSource}
-					renderRow = {(rowData)=>this.renderRow(rowData)} 
-					automaticallyAdjustContentInsets={false}
-            	    keyboardDismissMode="on-drag"
-               	    keyboardShouldPersistTaps='always'
-           	  	    showsVerticalScrollIndicator={false} />
+	            <ScrollableTabView 
+	            	locked={true}
+                    tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
+                    tabBarBackgroundColor='#FFFFFF'
+                    tabBarActiveTextColor='#f77935'
+                    tabBarInactiveTextColor='#777777'>
+                    <ListView
+                    	tabLabel={'问题列表'}
+						dataSource = {this.state.dataSource}
+						renderRow = {(rowData)=>this.renderRow(rowData)} 
+						automaticallyAdjustContentInsets={false}
+	            	    keyboardDismissMode="on-drag"
+	               	    keyboardShouldPersistTaps='always'
+	           	  	    showsVerticalScrollIndicator={false} />
+                   	<IssueRightTabView {...this.props} tabLabel={'我的问题'}/>
+				</ScrollableTabView>
            	  	<Spinner visible = {this.state.loadingVisible} />
 			</View>
 		);

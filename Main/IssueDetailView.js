@@ -231,22 +231,27 @@ export default class IssueDetailView extends Component {
             </Modal>
             <NavBar title={this.state.title}
               leftIcon={require('../images/back.png')}
-              leftPress={this.back.bind(this)}/>
+              leftPress={this.back.bind(this)}
+              rightText={this.getRightText()}
+              rightPress={() => this.props.navigator.replace({component:IssueDetailView,props:{data:this.props.data, directlySolve:true}})}/>
             <ScrollView
               keyboardDismissMode='on-drag'
               keyboardShouldPersistTaps='never'>
                 {this.renderTop()}
                 {this.renderReason()}
+                {this.renderTechReason()}
                 {this.renderDetailView()}
             </ScrollView>
             {this.renderBottomButton()}
-            <Spinner
-                visible={this.state.loadingVisible}
-            />
+            <Spinner visible={this.state.loadingVisible}/>
           </View>
         );
     }
 
+    getRightText(){
+      if(this.props.directlySolve || Global.isSolverMember(Global.UserInfo) || Global.isGroup(Global.UserInfo)) return '';
+      return this.state.data.status == 'pre' || this.state.data.status == 'unsolved' ? '直接处理' : '';
+    }
 
 startFeedbackProblem(){
   if(!this.state.content){
@@ -410,6 +415,7 @@ startProblem(){
       }
 
       isLeaderPre(){
+        if(this.props.directlySolve) return false;
         if(Global.isSolverLeader(Global.UserInfo)){
           if(this.state.data.status == 'pre'){
             return true;
@@ -419,6 +425,7 @@ startProblem(){
     }
 
     isLeaderUnsolved(){
+      if(this.props.directlySolve) return false;
       if(Global.isSolverLeader(Global.UserInfo)){
         if(this.state.data.status == 'unsolved'){
           return true;
@@ -428,6 +435,7 @@ startProblem(){
     }
 
       isMonitorDelivery(){
+        if(this.props.directlySolve) return false;
               if (Global.isMonitor(Global.UserInfo)) {
                 if (this.state.data.status == 'pre' && !this.state.data.coordinate.id) {
                   return true
@@ -437,6 +445,7 @@ startProblem(){
           }
 
       isCoordinatorDelivery(){
+        if(this.props.directlySolve) return false;
         if(Global.isCoordinator(Global.UserInfo)){
           if(this.state.data.status == 'pre' && !this.state.data.designee.id){
             return true;
@@ -446,15 +455,20 @@ startProblem(){
       }
 
       isSolverSubmit(){
+        if(this.props.directlySolve) return true;
             if(Global.isSolverMember(Global.UserInfo)){
               if(this.state.data.status == 'pre'){
                 return true;
               }
             }
+            if(this.props.directlySolve){
+              return true;
+            }
             return false;
           }
 
       isGroupUndo(){
+        if(this.props.directlySolve) return false;
             if(Global.isGroup(Global.UserInfo)){
               if(this.state.data.status == 'undo'){
                 return true;
@@ -475,8 +489,26 @@ startProblem(){
                   </View>
                 );
             }else if (this.isSolverSubmit()) {
+                if(this.props.directlySolve){
+                  return(
+                    <View style={{height:50,width:width,flexDirection:'row'}}>
+                      <View style={{height:50,flex:1}}>
+                        <CommitButton
+                          title={'提交'}
+                          onPress={this.startFeedbackProblem.bind(this)} />
+                      </View>
+                    </View>
+                  );
+                }
                 return(
                   <View style={{height:50,width:width,flexDirection:'row'}}>
+                    <View style={{height:50,flex:1}}>
+                      <CommitButton
+                        title={'不能解决'}
+                        onPress={() => this.props.navigator.push({component:IssueReject, props:{title:'不能解决',placeholder:'请输入不能解决原因',buttonTitle:'提交至上级',callback:(message) => this.canNotDo(message)}})}
+                        containerStyle={{backgroundColor:'#ffffff'}}
+                        titleStyle={{color: '#f77935'}} />
+                    </View>
                     <View style={{height:50,flex:1}}>
                       <CommitButton
                         title={'提交'}
@@ -490,7 +522,7 @@ startProblem(){
                     <View style={{height:50,flex:1}}>
                       <CommitButton
                         title={'不接受反馈'}
-                        onPress={() => this.props.navigator.push({component:IssueReject, props:{callback:(message) => this.rejectSolution(message)}})}
+                        onPress={() => this.props.navigator.push({component:IssueReject, props:{title:'退回理由',placeholder:'请输入退回理由',buttonTitle:'确认退回',callback:(message) => this.rejectSolution(message)}})}
                         containerStyle={{backgroundColor:'#ffffff'}}
                         titleStyle={{color: '#f77935'}} />
                     </View>
@@ -531,6 +563,24 @@ startProblem(){
             }
     }
 
+    canNotDo(message){
+      const params = {
+        questionId: this.state.data.id,
+        reason: message
+      }
+      HttpRequest.post(
+        '/question/unable', 
+        params, 
+        (reponse) => {
+          DeviceEventEmitter.emit('operate_issue','operate_issue');
+          this.back();
+        },
+        (error) => {
+          HttpRequest.printError(error);
+        }
+      );
+    }
+
     renderTop(){
         if(this.isSolverSubmit()){
           return this.renderFeedbackUI();
@@ -547,6 +597,20 @@ startProblem(){
               <Text style={{color: '#e82628', fontSize: 14, lineHeight: 22, marginLeft: 10, marginBottom: 10}}>
                 <Text style={{fontWeight: 'bold'}}>退回理由: </Text>
                  <Text>{this.state.data.reason}</Text>
+              </Text>
+              <View style={styles.divider} />
+          </View>
+        );
+      }
+    }
+
+    renderTechReason(){
+      if(this.state.data.unableReason && this.state.data.status == 'unsolved'){
+        return(
+          <View style={{backgroundColor: 'white', paddingTop: 10, paddingRight: 6,}}>
+              <Text style={{color: '#e82628', fontSize: 14, lineHeight: 22, marginLeft: 10, marginBottom: 10}}>
+                <Text style={{fontWeight: 'bold'}}>不能解决理由: </Text>
+                 <Text>{this.state.data.unableReason}</Text>
               </Text>
               <View style={styles.divider} />
           </View>
