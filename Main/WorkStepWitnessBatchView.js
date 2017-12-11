@@ -321,22 +321,39 @@ export default class WorkStepWitnessBatchView extends Component {
            }
 
            renderQC(item){
-              if (item.noticeQC1 == null && item.noticeQC2 == null){
-                   return
-               }
 
-               if (item.noticeQC1 && item.noticeQC2) {
-                   return(<Text style= {styles.detail}>QC1({item.noticeQC1}) QC2({item.noticeQC2})</Text>)
-               }
+               if (item.noticeQC1 == null && item.noticeQC2 == null){
+                    return
+                }
 
-               if (item.noticeQC1 && !item.noticeQC2) {
-                   return(<Text style= {styles.detail}>QC1({item.noticeQC1})</Text>)
-               }
+                var noticePoint = ''
 
-               if (!item.noticeQC1 && item.noticeQC2) {
-                   return(<Text style= {styles.detail}>QC2({item.noticeQC2})</Text>)
-               }
 
+                if (item.noticeQC1) {
+                    noticePoint+='QC1('+item.noticeQC1+')  ';
+
+                }
+                if (item.noticeQC2) {
+                    noticePoint+='QC2('+item.noticeQC2+')  ';
+
+                }
+                if (item.noticeCZECQC) {
+                    noticePoint+='CZECQC('+item.noticeCZECQC+')  ';
+
+                }
+                if (item.noticeCZECQA) {
+                    noticePoint+='CZECQA('+item.noticeCZECQA+')  ';
+
+                }
+                if (item.noticePAEC) {
+                    noticePoint+='PAEC('+item.noticePAEC+')  ';
+
+                }
+
+
+                if (noticePoint!='') {
+                    return(<Text style= {[styles.detail,{marginLeft:10,fontSize:10}]}>{noticePoint}</Text>)
+                }
 
            }
 
