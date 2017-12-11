@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Image, Text, TouchableOpacity} from 'react-native';
+import {View, Image, Text, TouchableOpacity, DeviceEventEmitter} from 'react-native';
 
 import CardView from 'react-native-cardview';
 import NavBar from '../common/NavBar';
@@ -27,6 +27,11 @@ export default class IssueTabView extends Component{
 
 	componentDidMount(){
 		this.requestStatistics();
+        operationSubscription = DeviceEventEmitter.addListener('operate_issue',(param)=>{this.requestStatistics();})
+	}
+
+	componentWillUnmount(){
+      operationSubscription.remove();
 	}
 
 	requestStatistics(){
