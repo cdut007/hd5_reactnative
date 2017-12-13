@@ -94,10 +94,10 @@ export default class IssueReportView extends Component {
             return
         }
 
-        if(this.state.fileArr.length<=1){
-            Global.alert('请选择至少一张问题图片');
-            return;
-        }
+        // if(this.state.fileArr.length<=1){
+        //     Global.alert('请选择至少一张问题图片');
+        //     return;
+        // }
 
         this.setState({
             loadingVisible: true

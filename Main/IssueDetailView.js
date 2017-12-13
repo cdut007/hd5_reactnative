@@ -258,10 +258,10 @@ startFeedbackProblem(){
     Global.alert('请输入问题反馈内容')
     return
   }
-  if(this.state.fileArr.length<=1){
-    Global.alert('请选择至少一张反馈图片')
-    return
-  }
+  // if(this.state.fileArr.length<=1){
+  //   Global.alert('请选择至少一张反馈图片')
+  //   return
+  // }
   this.setState({loadingVisible: true,})
   var params = new FormData();
   params.append('questionId',this.props.data.id);
