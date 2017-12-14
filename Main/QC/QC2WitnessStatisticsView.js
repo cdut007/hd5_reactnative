@@ -300,16 +300,7 @@ export default class QC2WitnessStatisticsView extends Component {
 
                         <View style={styles.statisticsflexContainer}>
 
-                        <View style={styles.cell}>
-
-                          <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                            已发起的见证
-                          </Text>
-                          <Text style={{color:'#1c1c1c',fontSize:14,}}>
-                            {rowData.statistics.total}
-                          </Text>
-                        </View>
-
+                    
 
                         <View style={styles.cell}>
 
