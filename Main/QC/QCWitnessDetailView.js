@@ -1046,7 +1046,7 @@ export default class QCWitnessDetailView extends Component {
 
                displayAry.push({title:'计划用量',content:item.planDosage,id:'b1-'+i},);
 
-               displayAry.push({title:'规格型号',content:item.specificationModel,id:'b4-'+i},);
+               displayAry.push({title:'规格型号',content:ConstMapValue.regExpSepcification(item.specificationModel),id:'b4-'+i},);
                displayAry.push({title:'单位',content:item.unit,id:'b5'+i},);
 
                displayAry.push({type:'devider'},);

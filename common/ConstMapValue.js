@@ -152,6 +152,15 @@ module.exports = {
 
             return displayAry
     },
+    regExpSepcification(result){
+                        result = result.replace("\"", "&quot;"); // "
+                                    result = result.replace("'", "'"); // '--> &apos;
+                                    result = result.replace("<", "&lt;"); // <
+                                    result = result.replace(">", "&gt;"); // >
+                                    result = result.replace("&", "&amp;"); // &
+
+                                    return result
+    }
 
 
 };
