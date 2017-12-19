@@ -352,7 +352,7 @@ export default class WorkStepWitnessBatchView extends Component {
 
 
                 if (noticePoint!='') {
-                    return(<Text style= {[styles.detail,{marginLeft:10,fontSize:10}]}>{noticePoint}</Text>)
+                    return(<View style={{ flex:1,}}><Text  numberOfLines={2} style= {[styles.detail,{marginLeft:10,marginRight:10,fontSize:10}]}>{noticePoint}</Text></View>)
                 }
 
            }
@@ -370,7 +370,7 @@ export default class WorkStepWitnessBatchView extends Component {
                return(
                    <View>
                    <View style= {styles.item_container}>
-                       <Text style= {styles.title}>{data.stepname}</Text>
+                       <Text numberOfLines={3} style= {styles.title}>{data.stepname}</Text>
                         {this.renderQC(data)}
 
                    </View>
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
     paddingTop:8,
     backgroundColor:'#ffffff',
     paddingBottom:8,
-    height: 48,
+    height: 64,
     alignItems: 'center',
 
 },
