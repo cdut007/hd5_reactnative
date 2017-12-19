@@ -36,7 +36,7 @@ export default class IssueTabView extends Component{
 
 	requestStatistics(){
 		const params = {
-			type: 'GDJH'
+			type: this.props.type
 		};
 		HttpRequest.get(
 			'/question/statistics',
@@ -82,13 +82,13 @@ export default class IssueTabView extends Component{
 	onClick(position){
 		switch(position){
 			case 0:
-				this.props.navigator.push({component:MyIssueListView, props:{title:'已反馈', status:MY_ISSUE_STATUS[0]}})
+				this.props.navigator.push({component:MyIssueListView, props:{title:'已反馈', status:MY_ISSUE_STATUS[0], type:this.props.type}})
 				break;
 			case 1:
-				this.props.navigator.push({component:MyIssueListView, props:{title:'未解决', status:MY_ISSUE_STATUS[1]}})
+				this.props.navigator.push({component:MyIssueListView, props:{title:'未解决', status:MY_ISSUE_STATUS[1], type:this.props.type}})
 				break;
 			case 2:
-				this.props.navigator.push({component:MyIssueListView, props:{title:'已解决', status:MY_ISSUE_STATUS[2]}})
+				this.props.navigator.push({component:MyIssueListView, props:{title:'已解决', status:MY_ISSUE_STATUS[2], type:this.props.type}})
 				break;
 		}
 	}

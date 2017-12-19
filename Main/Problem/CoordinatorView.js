@@ -33,7 +33,7 @@ export default class CoordinatorView extends Component{
 	}
 
 	requestStatistics(){
-		let param = {type: 'GDJH'};
+		let param = {type: this.props.type};
 		this.setState({loadingVisible: true});
 		HttpRequest.get('/statistics/problem', param, this.onGetDataSuccess.bind(this),
 			(e) => {
@@ -69,7 +69,7 @@ export default class CoordinatorView extends Component{
 		return(
 			<View style = {styles.container}>
 				<NavBar
-	                title={'管道问题'}
+	                title={`${this.props.data.title}问题`}
 	                leftIcon={require('../../images/back.png')}
 	                leftPress={this.back.bind(this)} />
 	            <ScrollableTabView 

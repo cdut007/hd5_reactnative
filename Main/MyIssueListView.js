@@ -31,7 +31,7 @@ export default class MyIssueListView extends Component{
             <View style={{marginTop:10,}}>
 	            <IssueListView
 	              isMyIssue={true}
-	              type={'GDJH'}
+	              type={this.props.type}
 	              status={this.props.status}
 	              navigator={this.props.navigator} />
             </View>
