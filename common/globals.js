@@ -163,7 +163,9 @@ module.exports = {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.department.name;
+
+
+        var roleType = user.department ? user.department.name : user.department;
         return roleType == 'HSE部'
     },
 
