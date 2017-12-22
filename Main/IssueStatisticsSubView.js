@@ -237,7 +237,7 @@ export default class IssueStatisticsSubView extends Component {
           </ScrollableTabView>
         );
       }else{
-        this.renderListView();
+        return this.renderListView();
       }
     }
 
