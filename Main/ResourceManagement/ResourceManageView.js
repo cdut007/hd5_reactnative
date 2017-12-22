@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import {View, TouchableOpacity, Image, Text} from 'react-native';
+import {View, TouchableOpacity, Image, Text, ScrollView} from 'react-native';
 
 import Dimensions from 'Dimensions';
 import NavBar from '../../common/NavBar';
 import CardView from 'react-native-cardview'
 import ScanQRCodeView from './ScanQRCodeView';
 import DailyReportView from './DailyReportView';
+import InfoInputView from './InfoInputView';
 
 var width = Dimensions.get('window').width;
 
@@ -22,12 +23,11 @@ export default class ResourceManageView extends Component{
 					source={require('../../images/images.png')} />
 				<TouchableOpacity onPress = {() => this.goToDailyReport()}>
 					<CardView
-						style = {{marginTop: 15, marginLeft: 10, marginRight: 10, backgroundColor: '#ffffff', height: width*0.33, flexDirection: 'row', alignItems: 'center'}}
+						style = {{marginTop: 10, marginLeft: 10, marginRight: 10, backgroundColor: '#ffffff', height: width*0.28, flexDirection: 'row', alignItems: 'center'}}
 						cardElevation = {4}
 						cornerRadius = {6}>
 						<Image
-							style = {{width: 80, height: 80, marginLeft: 10}}
-							
+							style = {{width: 80, height: 80, marginLeft: 10}}							
 							source = {require('../../images/daily_icon.png')} />
 						<View>
 							<Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold'}}>库存日报</Text>
@@ -37,7 +37,7 @@ export default class ResourceManageView extends Component{
 				</TouchableOpacity>
 				<TouchableOpacity onPress = {() => this.goToScanQRCode()}>
 					<CardView
-						style = {{marginTop: 15, marginLeft: 10, marginRight: 10, backgroundColor: '#ffffff', height: width*0.33, flexDirection: 'row', alignItems: 'center'}}
+						style = {{marginTop: 10, marginLeft: 10, marginRight: 10, backgroundColor: '#ffffff', height: width*0.28, flexDirection: 'row', alignItems: 'center'}}
 						cardElevation = {4}
 						cornerRadius = {6}>
 						<Image
@@ -45,10 +45,24 @@ export default class ResourceManageView extends Component{
 							source = {require('../../images/scan_icon.png')} />
 						<View>
 							<Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold'}}>扫一扫</Text>
-							<Text style={{color: '#777777', fontSize: 14, width: width*0.67}}>查看物项信息(单/批量入库、单/批量出库、退库处理、库存/出库记录查询)</Text>
+							<Text style={{color: '#777777', fontSize: 14, width: width*0.67}}>查看物项信息，入库、出库、退库处理</Text>
 						</View>
 					</CardView>
 				</TouchableOpacity>
+				<TouchableOpacity onPress = {() => this.goToStoreQuery()}>
+					<CardView
+						style = {{marginTop: 10, marginLeft: 10, marginRight: 10, backgroundColor: '#ffffff', height: width*0.28, flexDirection: 'row', alignItems: 'center'}}
+						cardElevation = {4}
+						cornerRadius = {6}>
+						<Image
+							style = {{width: 80, height: 80, marginLeft: 10}}
+							source = {require('../../images/inquire_icon.png')} />
+						<View>
+							<Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold'}}>库存查询</Text>
+							<Text style={{color: '#777777', fontSize: 14, width: width*0.67}}>搜索查询物项信息</Text>
+						</View>
+					</CardView>
+				</TouchableOpacity>	
 			</View>
 		);
 	}
@@ -67,5 +81,15 @@ export default class ResourceManageView extends Component{
 		this.props.navigator.push({
 			component: DailyReportView
 		})
+	}
+
+	goToStoreQuery(){
+		this.props.navigator.push({
+			component: InfoInputView,
+			props: {
+				title: '物项查询',
+				type: 2
+			}
+		});
 	}
 }
