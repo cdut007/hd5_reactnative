@@ -250,7 +250,7 @@ export default class IssueDetailView extends Component {
 
     getRightText(){
       if(this.props.directlySolve || Global.isSolverMember(Global.UserInfo) || Global.isGroup(Global.UserInfo)) return '';
-      return (this.state.data.status == 'pre' || this.state.data.status == 'unsolved') && !this.state.data.designee.id ? '直接处理' : '';
+      return (this.state.data.status == 'pre' && !this.state.data.designee.id) || this.state.data.status == 'unsolved'  ? '直接处理' : '';
     }
 
 startFeedbackProblem(){
