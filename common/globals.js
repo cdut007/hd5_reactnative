@@ -63,110 +63,121 @@ module.exports = {
         var curTime = new Date(time).format("yyyy-MM-dd hh:mm");
         return curTime
     },
+    existRole(user,roleName){
+
+            for (var i = 0; i < user.roles.length; i++) {
+                
+                if (user.roles[i].roleType[0] == roleName) {
+                    return true;
+                }
+            }
+
+        return false;
+    },
     isMonitor(user){
-        if (!user) {
+        if (!user || !user.roles ) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'monitor'
+
+        return this.existRole(user, 'monitor');
     },
     isCaptain(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'captain'
+
+        return this.existRole(user, 'captain');
     },isGroup(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'team'
+
+        return this.existRole(user, 'team');
     },isQCTeam(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'witness_team_qc1'
+
+        return this.existRole(user, 'witness_team_qc1');
     },isQC2Team(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'witness_team_qc2'
+
+        return this.existRole(user, 'witness_team_qc2');
     },isQC1Member(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'witness_member_qc1'
+
+        return this.existRole(user, 'witness_member_qc1');
     },isQC2Member(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'witness_member_qc2'
+
+        return this.existRole(user, 'witness_member_qc2');
     },isQC2SubMember(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'witness_member_czecqc' || roleType == 'witness_member_paec' || roleType == 'witness_member_czecqa'
+
+        return this.existRole(user, 'witness_member_czecqc') || this.existRole(user,'witness_member_paec') || this.existRole(user,'witness_member_czecqa');
     },isSolverMember(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'solver'
+
+        return this.existRole(user, 'solver');
     },isSolverLeader(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'supervisor'
+
+        return this.existRole(user, 'supervisor');
     },isCoordinator(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'coordinator'
+
+        return this.existRole(user, 'coordinator');
     },
     isQCManager(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'QCManager'
+
+        return this.existRole(user, 'QCManager');
     },
     isQC1(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
-        var roleType = user.roles[0].roleType[0]
-        return roleType == 'QC1'
+
+        return this.existRole(user, 'QC1');
     },
     isHSE(user){
-        if (!user) {
+        if (!user || !user.roles) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
         }
 
 
         var roleType = user.department ? user.department.name : user.department;
-        return roleType == 'HSE部'
+        return this.existRole(user, 'HSE部');
     },
 
     alert(content){

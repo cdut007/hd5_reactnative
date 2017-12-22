@@ -314,6 +314,7 @@ export default class HomeView extends Component {
                         }
                 })
             }else if (Global.isGroup(Global.UserInfo)) {
+                
                 data.user = new Object();
                 data.user.id = Global.UserInfo.id;
                 data.user.dept = new Object();
@@ -457,21 +458,24 @@ export default class HomeView extends Component {
                         }
                 })
             }else {
+
+                Global.alert("角色未知，请联系管理员");
+
                 data.user = new Object();
                 data.user.id = Global.UserInfo.id;
                 data.user.dept = new Object();
                 data.user.dept.name = data.title;//change later. for dept
 
 
-                this.props.navigator.push({
-                    component: SolverTabView,
-                     props: {
-                         data:data,
-                         type:data.type,
-                         typeStr:typeSegArr[this.state.selectedTypeIndex],
-                         category:dayCateArr[index],
-                        }
-                })
+                // this.props.navigator.push({
+                //     component: SolverTabView,
+                //      props: {
+                //          data:data,
+                //          type:data.type,
+                //          typeStr:typeSegArr[this.state.selectedTypeIndex],
+                //          category:dayCateArr[index],
+                //         }
+                // })
                 Global.log('unkonwn roles ....')
             }
 
