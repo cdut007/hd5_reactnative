@@ -195,7 +195,7 @@ export default class LoginView extends Component {
 
             for (var i = 0; i < user.roles.length; i++) {
                 var  roleBtn = {};
-                  roleBtn.name = user.roles[i].roleType[0];
+                  roleBtn.name = user.roles[i].name;
                   if (!roleBtn.name || roleBtn.name == '') {
                       roleBtn.name = 'unkonwn';
                   }
@@ -214,11 +214,13 @@ export default class LoginView extends Component {
                 }
                 else if (response.customButton) {
                     for (var i = 0; i < user.roles.length; i++) {
-                          if (user.roles[i].roleType[0] == response.customButton) {
+                          if (user.roles[i].name == response.customButton) {
                               var roles = [];
                               roles.push(user.roles[i]);
+                              user.department = user.roles[i].department;
                               user.roles=roles;
-                             
+
+                              break;
                           }
                     }
                     response.responseResult = user;
