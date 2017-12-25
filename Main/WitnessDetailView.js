@@ -9,7 +9,8 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     ScrollView,
-    AsyncStorage
+    AsyncStorage,
+    DeviceEventEmitter
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar';
@@ -22,7 +23,7 @@ import SingleWorkRollDealBatWitnessView from './SingleWorkRollDealBatWitnessView
 import IssueReportView from './IssueReportView'
 import WorkStepListView from './WorkStepListView';
 import WitnessFailResultView from './WitnessFailResultView'
-
+import Spinner from 'react-native-loading-spinner-overlay'
 import ConstMapValue from '../common/ConstMapValue.js';
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
@@ -109,6 +110,9 @@ export default class WitnessDetailView extends Component {
             <View style={{backgroundColor:'#f2f2f2',height:10,width:width}}></View>
              {this.renderDetailView()}
              {this.renderFormView()}
+             <Spinner
+                 visible={this.state.loadingVisible}
+             />
             </View>
         )
     }
@@ -122,14 +126,69 @@ export default class WitnessDetailView extends Component {
         })
     }
 
-    startProblem(){
+
+    onCancelSuccess(response){
+
+
+        this.setState({
+            loadingVisible: false
+        });
+        Global.showToast(response.message)
+
+        //update
+        DeviceEventEmitter.emit('workstep_update','workstep_update');
+        this.back();
 
     }
+
+    startCancelWitness(){
+
+        this.setState({
+            loadingVisible: true
+        });
+        var paramBody = {
+                 ids:this.state.data.id
+            }
+
+        HttpRequest.post('/workstep_op/witness/cancel', paramBody, this.onCancelSuccess.bind(this),
+        (e) => {
+            this.setState({
+                loadingVisible: false
+            });
+            try {
+                var errorInfo = JSON.parse(e);
+            }
+            catch(err)
+            {
+                Global.log("error======"+err)
+            }
+                if (errorInfo != null) {
+                    if (errorInfo.code == -1002||
+                     errorInfo.code == -1001) {
+                    Global.alert(errorInfo.message);
+                }else {
+                    Global.alert(e)
+                }
+
+                } else {
+                    Global.alert(e)
+                }
+
+
+            Global.log(' error:' + e)
+        })
+}
 
     renderFormView(){
             //1  fininshed retun, jsut san
 
             if (Global.isGroup(Global.UserInfo)) {
+                if (this.props.data && this.props.data.launchData) {
+                    if (item.result != 'UNQUALIFIED' && item.result != 'QUALIFIED') {
+                        return(<View style={{height:50,width:width}}><CommitButton title={'取消见证'}
+                                onPress={this.startCancelWitness.bind(this)}></CommitButton></View>)
+                    }
+                }
 
 
             }else if (Global.isCaptain(Global.UserInfo)) {
@@ -196,6 +255,7 @@ export default class WitnessDetailView extends Component {
 
             style={styles.mainStyle}>
                 {this.renderItem()}
+
                    </ScrollView>);
     }
 

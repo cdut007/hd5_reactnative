@@ -325,7 +325,7 @@ export default class BatchWorkStepListView extends Component {
 
            if (item.stepflag == 'DONE') {
                return (<Text style= {styles.desc}>合格</Text>)
-           }else if (item.noticeaqc1 == null && item.noticeaqc2 == null){
+           }else if (item.noticeQC1 == null && item.noticeQC2 == null){
                return
            }
 

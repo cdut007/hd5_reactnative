@@ -10,7 +10,8 @@ import {
     TouchableHighlight,
     ScrollView,
     AsyncStorage,
-    DeviceEventEmitter
+    DeviceEventEmitter,
+    Button
 } from 'react-native';
 import Dimensions from 'Dimensions';
 import NavBar from '../common/NavBar';
