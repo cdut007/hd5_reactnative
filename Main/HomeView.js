@@ -457,6 +457,22 @@ export default class HomeView extends Component {
                          category:dayCateArr[index],
                         }
                 })
+            }else if(Global.isSolverMember(Global.UserInfo)){
+                data.user = new Object();
+                data.user.id = Global.UserInfo.id;
+                data.user.dept = new Object();
+                data.user.dept.name = data.title;//change later. for dept
+
+
+                this.props.navigator.push({
+                    component: SolverTabView,
+                     props: {
+                         data:data,
+                         type:data.type,
+                         typeStr:typeSegArr[this.state.selectedTypeIndex],
+                         category:dayCateArr[index],
+                        }
+                })
             }else {
 
                 Global.alert("角色未知，请联系管理员");
