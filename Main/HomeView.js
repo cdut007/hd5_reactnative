@@ -314,7 +314,7 @@ export default class HomeView extends Component {
                         }
                 })
             }else if (Global.isGroup(Global.UserInfo)) {
-                
+
                 data.user = new Object();
                 data.user.id = Global.UserInfo.id;
                 data.user.dept = new Object();
