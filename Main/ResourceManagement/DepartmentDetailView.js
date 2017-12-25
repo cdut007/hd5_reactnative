@@ -83,11 +83,11 @@ export default class DepartmentDetailView extends Component{
 			param,
 			(response) => {
 				let result = response.responseResult;
-				let isHasMore = result.pageSize * result.pageNum < result.totalCount;
+				let isHasMore = result.pagesize * result.pageNum < result.totalCounts;
 				if(this.pagenum == 1){                     
-					this.state.data = result.data;
+					this.state.data = result.datas ? result.datas : [];
 				}else{
-					this.state.data = this.state.data.concat(result.data);
+					this.state.data = this.state.data.concat(result.datas);
 				}
 				this.setState({
 					isLoading: false,
@@ -117,7 +117,7 @@ export default class DepartmentDetailView extends Component{
 				let result = response.responseResult;
 				let isHasMore = result.pagesize * result.pageNum < result.totalCounts;
 				if(this.pagenum == 1){
-					this.state.data = result.datas;
+					this.state.data = result.datas ? result.datas : [];
 				}else{
 					this.state.data = this.state.data.concat(result.datas);
 				}
