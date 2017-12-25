@@ -128,7 +128,7 @@ renderQcAssign(){
     <View style={{height:50,flex:1}}>
       <CommitButton
         title={'质量问题单'}
-        onPress={this.verify.bind(this)}
+        onPress={this.startQuality.bind(this)}
         >
       </CommitButton>
     </View>
@@ -165,6 +165,8 @@ reject(){
   })
 
 }
+
+
 verify(){
 
 if (!this.state.choose_date) {
@@ -184,7 +186,7 @@ startQuality(){
   Alert.alert('','开启质量问题单?',
             [
               {text:'取消',},
-              {text:'确认',onPress:()=> {this.confirmReject()}}
+              {text:'确认'}
 ])
 
 }
@@ -196,8 +198,9 @@ confirmReject(){
        });
 
        var paramBody = {
-               'qualityFlag':false,
-                'problemId' : this.state.data.id,
+               'qualityFlag':true,
+                'qcProblrmId' : this.state.data.id,
+
            }
 
   HttpRequest.post('/qualityControl/qcAssignClose', paramBody, this.onDeliverySuccess.bind(this),
