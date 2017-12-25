@@ -54,7 +54,8 @@ var width = Dimensions.get('window').width;
 var machineTypes = [];
 var DepartTypes = [];
 var TeamTypes = [];
-var PlantTypes = ['子项1','子项2','子项3','子项4','子项5'];
+// var PlantTypes = ['子项1','子项2','子项3','子项4','子项5'];
+var ReportPbTypes =  {"成品保护":"PRODUCTP_ROTECTION","清洁度":"CLEANLINESS","标识":"SIGN","防异物":"ANTI_FOREIGN_BODY","安装":"INSTALL"}
 
 export  default class ProblemReport extends Component {
 
@@ -64,7 +65,9 @@ export  default class ProblemReport extends Component {
       this.state = {
           title: "报告问题",
           machineType: '选择机组',
-          plantType: '选择子项',
+          plantType: '',
+          pbType:'选择问题类型',
+          area:'',
           questionName:'',
           elevation: '', //标高
           RoomNumber:'',//房间号
@@ -75,7 +78,7 @@ export  default class ProblemReport extends Component {
           DepartTypes:null,
           TeamTypes:null,
           machineTypes:null,
-          PlantTypes:null,
+          // PlantTypes:null,
           question:'',
           fileArr: [{}],//装图片资源的数组
           loadingVisible:false,
@@ -233,8 +236,10 @@ export  default class ProblemReport extends Component {
     var itemAry = [];
 
     var displayAry = [
+      {title:'问题类型:',id:'choose_pbtype',pickerTitle:"选择问题类型",content:this.state.pbType,data:Object.keys(ReportPbTypes),type:'choose',refence:this.pbtype_ref},
       {title:'机组:',id:'choose_machiche',pickerTitle:"选择机组",content:this.state.machineType,data:machineTypes,type:'choose',refence:this.mac_ref},
-      {title:'子项:',id:'choose_platHouse',pickerTitle:"选择子项",content:this.state.plantType,data:PlantTypes,type:'choose',refence:this.sub_ref},
+      {title:'子项:',id:'sbutype',content:this.state.plantType,type:'input'},
+      {title:'区域:',id:'area',content:this.state.area,type:'input'},
       {title:'楼层:',id:'elevation',content:this.state.elevation,type:'input'},
       {title:'房间号:',id:'room_no',content:this.state.RoomNumber,type:'input'},
       {title:'系统(选填):',id:'system_no',content:this.state.system_no,type:'input'},
@@ -292,15 +297,26 @@ return(
 
   onCommit() {
 
+if (this.state.pbType == '选择问题类型') {
+  Global.alert("请选择问题类型");
+  return;
+}
+
     if (this.state.machineType == '选择机组') {
       Global.alert("请选择机组");
       return;
     }
 
-    if (this.state.plantType == '选择子项') {
-      Global.alert("请选择子项");
+    if (!this.state.plantType.length) {
+      Global.alert("请输入子项");
       return;
     }
+
+if (!this.state.area.length) {
+  Global.alert("请输入区域");
+  return;
+}
+
     if (!this.state.elevation.length) {
       Global.alert("请输入楼层");
       return;
@@ -344,8 +360,10 @@ return(
    })
 
    var param = new FormData()
+   param.append('type', ReportPbTypes[this.state.pbType]);
    param.append('unit', this.state.machineType);
    param.append('subitem', this.state.plantType);
+    param.append('area', this.state.area);
    param.append('floor', this.state.elevation);
    param.append('roomnum', this.state.RoomNumber);
 
@@ -456,6 +474,17 @@ _questtionDescribe(){
   _ontextChange(text,tag){
 
   switch (tag) {
+    case "sbutype":
+    {
+      this.setState({plantType:text})
+    }
+      break;
+    case "area":
+    {
+        this.setState({area:text})
+    }
+      break;
+
     case "elevation":
       {
           this.setState({elevation:text})
@@ -605,16 +634,16 @@ _questtionDescribe(){
   onSelectedType(data,pickerType){
 
    switch (pickerType) {
+     case "choose_pbtype":
+       {
+          this.setState({pbType:data[0]})
+       }
+       break;
      case "choose_machiche":
      {
        this.setState({machineType:data[0]})
      }
      break;
-     case "choose_platHouse":
-     {
-      this.setState({plantType:data[0]})
-     }
-       break;
       case "choose_des":
       {
          this.figureDes(data);

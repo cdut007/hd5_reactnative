@@ -76,7 +76,8 @@ export default class QuestionDetail extends Component {
      this.state = {
        data : this.props.data,
        loadingVisible:false,
-       qcdetail:"选择QC1",
+       qcdetail:"选择QC",
+       choose_date:null,
        assignList:null,
        qcdetailId:null,
      }
@@ -123,6 +124,15 @@ renderQcAssign(){
 
   return(
     <View style={{height:50,width:width,flexDirection:'row'}}>
+
+    <View style={{height:50,flex:1}}>
+      <CommitButton
+        title={'质量问题单'}
+        onPress={this.verify.bind(this)}
+        >
+      </CommitButton>
+    </View>
+
   <View style={{height:50,flex:1}}>
     <CommitButton
       title={'关闭'}
@@ -139,6 +149,7 @@ renderQcAssign(){
         >
       </CommitButton>
     </View>
+
     </View>)
 
 }
@@ -156,12 +167,26 @@ reject(){
 }
 verify(){
 
+if (!this.state.choose_date) {
+  Global.alert("请选择截止日期");
+  return;
+}
 
   Alert.alert('','确认整改?',
             [
               {text:'取消',},
               {text:'确认',onPress:()=> {this.confirmVeify()}}
 ])
+}
+
+startQuality(){
+
+  Alert.alert('','开启质量问题单?',
+            [
+              {text:'取消',},
+              {text:'确认',onPress:()=> {this.confirmReject()}}
+])
+
 }
 
 confirmReject(){
@@ -171,10 +196,11 @@ confirmReject(){
        });
 
        var paramBody = {
+               'qualityFlag':false,
                 'problemId' : this.state.data.id,
            }
 
-  HttpRequest.post('/qualityControl/qcVerify', paramBody, this.onDeliverySuccess.bind(this),
+  HttpRequest.post('/qualityControl/qcAssignClose', paramBody, this.onDeliverySuccess.bind(this),
       (e) => {
         this.setState({
             loadingVisible: false
@@ -211,6 +237,7 @@ confirmVeify(){
 
        var paramBody = {
                 'problemId' : this.state.data.id,
+                'timeLimit' : this.state.choose_date,
            }
 
 
@@ -256,6 +283,49 @@ return(
 )
 
 }
+
+
+chooseItemInfo(title,id,content){
+
+       return(
+
+         <View style={styles.statisticsflexContainer}>
+           <Text> 整改期限 </Text>
+         <View style={[styles.cell,{alignItems:'center',padding:10,backgroundColor:'#f2f2f2'}]}>
+
+         <TouchableOpacity
+        onPress={() => this._selectD.onClick()}
+         style={{borderWidth:0.5,
+               alignItems:'center',
+               borderColor : '#f77935',
+               backgroundColor : 'white',
+               borderRadius : 4,flexDirection:'row',alignSelf:'stretch',paddingLeft:10,paddingRight:10,paddingTop:8,paddingBottom:8}}>
+
+         <DateTimePickerView
+           ref={(c) => this._selectD = c}
+             type={'date'}
+             minTime={new Date()}
+             title={this.state.displayDate}
+             visible={this.state.time_visible}
+             style={{color:'#f77935',fontSize:14,flex:1}}
+             onSelected={this.onSelectedDate.bind(this)}
+         />
+                             <Image
+                             style={{width:20,height:20}}
+                             source={require('../../images/unfold.png')}/>
+         </TouchableOpacity>
+
+       </View>
+
+     </View>)
+
+         }
+
+         onSelectedDate(date){
+
+           this.state.choose_date = date.getTime();
+           this.setState({displayDate:Global.formatDate(this.state.choose_date)})
+         }
 
 commit(){
 
@@ -396,6 +466,10 @@ back() {
 
       if ( Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreQCLeaderAssign') {
         itemAry.push(this.renderSelectView(this.state.qcdetail,assinList,"选择QC"))
+      }
+
+      if (this.state.data.status == 'PreQCAssign') {
+        itemAry.push(this.chooseItemInfo("整改期限","choose_date",this.state.choose_date))
       }
 
       return itemAry;

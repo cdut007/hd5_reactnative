@@ -117,14 +117,15 @@ export default class  CloseProblem extends Component {
         loadingVisible: true
    })
 
+
    var paramBody = {
+            'qualityFlag' : false,
             'qcProblrmId' : this.state.data.id,
-            'checkResult' : "Close",
             'note' : this.state.question,
        }
 
 
-   HttpRequest.post('/qualityControl/qcVerify', paramBody, this.onDeliverySuccess.bind(this),
+   HttpRequest.post('/qualityControl/qcAssignClose', paramBody, this.onDeliverySuccess.bind(this),
        (e) => {
          this.setState({
              loadingVisible: false
