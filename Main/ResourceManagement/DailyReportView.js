@@ -13,7 +13,7 @@ const width = Dimensions.get('window').width;
 
 var inPagenum = 1;	//入库http请求分页当前页
 
-const sectionHeaders = {name:'物项名称', specificationNo:'规格型号', warehouse:'储存仓库', location:'货位', number:'数量'};
+const sectionHeaders = {name:'物项名称', specificationNo:'规格型号', material:'材质', number:'数量'};
 const departmentImages = [require('../../images/department_1_icon.png'),require('../../images/department_2_icon.png'),require('../../images/department_3_icon.png'),require('../../images/department_4_icon.png'),require('../../images/department_5_icon.png'),require('../../images/department_6_icon.png'),require('../../images/department_7_icon.png'),require('../../images/department_8_icon.png')];
 
 export default class DailyReportView extends Component{
@@ -94,18 +94,17 @@ class InStoreView extends Component{
 		var param = {
 			pagesize: 10,
 			pagenum: inPagenum,
-			type: 'IN'
 		}
 		HttpRequest.get(
-			'/material',
+			'/material/materialTodayStoreList',
 			param,
 			(response) => {
 				var result = response.responseResult;
-				let isHasMore = result.pageNum*result.pageSize < result.totalCounts;
+				let isHasMore = result.pageNum*result.pagesize < result.totalCounts;
 				if(inPagenum==1){
-					this.state.inData = result.data;
+					this.state.inData = result.datas;
 				}else{
-					this.state.inData = this.state.inData.concat(result.data);
+					this.state.inData = this.state.inData.concat(result.datas);
 				}
 				this.setState({
 					isRefreshing: false,
@@ -147,8 +146,7 @@ class InStoreView extends Component{
 				<View style={{width:width, height:48, flexDirection:'row', backgroundColor:'#fff', alignItems:'center'}}>
 					<Text style={{flex:1, textAlign:'center', color: color}}>{item.name}</Text>
 					<Text style={{flex:1, textAlign:'center', color: color}}>{item.specificationNo}</Text>
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.warehouse}</Text>	
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.location}</Text>	
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.material}</Text>	
 					<Text style={{flex:1, textAlign:'center', color: color}}>{item.number}</Text>			
 				</View>
 			</TouchableOpacity>
@@ -185,9 +183,9 @@ class OutStoreView extends Component{
 	requestOutStoreData(){
 		var param = {};
 		HttpRequest.get(
-			'/statistics/material/department',
+			'/material/materialTodayOutCount',
 			param,
-			(response) => {this.setState({outData:response.responseResult.departments})},
+			(response) => {this.setState({outData:response.responseResult})},
 			(error) =>{
 				HttpRequest.printError(error);
 			}
@@ -212,8 +210,8 @@ class OutStoreView extends Component{
 			<TouchableOpacity onPress={() => {this.props.navigator.push({component:DepartmentDetailView, props:{item:item, title:item.department.name, type:1}})}}>
 				<View style={{backgroundColor:'#fff', flexDirection:'row', width:width, height:48, alignItems:'center'}}>
 					<Image source={departmentImages[(index)%8]} style={{width:34, height:34, marginLeft:10, marginRight:10}} />
-					<Text style={{flex:1, color:'#555', fontSize:16, fontWeight:'bold'}}>{item.department.name}</Text>
-					<Text style={{fontSize:14, color:'#e82628'}}>{item.output}</Text>
+					<Text style={{flex:1, color:'#555', fontSize:16, fontWeight:'bold'}}>{item.issDept}</Text>
+					<Text style={{fontSize:14, color:'#e82628'}}>{item.number}</Text>
 					<Image source={require('../../images/detailsIcon.png')} style={{width:20, height:20, marginRight:10}} />
 				</View>
 			</TouchableOpacity>

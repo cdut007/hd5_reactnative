@@ -9,18 +9,20 @@ import ResourceDetailView from './ResourceDetailView';
 import ConfirmDialog from '../../common/ConfirmDialog';
 import InfoInputView from './InfoInputView';
 
-const departmentHeaders = {material:{id:'序号', name:'物项名称'}, extractCount:'出库量', confirmCount:'核实量', receiver:'领料员'};
-const inStoreHeaders = {id:'序号', name:'物项名称', warrantyNo:'质保号', number:'数量'};
-const outStoreHeaders = {material:{id:'序号', name:'物项名称'}, extractCount:'出库量', department:{name:'出库单位'}, receiver:'领料员'};
+const departmentHeaders = {no:'序号', name:'物项名称', number:'出库量', confirmCount:'核实量', whoGet:'领料员'};
+const backStoreHeaders = {no:'序号', name:'物项名称', number:'退库量', issDept:'退库单位', keeper:'退库员'};
+const outStoreHeaders = {no:'序号', name:'物项名称', number:'出库量', issDept:'出库单位', whoGet:'领料员'};
+const queryHeaders = {no:'序号', name:'物项名称', specificationNo:'规格型号', number:'库存数量'};
 
 var width = Dimensions.get('window').width;
-var pagenum = 1;
 
 /*
- *必须参数: title(标题), type(区分类型: 1-部门出库详情 2-批量入库 3-批量出库)
+ *必须参数: title(标题), type(区分类型: 1-部门出库详情 2-批量退库 3-批量出库 4-物项查询列表) item(数据源) conditions(物项查询条件)
  */
 
 export default class DepartmentDetailView extends Component{
+
+	pagenum = 1;
 
 	constructor(props){
 		super(props); 
@@ -30,19 +32,21 @@ export default class DepartmentDetailView extends Component{
 				titleHeaders = departmentHeaders;
 				break;
 			case 2:
-				titleHeaders = inStoreHeaders;
+				titleHeaders = backStoreHeaders;
 				break;
 			case 3:
 				titleHeaders = outStoreHeaders;
 				break;
+			case 4:
+				titleHeaders = queryHeaders;
+			    break;
 		}
 		this.state = {
 			data: [],
 			headers: titleHeaders,
+			isLoading: true,
 			isRefreshing: false,
 			hasMore: false,
-			isShow: false,
-			content: ''
 		}
 	}
 
@@ -51,102 +55,81 @@ export default class DepartmentDetailView extends Component{
 	}
 
 	requestNetInfo(){
+		this.setState({isLoading:true});
 		switch(this.props.type){
 			case 1:
 				this.requestDepartmentInfo();
 				break;
 			case 2:
-				this.setState({data:[{
-    "id": 8,
-    "name": "名称-8",
-    "warehouse": "仓库-8",
-    "location": "货位-8",
-    "number": 195,
-    "warrantyNo": "224877558",
-    "nameEn": "英文名称-8",
-    "specificationNo": "规格型号-8",
-    "material": "材质-8",
-    "securityLevel": "6",
-    "warrantyLevel": "0",
-    "standard": "标准-8",
-    "positionNo": "位号-8",
-    "furnaceNo": "炉批号-8",
-    "warrantyCount": 38,
-    "remark": "备注-8",
-    "shipNo": "船次件号-8",
-    "price": 63
-  }]})
+				this.setState({data:this.props.item, isRefreshing:false, isLoading:false, hasMore:false});
 				break;
 			case 3:
-				this.setState({data:[{
-        "id": 1,
-        "warrantyNo": "220394141",
-        "extractCount": 60,
-        "confirmCount": 62,
-        "totalPrice": 2728,
-        "keeper": "保管员-1",
-        "invoiceDate": 930240000000,
-        "signDate": 1152633600000,
-        "department": {
-          "id": 104,
-          "name": "经理部",
-          "departmentResult": null
-        },
-        "receiver": "领用人-1",
-        "extractNo": "出库单号-1",
-        "planNo": "需求计划号-1",
-        "remark": "备注-1",
-        "accounting": "会计科目-1",
-        "material": {
-          "id": 1,
-          "name": "名称-1",
-          "warehouse": "仓库-1",
-          "location": "货位-1",
-          "number": 123,
-          "warrantyNo": "220394141",
-          "nameEn": "英文名称-1",
-          "specificationNo": "规格型号-1",
-          "material": "材质-1",
-          "securityLevel": "6",
-          "warrantyLevel": "9",
-          "standard": "标准-1",
-          "positionNo": "位号-1",
-          "furnaceNo": "炉批号-1",
-          "warrantyCount": 87,
-          "remark": "备注-1",
-          "shipNo": "船次件号-1",
-          "price": 44
-        }
-      }]})
+				this.setState({data:this.props.item, isRefreshing:false, isLoading:false, hasMore:false});
+				break;
+			case 4:
+				this.requestQueryInfo();
 				break;
 		}
 	}
 
 	requestDepartmentInfo(){
 		var param = {
-			type : 'OUT',
-			departmentId: this.props.item.department.id,
+			ISS_DEPT: this.props.item.issDept,
 			pagesize: 10,
-			pagenum: pagenum,
+			pagenum: this.pagenum,
 		};
-		HttpRequest.get(
-			'/material',
+		HttpRequest.post(
+			'/material/materialTodayOutList',
 			param,
 			(response) => {
 				let result = response.responseResult;
 				let isHasMore = result.pageSize * result.pageNum < result.totalCount;
-				if(pagenum ==1){
+				if(this.pagenum == 1){                     
 					this.state.data = result.data;
 				}else{
 					this.state.data = this.state.data.concat(result.data);
 				}
 				this.setState({
+					isLoading: false,
 					isRefreshing: false,
 					hasMore: isHasMore
 				});
 			},
 			(error) => {
 				this.setState({
+					isLoading: false,
+					isRefreshing: false,
+					hasMore: false
+				});
+				HttpRequest.printError(error);
+			}
+		)
+	}
+
+	requestQueryInfo(){
+		let params = this.props.conditions;
+		params.pagenum = this.pagenum;
+		params.pagesize = 10;
+		HttpRequest.post(
+			'/material/materialQueryList',
+			params,
+			(response) => {
+				let result = response.responseResult;
+				let isHasMore = result.pagesize * result.pageNum < result.totalCounts;
+				if(this.pagenum == 1){
+					this.state.data = result.datas;
+				}else{
+					this.state.data = this.state.data.concat(result.datas);
+				}
+				this.setState({
+					isLoading: false,
+					isRefreshing: false,
+					hasMore: isHasMore
+				});
+			},
+			(error) => {
+				this.setState({
+					isLoading: false,
 					isRefreshing: false,
 					hasMore: false
 				});
@@ -156,13 +139,14 @@ export default class DepartmentDetailView extends Component{
 	}
 
 	onRefresh(){
-		pagenum = 1;
-		this.requestNetInfo();
+		this.setState({isRefreshing:true});
+		this.pagenum = 1;
+		this.requestNetInfo(); 
 	}
 
 	onEndReached(){
-		if(this.state.hasMore){
-			pagenum++;
+		if(this.state.hasMore && !this.state.isLoading){
+			this.pagenum++;
 			this.requestNetInfo();
 		}
 	}
@@ -171,12 +155,10 @@ export default class DepartmentDetailView extends Component{
 	render(){
 		return(
 			<View style={{flex:1, backgroundColor:'#f2f2f2', flexDirection:'column'}}>
-				<ConfirmDialog content={this.state.content} isShow={this.state.isShow} onCancel={() => {this.setState({isShow:false})}} onConfirm={() => this.setState({isShow:false})}/>
 				<NavBar
 					title={this.props.title}
 					leftIcon={require('../../images/back.png')}
 					leftPress={() => this.back()} />
-				{this.renderHeader()}
 				<SectionList
 					style={{marginTop:10}}
 					contentContainerStyle={{backgroundColor:'#fff'}}
@@ -188,10 +170,9 @@ export default class DepartmentDetailView extends Component{
 					onEndReachedThreshold={0.5}
 					ItemSeparatorComponent={() => <SeparateComponent lineStyle={{marginLeft:10, marginRight:10}}/>}
 					SectionSeparatorComponent={() => <SeparateComponent />}
-					renderItem={({item}) => this.renderItem(item,'#707070')}
-					renderSectionHeader={({section}) => this.renderItem(section.key,'#1c1c1c')}
+					renderItem={({item}) => this.renderItem(item,'#707070',false)}
+					renderSectionHeader={({section}) => this.renderItem(section.key,'#1c1c1c',true)}
 					sections={[{ key: this.state.headers, data: this.state.data}]} />
-				{this.renderBottomButton()}
 			</View>
 		);
 	}
@@ -200,114 +181,80 @@ export default class DepartmentDetailView extends Component{
 		this.props.navigator.pop();
 	}
 
-	renderHeader(){
-		let info = '';
-		let count = '';
+	renderItem(item,color,isHeader){
 		switch(this.props.type){
 			case 1:
-				info = this.props.item.department.name + '今日出库合计数: ';
-				count = this.props.item.output;
-				break;
-			default:
-				info = '本次扫描合计数: '
-				count = 80;
-				break;
-		}
-		return(
-			<View style={{width: width, height:48, backgroundColor:'#fff', justifyContent:'center'}}>
-				<Text style={{fontSize:14, color:'#777', marginLeft:10}}>
-					<Text style={{fontWeight:'bold', color:'#1c1c1c'}}>{info}</Text>
-					{count}
-				</Text>
-			</View>
-		);
-	}
-
-	renderItem(item,color){
-		switch(this.props.type){
-			case 1:
-				return this.renderDepartmentItem(item,color);
+				return this.renderDepartmentItem(item,color,isHeader);
 				break;
 			case 2:
-				return this.renderInStoreItem(item,color);
+				return this.renderBackStoreItem(item,color,isHeader);
 				break;
 			case 3:
-				return this.renderOutStoreItem(item,color);
+				return this.renderOutStoreItem(item,color,isHeader);
+				break;
+			case 4:
+				return this.renderQueryItem(item, color, isHeader);
 				break;
 		}
 	}
 
-	renderDepartmentItem(item,color){
+	renderDepartmentItem(item,color,isHeader){
 		return(
 			<TouchableOpacity onPress={() => {this.props.navigator.push({component:ResourceDetailView,props:{type:1, item:item}})}}>
 				<View style={{width:width, height:48, flexDirection:'row', backgroundColor:'#fff', alignItems:'center'}}>
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.material.id}</Text>
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.material.name}</Text>
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.extractCount}</Text>	
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.no}</Text>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.name}</Text>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.number}</Text>	
 					<Text style={{flex:1, textAlign:'center', color: color}}>{item.confirmCount}</Text>	
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.receiver}</Text>			
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.whoGet}</Text>			
 				</View>
 			</TouchableOpacity>
 		);
 	}
 
-	renderInStoreItem(item,color){
+	renderBackStoreItem(item,color,isHeader){
 		return(
-			<TouchableOpacity onPress={() => {this.props.navigator.push({component:ResourceDetailView,props:{type:5, item:item}})}}>
-				<View style={{width:width, height:48, flexDirection:'row', backgroundColor:'#fff', alignItems:'center'}}>
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.id}</Text>
+			<TouchableOpacity onPress={() => {isHeader ? {} : this.props.navigator.push({component:ResourceDetailView,props:{type:5, item:item, callback:(item)=>this.callback(item)}})}}>
+				<View style={{width:width, height:48, flexDirection:'row', backgroundColor: item.hasDone ? '#fff9f6' : '#fff', alignItems:'center'}}>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.no}</Text>
 					<Text style={{flex:1, textAlign:'center', color: color}}>{item.name}</Text>
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.warrantyNo}</Text>	
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.number}</Text>	
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.issDept}</Text>	
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.keeper}</Text>	
+				</View>
+			</TouchableOpacity>
+		);
+	}
+
+	renderOutStoreItem(item,color,isHeader){
+		return(
+			<TouchableOpacity onPress={() => {isHeader ? {} : this.props.navigator.push({component:ResourceDetailView,props:{type:4, item:item, callback:(item)=>this.callback(item)}})}}>
+				<View style={{width:width, height:48, flexDirection:'row', backgroundColor: item.hasDone ? '#fff9f6' : '#fff', alignItems:'center'}}>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.no}</Text>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.name}</Text>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.number}</Text>	
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.issDept}</Text>	
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.whoGet}</Text>			
+				</View>
+			</TouchableOpacity>
+		);
+	}
+
+	renderQueryItem(item,color,isHeader){
+		return(
+			<TouchableOpacity onPress={() => {isHeader ? {} : this.props.navigator.push({component:ResourceDetailView,props:{type:6, item:item}})}}>
+				<View style={{width:width, height:48, flexDirection:'row', backgroundColor:'#fff', alignItems:'center'}}>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.no}</Text>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.name}</Text>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.specificationNo}</Text>	
 					<Text style={{flex:1, textAlign:'center', color: color}}>{item.number}</Text>	
 				</View>
 			</TouchableOpacity>
 		);
 	}
 
-	renderOutStoreItem(item,color){
-		return(
-			<TouchableOpacity onPress={() => {this.props.navigator.push({component:ResourceDetailView,props:{type:6, item:item}})}}>
-				<View style={{width:width, height:48, flexDirection:'row', backgroundColor:'#fff', alignItems:'center'}}>
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.material.id}</Text>
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.material.name}</Text>
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.extractCount}</Text>	
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.department.name}</Text>	
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.receiver}</Text>			
-				</View>
-			</TouchableOpacity>
-		);
-	}
-
-	renderBottomButton(){
-		if(this.props.type!=1){
-			let title = '入库';
-			switch(this.props.type){
-				case 2:
-					title = '入库';
-					break;
-				case 3:
-					title = '出库';
-					break;	
-			}
-			return(
-				<TouchableOpacity
-				  activeOpacity={0.8} 
-				  style={{width:width, height:48, backgroundColor:'#f77935', alignItems:'center', justifyContent:'center'}}
-				  onPress={() => this.clickBottomButton()}>
-					<Text style={{color:'#fff', fontSize:18, fontWeight:'bold'}}>{title}</Text>
-				</TouchableOpacity>
-			);
-		}
-	}
-
-	clickBottomButton(){
-		switch(this.props.type){
-			case 2:
-				this.props.navigator.push({component:InfoInputView,props:{title:'核实入库',type:1}})
-				break;
-			case 3:
-				this.setState({content:'确认出库',isShow:true})
-				break;
-		}
+	callback(item){
+		item.hasDone = true;
+		this.setState({data:this.state.data});
 	}
 }

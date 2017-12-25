@@ -18,6 +18,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import NavBar from '../common/NavBar'
 import TabView from '../Main/TabView'
 import DeviceInfo from 'react-native-device-info'
+import ImagePicker from 'react-native-image-picker'
 var Global = require('../common/globals');
 
 var width = Dimensions.get('window').width;
@@ -30,6 +31,30 @@ String.prototype.startWith=function(str){
   var reg=new RegExp("^"+str);
   return reg.test(this);
 }
+
+var options = {
+    title: '选择身份', // specify null or empty string to remove the title
+    cancelButtonTitle: '取消',
+    customButtons: [],
+    takePhotoButtonTitle: '', // specify null or empty string to remove this button
+    chooseFromLibraryButtonTitle: '', // specify null or empty string to remove this button
+    cameraType: 'back', // 'front' or 'back'
+    mediaType: 'photo', // 'photo' or 'video'
+    videoQuality: 'medium', // 'low', 'medium', or 'high'
+    durationLimit: 10, // video recording max time in seconds
+    maxWidth: 1920, // photos only
+    maxHeight: 1920, // photos only
+    aspectX: 2, // aspectX:aspectY, the cropping image's ratio of width to height
+    aspectY: 1, // aspectX:aspectY, the cropping image's ratio of width to height
+    quality: 1, // photos only
+    angle: 0, // photos only
+    allowsEditing: false, // Built in functionality to resize/reposition the image
+    noData: true, // photos only - disables the base64 `data` field from being generated (greatly improves performance on large photos)
+    storageOptions: { // if this key is provided, the image will get saved in the documents/pictures directory (rather than a temporary directory)
+        skipBackup: true, // image will NOT be backed up to icloud
+        path: 'images' // will save image at /Documents/images rather than the root
+    }
+};
 
 
 export default class LoginView extends Component {
@@ -162,6 +187,54 @@ export default class LoginView extends Component {
         //
         //     });
         // }
+
+        var user = response.responseResult;
+        if (user.roles && user.roles.length>1) {
+            //must choose one of role type.
+            var rolesButtons = [];
+
+            for (var i = 0; i < user.roles.length; i++) {
+                var  roleBtn = {};
+                  roleBtn.name = user.roles[i].name;
+                  if (!roleBtn.name || roleBtn.name == '') {
+                      roleBtn.name = 'unkonwn';
+                  }
+                  roleBtn.title = user.roles[i].name;
+                rolesButtons.push(roleBtn);
+            }
+
+            options.customButtons = rolesButtons;
+            ImagePicker.showImagePicker(options, (response) => {
+                //   Global.log('Response = ', response);
+                if (response.didCancel) {
+                    Global.log('User cancelled  picker');
+                }
+                else if (response.error) {
+                    Global.log('Picker Error: ', response.error);
+                }
+                else if (response.customButton) {
+                    for (var i = 0; i < user.roles.length; i++) {
+                          if (user.roles[i].name == response.customButton) {
+                              var roles = [];
+                              roles.push(user.roles[i]);
+                              user.department = user.roles[i].department;
+                              user.roles=roles;
+
+                              break;
+                          }
+                    }
+                    response.responseResult = user;
+                    this.goMain(response,paramBody);
+                    Global.log('User tapped custom button: '+ response.customButton);
+
+                }
+            });
+            return;
+        }
+
+        this.goMain(response,paramBody);
+    }
+    goMain(response,paramBody){
         var me = this
         AsyncStorage.setItem('k_login_info', JSON.stringify(response), (error, result) => {
             if (error) {
@@ -191,7 +264,6 @@ export default class LoginView extends Component {
             props: {...this.props}
         })
     }
-
 
 
     render() {
