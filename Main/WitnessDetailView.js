@@ -184,6 +184,7 @@ export default class WitnessDetailView extends Component {
 
             if (Global.isGroup(Global.UserInfo)) {
                 if (this.props.data && this.props.data.launchData) {
+                    var item = this.props.data;
                     if (item.result != 'UNQUALIFIED' && item.result != 'QUALIFIED') {
                         return(<View style={{height:50,width:width}}><CommitButton title={'取消见证'}
                                 onPress={this.startCancelWitness.bind(this)}></CommitButton></View>)
@@ -468,7 +469,7 @@ getNoticeType(noticePoint){
                var displayAry = [];
 
 
-               if (this.state.data.witnessInfo) {
+               if (this.state.data.witnessInfo && this.state.data.witnessInfo.length > 0) {
                    displayAry.push({title:'发起人',content:this.state.data.witnessInfo[0].launcherName,id:'name'})
 
                    displayAry.push({type:'devider'},);
