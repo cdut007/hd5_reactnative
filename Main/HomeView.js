@@ -271,6 +271,10 @@ export default class HomeView extends Component {
             }
 
             if (data.type == 'WZGL') {
+              if(!Global.isKeeper(Global.UserInfo)){
+                Global.alert("当前角色不是库存管理员,无权限操作");
+                return;
+              }
                this.props.navigator.push({
                   component: ResourceManageView,
                    props: {
