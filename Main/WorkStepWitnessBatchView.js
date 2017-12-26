@@ -186,9 +186,14 @@ export default class WorkStepWitnessBatchView extends Component {
         var bodyArray=[]
         for (var i = 0; i < this.state.data.length; i++) {
             var elemnt = new Object()
+            var batchIds = this.state.data[i].workStepIds;
+            if(batchIds){
+                elemnt.ids = batchIds
+            }else{
+                elemnt.id = this.state.data[i].id
+            }
 
-            elemnt.id = this.state.data[i].id
-            elemnt.ids = this.state.data[i].workStepIds
+
             elemnt.witnessaddress = this.state.data[i].choose_address
             elemnt.witnessdate = Global.formatFullDate(this.state.data[i].choose_date)
             bodyArray.push(elemnt)

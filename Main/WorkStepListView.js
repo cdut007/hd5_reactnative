@@ -119,7 +119,10 @@ export default class WorkStepListView extends Component {
 
     startCommitWitness(){
         var selectItems = []
-
+        if(!this.state.data){
+            Global.alert('请选择工序见证')
+            return;
+        }
         this.state.data.map((item, i) => {
                         if (item.selected) {
                             selectItems.push(item)

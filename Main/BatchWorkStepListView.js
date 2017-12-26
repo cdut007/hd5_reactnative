@@ -124,8 +124,8 @@ export default class BatchWorkStepListView extends Component {
         this.state.data.map((item, i) => {
                         if (item.selected) {
                             selectItems.push(item)
-
-                            Global.log('selected==='+item.id)
+                            item.id=item.workStepIds;
+                            Global.log('selected==='+item.workStepIds)
                         }
                     })
         if (selectItems.length == 0) {
