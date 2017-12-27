@@ -196,7 +196,11 @@ export default class WorkStepListView extends Component {
                // 数组
                var itemAry = [];
                // 颜色数组
-               var displayAry = [{title:'施工日期',content:this.state.plan_data.weldno,id:'0',noLine:true},
+               var time = this.state.plan_data.planBeginProgressDate
+               if (!time) {
+                   time = this.state.plan_data.planStartDate
+               }
+               var displayAry = [{title:'施工日期',content:Global.formatDate(time),id:'0',noLine:true},
                {title:'工程量编号',content:this.state.plan_data.projectNo,id:'1',noLine:true},
                 {title:'焊口/支架',content:this.state.plan_data.weldno,id:'2',noLine:true},
                  {title:'工程量类别',content:this.state.plan_data.projectType,id:'3',noLine:true},

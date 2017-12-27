@@ -117,7 +117,7 @@ export default class MeetingView extends Component {
          query = '';
      }
 
-        var datas = response.responseResult.data;
+        var datas = response.responseResult.datas;
         if (datas) {
             this.setState({expired_notice:datas})
         }
@@ -132,7 +132,7 @@ export default class MeetingView extends Component {
 
 
 
-   HttpRequest.get('/expire_notice', paramBody, this.onGetDataSuccess.bind(this),
+   HttpRequest.get('/enpower/invalidFileList', paramBody, this.onGetDataSuccess.bind(this),
        (e) => {
 
 
@@ -333,7 +333,7 @@ export default class MeetingView extends Component {
          <TouchableOpacity key={i} onPress={this.onExpriedDetailModuleItemClick.bind(this,moduleDataItem)}>
          <View style={[{width:width}]}>
 
-             <Text numberOfLines={1} style={{ fontSize: 14, marginTop:10,marginRight:10,color: "#e82628" }}> {Global.formatFullDateDisplay(moduleDataItem.publishTime)} {moduleDataItem.title}</Text>
+             <Text numberOfLines={1} style={{ fontSize: 14, marginTop:10,marginRight:10,color: "#e82628" }}> {Global.formatDate(moduleDataItem.releaseDate)} 文件失效通知 {moduleDataItem.cancCode}</Text>
          </View>
          </TouchableOpacity>)
       }
