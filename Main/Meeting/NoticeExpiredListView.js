@@ -130,7 +130,7 @@ export default class NoticeExpiredListView extends Component {
          query = '';
      }
 
-        var datas = response.responseResult.data;
+        var datas = response.responseResult.datas;
 
 
 
@@ -211,7 +211,7 @@ export default class NoticeExpiredListView extends Component {
                      }
 
 
-            HttpRequest.get('/expire_notice', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/enpower/invalidFileList', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
                     this.setState({
@@ -274,14 +274,14 @@ export default class NoticeExpiredListView extends Component {
 
                        <View style={{flex:1,flexDirection:'row',alignSelf:'center'}}>
                        <Text numberOfLines={1} style={{color:'#0755a6',fontSize:14,}}>
-                             {Global.formatFullDateDisplay(rowData.publishTime)}
+                             {Global.formatDate(rowData.releaseDate)}
                        </Text>
 
 
                        </View>
 
                        <Text numberOfLines={1} style={{flex:1.4,color:'#0755a6',fontSize:14}}>
-                        {rowData.title}
+                        文件失效通知 {rowData.cancCode}
                        </Text>
 
                         </View>

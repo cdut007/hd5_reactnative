@@ -129,7 +129,7 @@ export default class NoticeExpiredListView extends Component {
          Global.log('onGetDataSuccess@@@@')
 
 
-        var datas = response.responseResult.files;
+        var datas = response.responseResult.cancFileList;
 
 
 
@@ -190,7 +190,7 @@ export default class NoticeExpiredListView extends Component {
                      }
 
 
-            HttpRequest.get('/expire_notice/'+this.props.data.id, paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get('/enpower/invalidFileDetail/'+this.props.data.id, paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
 
@@ -228,40 +228,21 @@ export default class NoticeExpiredListView extends Component {
 
     renderTop(){
 
-        return( <View style={{height:this.state.WebViewHeight + 74,marginBottom:10}}>
+        return( <View style={{height:this.state.WebViewHeight,marginBottom:10}}>
           <View style={[styles.itemContainer,]}>
 
-          {/* <Text numberOfLines={4} style={{color:'#282828',fontSize:14}}>
-
+          <Text numberOfLines={4} style={{color:'#282828',fontSize:14}}>
           各位领导，各部门负责人：
+
             下列文件已失效，不再使用，请在
-            <Text style={{color:'#e82628'}}>2017年11月29日</Text>
+            <Text style={{color:'#e82628'}}>{Global.formatDate(this.state.data.askReturnDate)}</Text>
             前，将失效文件（纸质版）退回文档组，同时请自行删除电子版文件（PDF版），以避免误用。
 
-          </Text> */}
-          <WebView  style={{width:width,height:this.state.WebViewHeight}}
-
-                         source={{html: `<!DOCTYPE html><html><body style="height:100%">${this.state.data.content}<script>window.onload=function(){window.location.hash = 1;document.title = document.body.clientHeight;}</script></body></html>`}}
-                          javaScriptEnabled={true}
-                          domStorageEnabled={true}
-                          bounces={false}
-                          scrollEnabled={false}
-                          automaticallyAdjustContentInsets={true}
-                          contentInset={{top:0,left:0}}
-                          onNavigationStateChange={(title)=>{
-                            //   if(title.title != undefined) {
-                            //       this.setState({
-                            //           WebViewHeight:(parseInt(title.title)+20)
-                            //       })
-                            //   }
-                          }}
-                 >
-
-                 </WebView>
+          </Text>
 
 
           <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-            {this.state.data.department}
+            {this.state.data.projName}
           </Text>
 
           <View style={{backgroundColor: '#d6d6d6',
@@ -270,7 +251,7 @@ export default class NoticeExpiredListView extends Component {
 
 
           <View style={{flexDirection:'row',alignItems:'center'}}>
-          <View style={{flex:1,flexDirection:'row',}}>
+          {/* <View style={{flex:1,flexDirection:'row',}}>
           <Text numberOfLines={1} style={{marginTop:5,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
                 编制日期：
           </Text>
@@ -279,13 +260,13 @@ export default class NoticeExpiredListView extends Component {
          {Global.formatDate(this.state.data.writeTime)}
           </Text>
 
-          </View>
+          </View> */}
 
           <Text numberOfLines={1} style={{marginTop:5,color:'#1c1c1c',fontSize:12}}>
           编号：
           </Text>
           <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
-          {this.state.data.no}
+          {this.state.data.cancCode}
           </Text>
 
           </View>
@@ -296,7 +277,7 @@ export default class NoticeExpiredListView extends Component {
           <View style={{flexDirection:'row',alignItems:'center'}}>
 
 
-
+{/*
          <View style={{flex:1,flexDirection:'row',}}>
          <Text numberOfLines={1} style={{marginTop:5,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
                审批日期：
@@ -306,13 +287,13 @@ export default class NoticeExpiredListView extends Component {
         {Global.formatDate(this.state.data.approvelTime)}
          </Text>
 
-         </View>
+         </View> */}
 
          <Text numberOfLines={1} style={{marginTop:5,color:'#1c1c1c',fontSize:12}}>
          发布时间：
          </Text>
          <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
-        {Global.formatFullDateDisplay(this.state.data.publishTime)}
+        {Global.formatFullDateDisplay(this.state.data.releaseDate)}
          </Text>
 
           </View>
@@ -337,7 +318,7 @@ export default class NoticeExpiredListView extends Component {
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
 
-            var info = '已失效'
+            var info = rowData.status
             //状态:pre待解决、undo待确认、unsolved仍未解决、solved已解决
             var color = '#e82628'
             if(rowData.status == 'EXPIRED'){
@@ -348,7 +329,7 @@ export default class NoticeExpiredListView extends Component {
 
                 return (
 
-                       <View style={{height:130}}>
+                       <View>
                         <View style={styles.itemContainer} onPress={this.onItemPress.bind(this, rowData)}>
 
                         <Text numberOfLines={1} style={{color:'#282828',fontSize:14}}>
@@ -363,7 +344,7 @@ export default class NoticeExpiredListView extends Component {
                         </Text>
 
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#777777',fontSize:12,marginBottom:2,}}>
-                          {rowData.no}
+                          {rowData.ctitle}
                         </Text>
 
                         </View>
@@ -374,26 +355,20 @@ export default class NoticeExpiredListView extends Component {
                         </Text>
 
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#777777',fontSize:12,marginBottom:2,}}>
-                          {rowData.version}
+                          {rowData.revsion}
                         </Text>
 
                         </View>
 
 
-
+                        {this.renderUserList(rowData.userList)}
 
                         <View style={{flexDirection:'row',alignItems:'center'}}>
 
 
 
                        <View style={{flex:1,flexDirection:'row',}}>
-                       <Text numberOfLines={1} style={{marginTop:5,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                             领用人:
-                       </Text>
 
-                       <Text numberOfLines={1} style={{marginTop:5,color:'#777777',fontSize:12}}>
-                        {rowData.receiver}({rowData.number}份)
-                       </Text>
 
                        </View>
 
@@ -422,6 +397,50 @@ export default class NoticeExpiredListView extends Component {
                 {itemView()}
             </View>
         )
+    }
+
+    renderUserList(userList){
+
+        var disPlayUserList  = [];
+        if (!userList || userList.length == 0) {
+            return
+        }
+
+
+        for (var i = 0; i < userList.length; i++) {
+            var user = userList[i];
+            var label = 'loginname';
+            var files = '('+`${user.borNum}`+'份)';
+            if(user.borrower){
+                disPlayUserList.push(<View style={{flexDirection:'row',alignItems:'center'}}>
+                <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+                  使用人：
+                </Text>
+
+                <Text numberOfLines={1}  style={{marginTop:10,color:'#777777',fontSize:12,marginBottom:2,}}>
+                  {user.loginname} {files}
+                </Text>
+
+                </View>)
+                files= '';
+            }
+
+            disPlayUserList.push(<View style={{flexDirection:'row',alignItems:'center'}}>
+            <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+              借阅人：
+            </Text>
+
+            <Text numberOfLines={1}  style={{marginTop:10,color:'#777777',fontSize:12,marginBottom:2,}}>
+              {user.loginname} {files}
+            </Text>
+
+            </View>)
+        }
+
+
+
+        return disPlayUserList;
+
     }
 
     renderListView() {
@@ -480,7 +499,6 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
             flex:1,
-            height:94,
             backgroundColor:'#ffffff',
             padding:10,
             justifyContent: 'center',

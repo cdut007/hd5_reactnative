@@ -179,7 +179,14 @@ module.exports = {
         var roleType = user.department ? user.department.name : user.department;
         return this.existRole(user, 'HSE部');
     },
+    isKeeper(user){
+        if (!user || !user.roles) {
+            console.log('maybe crash recycle from the memery cache, can read data again ??')
+            return false
+        }
 
+        return this.existRole(user, 'keeper');
+    },
     alert(content){
         if (Platform.OS === 'ios'){
             // Add a Toast on screen.

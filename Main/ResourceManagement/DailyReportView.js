@@ -197,7 +197,7 @@ class OutStoreView extends Component{
 			<FlatList 
 				tabLabel={this.state.outStore} 
 				style={{marginTop:10}}
-				keyExtractor={(item,index) => item.department.id}
+				keyExtractor={(item,index) => index}
 				contentContainerStyle={{backgroundColor:'#fff'}}
 				ItemSeparatorComponent={() => <SeparateComponent lineStyle={{marginLeft:10, marginRight:10}}/>}
 				data = {this.state.outData}
@@ -207,7 +207,7 @@ class OutStoreView extends Component{
 
 	renderOutItem(item,index){
 		return(
-			<TouchableOpacity onPress={() => {this.props.navigator.push({component:DepartmentDetailView, props:{item:item, title:item.department.name, type:1}})}}>
+			<TouchableOpacity onPress={() => {this.props.navigator.push({component:DepartmentDetailView, props:{item:item, title:item.issDept, type:1}})}}>
 				<View style={{backgroundColor:'#fff', flexDirection:'row', width:width, height:48, alignItems:'center'}}>
 					<Image source={departmentImages[(index)%8]} style={{width:34, height:34, marginLeft:10, marginRight:10}} />
 					<Text style={{flex:1, color:'#555', fontSize:16, fontWeight:'bold'}}>{item.issDept}</Text>

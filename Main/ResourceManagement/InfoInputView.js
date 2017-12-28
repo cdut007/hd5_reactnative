@@ -218,7 +218,8 @@ export default class InfoInputView extends Component{
         	pickerCancelBtnText:'取消',
         	pickerTitleText:'',
 	        onPickerConfirm: data => {
-	            this.state.inStoreData.GJJSBFL=data[0]
+	        	this.state.inStoreData.GJJSBFL = data[0];
+	        	this.setState({inStoreData:this.state.inStoreData});
 	        }	    
   		});
     	Picker.show();

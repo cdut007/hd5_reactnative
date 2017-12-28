@@ -271,6 +271,10 @@ export default class HomeView extends Component {
             }
 
             if (data.type == 'WZGL') {
+              if(!Global.isKeeper(Global.UserInfo)){
+                Global.alert("当前角色不是库存管理员,无权限操作");
+                return;
+              }
                this.props.navigator.push({
                   component: ResourceManageView,
                    props: {
@@ -314,7 +318,7 @@ export default class HomeView extends Component {
                         }
                 })
             }else if (Global.isGroup(Global.UserInfo)) {
-                
+
                 data.user = new Object();
                 data.user.id = Global.UserInfo.id;
                 data.user.dept = new Object();
@@ -450,6 +454,22 @@ export default class HomeView extends Component {
 
                 this.props.navigator.push({
                     component: CoordinatorView,
+                     props: {
+                         data:data,
+                         type:data.type,
+                         typeStr:typeSegArr[this.state.selectedTypeIndex],
+                         category:dayCateArr[index],
+                        }
+                })
+            }else if(Global.isSolverMember(Global.UserInfo)){
+                data.user = new Object();
+                data.user.id = Global.UserInfo.id;
+                data.user.dept = new Object();
+                data.user.dept.name = data.title;//change later. for dept
+
+
+                this.props.navigator.push({
+                    component: SolverTabView,
                      props: {
                          data:data,
                          type:data.type,
