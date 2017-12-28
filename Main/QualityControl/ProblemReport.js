@@ -244,7 +244,7 @@ export  default class ProblemReport extends Component {
       {title:'房间号:',id:'room_no',content:this.state.RoomNumber,type:'input'},
       {title:'系统(选填):',id:'system_no',content:this.state.system_no,type:'input'},
       {title:'责任部门:',id:'choose_des',pickerTitle:"选择责任部门",content:this.state.ResDepart,data:DepartTypes,type:'choose',refence:this.resP_ref},
-      {title:'责任班组(选填):',id:'choose_team',pickerTitle:"选择责任班组",content:this.state.ResTeam,data:TeamTypes,type:'choose',refence:this.team_ref},
+      {title:'责任班组:',id:'choose_team',pickerTitle:"选择责任班组",content:this.state.ResTeam,data:TeamTypes,type:'choose',refence:this.team_ref},
       {type:'describe'},
       {type:'file'},
 
@@ -329,6 +329,12 @@ if (!this.state.area.length) {
        Global.alert("请选择责任部门");
        return;
      }
+
+     if (this.state.ResTeam == '选择责任班组') {
+       Global.alert("请选择选择责任班组");
+       return;
+     }
+
      if (!this.state.question.length) {
        Global.alert("请输入问题描述");
        return;
@@ -338,12 +344,8 @@ if (!this.state.area.length) {
          return;
      }
 
-     let team;
-     if (this.state.ResTeam == '选择责任班组') {
-       team = "";
-     }else {
-       team = this.state.ResTeam;
-     }
+
+
 
      Alert.alert('','确认提交?',
                [
@@ -370,11 +372,11 @@ if (!this.state.area.length) {
    param.append('problemDescription', this.state.question);
    param.append('responsibleDept', this.state.ResDepartId);
 
- if (this.state.ResTeamId) {
+ // if (this.state.ResTeamId) {
 
   param.append('responsibleTeam',this.state.ResTeamId);
 
- }
+ // }
 
 if (this.state.system_no.length) {
      param.append('system', this.state.system_no);

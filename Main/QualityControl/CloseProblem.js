@@ -91,12 +91,74 @@ export default class  CloseProblem extends Component {
 
   return(
     <View style={{height:50,width:width,flexDirection:'row'}}>
+    <View style={{height:50,flex:1}}>
+      <CommitButton
+        title={'质量问题单'}
+        onPress={this.startQuality.bind(this)}
+      containerStyle={{backgroundColor:'#ffffff'}}
+        titleStyle={{color: '#f77935'}}
+  >
+      </CommitButton>
+      </View>
+
     <CommitButton title={'关闭任务'}
     onPress={this.commit.bind(this)}
       >
     </CommitButton>
     </View>
   )
+
+  }
+
+  startQuality(){
+
+    Alert.alert('','开启质量问题单?',
+              [
+                {text:'取消',},
+                 {text:'确认',onPress:()=> {this.confirmReject()}}
+  ])
+
+  }
+
+
+  confirmReject(){
+
+    this.setState({
+             loadingVisible: true
+         });
+
+         var paramBody = {
+                 'qualityFlag':true,
+                  'qcProblrmId' : this.state.data.id,
+                  'note' : this.state.question,
+             }
+
+    HttpRequest.post('/qualityControl/qcAssignClose', paramBody, this.onDeliverySuccess.bind(this),
+        (e) => {
+          this.setState({
+              loadingVisible: false
+          });
+          try {
+              var errorInfo = JSON.parse(e);
+          }
+          catch(err)
+          {
+              console.log("error======"+err)
+          }
+              if (errorInfo != null) {
+                  if (errorInfo.code == -1002||
+                   errorInfo.code == -1001) {
+                  Global.showToast(errorInfo.message);
+              }else {
+                Global.showToast(e)
+              }
+
+              } else {
+                  Global.showToast(e)
+              }
+
+          console.log('Login error:' + e)
+        })
 
   }
 

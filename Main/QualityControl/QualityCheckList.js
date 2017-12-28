@@ -101,7 +101,7 @@ export default class QualityCheckList extends Component {
     if (this.state.insearch) {
       this.state.insearch = false;
       return;
-    } 
+    }
 
             console.log("触发加载更多 toEnd() --> ");
             //console.log("加载更多？ ",userReducer.isLoadingMore, userReducer.products.length, userReducer.totalProductCount,userReducer.isRefreshing);
@@ -139,6 +139,9 @@ export default class QualityCheckList extends Component {
 
 
     componentDidMount() {
+
+    this.qualityCheck = DeviceEventEmitter.addListener('Quality_Check',(param) => {this._onRefresh()})
+
     InteractionManager.runAfterInteractions(() => {
       this.executePlanRequest(1);
 

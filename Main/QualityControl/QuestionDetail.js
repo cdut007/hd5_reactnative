@@ -125,14 +125,6 @@ renderQcAssign(){
   return(
     <View style={{height:50,width:width,flexDirection:'row'}}>
 
-    <View style={{height:50,flex:1}}>
-      <CommitButton
-        title={'质量问题单'}
-        onPress={this.startQuality.bind(this)}
-        >
-      </CommitButton>
-    </View>
-
   <View style={{height:50,flex:1}}>
     <CommitButton
       title={'关闭'}
@@ -397,6 +389,8 @@ onDeliverySuccess(response){
 
     Global.showToast(response.message)
 
+ DeviceEventEmitter.emit('Quality_Check','Quality_Check');
+
     this.back();
 
 }
@@ -471,7 +465,7 @@ back() {
         itemAry.push(this.renderSelectView(this.state.qcdetail,assinList,"选择QC"))
       }
 
-      if (this.state.data.status == 'PreQCAssign') {
+      if (this.state.data.status == 'PreQCAssign' && Global.isQC1(Global.UserInfo)) {
         itemAry.push(this.chooseItemInfo("整改期限","choose_date",this.state.choose_date))
       }
 
