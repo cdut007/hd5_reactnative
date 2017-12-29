@@ -150,9 +150,9 @@ export default class QualityCheckList extends Component {
     }
 
     componentWillUnmount(){
-      /*
-       this.SafeWorkDeal.remove();
-       */
+  
+       this.qualityCheck.remove();
+
   }
 
     onGetDataSuccess(response,paramBody){

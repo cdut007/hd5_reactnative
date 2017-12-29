@@ -36,6 +36,7 @@ export default class  CloseProblem extends Component {
        data : this.props.data,
        loadingVisible:false,
        question:'',
+       title: this.props.title ? this.props.title : "关闭任务" ,
      }
 
   }
@@ -45,7 +46,7 @@ export default class  CloseProblem extends Component {
     return (
         <View style={styles.container}>
             <NavBar
-            title={"关闭任务"}
+            title = {this.state.title}
             leftIcon={require('../../images/back.png')}
             leftPress={this.back.bind(this)}/>
             <ScrollView>
@@ -89,6 +90,82 @@ export default class  CloseProblem extends Component {
 
   renderWaitCommit(){
 
+      if (this.state.data.status == 'PreQCAssign') {
+    return    this.renderClose();
+      }else if (this.state.data.status == 'PreQCverify'){
+
+  return  this.renderQcCheckFail();
+
+      }
+
+  }
+
+//QC检查不合格
+renderQcCheckFail(){
+
+  return(
+    <View style={{height:50,width:width,flexDirection:'row'}}>
+    <CommitButton title={'提交'}
+    onPress={this.QcCheckFail.bind(this)}
+      >
+    </CommitButton>
+    </View>
+  )
+
+}
+
+QcCheckFail(){
+
+  Alert.alert('','确认提交?',
+            [
+              {text:'取消',},
+               {text:'确认',onPress:()=> {this.QcCheck()}}
+])
+
+}
+
+QcCheck(){
+
+  var paramBody = {
+           'note':this.state.question,
+           'qcProblrmId' : this.state.data.id,
+           'checkResult' : 'Unqualified',
+
+      }
+
+  HttpRequest.post('/qualityControl/qcVerify', paramBody, this.onDeliverySuccess.bind(this),
+      (e) => {
+        this.setState({
+            loadingVisible: false
+        });
+        try {
+            var errorInfo = JSON.parse(e);
+        }
+        catch(err)
+        {
+            console.log("error======"+err)
+        }
+            if (errorInfo != null) {
+                if (errorInfo.code == -1002||
+                 errorInfo.code == -1001) {
+                Global.showToast(errorInfo.message);
+            }else {
+              Global.showToast(e)
+            }
+
+            } else {
+                Global.showToast(e)
+            }
+
+        console.log('Login error:' + e)
+      })
+
+}
+
+
+//关闭任务
+renderClose(){
+
   return(
     <View style={{height:50,width:width,flexDirection:'row'}}>
     <View style={{height:50,flex:1}}>
@@ -108,7 +185,7 @@ export default class  CloseProblem extends Component {
     </View>
   )
 
-  }
+}
 
   startQuality(){
 

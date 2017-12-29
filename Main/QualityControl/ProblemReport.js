@@ -362,6 +362,7 @@ if (!this.state.area.length) {
    })
 
    var param = new FormData()
+
    param.append('type', ReportPbTypes[this.state.pbType]);
    param.append('unit', this.state.machineType);
    param.append('subitem', this.state.plantType);

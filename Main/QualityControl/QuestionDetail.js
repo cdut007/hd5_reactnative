@@ -80,6 +80,8 @@ export default class QuestionDetail extends Component {
        choose_date:null,
        assignList:null,
        qcdetailId:null,
+       question:'',
+        newFileArr:[{}],//新的图片
      }
 
   }
@@ -116,7 +118,185 @@ renderCommitBtn(){
         return   this.renderWaitCommit();
   }else if ( Global.isQC1(Global.UserInfo) && this.state.data.status == 'PreQCAssign') {
        return this.renderQcAssign();
+  }else if (Global.isMonitor(Global.UserInfo) && this.state.data.status == 'PreRenovete') {
+    return this.Commit()
+  }else if (this.state.data.status == 'PreQCverify' && Global.isQC1(Global.UserInfo)) {
+      return this.QcCheckResult();
   }
+
+}
+
+//qc核实整改结果
+QcCheckResult(){
+
+  return(
+    <View style={{height:50,width:width,flexDirection:'row'}}>
+
+  <View style={{height:50,flex:1}}>
+    <CommitButton
+      title={'不合格'}
+      onPress={this.QcCheckResultFail.bind(this)}
+    containerStyle={{backgroundColor:'#ffffff'}}
+      titleStyle={{color: '#f77935'}}
+>
+    </CommitButton>
+    </View>
+    <View style={{height:50,flex:1}}>
+      <CommitButton
+        title={'合格'}
+        onPress={this.QcCheckResultPass.bind(this)}
+        >
+      </CommitButton>
+    </View>
+
+    </View>)
+
+}
+
+QcCheckResultPass(){
+
+  Alert.alert('', '确认审核通过?',
+            [
+              {text:'取消',},
+              {text:'确认',onPress:()=> {this.QcCheck()}}
+])
+
+}
+
+QcCheckResultFail(){
+
+  this.props.navigator.push({
+      component: CloseProblem,
+       props: {
+           data:this.state.data,
+           title:"整改不合格",
+          }
+  })
+
+}
+
+QcCheck(){
+
+  var paramBody = {
+           'note':'',
+           'qcProblrmId' : this.state.data.id,
+           'checkResult' : 'Qualified',
+
+      }
+
+  HttpRequest.post('/qualityControl/qcVerify', paramBody, this.onDeliverySuccess.bind(this),
+      (e) => {
+        this.setState({
+            loadingVisible: false
+        });
+        try {
+            var errorInfo = JSON.parse(e);
+        }
+        catch(err)
+        {
+            console.log("error======"+err)
+        }
+            if (errorInfo != null) {
+                if (errorInfo.code == -1002||
+                 errorInfo.code == -1001) {
+                Global.showToast(errorInfo.message);
+            }else {
+              Global.showToast(e)
+            }
+
+            } else {
+                Global.showToast(e)
+            }
+
+        console.log('Login error:' + e)
+      })
+
+}
+
+//提交施工班组的整改结果
+Commit(){
+
+  return(
+    <View style={{height:50,width:width,flexDirection:'row'}}>
+    <CommitButton title={'提交'}
+    onPress={this.CommitDealResult.bind(this)}
+      >
+    </CommitButton>
+    </View>
+  )
+
+}
+
+//提交整改结果
+CommitDealResult(){
+
+  if (!this.state.question.length) {
+    Global.alert("请输入整改描述");
+    return;
+  }
+
+  if(this.state.newFileArr.length<=1){
+     Global.alert('请选择至少一张问题图片');
+      return;
+  }
+
+
+  Alert.alert('','确认提交?',
+            [
+              {text:'取消',},
+              {text:'确认',onPress:()=> {this.ConfirmCommitDealResult()}}
+])
+
+
+}
+
+
+ConfirmCommitDealResult(){
+
+  this.setState({
+      loadingVisible: true
+  });
+
+   var param = new FormData();
+
+  param.append('qcProblrmId', this.state.data.id);
+  param.append('renovateDescription', this.state.question);
+
+   this.state.newFileArr.map((item, i) => {
+       if (item['fileSource']) {
+          let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
+          param.append("file",file);   //这里的files就是后台需要的key
+       }
+   });
+
+  HttpRequest.uploadImage('/qualityControl/teamRenovete', param, this.onDeliverySuccess.bind(this),
+      (e) => {
+        this.setState({
+            loadingVisible: false
+        });
+        try {
+            var errorInfo = JSON.parse(e);
+        }
+        catch(err)
+        {
+            console.log("error======"+err)
+        }
+            if (errorInfo != null) {
+                if (errorInfo.code == -1002||
+                 errorInfo.code == -1001) {
+                Global.showToast(errorInfo.message);
+            }else {
+                Global.showToast(e)
+            }
+
+            } else {
+                Global.showToast(e)
+            }
+
+        console.log('Login error:' + e)
+      })
+
+
 
 }
 
@@ -266,6 +446,7 @@ confirmVeify(){
 
 }
 
+//责任单位主任执行分派
 renderWaitCommit(){
 
 return(
@@ -430,7 +611,7 @@ back() {
   }
 
   if (this.state.data.notes) {
-    displayAry.push({title:'问题描述',content:this.state.data.notes,id:'15',noLine:true})
+    displayAry.push({title:'备注:',content:this.state.data.notes,id:'15',noLine:true})
   }
 
 
@@ -459,6 +640,15 @@ back() {
             );
           }
       }
+
+
+ if ( Global.isMonitor(Global.UserInfo) && this.state.data.status == 'PreRenovete') {
+
+           itemAry.push(this._questtionDescribe());
+
+             itemAry.push(this.renderNewFileView("整改照片"));
+
+}
 
 
       if ( Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreQCLeaderAssign') {
@@ -675,6 +865,113 @@ back() {
       }
 
 
+      _questtionDescribe(){
+        return(
+          <View style={styles.questionType}>
+            <Text style={{color: '#1c1c1c', fontSize: 14}}>整改描述:</Text>
+            <TextInput
+                style={{flex: 1, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}}
+                underlineColorAndroid ='transparent'
+                multiline = {true}
+                onChangeText={(text) => this.setState({ question: text })}
+                value={this.state.question} />
+          </View>
+        )
+      }
+
+      renderNewFileView(title) {
+          return (
+              <View style={{alignItems:'center',flexDirection: 'row', flexWrap: 'wrap', width: width, paddingTop: 10, paddingRight: 10}} horizontal={true} >
+                      <Text> {title} </Text>
+                      {this.renderNewImages()}
+
+              </View>
+          )
+      }
+
+      renderNewImages(){
+        var imageViews = [];
+
+        {this.state.newFileArr.map( (item,i) => {
+
+           imageViews.push(
+             <TouchableOpacity
+                key={i}
+                onPress={() => this.onSelectNewFile(i)}
+                onLongPress={() => this.onDeleteNewFile(i)}
+                style={{width:70,height:70,marginLeft:10,marginBottom:10}}>
+                     {item['fileSource']
+                     ?(<Image resizeMode={'cover'} style={{width:70,height:70,borderWidth:0.5,borderRadius:4}} source={{uri:item['fileSource']}}/>)
+                     :(<Image resizeMode={'cover'} style={{width:70,height:70,borderWidth:0.5,borderRadius:4}} source={require('../../images/add_pic_icon.png')}/>)
+                      }
+             </TouchableOpacity>
+           );
+
+           if(this.state.newFileArr[this.state.newFileArr.length-1]['fileSource']){
+                   this.state.newFileArr.push({});
+               }
+        })}
+
+       return imageViews;
+      }
+
+
+      //选择图片
+      onSelectNewFile(idx) {
+
+      this.currentFileIdx = idx;
+
+      ImagePicker.showImagePicker(options,(response) => {
+
+       if (response.didCancel) {
+         console.log("cancelled");
+       }else if (response.error) {
+         console.log("error");
+       }else if (response.customButton) {
+         console.log("customButton");
+       }else {
+         var source;
+         if (Platform.OS === 'android') {
+           source = {uri:response.uri,isStatic:true};
+         }else {
+           source = {
+              uri: response.uri.replace('file://', ''),
+              isStatic: true
+           };
+
+         }
+
+         var fileInfo = this.state.newFileArr[this.currentFileIdx]
+         fileInfo['fileSource'] = source.uri;
+         fileInfo['fileName'] = response.fileName;
+         fileInfo['url'] = source.uri;
+
+         if(this.state.newFileArr.length<MAX_IMAGE_COUNT && this.state.newFileArr[this.state.newFileArr.length-1]['fileSource']){
+             this.state.newFileArr.push({});
+         }
+
+         this.setState({
+             ...this.state
+         });
+
+       }
+
+      });
+
+      }
+
+      onDeleteNewFile(idx){
+
+        if(this.state.newFileArr[idx]['fileSource']){
+            this.state.newFileArr.splice(idx, 1)
+            this.setState({
+                ...this.state
+            })
+        }
+
+      }
+
+
 }
 
 const styles = StyleSheet.create({
@@ -784,6 +1081,19 @@ statisticsflexContainer: {
             justifyContent: 'center',
             alignItems: 'center',
             alignSelf: 'center',
+          },
+
+          questionType:{
+            backgroundColor: 'white',
+             height: 150,
+              paddingTop: 10,
+              paddingLeft: 10,
+              borderWidth:1,
+              borderColor:'darkgray',
+              marginTop:10,
+              marginLeft:10,
+              marginRight:10,
+              borderRadius:8,
           },
 
 })
