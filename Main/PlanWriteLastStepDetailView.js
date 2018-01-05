@@ -254,12 +254,12 @@ export default class PlanWriteLastStepDetailView extends Component {
     startHankou(){
 
         if (!this.state.choose_date) {
-            Global.alert('请选择焊接时间')
+            Global.alert('请选择操作时间')
             return
         }
 
         if (!this.state.displayHankouNo) {
-            Global.alert('请输入焊工号')
+            Global.alert('请输入操作工号')
             return
         }
 
@@ -612,8 +612,8 @@ export default class PlanWriteLastStepDetailView extends Component {
 
 
                if (this.state.data.welder) {
-                   displayAry.push({title:'焊工号',content:this.state.data.welder.realname,id:'e1'})
-                   displayAry.push({title:'焊接时间',content:Global.formatFullDateDisplay(this.state.data.welddate),id:'e2'})
+                   displayAry.push({title:'操作号',content:this.state.data.welder.realname,id:'e1'})
+                   displayAry.push({title:'操作时间',content:Global.formatFullDateDisplay(this.state.data.welddate),id:'e2'})
                }
                //qc1 qc2
                if (this.state.data.qc1WitnessDate) {

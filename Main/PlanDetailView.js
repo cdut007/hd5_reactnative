@@ -539,8 +539,8 @@ export default class PlanDetailView extends Component {
                // 颜色数组
                var displayAry = [];
                if (this.state.data.welder) {
-                   displayAry.push({title:'焊工号',content:this.state.data.welder.realname,id:'e1'})
-                   displayAry.push({title:'焊接时间',content:Global.formatFullDateDisplay(this.state.data.welddate),id:'e2'})
+                   displayAry.push({title:'操作工号',content:this.state.data.welder.realname,id:'e1'})
+                   displayAry.push({title:'操作时间',content:Global.formatFullDateDisplay(this.state.data.welddate),id:'e2'})
                }
                //qc1 qc2
                if (this.state.data.qc1WitnessDate) {
