@@ -300,7 +300,7 @@ export default class InfoInputView extends Component{
 
 	requestInStore(){
 		HttpRequest.post(
-			'/enpower/material',
+			'/enpower/material/materialStoreCheck',
 			this.state.inStoreData,
 			(response) => {
 				this.props.navigator.pop();

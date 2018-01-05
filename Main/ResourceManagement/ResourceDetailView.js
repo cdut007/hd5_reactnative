@@ -417,7 +417,7 @@ export default class ResourceDetailView extends Component{
 	requestOutStore(){
 		this.setState({loadingVisible:true});
 		HttpRequest.post(
-			'/enpower/material', 
+			'/enpower/material/materialOutCheck', 
 			this.state.outStoreData,
 			(response) => {
 				this.setState({loadingVisible:false});
@@ -436,7 +436,7 @@ export default class ResourceDetailView extends Component{
 	requestBackStore(){
 		this.setState({loadingVisible:true});
 		HttpRequest.post(
-			'/enpower/material',
+			'/enpower/material/materialCancelCheck',
 			this.state.backStoreData,
 			(reponse) => {
 				this.setState({loadingVisible:false});
