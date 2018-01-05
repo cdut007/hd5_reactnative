@@ -144,7 +144,7 @@ module.exports = {
             }else if (type == 'JXJH') {
                 displayAry.push({title:'设备名称',content:data.deviceName,id:'r0'});
 
-                displayAry.push({title:'设备编号',content:data.deviceNo,id:'r1'});
+                //displayAry.push({title:'设备编号',content:data.deviceNo,id:'r1'});
 
                 displayAry.push({title:'设备类型',content:data.deviceType,id:'r2'});
 

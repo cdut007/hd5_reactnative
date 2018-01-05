@@ -152,7 +152,10 @@ export default class ScanMemberListView extends Component {
 
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
-
+            var role = '';
+             if(rowData.roles && rowData.roles.length > 0){
+                role= rowData.roles[0].name;
+             }
                 return (
                        <View style={styles.itemContainer}>
                         <TouchableOpacity style={[{flexDirection:'row',alignItems: 'center',alignSelf:'stretch',backgroundColor:'#ffffff'}]} onPress={this.onItemPress.bind(this, rowData,rowID)}>
@@ -172,7 +175,7 @@ export default class ScanMemberListView extends Component {
                         <View style= {[styles.cellLine,{marginLeft:8,marginRight:8,marginTop:20,marginBottom:20}]}/>
 
                         <Text style={{color:'#888888',fontSize:14,marginLeft:4,}}>
-                          {rowData.roles[0].name}
+                          {role}
                         </Text>
 
                         </View>

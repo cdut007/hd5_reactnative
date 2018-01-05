@@ -337,7 +337,10 @@ export default class FeedbackMessageView extends Component {
 
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
-
+            var role = '';
+            if (rowData.user.roles && rowData.user.roles.length>0) {
+                role = '('+ rowData.user.roles[0].name+')';
+            }
                 return (
                        <View style={styles.itemContainer}>
                         <TouchableOpacity style={[{padding:10,alignItems:'center',flexDirection:'row',alignSelf:'stretch',backgroundColor:'#ffffff'}]} onPress={this.onItemPress.bind(this, rowData,rowID)}>
@@ -358,7 +361,7 @@ export default class FeedbackMessageView extends Component {
 
 
                         <Text style={{flex:1,color:'#1c1c1c',fontSize:14,marginLeft:4,}}>
-                          {'('+ rowData.user.roles[0].name+')'}
+                          {role}
                         </Text>
 
                         <Text style={{color:'#888888',fontSize:12,width:160}}>

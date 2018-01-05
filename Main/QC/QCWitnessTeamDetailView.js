@@ -62,7 +62,7 @@ export default class QCWitnessTeamDetailView extends Component {
 
 
     componentDidMount() {
-
+            
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
         if (!this.props.exist_qc_member) {
             this.getWitnessTeamMember();

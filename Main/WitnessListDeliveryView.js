@@ -64,6 +64,7 @@ export default class WitnessListDeliveryView extends Component {
         if (this.props.tag == 'QC2') {
             displayTeamQC = '选择QC2组长'
         }
+
         this.state = {
             dataSource: ds,
             isLoading: false,
@@ -72,6 +73,7 @@ export default class WitnessListDeliveryView extends Component {
             items:[],
             totalCount:0,
             QCTeamMember:null,
+            label:displayTeamQC,
             displayTeamQC:displayTeamQC,
             members:data,
             choose_teamQC:null,

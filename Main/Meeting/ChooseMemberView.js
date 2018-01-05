@@ -158,6 +158,7 @@ export default class ChooseMemberView extends Component {
   }
 
   chooseMember(memberData){
+     
       this.props.navigator.push({
           component: ChooseMemberListView,
            props: {

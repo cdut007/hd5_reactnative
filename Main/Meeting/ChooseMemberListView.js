@@ -266,6 +266,10 @@ export default class ChooseMemberListView extends Component {
 
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
+            var role = '';
+             if(rowData.roles && rowData.roles.length > 0){
+                role= rowData.roles[0].name;
+             }
 
                 return (
                        <View style={styles.itemContainer}>
@@ -305,7 +309,7 @@ export default class ChooseMemberListView extends Component {
                         <View style= {[styles.cellLine,{marginLeft:8,marginRight:8,marginTop:20,marginBottom:20}]}/>
 
                         <Text style={{color:'#888888',fontSize:14,marginLeft:4,}}>
-                          {rowData.roles[0].name}
+                          {role}
                         </Text>
 
                         </View>

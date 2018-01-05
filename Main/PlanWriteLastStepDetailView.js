@@ -554,7 +554,17 @@ export default class PlanWriteLastStepDetailView extends Component {
 
 
 
+    createMaterialListItems(displayAry){
+        var materialList = this.state.data.materialList
+        for (var i = 0; i < materialList.length; i++) {
+            var item = materialList[i]
+            displayAry.push({type:'devider'},);
+            displayAry.push({title:'规格型号',content:ConstMapValue.regExpSepcification(item.specificationModel),id:'b4-'+i},);
+            displayAry.push({title:'材质',content:item.materialQuality,id:'b5-'+i},);
 
+        }
+        return displayAry
+    }
 
     renderMoreItem(){
         if (!this.state.displayMore) {
@@ -565,19 +575,28 @@ export default class PlanWriteLastStepDetailView extends Component {
         displayMoreAry.push({title:'子项',content:this.state.data.subItem,id:'c1'},);
         displayMoreAry.push({title:'系统号',content:this.state.data.systemNo,id:'c2'},);
         displayMoreAry.push({title:'工程量',content:this.state.data.projectCost,id:'c3'},);
-        displayMoreAry.push({title:'规格',content:this.state.data.speification,id:'c4'},);
-        displayMoreAry.push({title:'材质',content:this.state.data.matelial,id:'c5'},);
+
         displayMoreAry.push({title:'核级',content:this.state.data.croeLevel,id:'c6'},);
         displayMoreAry.push({title:'单位',content:this.state.data.projectUnit,id:'c7'},);
+
+        if (this.state.data.materialList) {
+            this.createMaterialListItems(displayMoreAry)
+        }
         //displayMoreAry.push({title:'点值',content:this.state.data.spot,id:'c8'},);
         // 遍历
         for (var i = 0; i<displayMoreAry.length; i++) {
-            itemAry.push(
-                <DisplayItemView key={displayMoreAry[i].id}
-                 title={displayMoreAry[i].title}
-                 detail={displayMoreAry[i].content}
-                />
-            );
+            if (displayMoreAry[i].type == 'devider') {
+               itemAry.push(
+                  <View style={styles.divider}/>
+               );
+           }else{
+               itemAry.push(
+                   <DisplayItemView key={displayMoreAry[i].id}
+                    title={displayMoreAry[i].title}
+                    detail={displayMoreAry[i].content}
+                   />
+               );
+           }
 
         }
          return itemAry;
