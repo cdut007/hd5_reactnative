@@ -195,7 +195,7 @@ export default class WorkStepWitnessBatchView extends Component {
 
 
             elemnt.witnessaddress = this.state.data[i].choose_address
-            elemnt.witnessdate = Global.formatFullDate(this.state.data[i].choose_date)
+            elemnt.witnessdate = Global.formatFullDateWithChina(this.state.data[i].choose_date)
             bodyArray.push(elemnt)
         }
         this.setState({

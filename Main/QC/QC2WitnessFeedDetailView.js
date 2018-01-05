@@ -356,7 +356,7 @@ export default class QC2WitnessFeedDetailView extends Component {
             var param = new FormData()
             param.append('id', this.props.data.id)
             param.append('witnessaddress', this.state.choose_address)
-            param.append('witnessdate',  Global.formatFullDate(this.state.choose_date))
+            param.append('witnessdate',  Global.formatFullDateWithChina(this.state.choose_date))
             param.append('witnessdesc', this.state.input_witnessdesc)
             param.append('substitute',this.state.substitute)
             param.append('dosage', this.state.input_dosage)
@@ -389,7 +389,7 @@ export default class QC2WitnessFeedDetailView extends Component {
             var paramBody = {
                      id:this.props.data.id,
                      witnessaddress:this.state.choose_address,
-                     witnessdate:Global.formatFullDate(this.state.choose_date),
+                     witnessdate:Global.formatFullDateWithChina(this.state.choose_date),
                      witnessdesc:this.state.input_witnessdesc,
                      substitute:this.state.substitute,
                      dosage:this.state.input_dosage,

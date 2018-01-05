@@ -252,7 +252,7 @@ export default class QCWitnessTeamDetailView extends Component {
     }
 
     renderTop(){
-        var date = this.props.data.launchData;
+        var date = this.props.data.witnessDate;
         if (!date) {
             date = this.props.data.createDate;
         }

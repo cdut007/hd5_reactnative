@@ -56,6 +56,25 @@ module.exports = {
         var curTime = new Date(time).format("yyyy-MM-dd hh:mm:ss");
         return curTime
     },
+    formatFullDateWithChina(time){
+        if (!time) {
+            return ''
+        }
+        //东8区，东时区记做正数
+        var zoneOffset = 8;
+        //算出时差,并转换为毫秒：
+        var date = new Date()
+        var offset2 = date.getTimezoneOffset()* 60 * 1000;
+        //算出现在的时间：
+        var nowDate2 = time;
+        //此时东2区的时间
+        var currentZoneDate = new Date(nowDate2 + offset2 + zoneOffset*60*60*1000);
+
+        console.log("东8区现在是："+currentZoneDate.getTime());
+        console.log('当地时间是：'+nowDate2);
+        var curTime = new Date(currentZoneDate.getTime()).format("yyyy-MM-dd hh:mm:ss");
+        return curTime
+    },
     formatFullDateDisplay(time){
         if (!time) {
             return ''
@@ -66,7 +85,7 @@ module.exports = {
     existRole(user,roleName){
 
             for (var i = 0; i < user.roles.length; i++) {
-                
+
                 if (user.roles[i].roleType[0] == roleName) {
                     return true;
                 }

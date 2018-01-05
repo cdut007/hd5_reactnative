@@ -271,7 +271,7 @@ export default class PlanWriteLastStepDetailView extends Component {
         var paramBody = {
                 'id': this.state.data.id,
                 'welder': this.state.displayHankouNo,
-                'weldDate':Global.formatFullDate(this.state.choose_date),
+                'weldDate':Global.formatFullDateWithChina(this.state.choose_date),
             }
 
         HttpRequest.post('/v2/rollingplan_op/backfill', paramBody, this.onDeliverySuccess.bind(this),

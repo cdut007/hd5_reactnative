@@ -447,7 +447,7 @@ export default class QCWitnessDetailView extends Component {
             var param = new FormData()
             param.append('id', this.props.data.id)
             param.append('witnessaddress', this.state.choose_address)
-            param.append('witnessdate', this.state.choose_date)
+            param.append('witnessdate', Global.formatFullDateWithChina(this.state.choose_date))
             param.append('witnessdesc', this.state.input_witnessdesc)
             param.append('isok', result)
             param.append('remark', this.state.remark)
@@ -482,7 +482,7 @@ export default class QCWitnessDetailView extends Component {
             var paramBody = {
                      id:this.props.data.id,
                      witnessaddress:this.state.choose_address,
-                     witnessdate:this.state.choose_date,
+                     witnessdate:Global.formatFullDateWithChina(this.state.choose_date),
                      witnessdesc:this.state.input_witnessdesc,
                      isok:result,
                 }
@@ -640,7 +640,7 @@ export default class QCWitnessDetailView extends Component {
     onSelectedDate(id,date){
      Global.log(id+"date=="+date.getTime());
 
-     this.state[id] = Global.formatFullDate(date);
+     this.state[id] = date.getTime();
      this.setState({...this.state});
     }
 
@@ -1074,7 +1074,7 @@ export default class QCWitnessDetailView extends Component {
                    result = '选择见证结果'
                }
 
-               var displayAry = [{title:'见证时间',id:'choose_date',content:date,type:'date'},
+               var displayAry = [{title:'见证时间',id:'choose_date',content:Global.formatFullDate(date),type:'date'},
                  {title:'见证地点',id:'choose_address',content:address,data:this.state.witnessAddresses,type:'choose'},
                  {title:'见证结果',id:'choose_result',content:result,data:this.state.witness_resules,type:'choose'},
 

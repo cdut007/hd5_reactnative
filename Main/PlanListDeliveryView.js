@@ -523,7 +523,7 @@ export default class PlanListDeliveryView extends Component {
                 'method': 'ASSIGN',
                 'ids': ids,
                 'userId':this.state.choose_member,
-                'consDate':Global.formatFullDate(this.state.choose_date),
+                'consDate':Global.formatFullDateWithChina(this.state.choose_date),
             }
 
         HttpRequest.post('/rollingplan_op', paramBody, this.onDeliverySuccess.bind(this),
