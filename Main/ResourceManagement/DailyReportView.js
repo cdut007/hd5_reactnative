@@ -27,7 +27,7 @@ export default class DailyReportView extends Component{
 	}
 
 	componentDidMount(){
-		this.requestStatistics();
+		// this.requestStatistics();
 	}
 
 
