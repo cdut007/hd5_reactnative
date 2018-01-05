@@ -12,6 +12,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     InteractionManager,
+    DeviceEventEmitter,
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -71,9 +72,15 @@ export default class WitnessListViewContainer extends Component {
 
     componentDidMount() {
 
+        mSubscription = DeviceEventEmitter.addListener('witness_update',(param)=>{
+            console.log('update-----');
+            this.setState({...this.state});})
+
 
     }
-
+    componentWillUnmount(){
+      mSubscription.remove();
+    }
 
 
     rendTabs(){

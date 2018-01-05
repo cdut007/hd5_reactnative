@@ -206,7 +206,7 @@ export default class MeView extends Component {
                     onPress = {()=>{NativeModules.LogInterface.sendLogReport()}}>
                     <Text style={styles.loginText}>发送日志反馈</Text>
                 </TouchableOpacity>
-                <Text style={{fontSize: 18, color: '#000000aa',marginTop: 5}}>{'version: ' + this.props.version} {this.state.env}</Text>
+                <Text style={{fontSize: 18, color: '#000000aa',marginTop: 5}}>{'版本: ' + this.props.version} {this.state.env}</Text>
                 </View>
 
 
