@@ -62,7 +62,7 @@ export default class QCWitnessTeamDetailView extends Component {
 
 
     componentDidMount() {
-            
+
         this.executeNetWorkRequest(this.props.data.rollingPlanId);
         if (!this.props.exist_qc_member) {
             this.getWitnessTeamMember();
@@ -252,9 +252,9 @@ export default class QCWitnessTeamDetailView extends Component {
     }
 
     renderTop(){
-        var date = this.props.data.createDate;
+        var date = this.props.data.launchData;
         if (!date) {
-            date = this.props.data.launchData
+            date = this.props.data.createDate;
         }
         return(<View style={styles.statisticsflexContainer}>
 

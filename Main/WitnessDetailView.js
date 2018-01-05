@@ -202,9 +202,9 @@ export default class WitnessDetailView extends Component {
     }
 
     renderTop(){
-        var date = this.props.data.createDate;
+        var date = this.props.data.launchData;
         if (!date) {
-            date = this.props.data.launchData
+            date = this.props.data.createDate;
         }
         return(<View style={styles.statisticsflexContainer}>
 
