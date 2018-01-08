@@ -412,7 +412,7 @@ confirmVeify(){
 
        var paramBody = {
                 'problemId' : this.state.data.id,
-                'timeLimit' : this.state.choose_date,
+                'timeLimit' :  Global.formatDateWithChina(this.state.choose_date),
            }
 
 
@@ -498,7 +498,7 @@ chooseItemInfo(title,id,content){
          }
 
          onSelectedDate(date){
-
+            // this.state.choose_date  =   Global.formatDateWithChina(date);
            this.state.choose_date = date.getTime();
            this.setState({displayDate:Global.formatDate(this.state.choose_date)})
          }

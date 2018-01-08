@@ -469,7 +469,7 @@ if (status == 1) {
          var paramBody = {
                   'problemId' : Pid,
                   'responsibleTeamId' :  UsId,
-                  'startDate' : this.state.choose_date,
+                  'startDate' : Global.formatDateWithChina(this.state.choose_date),
              }
 
     HttpRequest.post('/hse/assign', paramBody, this.onDeliverySuccess.bind(this),
