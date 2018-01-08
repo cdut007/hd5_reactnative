@@ -122,6 +122,7 @@ export default class WitnessDetailView extends Component {
             component: WorkStepListView,
              props: {
                  data:this.state.data,
+                 type:this.props.type
                 }
         })
     }

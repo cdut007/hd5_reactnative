@@ -237,6 +237,7 @@ export default class PlanWriteLastStepDetailView extends Component {
             component: WorkStepListView,
              props: {
                  data:this.state.data,
+                 type:this.props.type
                 }
         })
     }

@@ -25,6 +25,7 @@ import IssueReportView from './IssueReportView'
 import dateformat from 'dateformat';
 import Accordion from 'react-native-collapsible/Accordion';
 
+import ConstMapValue from '../common/ConstMapValue.js';
 import Global from '../common/globals.js'
 import CommitButton from '../common/CommitButton'
 import WitnessDetailView from './WitnessDetailView.js'
@@ -201,12 +202,12 @@ export default class WorkStepListView extends Component {
                    time = this.state.plan_data.planStartDate
                }
                var displayAry = [{title:'施工日期',content:Global.formatDate(time),id:'0',noLine:true},
-               {title:'工程量编号',content:this.state.plan_data.projectNo,id:'1',noLine:true},
-                {title:'焊口/支架',content:this.state.plan_data.weldno,id:'2',noLine:true},
-                 {title:'工程量类别',content:this.state.plan_data.projectType,id:'3',noLine:true},
-                {title:'作业条目编号',content:this.state.plan_data.workListNo,id:'4',noLine:true},
+                     {title:'工程量类别',content:this.state.plan_data.projectType,id:'3',noLine:true},
+                    {title:'作业条目编号',content:this.state.plan_data.workListNo,id:'4',noLine:true},
 
-           ];
+               ];
+
+               displayAry = ConstMapValue.getdisplyInfo(displayAry,this.state.plan_data,this.props.type);
 
 
 
