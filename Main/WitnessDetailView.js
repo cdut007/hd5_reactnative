@@ -137,6 +137,7 @@ export default class WitnessDetailView extends Component {
 
         //update
         DeviceEventEmitter.emit('workstep_update','workstep_update');
+        DeviceEventEmitter.emit('witness_update','witness_update');
         this.back();
 
     }

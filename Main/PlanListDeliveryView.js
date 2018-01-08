@@ -152,7 +152,17 @@ export default class PlanListDeliveryView extends Component {
     componentDidMount() {
 
         this.executePlanRequest(1);
+        mWorkStepSubscription = DeviceEventEmitter.addListener('workstep_update',(param)=>{this._onRefresh();})
+        mIssueSubscription = DeviceEventEmitter.addListener('new_issue',(param)=>{this._onRefresh();})
+        mIssueOperateSubscription = DeviceEventEmitter.addListener('operate_issue',(param)=>{this._onRefresh();})
 
+
+    }
+
+    componentWillUnmount(){
+      mWorkStepSubscription.remove();
+      mIssueSubscription.remove();
+      mIssueOperateSubscription.remove();
     }
 
     renderCheckBox(item,rowID) {
@@ -661,6 +671,10 @@ export default class PlanListDeliveryView extends Component {
     renderRow(rowData, sectionID, rowID) {
 
         itemView = () => {
+            var styleItem = [styles.statisticsflexContainer,{backgroundColor:'#ffffff'}]
+            if (rowData.problemFlag) {
+                styleItem = [styles.statisticsflexContainer,{backgroundColor:'#fce71b'}]
+            }
 
                 return (
 
@@ -668,7 +682,7 @@ export default class PlanListDeliveryView extends Component {
 
 
 
-                        <View style={styles.statisticsflexContainer}>
+                        <View style={styleItem}>
 
                         {this.renderTitleColsCheckBox(rowData,rowID)}
 

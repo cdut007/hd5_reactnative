@@ -12,6 +12,7 @@ import {
     TouchableNativeFeedback,
     TouchableHighlight,
     InteractionManager,
+    DeviceEventEmitter
 } from 'react-native';
 import HttpRequest from '../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -125,8 +126,17 @@ export default class WorkStepWitnessListView extends Component {
     componentDidMount() {
 
         this.executePlanRequest(1);
+        mSubscription = DeviceEventEmitter.addListener('witness_update',(param)=>{
+            console.log('update---list--');
+            this.executePlanRequest(1);
+        });
 
-    }
+
+        }
+        componentWillUnmount(){
+        mSubscription.remove();
+        }
+
 
     onGetDataSuccess(response,paramBody){
          Global.log('onGetDataSuccess@@@@')

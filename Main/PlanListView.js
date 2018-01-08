@@ -126,16 +126,21 @@ export default class PlanListView extends Component {
 
 
     componentDidMount() {
-    
+
         this.executePlanRequest(1);
         mSubscription = DeviceEventEmitter.addListener('plan_update',(param)=>{this._onRefresh();})
         mWorkStepSubscription = DeviceEventEmitter.addListener('workstep_update',(param)=>{this._onRefresh();})
+        mIssueSubscription = DeviceEventEmitter.addListener('new_issue',(param)=>{this._onRefresh();})
+        mIssueOperateSubscription = DeviceEventEmitter.addListener('operate_issue',(param)=>{this._onRefresh();})
+
 
     }
 
         componentWillUnmount(){
           mSubscription.remove();
           mWorkStepSubscription.remove();
+          mIssueSubscription.remove();
+          mIssueOperateSubscription.remove();
         }
 
 
@@ -299,6 +304,9 @@ export default class PlanListView extends Component {
             var styleItem = [styles.statisticsflexContainer,{backgroundColor:'#ffffff'}]
             if (rowData.backFill) {
                 styleItem = [styles.statisticsflexContainer,{backgroundColor:'#fae7dd'}]
+            }
+            if (rowData.problemFlag) {
+                styleItem = [styles.statisticsflexContainer,{backgroundColor:'#fce71b'}]
             }
 
                 return (
