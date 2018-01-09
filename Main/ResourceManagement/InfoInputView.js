@@ -46,7 +46,7 @@ export default class InfoInputView extends Component{
 				FILE_NO: '',
 				CHECK_QTY: '',
 				WAREH_AREA: '',
-				GJJSBFL: '',
+				GJJSBFL: '材料',
 				DELIV_LOT: ''
 			},
 			queryData: {
@@ -213,7 +213,7 @@ export default class InfoInputView extends Component{
 
 	onPickerClick(){
 		Picker.init({
-        	pickerData: ['空','设备','工机具'],
+        	pickerData: ['材料','设备','工机具'],
         	pickerConfirmBtnText:'保存',
         	pickerCancelBtnText:'取消',
         	pickerTitleText:'',
