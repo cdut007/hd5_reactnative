@@ -7,7 +7,8 @@ import QRCodeView from 'react-native-camera';
 import DepartmentDetailView from './DepartmentDetailView';
 import ResourceDetailView from './ResourceDetailView';
 import HttpRequest from '../../HttpRequest/HttpRequest';
-import Spinner from 'react-native-loading-spinner-overlay'
+import Spinner from 'react-native-loading-spinner-overlay';
+import Global from '../../common/globals';
 
 var width = Dimensions.get('window').width;
 
@@ -100,6 +101,7 @@ export default class ScanQRCodeView extends Component{
 	          }
 	        },
 	        (error) => {
+	       	  Global.alert('此单已处理')
 	          HttpRequest.printError(error);
 	          this.setState({isLoading:false});
 	        }
