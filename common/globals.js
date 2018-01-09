@@ -60,6 +60,7 @@ module.exports = {
         if (!time) {
             return ''
         }
+        console.log('time=='+time);
         //东8区，东时区记做正数
         var zoneOffset = 8;
         //算出时差,并转换为毫秒：

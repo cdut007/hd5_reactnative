@@ -564,7 +564,7 @@ export default class QC2WitnessFeedDetailView extends Component {
     onSelectedDate(id,date){
      Global.log(id+"date=="+date.getTime());
 
-     this.state[id] = date;
+     this.state[id] = date.getTime();
      this.setState({...this.state});
     }
 

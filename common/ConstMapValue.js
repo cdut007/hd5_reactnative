@@ -4,7 +4,7 @@ var Map_Plan_Col = {
     'GDJH':{col1:'图纸号',col2:'焊口/支架',col3:'房间号',col4:'规格',col5:'施工日期'},
     'TFJH':{col1:'图纸号',col2:'管线号',col3:'房间号',col4:'工程量编号',col5:'施工日期'},
      'ZXT':{col1:'图纸号',col2:'工程量编号',col3:'房间号',col4:'工程量',col5:'施工日期'},
-     'JXJH':{col1:'图纸号',col2:'设备位号',col3:'房间号',col4:'工程量',col5:'施工日期'},
+     'JXJH':{col1:'图纸号',col2:'工程量编号',col3:'房间号',col4:'工程量',col5:'施工日期'},
      'DQJH':{col1:'图纸号',col2:'工程量编号',col3:'房间号',col4:'工程量',col5:'施工日期'},
      'YBJH':{col1:'图纸号',col2:'工程量编号',col3:'房间号',col4:'工程量',col5:'施工日期'},
      'TSJH':{col1:'图纸号',col2:'工程量编号',col3:'房间号',col4:'工程量',col5:'施工日期'},
@@ -14,7 +14,7 @@ var Map_Plan_Col = {
 var Map_Plan_Col_value = {
     'GDJH':{val1:'drawingNo',val2:'weldno',val3:'roomNo',val4:'speification',val5:'施工日期'},
     'TFJH':{val1:'drawingNo',val2:'lineNo',val3:'roomNo',val4:'projectNo',val5:'施工日期'},
-    'JXJH':{val1:'drawingNo',val2:'deviceNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
+    'JXJH':{val1:'drawingNo',val2:'projectNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
     'ZXT':{val1:'drawingNo',val2:'projectNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
     'DQJH':{val1:'drawingNo',val2:'projectNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
     'YBJH':{val1:'drawingNo',val2:'projectNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
@@ -30,7 +30,7 @@ var Map_Plan_Col_value = {
 var Map_Witness_Col = {
     'GDJH':{col1:'发起日期',col2:'工序编号/名称',col3:'见证点类型',col4:'焊口/支架',},
     'TFJH':{col1:'发起日期',col2:'工序编号/名称',col3:'见证点类型',col4:'管线号',},
-    'JXJH':{col1:'发起日期',col2:'工序编号/名称',col3:'见证点类型',col4:'设备位号',},
+    'JXJH':{col1:'发起日期',col2:'工序编号/名称',col3:'见证点类型',col4:'工程量编号',},
     'ZXT':{col1:'发起日期',col2:'工序编号/名称',col3:'见证点类型',col4:'焊口/支架',},
     'DQJH':{col1:'发起日期',col2:'工序编号/名称',col3:'见证点类型',col4:'焊口/支架',},
     'YBJH':{col1:'发起日期',col2:'工序编号/名称',col3:'见证点类型',col4:'焊口/支架',},
@@ -41,7 +41,7 @@ var Map_Witness_Col = {
 var Map_Witness_Col_value = {
     'GDJH':{val1:'drawingNo',val2:'weldno',val3:'roomNo',val4:'speification',val5:'施工日期'},
     'TFJH':{val1:'drawingNo',val2:'lineNo',val3:'roomNo',val4:'projectNo',val5:'施工日期'},
-    'JXJH':{val1:'drawingNo',val2:'deviceNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
+    'JXJH':{val1:'drawingNo',val2:'projectNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
     'ZXT':{val1:'drawingNo',val2:'projectNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
     'DQJH':{val1:'drawingNo',val2:'projectNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
     'YBJH':{val1:'drawingNo',val2:'projectNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
@@ -65,7 +65,7 @@ var Map_QC_Witness_Col = {
 var Map_QC_Witness_Col_value = {
     'GDJH':{val1:'drawingNo',val2:'weldno',val3:'roomNo',val4:'speification',val5:'施工日期'},
     'TFJH':{val1:'drawingNo',val2:'lineNo',val3:'roomNo',val4:'projectNo',val5:'施工日期'},
-    'JXJH':{val1:'drawingNo',val2:'deviceNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
+    'JXJH':{val1:'drawingNo',val2:'projectNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
     'ZXT':{val1:'drawingNo',val2:'projectNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
     'DQJH':{val1:'drawingNo',val2:'projectNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
     'YBJH':{val1:'drawingNo',val2:'projectNo',val3:'roomNo',val4:'projectCost',val5:'施工日期'},
@@ -104,7 +104,7 @@ module.exports = {
     getdisplyInfo(displayAry,data,type ){
 
          if(type == 'JXJH'){
-             displayAry.push({title:'设备位号',content:data.projectNo,id:'1',noLine:true});
+             displayAry.push({title:'工程量编号',content:data.projectNo,id:'1',noLine:true});
                displayAry.push({title:'工程量',content:data.projectCost,id:'2',noLine:true});
          }else{
              displayAry.push({title:'工程量编号',content:data.projectNo,id:'1',noLine:true});
