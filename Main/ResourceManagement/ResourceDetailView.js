@@ -29,7 +29,8 @@ export default class ResourceDetailView extends Component{
 			outStoreData: {
 				ISSNO: this.props.item.issNo,
 				QTY_RELEASED: '',
-				WHO_GET: this.props.item.whoGet
+				WHO_GET: this.props.item.whoGet,
+				ISSUSEREMARK: this.props.item.remark
 			},
 			backStoreData: {
 				ID: this.props.item.id,
@@ -212,7 +213,7 @@ export default class ResourceDetailView extends Component{
 				displayArr.push({title1:'核安全等级:',content1:this.props.item.securityLevel,title2:'质保等级:',content2:this.props.item.warrantyLevel})
 				displayArr.push({title1:'标准:',content1:this.props.item.standard,title2:'位号:',content2:this.props.item.positionNo})
 				displayArr.push({title1:'货位号:',content1:this.props.item.location,title2:'会计科目:',content2:this.props.item.cstCode})
-				displayArr.push({title:'备注:',content:this.props.item.remark})
+				displayArr.push({title:'备注:',content:this.props.item.remark, input:true, onTextChanged:(text) => {this.state.outStoreData.ISSUSEREMARK = text}})
 				break;
 			case 5:
 				displayArr.push({title:'退库单号:',content:this.props.item.issNo})
@@ -289,7 +290,18 @@ export default class ResourceDetailView extends Component{
 						<View style={{height:48, flexDirection:'row', alignItems:'center'}}>
 							<View style={{flex:1, flexDirection:'row',alignItems:'center',marginLeft:10}}>
 								<Text style={{flex:1,fontSize:14, color:'#1c1c1c'}}>{item.title}</Text>
-								<Text style={{flex:3,fontSize:14, color:'#888'}}>{item.content}</Text>
+								{
+									item.input
+									?
+									<TextInput
+										style={{color:'#888',fontSize:14,flex:3}}
+										onChangeText={(text) => item.onTextChanged(text)}
+										placeholder={'请输入'}
+										placeholderTextColor={'#6d9ee1'}
+										underlineColorAndroid={'transparent'} />
+									:
+									<Text style={{flex:3,fontSize:14, color:'#888'}}>{item.content}</Text>
+								}
 							</View>
 						</View>
 						{i<displayArr.length-1?<SeparateComponent lineStyle={{marginLeft:10, marginRight:10}}/>:null}
@@ -372,6 +384,7 @@ export default class ResourceDetailView extends Component{
 			case 4:
 				for(var child in this.state.outStoreData){
 					if(!this.state.outStoreData[child]){
+						if(child == 'ISSUSEREMARK') continue;
 						Global.alert('请填写完整信息');
 						return;
 					}
