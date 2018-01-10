@@ -29,8 +29,7 @@ export default class ResourceDetailView extends Component{
 			outStoreData: {
 				ISSNO: this.props.item.issNo,
 				QTY_RELEASED: '',
-				WHO_GET: this.props.item.whoGet,
-				ISSUSEREMARK: this.props.item.remark
+				WHO_GET: this.props.item.whoGet
 			},
 			backStoreData: {
 				ID: this.props.item.id,
