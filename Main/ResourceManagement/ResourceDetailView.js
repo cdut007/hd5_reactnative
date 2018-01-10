@@ -263,7 +263,19 @@ export default class ResourceDetailView extends Component{
 					viewArr = this.returnViewArr(displayArr);
 					break;
 				case 5:
-					displayArr.push({title1:'退库量:',content1:this.props.item.number,color1:'#e82628',title2:'核实量:',content2:this.props.item.warrantyLevel,input2:true,onTextChanged2:(text) => {this.state.backStoreData.QTY_RELEASED = text}})
+					displayArr.push({title1:'退库量:',content1:this.props.item.number,color1:'#e82628',title2:'核实量:',content2:this.props.item.warrantyLevel,input2:true,onTextChanged2:(text) => {
+						let temp = text.replace(/[^0-9]/g,'');
+						if(!temp){
+							this.state.backStoreData.QTY_RELEASED = temp
+							this.setState({...this.state})
+						}else if(temp!=text){
+							this.state.backStoreData.QTY_RELEASED = '-' + temp
+							this.setState({...this.state})
+						}else{
+							this.state.backStoreData.QTY_RELEASED = '-' + text
+							this.setState({...this.state})
+						}
+					}})
 					displayArr.push({title1:'单价(￥):',content1:this.props.item.price,title2:'总金额(￥):',content2:this.props.item.ckJe})
 					displayArr.push({title1:'仓库:',content1:this.props.item.warehouse,input1:true,onTextChanged1:(text) => {this.state.backStoreData.WAREH_CODE = text},title2:'货位:',content2:this.props.item.location,input2:true,onTextChanged2:(text) => {this.state.backStoreData.WAREH_PLACE = text}})
 					viewArr = this.returnViewArr(displayArr);
@@ -335,6 +347,7 @@ export default class ResourceDetailView extends Component{
 										style={{color:'#888',fontSize:14,flex:11}}
 										onChangeText={(text) => item.onTextChanged2(text)}
 										placeholder={'请输入'}
+										value={this.state.backStoreData.QTY_RELEASED}
 										placeholderTextColor={'#6d9ee1'}
 										underlineColorAndroid={'transparent'} />
 									:
