@@ -14,6 +14,8 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.uimanager.IllegalViewOperationException;
 import com.hd_app.LogUtils;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 
 /**
  * Created by lly on 2017/10/11.
@@ -28,6 +30,11 @@ public class LogInterface extends ReactContextBaseJavaModule {
     @Override
     public String getName() {
         return "LogInterface";
+    }
+
+    @ReactMethod
+    public void checkUpgrade() {
+        Beta.checkUpgrade();
     }
 
     @ReactMethod
@@ -68,7 +75,7 @@ public class LogInterface extends ReactContextBaseJavaModule {
 
 
 
-    
+
 
 
 }

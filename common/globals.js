@@ -119,6 +119,20 @@ module.exports = {
 
         return false;
     },
+    existRoleName(user){
+        if (!user || !user.roles ) {
+            console.log('maybe crash recycle from the memery cache, can read data again ??')
+            return false
+        }
+            for (var i = 0; i < user.roles.length; i++) {
+
+                if (user.roles[i].roleType[0]) {
+                    return true;
+                }
+            }
+
+        return false;
+    },
     isMonitor(user){
         if (!user || !user.roles ) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
@@ -212,7 +226,7 @@ module.exports = {
             return false
         }
 
-        return this.existRole(user, 'QC1');
+        return this.existRole(user, 'witness_team_qc1') || this.existRole(user, 'witness_team_qc2') || this.existRole(user, 'witness_member_qc1') || this.existRole(user, 'witness_member_qc2')|| this.existRole(user, 'qc_member');
     },
     isHSE(user){
         if (!user || !user.roles) {

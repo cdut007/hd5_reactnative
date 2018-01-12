@@ -195,7 +195,7 @@ export default class MeView extends Component {
                 </View>
 
 
-                <View style={{flex:1,marginTop: 100, alignItems: 'center' }}>
+                <View style={{flex:1,marginTop: 60, alignItems: 'center' }}>
                 <TouchableOpacity
                     style={[styles.loginButton,]}
                     onPress={this._logout_function.bind(this)}
@@ -206,6 +206,14 @@ export default class MeView extends Component {
                     onPress = {()=>{NativeModules.LogInterface.sendLogReport()}}>
                     <Text style={styles.loginText}>发送日志反馈</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.reportButton}
+                    onPress = {()=>{NativeModules.LogInterface.checkUpgrade()}}>
+                    <Text style={styles.loginText}>检查新版本</Text>
+                </TouchableOpacity>
+
+
                 <Text style={{fontSize: 18, color: '#000000aa',marginTop: 5}}>{'版本: ' + this.props.version} {this.state.env}</Text>
                 </View>
 

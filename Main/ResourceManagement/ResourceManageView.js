@@ -7,10 +7,36 @@ import CardView from 'react-native-cardview'
 import ScanQRCodeView from './ScanQRCodeView';
 import DailyReportView from './DailyReportView';
 import InfoInputView from './InfoInputView';
+import Global from '../../common/globals';
 
 var width = Dimensions.get('window').width;
 
 export default class ResourceManageView extends Component{
+
+
+   renderScanView(){
+	   if(!Global.isKeeper(Global.UserInfo)){
+
+		 return;
+	   }
+
+	   return(<TouchableOpacity onPress = {() => this.goToScanQRCode()}>
+			   <CardView
+				   style = {{marginTop: 10, marginLeft: 10, marginRight: 10, backgroundColor: '#ffffff', height: width*0.28, flexDirection: 'row', alignItems: 'center'}}
+				   cardElevation = {4}
+				   cornerRadius = {6}>
+				   <Image
+					   style = {{width: 80, height: 80, marginLeft: 10}}
+					   source = {require('../../images/scan_icon.png')} />
+				   <View>
+					   <Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold'}}>扫一扫</Text>
+					   <Text style={{color: '#777777', fontSize: 14, width: width*0.67}}>查看物项信息，入库、出库、退库处理</Text>
+				   </View>
+			   </CardView>
+		   </TouchableOpacity>);
+
+   }
+
 	render(){
 		return(
 			<View style={{flex:1,flexDirection: 'column', backgroundColor: '#f2f2f2'}}>
@@ -18,7 +44,7 @@ export default class ResourceManageView extends Component{
 	                title={'物项管理'}
 	                leftIcon={require('../../images/back.png')}
 	                leftPress={this.back.bind(this)} />
-				<Image 
+				<Image
 					style={{width: width, height: width*0.53}}
 					source={require('../../images/images.png')} />
 				<TouchableOpacity onPress = {() => this.goToDailyReport()}>
@@ -27,7 +53,7 @@ export default class ResourceManageView extends Component{
 						cardElevation = {4}
 						cornerRadius = {6}>
 						<Image
-							style = {{width: 80, height: 80, marginLeft: 10}}							
+							style = {{width: 80, height: 80, marginLeft: 10}}
 							source = {require('../../images/daily_icon.png')} />
 						<View>
 							<Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold'}}>库存日报</Text>
@@ -35,20 +61,7 @@ export default class ResourceManageView extends Component{
 						</View>
 					</CardView>
 				</TouchableOpacity>
-				<TouchableOpacity onPress = {() => this.goToScanQRCode()}>
-					<CardView
-						style = {{marginTop: 10, marginLeft: 10, marginRight: 10, backgroundColor: '#ffffff', height: width*0.28, flexDirection: 'row', alignItems: 'center'}}
-						cardElevation = {4}
-						cornerRadius = {6}>
-						<Image
-							style = {{width: 80, height: 80, marginLeft: 10}}
-							source = {require('../../images/scan_icon.png')} />
-						<View>
-							<Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold'}}>扫一扫</Text>
-							<Text style={{color: '#777777', fontSize: 14, width: width*0.67}}>查看物项信息，入库、出库、退库处理</Text>
-						</View>
-					</CardView>
-				</TouchableOpacity>
+				{this.renderScanView()}
 				<TouchableOpacity onPress = {() => this.goToStoreQuery()}>
 					<CardView
 						style = {{marginTop: 10, marginLeft: 10, marginRight: 10, backgroundColor: '#ffffff', height: width*0.28, flexDirection: 'row', alignItems: 'center'}}
@@ -62,7 +75,7 @@ export default class ResourceManageView extends Component{
 							<Text style={{color: '#777777', fontSize: 14, width: width*0.67}}>搜索查询物项信息</Text>
 						</View>
 					</CardView>
-				</TouchableOpacity>	
+				</TouchableOpacity>
 			</View>
 		);
 	}

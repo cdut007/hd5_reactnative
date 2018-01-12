@@ -271,10 +271,7 @@ export default class HomeView extends Component {
             }
 
             if (data.type == 'WZGL') {
-              if(!Global.isKeeper(Global.UserInfo)){
-                Global.alert("当前角色不是库存管理员,无权限操作");
-                return;
-              }
+        
                this.props.navigator.push({
                   component: ResourceManageView,
                    props: {
@@ -478,8 +475,13 @@ export default class HomeView extends Component {
                         }
                 })
             }else {
+                if(Global.existRoleName(Global.UserInfo)){
+                    Global.alert("当前角色无权限操作该模块，请联系管理员");
+                    return
+                }else{
+                    Global.alert("角色未知，请联系管理员，或者升级新版本试试");
+                }
 
-                Global.alert("角色未知，请联系管理员");
 
                 data.user = new Object();
                 data.user.id = Global.UserInfo.id;
