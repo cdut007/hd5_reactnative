@@ -150,7 +150,7 @@ export default class QualityCheckList extends Component {
     }
 
     componentWillUnmount(){
-  
+
        this.qualityCheck.remove();
 
   }
@@ -390,6 +390,8 @@ this.state.insearch = true;
      }else if (status == 'PreQCverify') {
          return '待审核'
      }else if (status == 'PreRenovete') {
+         return '整改中'
+     }else if (status == 'PreUpRenovete') {
          return '待整改'
      }else if (status == 'Finished') {
          return '已完成'

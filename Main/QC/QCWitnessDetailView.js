@@ -87,6 +87,7 @@ export default class QCWitnessDetailView extends Component {
             choose_result:null,
             remark:null,
             fileArr: [{}],
+            input_dosage:null,
             witnessAddresses:data.witnessAddresses,
             witness_resules:['合格','不合格'],
             witnessNotOkResultType:null,
@@ -450,6 +451,7 @@ export default class QCWitnessDetailView extends Component {
             param.append('witnessdate', Global.formatFullDateWithChina(this.state.choose_date))
             param.append('witnessdesc', this.state.input_witnessdesc)
             param.append('isok', result)
+            param.append('dosage', this.state.input_dosage)
             param.append('remark', this.state.remark)
             param.append('failType', this.state.witnessNotOkResultType)
             if (materiaJsonlList.length>0) {
@@ -485,6 +487,7 @@ export default class QCWitnessDetailView extends Component {
                      witnessdate:Global.formatFullDateWithChina(this.state.choose_date),
                      witnessdesc:this.state.input_witnessdesc,
                      isok:result,
+                     dosage:this.state.input_dosage,
                 }
 
                 if (materiaJsonlList.length>0) {
@@ -1119,10 +1122,10 @@ export default class QCWitnessDetailView extends Component {
                 }
 
                 if (!Global.isQC2SubMember(Global.UserInfo)&&!Global.isQC2Member(Global.UserInfo)) {
+                     displayAry.push({title:'实际完成工程量',id:'input_dosage',content:this.state.data.rollingPlan.dosage, type:'input',keyboard:'numeric'});
                     if (this.state.data.rollingPlan.materialList) {
                         this.createMaterialListItems(displayAry)
                     }
-
                 }
 
 

@@ -55,6 +55,7 @@ var machineTypes = [];
 var DepartTypes = [];
 var TeamTypes = [];
 var PlantTypes = [];
+var RoomTypes = [];
 // var PlantTypes = ['子项1','子项2','子项3','子项4','子项5'];
 var ReportPbTypes =  {"成品保护":"PRODUCTP_ROTECTION","清洁度":"CLEANLINESS","标识":"SIGN","防异物":"ANTI_FOREIGN_BODY","安装":"INSTALL"}
 
@@ -70,8 +71,8 @@ export  default class ProblemReport extends Component {
           pbType:'选择问题类型',
           area:'',
           questionName:'',
-          elevation: '', //标高
-          RoomNumber:'',//房间号
+          elevation: '选择标高', //标高
+          RoomNumber:'选择房间号',//房间号
           ResDepart:'选择责任部门',
           ResDepartId:null,
           ResTeamId:null,
@@ -80,6 +81,8 @@ export  default class ProblemReport extends Component {
           TeamTypes:null,
           machineTypes:null,
           PlantTypes:null,
+          RoomTypes:[],
+          BgTypes:[],
           question:'',
           fileArr: [{}],//装图片资源的数组
           loadingVisible:false,
@@ -137,6 +140,8 @@ export  default class ProblemReport extends Component {
         loadingVisible: false
     });
 
+    console.log("result==="+response.responseResult);
+
    if (response.responseResult) {
 
     this.figureData(response.responseResult)
@@ -157,6 +162,10 @@ export  default class ProblemReport extends Component {
     this.state.PlantTypes = data.wrokshop;
     this.state.DepartTypes = data.responsibleDept;
     this.state.TeamTypes = data.responsibleTeam;
+    RoomTypes = data.roomLevel;
+    if(data.problemType){
+        ReportPbTypes = data.problemType;
+    }
 
     this.state.machineTypes.forEach((item) => {
 
@@ -190,6 +199,7 @@ export  default class ProblemReport extends Component {
   if (this.state.plantType == '选择厂房' && PlantTypes.length > 0 ) {
 
     this.setState({plantType:PlantTypes[0]})
+    this.updateRooms(PlantTypes[0]);
 
   }
 
@@ -201,6 +211,40 @@ export  default class ProblemReport extends Component {
 
 
   }
+
+
+    updateRooms(plantType){
+        var Rooms = [];
+        for (var i = 0; i < RoomTypes.length; i++) {
+            if(RoomTypes[i].room.startWith(plantType)){
+                Rooms.push(RoomTypes[i].room);
+            }
+
+        }
+
+         this.state.RoomTypes = Rooms.sort();
+         this.setState({RoomTypes:Rooms,elevation:'选择标高',RoomNumber:'选择房间号'})
+
+    }
+
+    updateElevation(room){
+        var BgTypes = [];
+        for (var i = 0; i < RoomTypes.length; i++) {
+            if(RoomTypes[i].room == room){
+                if(RoomTypes[i].level){
+                    if(RoomTypes[i].level.length>0){
+                        BgTypes = RoomTypes[i].level;
+                    }
+                }
+
+                break;
+            }
+
+        }
+         this.state.BgTypes = BgTypes;
+         this.setState({BgTypes:BgTypes,elevation:'选择标高'})
+
+    }
 
   render() {
       return (
@@ -236,12 +280,12 @@ export  default class ProblemReport extends Component {
       {title:'问题类型:',id:'choose_pbtype',pickerTitle:"选择问题类型",content:this.state.pbType,data:Object.keys(ReportPbTypes),type:'choose',refence:this.pbtype_ref},
       {title:'机组:',id:'choose_machiche',pickerTitle:"选择机组",content:this.state.machineType,data:machineTypes,type:'choose',refence:this.mac_ref},
       {title:'厂房',id:'choose_platHouse',pickerTitle:"选择厂房",content:this.state.plantType,data:PlantTypes,type:'choose',ref:this._selectPlant},
-      {title:'区域:',id:'area',content:this.state.area,type:'input'},
-      {title:'楼层:',id:'elevation',content:this.state.elevation,type:'input'},
-      {title:'房间号:',id:'room_no',content:this.state.RoomNumber,type:'input'},
+      {title:'区域(选填):',id:'area',content:this.state.area,type:'input'},
+      {title:'房间号',id:'room_no',pickerTitle:"选择房间号",content:this.state.RoomNumber,data:this.state.RoomTypes,type:'choose',ref:this._selectRoom},
+       {title:'标高',id:'elevation',pickerTitle:"选择标高",content:this.state.elevation,data:this.state.BgTypes,type:'choose',ref:this._selectBg},
       {title:'系统(选填):',id:'system_no',content:this.state.system_no,type:'input'},
       {title:'责任部门:',id:'choose_des',pickerTitle:"选择责任部门",content:this.state.ResDepart,data:DepartTypes,type:'choose',refence:this.resP_ref},
-      {title:'责任班组:',id:'choose_team',pickerTitle:"选择责任班组",content:this.state.ResTeam,data:TeamTypes,type:'choose',refence:this.team_ref},
+      {title:'责任班组(选填):',id:'choose_team',pickerTitle:"选择责任班组",content:this.state.ResTeam,data:TeamTypes,type:'choose',refence:this.team_ref},
       {type:'describe'},
       {type:'file'},
 
@@ -309,28 +353,23 @@ if (this.state.pbType == '选择问题类型') {
       return;
     }
 
-if (!this.state.area.length) {
-  Global.alert("请输入区域");
-  return;
-}
 
-    if (!this.state.elevation.length) {
-      Global.alert("请输入楼层");
-      return;
+
+    if (this.state.RoomNumber == '选择房间号') {
+        Global.alert("选择房间号");
+        return;
     }
-    if (!this.state.RoomNumber.length) {
-      Global.alert("请输入房间号");
-      return;
+
+    if (this.state.elevation == '选择标高') {
+        Global.alert("选择标高");
+        return;
     }
+
      if (this.state.ResDepart == '选择责任部门') {
        Global.alert("请选择责任部门");
        return;
      }
 
-     if (this.state.ResTeam == '选择责任班组') {
-       Global.alert("请选择选择责任班组");
-       return;
-     }
 
      if (!this.state.question.length) {
        Global.alert("请输入问题描述");
@@ -370,11 +409,11 @@ if (!this.state.area.length) {
    param.append('problemDescription', this.state.question);
    param.append('responsibleDept', this.state.ResDepartId);
 
- // if (this.state.ResTeamId) {
+  if (this.state.ResTeamId) {
 
   param.append('responsibleTeam',this.state.ResTeamId);
 
- // }
+  }
 
 if (this.state.system_no.length) {
      param.append('system', this.state.system_no);
@@ -481,16 +520,6 @@ _questtionDescribe(){
     }
       break;
 
-    case "elevation":
-      {
-          this.setState({elevation:text})
-      }
-      break;
-      case "room_no":
-      {
-         this.setState({RoomNumber:text})
-      }
-        break;
       case "system_no":
         this.setState({system_no:text})
         break;
@@ -638,6 +667,7 @@ _questtionDescribe(){
        case "choose_platHouse":
        {
         this.setState({plantType:data[0]})
+         this.updateRooms(data[0]);
        }
          break;
      case "choose_machiche":
@@ -645,6 +675,18 @@ _questtionDescribe(){
        this.setState({machineType:data[0]})
      }
      break;
+
+    case "elevation":
+              {
+                  this.setState({elevation:data[0]})
+              }
+    break;
+    case "room_no":
+              {
+                 this.setState({RoomNumber:data[0]})
+                 this.updateElevation(data[0]);
+              }
+    break;
       case "choose_des":
       {
          this.figureDes(data);

@@ -425,6 +425,10 @@ this.state.insearch = true;
          return '新问题'
      }else if (status == 'Renovating') {
          return '整改中'
+     }else if (status == 'PreRenovete') {
+         return '待整改'
+     }else if (status == 'PreUpRenovete') {
+         return '待整改'
      }else if (status == 'Need_Check') {
          return '待审核'
      }else if (status == 'Finish') {

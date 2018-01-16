@@ -27,6 +27,11 @@ import Global from '../../common/globals'
 const SAFEWORK_ISSUE_COMMIT_URL = '/hse/create'
 var width = Dimensions.get('window').width;
 
+String.prototype.startWith=function(str){
+  var reg=new RegExp("^"+str);
+  return reg.test(this);
+}
+
 export default  class  MyReport extends Component {
 
   constructor(props) {

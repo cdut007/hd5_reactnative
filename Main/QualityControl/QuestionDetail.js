@@ -31,6 +31,8 @@ import Spinner from 'react-native-loading-spinner-overlay'
 import MemberSelectView from '../../common/MemberSelectView'
 import CloseProblem from '../QualityControl/CloseProblem'
 
+import ChooseMemberListView from './ChooseMemberListView'
+
 const MAX_IMAGE_COUNT = 5;
 
 var options = {
@@ -82,6 +84,8 @@ export default class QuestionDetail extends Component {
        qcdetailId:null,
        question:'',
         newFileArr:[{}],//新的图片
+        department:[],
+        chooseMember:null,
      }
 
   }
@@ -118,8 +122,10 @@ renderCommitBtn(){
         return   this.renderWaitCommit();
   }else if ( Global.isQC1(Global.UserInfo) && this.state.data.status == 'PreQCAssign') {
        return this.renderQcAssign();
-  }else if (Global.isMonitor(Global.UserInfo) && this.state.data.status == 'PreRenovete') {
+  }else if ((Global.isMonitor(Global.UserInfo) || Global.isGroup(Global.UserInfo)) && this.state.data.status == 'PreRenovete') {
     return this.Commit()
+}else if (!Global.isQC1(Global.UserInfo)  && !Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreUpRenovete') {
+    return this.CommitDelivery()
   }else if (this.state.data.status == 'PreQCverify' && Global.isQC1(Global.UserInfo)) {
       return this.QcCheckResult();
   }
@@ -183,7 +189,7 @@ QcCheck(){
            'checkResult' : 'Qualified',
 
       }
-
+//
   HttpRequest.post('/qualityControl/qcVerify', paramBody, this.onDeliverySuccess.bind(this),
       (e) => {
         this.setState({
@@ -212,7 +218,17 @@ QcCheck(){
       })
 
 }
-
+//提交分派
+CommitDelivery(){
+    return(
+      <View style={{height:50,width:width,flexDirection:'row'}}>
+      <CommitButton title={'分派'}
+      onPress={this.CommitDeliveryResult.bind(this)}
+        >
+      </CommitButton>
+      </View>
+    )
+}
 //提交施工班组的整改结果
 Commit(){
 
@@ -224,6 +240,19 @@ Commit(){
     </CommitButton>
     </View>
   )
+
+}
+
+CommitDeliveryResult(){
+    if (!this.state.chooseMember) {
+      Global.alert("请选择分派班组成员");
+      return;
+    }
+    Alert.alert('','确认提交?',
+              [
+                {text:'取消',},
+                {text:'确认',onPress:()=> {this.ConfirmCommitDeliveryResult()}}
+  ])
 
 }
 
@@ -248,6 +277,46 @@ CommitDealResult(){
 ])
 
 
+}
+
+ConfirmCommitDeliveryResult(){
+    this.setState({
+        loadingVisible: true
+    });
+
+    var paramBody = {
+        'qcProblrmId' : this.state.data.id,
+        'assignedId' :  this.state.chooseMember.id,
+        }
+
+
+  HttpRequest.post('/qualityControl/responsibilityLeaderAssign', paramBody, this.onDeliverySuccess.bind(this),
+        (e) => {
+
+          this.setState({
+              loadingVisible: false
+          });
+          try {
+              var errorInfo = JSON.parse(e);
+          }
+          catch(err)
+          {
+              console.log("error======"+err)
+          }
+              if (errorInfo != null) {
+                  if (errorInfo.code == -1002||
+                   errorInfo.code == -1001) {
+                  Global.showToast(errorInfo.message);
+              }else {
+                  Global.showToast(e)
+              }
+
+              } else {
+                  Global.showToast(e)
+              }
+
+          console.log('Login error:' + e)
+        })
 }
 
 
@@ -506,7 +575,7 @@ chooseItemInfo(title,id,content){
 commit(){
 
   if (!this.state.qcdetailId) {
-    Global.alert("请选择QC1");
+    Global.alert("请选择QC");
     return;
   }
 
@@ -642,13 +711,22 @@ back() {
       }
 
 
- if ( Global.isMonitor(Global.UserInfo) && this.state.data.status == 'PreRenovete') {
+ if ( (Global.isMonitor(Global.UserInfo) || Global.isGroup(Global.UserInfo)) && this.state.data.status == 'PreRenovete') {
 
            itemAry.push(this._questtionDescribe());
 
              itemAry.push(this.renderNewFileView("整改照片"));
 
 }
+
+if ( !Global.isQC1(Global.UserInfo)  && !Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreUpRenovete') {
+
+          itemAry.push(this._chooseMember());
+
+        //    itemAry.push(this.renderNewFileView("整改照片"));
+
+}
+
 
 
       if ( Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreQCLeaderAssign') {
@@ -713,6 +791,8 @@ back() {
         }else if (status == 'PreQCverify') {
             return '待审核'
         }else if (status == 'PreRenovete') {
+            return '整改中'
+        }else if (status == 'PreUpRenovete') {
             return '待整改'
         }else if (status == 'Finished') {
             return '已完成'
@@ -729,9 +809,88 @@ back() {
 
       if ( Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreQCLeaderAssign'){
              {this.featchData()}
+      }else{
+              this.executeDepartmentRequest();
       }
 
       }
+
+      executeDepartmentRequest(){
+
+        Global.log('executeDepartmentRequest ')
+        if(!Global.UserInfo.department){
+
+            return ;
+        }
+
+
+                          var paramBody = {
+                                departmentId:Global.UserInfo.department.id,
+                              }
+
+              HttpRequest.get('/department/memberOfChild', paramBody, this.onGetDeptDataSuccess.bind(this),
+                  (e) => {
+
+                      try {
+                          var errorInfo = JSON.parse(e);
+                          if (errorInfo != null) {
+                           Global.log(errorInfo)
+                          } else {
+                              Global.log(e)
+                          }
+                      }
+                      catch(err)
+                      {
+                          Global.log(err)
+                      }
+
+                      Global.log('Task error:' + e)
+                  })
+      }
+
+      onGetDeptDataSuccess(response,paramBody){
+           Global.log('onGetDeptDataSuccess@@@@')
+           var result = response.responseResult;
+
+           if (!result || result.length == 0) {
+               return
+           }
+          //alert('department=='+JSON.stringify(result))
+           var department = []
+           var departmentNode = result[0].children
+           if (!departmentNode) {
+                Global.log('departmentNode not exsit@@@@')
+                return
+           }
+
+           //get first node for department
+           for (var i = 0; i < departmentNode.length; i++) {
+                  department.push(departmentNode[i])
+           }
+
+            Global.log(' node department lengh==@@@@'+department.length)
+           this.setState({department:department})
+
+      }
+
+      chooseMember(){
+            //alert(JSON.stringify(this.state.department))
+
+          this.props.navigator.push({
+              component: ChooseMemberListView,
+               props: {
+                   data:{},
+                   department:this.state.department,
+                   refresh:this.refresh.bind(this)
+                  }
+          })
+      }
+
+      refresh(contact){
+
+          this.setState({chooseMember:contact})
+      }
+
 
       featchData(){
 
@@ -864,6 +1023,35 @@ back() {
         )
       }
 
+      _chooseMember(){
+          var member = this.state.chooseMember;
+          var name = '选择班组成员';
+          if(member){
+             name = member.realname;
+          }
+          return(
+              <TouchableOpacity  onPress={this.chooseMember.bind(this)}  style={[styles.flexContainer,{flex:1,flexDirection:'row'}]}>
+
+
+
+                      <View style={{flex:1,flexDirection:'row',height:50, alignItems: 'center',}}>
+                      <Text style={[styles.content,{marginLeft:10,fontSize:16,color:'#555555',}]}>
+                       {name}
+                      </Text>
+
+                      </View>
+                      <View style={{flex:1,marginRight:10,flexDirection:'row',height:50, justifyContent:'flex-end',alignItems: 'center',}}>
+
+                      <Image style={{width:10,height:10,}} source={require('../../images/right_enter_blue.png')} />
+
+                      </View>
+
+
+
+
+                      </TouchableOpacity>
+          )
+      }
 
       _questtionDescribe(){
         return(
