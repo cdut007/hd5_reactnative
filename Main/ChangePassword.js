@@ -125,7 +125,7 @@ export default class ChangePassword extends Component {
         });
 
         Global.log('change success:' + JSON.stringify(response))
-
+        Global.alert("修改成功");
 
         this.back();
     }

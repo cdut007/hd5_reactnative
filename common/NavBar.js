@@ -107,7 +107,10 @@ export default class NavBar extends Component{
 
     setSearchMode(){
         this.setState({showSearch:true})
-        this.props.onSearchInit()
+        if(this.props.onSearchInit){
+            this.props.onSearchInit()
+        }
+
     }
     closeSearchMode(){
         this.setState({showSearch:false})
