@@ -54,6 +54,7 @@ var width = Dimensions.get('window').width;
 var machineTypes = [];
 var DepartTypes = [];
 var TeamTypes = [];
+var TeamStoreTypes = [];
 var PlantTypes = [];
 var RoomTypes = [];
 // var PlantTypes = ['子项1','子项2','子项3','子项4','子项5'];
@@ -114,7 +115,7 @@ export  default class ProblemReport extends Component {
       param.append('responsibleDeptId',this.state.ResDepartId);
     }
 
-    HttpRequest.get('/hse/createUI', param, this.featchDataSuccess.bind(this),
+    HttpRequest.get('/hse/v2/createUI', param, this.featchDataSuccess.bind(this),
         (e) => {
           this.setState({
               loadingVisible: false
@@ -156,12 +157,14 @@ export  default class ProblemReport extends Component {
   machineTypes = [];
   DepartTypes = [];
   TeamTypes = [];
+  TeamStoreTypes = [];
   PlantTypes = [];
 
     this.state.machineTypes = data.unit;
     this.state.PlantTypes = data.wrokshop;
     this.state.DepartTypes = data.responsibleDept;
     this.state.TeamTypes = data.responsibleTeam;
+    TeamStoreTypes = data.responsibleTeam;
     RoomTypes = data.roomLevel;
     if(data.problemType){
         ReportPbTypes = data.problemType;
@@ -206,9 +209,31 @@ export  default class ProblemReport extends Component {
   if (!this.state.ResDepartId && DepartTypes.length > 0) {
      this.state.ResDepartId = data.responsibleDept[0]['deptId'];
      this.setState({ResDepart:DepartTypes[0]})
+     this.updateTeams(data.responsibleDept[0]['deptId']);
   }
 
 
+
+  }
+
+  updateTeams(departmentId){
+      var fliterTeamTypes = [];
+      var tempTeam = [];
+
+      for (var i = 0; i < TeamStoreTypes.length; i++) {
+          if(TeamStoreTypes[i].parentDeptId == departmentId){
+              var item = TeamStoreTypes[i];
+              fliterTeamTypes.push(item);
+              tempTeam.push(item['deptName'])
+          }
+
+      }
+
+        TeamTypes = tempTeam;
+
+       this.state.TeamTypes = fliterTeamTypes.sort();
+       this.setState({TeamTypes:fliterTeamTypes, ResTeamId:null,
+        ResTeam:'选择责任班组'})
 
   }
 
@@ -690,6 +715,7 @@ _questtionDescribe(){
       case "choose_des":
       {
          this.figureDes(data);
+         this.updateTeams(this.state.ResDepartId);
       }
         break;
         case "choose_team":
@@ -717,10 +743,14 @@ _questtionDescribe(){
 
   })
 
+  if(this.state.DepartTypes.length == 0){
+     this.featchData();
+  }
+
   this.state.ResTeamId = null;
   this.state.ResTeam = '选择责任班组';
 
-  this.featchData();
+
 
 }
   figureTeam(data){

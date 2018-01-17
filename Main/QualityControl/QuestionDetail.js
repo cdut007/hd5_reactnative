@@ -662,13 +662,15 @@ back() {
         {title:'责任部门',content:this.state.data.responsibleDept ? this.state.data.responsibleDept.deptName : this.state.data.responsibleDept,id:'1',noLine:true},
         {title:'责任班组',content:this.state.data.responsibleTeam ? this.state.data.responsibleTeam.deptName : this.state.data.responsibleTeam,id:'2',noLine:true},
         {title:'问题描述',content:this.state.data.problemDescription,id:'11',noLine:true},
-        {title:'问题照片',content:problemFiles,id:'11',noLine:true,type:'img'},
+        {title:'问题照片',content:problemFiles,id:'b12',noLine:true,type:'img'},
       ];
 
 
+
   if (this.state.data.renovateDescription && solveFiles.length) {
-    displayAry.push({title:'整改描述',content:this.state.data.renovateDescription,id:'18',noLine:true})
-    displayAry.push( {title:'整改照片',content:problemFiles,id:'12',noLine:true,type:'img'})
+
+    displayAry.push({title:'整改描述',content:this.state.data.renovateDescription,id:'c18',noLine:true})
+    displayAry.push( {title:'整改照片',content:solveFiles,id:'c12',noLine:true,type:'img'})
   }
 
   if (this.state.data.qcUser) {
@@ -747,20 +749,20 @@ if ( !Global.isQC1(Global.UserInfo)  && !Global.isQCManager(Global.UserInfo) && 
           return (
               <View style={{alignItems:'center',flexDirection: 'row', flexWrap: 'wrap', width: width, paddingTop: 10, paddingRight: 10}} horizontal={true} >
                       <Text style={{marginTop:10,marginBottom:10}}> {title} </Text>
-                      {this.renderImages(imgs)}
+                      {this.renderImages(title,imgs)}
 
               </View>
           )
       }
 
-      renderImages(imgs){
+      renderImages(title,imgs){
 
         var imageViews = [];
         {imgs.map( (item,i) => {
 
            imageViews.push(
              <TouchableOpacity
-                key={i}
+                key={i+title}
                 style={{width:70,height:70,marginLeft:10,marginBottom:10}}
                 onPress={this.imageClick.bind(this,i,imgs)}>
                 <Image resizeMode={'cover'} style={{width:70,height:70,borderWidth:0.5,borderRadius:4}} source={{uri:item['url']}}/>

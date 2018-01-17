@@ -61,6 +61,8 @@ var DepartTypes = [];
 var TeamTypes = [];
 var selects = [];
 
+var TeamStoreTypes = [];
+
 String.prototype.startWith=function(str){
   var reg=new RegExp("^"+str);
   return reg.test(this);
@@ -129,7 +131,7 @@ export  default class ProblemReport extends Component {
     }
     param.append('safe','true');
 
-    HttpRequest.get('/hse/createUI', param, this.featchDataSuccess.bind(this),
+    HttpRequest.get('/hse/v2/createUI', param, this.featchDataSuccess.bind(this),
         (e) => {
           this.setState({
               loadingVisible: false
@@ -176,6 +178,7 @@ export  default class ProblemReport extends Component {
     this.state.DepartTypes = data.responsibleDept;
     this.state.TeamTypes = data.responsibleTeam;
     RoomTypes = data.roomLevel;
+    TeamStoreTypes = data.responsibleTeam;
 
     this.state.machineTypes.forEach((item) => {
 
@@ -220,9 +223,31 @@ export  default class ProblemReport extends Component {
   if (!this.state.ResDepartId && DepartTypes.length > 0) {
      this.state.ResDepartId = data.responsibleDept[0]['deptId'];
      this.setState({ResDepart:DepartTypes[0]})
+     this.updateTeams(data.responsibleDept[0]['deptId']);
   }
 
 
+
+  }
+
+  updateTeams(departmentId){
+      var fliterTeamTypes = [];
+      var tempTeam = [];
+
+      for (var i = 0; i < TeamStoreTypes.length; i++) {
+          if(TeamStoreTypes[i].parentDeptId == departmentId){
+              var item = TeamStoreTypes[i];
+              fliterTeamTypes.push(item);
+              tempTeam.push(item['deptName'])
+          }
+
+      }
+
+        TeamTypes = tempTeam;
+
+       this.state.TeamTypes = fliterTeamTypes.sort();
+       this.setState({TeamTypes:fliterTeamTypes, ResTeamId:null,
+        ResTeam:'选择责任班组'})
 
   }
 
@@ -727,6 +752,7 @@ return
       case "choose_des":
       {
          this.figureDes(data);
+          this.updateTeams(this.state.ResDepartId);
       }
         break;
         case "choose_team":
@@ -752,11 +778,13 @@ return
     }
 
   })
+  if(this.state.DepartTypes.length == 0){
+     this.featchData();
+  }
 
   this.state.ResTeamId = null;
   this.state.ResTeam = '选择责任班组';
 
-  this.featchData();
 
 }
   figureTeam(data){

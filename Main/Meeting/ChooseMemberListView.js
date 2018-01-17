@@ -28,6 +28,7 @@ var Global = require('../../common/globals');
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 
+var orignalData = [];
 
 export default class ChooseMemberListView extends Component {
     constructor(props) {
@@ -54,8 +55,27 @@ export default class ChooseMemberListView extends Component {
             this.props.navigator.pop()
         }
 
-    search() {
+    search(searchEnd) {
 
+        if(searchEnd){
+            this.setState({members:orignalData})
+        }else{
+
+            if(this.state.keyword != ''){
+                var searchData = [];
+                for (var i = 0; i < orignalData.length; i++) {
+                    var item = orignalData[i]
+                    if(item.realname && (item.realname.indexOf(this.state.keyword)>-1)){
+                        searchData.push(item)
+                    }
+                }
+                    //alert('ssss'+searchData.length )
+                    this.setState({members:searchData})
+            }else{
+
+            }
+
+        }
     }
     updateCheck(){
         if (!this.props.data.members) {
@@ -179,6 +199,8 @@ export default class ChooseMemberListView extends Component {
          }
      }
 
+
+
         componentWillUnmount(){
 
         }
@@ -212,11 +234,6 @@ export default class ChooseMemberListView extends Component {
 
         }
 
-        onSearchChange(event) {
-           var filter = event.nativeEvent.text.toLowerCase();
-        //    this.clearTimeout(this.timeoutID);
-        //    this.timeoutID = this.setTimeout(() => this.executePlanRequest(pagesize,1,filter), 100);
-        }
 
          renderFooter() {
            if (!this.hasMore() || !this.state.isLoadingTail) {
@@ -227,13 +244,34 @@ export default class ChooseMemberListView extends Component {
          }
 
 
+         onSearchChanged(text){
+         console.log('text=='+text);
+         this.state.keyword = text;
+         this.setState({keyword:text})
+          this.search(false)
 
+         }
+         onSearchInit(){
+             orignalData = [];
+             for (var i = 0; i < this.state.members.length; i++) {
+                 orignalData.push(this.state.members[i])
+             }
+
+         }
+
+         onSearchClose(){
+              this.search(true)
+         }
     render() {
         return (
             <View style={styles.container}>
                 <NavBar
                 title={this.state.title}
                 leftIcon={require('../../images/back.png')}
+                searchMode={false}
+                onSearchChanged={(text) => this.onSearchChanged(text)}
+                onSearchClose = {this.onSearchClose.bind(this)}
+                onSearchInit = {this.onSearchInit.bind(this)}
                 leftPress={this.back.bind(this)} />
                {this.renderListView()}
                {this.renderCommitBtn()}

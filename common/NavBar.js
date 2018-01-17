@@ -31,6 +31,7 @@ export default class NavBar extends Component{
         style: PropTypes.object,
         onSearchChanged: PropTypes.func,
         onSearchClose: PropTypes.func,
+        onSearchInit:PropTypes.func,
         searchMode: PropTypes.bool,
     }
     static topbarHeight = (Platform.OS === 'ios' ? 64 : 44)
@@ -106,6 +107,7 @@ export default class NavBar extends Component{
 
     setSearchMode(){
         this.setState({showSearch:true})
+        this.props.onSearchInit()
     }
     closeSearchMode(){
         this.setState({showSearch:false})

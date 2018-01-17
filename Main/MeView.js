@@ -19,6 +19,8 @@ import HttpRequest from '../HttpRequest/HttpRequest'
 import JPushModule from 'jpush-react-native';
 import LoginView from '../Login/LoginView'
 
+import ChangePassword from './ChangePassword';
+
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var account = Object();
@@ -79,6 +81,12 @@ export default class MeView extends Component {
     onMineWitnessPress(){
 
 
+    }
+
+    _changepassword_function(){
+        this.props.navigator.push({
+            component: ChangePassword,
+        })
     }
 
     _logout_function(){
@@ -156,6 +164,7 @@ export default class MeView extends Component {
 
         return (
             <View style={styles.container}>
+            
             <View style={styles.headView}>
                     <TouchableOpacity activeOpacity={1} onPress={this.enableTester.bind(this)}
                     style={[styles.headView, { position: 'absolute', left: 0, right: 0, }]}>
@@ -198,6 +207,11 @@ export default class MeView extends Component {
                 <View style={{flex:1,marginTop: 60, alignItems: 'center' }}>
                 <TouchableOpacity
                     style={[styles.loginButton,]}
+                    onPress={this._changepassword_function.bind(this)}
+                    ><Text style={styles.loginText}>修改密码</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={[styles.reportButton,]}
                     onPress={this._logout_function.bind(this)}
                     ><Text style={styles.loginText}>退出登录</Text>
                 </TouchableOpacity>
@@ -296,7 +310,7 @@ const styles = StyleSheet.create({
     },
     loginButton:
     {
-        marginTop: 50,
+        marginTop: 20,
         height: 50,
         width: width - 20,
         backgroundColor: '#fbac2a',
