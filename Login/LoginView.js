@@ -102,13 +102,13 @@ export default class LoginView extends Component {
         }
 
         if (this.state.LoginId && this.state.LoginId == 'test') {
-                            HttpRequest.setDomain('http://39.108.165.171','测试环境')
+                            HttpRequest.setDomain('http://39.108.165.171:8080','测试环境')
                             Global.showToast('测试环境设置成功')
                             return
             }
 
             if (this.state.LoginId && this.state.LoginId == 'product') {
-                                HttpRequest.setDomain('http://39.108.165.171','产品环境')
+                                HttpRequest.setDomain('http://116.236.114.61:9201','产品环境')
                                 Global.showToast('产品环境设置成功')
                                 return
                 }

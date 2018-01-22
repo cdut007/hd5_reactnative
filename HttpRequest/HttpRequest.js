@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native';
 import Xlog from 'react-native-xlog';
 
-var apiDomainAddr = 'http://39.108.165.171' //
+var apiDomainAddr = 'http://116.236.114.61:9201' //
 var apiAddr =  apiDomainAddr + '/hdxt/api'
 var httpToken = ''
 var Global = require('../common/globals');
@@ -321,12 +321,12 @@ if (body.jsonBody) {
         Global.log(errorInfo)
       } else {
         Global.log(error)
-      }           
+      }
     }
     catch(error)
     {
       Global.log(error)
-    }          
+    }
     Global.log('Network error:' + error)
   }
 }
