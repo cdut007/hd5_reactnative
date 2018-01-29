@@ -70,12 +70,18 @@ export default class QC2WitnessFeedDetailView extends Component {
         if (!data.rollingPlan) {
             data.rollingPlan = new Object()
         }
+
+        var date = this.props.data.witnessDate;
+        if (!date) {
+            date = this.props.data.createDate;
+        }
+
         this.state = {
             title: '见证回填',
             isHankouType:1,
             data:data,
-            choose_address:null,
-            choose_date:null,
+            choose_address:data.witnessAddress,
+            choose_date:date,
             input_witnessdesc:null,
             substitute:null,
             input_dosage:null,

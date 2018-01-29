@@ -77,12 +77,19 @@ export default class QCWitnessDetailView extends Component {
         if (!data.rollingPlan) {
             data.rollingPlan = new Object()
         }
+
+        var date = this.props.data.witnessDate;
+        if (!date) {
+            date = this.props.data.createDate;
+        }
+
+
         this.state = {
             title: '见证详情',
             isHankouType:1,
             data:data,
-            choose_address:null,
-            choose_date:null,
+            choose_address:data.witnessAddress,
+            choose_date:date,
             input_witnessdesc:null,
             choose_result:null,
             remark:null,
