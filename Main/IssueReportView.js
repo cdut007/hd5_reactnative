@@ -23,6 +23,8 @@ import DisplayItemView from '../common/DisplayItemView'
 import MemberSelectView from '../common/MemberSelectView'
 import Global from '../common/globals.js'
 
+import ConstMapValue from '../common/ConstMapValue.js';
+
 const MAX_IMAGE_COUNT = 5;
 const REQUST_ISSUE_COMMIT_URL = '/question/create'
 var width = Dimensions.get('window').width;
@@ -263,11 +265,10 @@ export default class IssueReportView extends Component {
                    time = this.state.plan_data.planStartDate
                }
                var displayAry = [{title:'施工日期',content:Global.formatDate(time),id:'0',noLine:true},
-               {title:'工程量编号',content:this.state.plan_data.projectNo,id:'1',noLine:true},
-               {title:'焊口/支架',content:this.state.plan_data.weldno,id:'2',noLine:true},
                {title:'工程量类别',content:this.state.plan_data.projectType,id:'3',noLine:true},
                {title:'作业条目编号',content:this.state.plan_data.workListNo,id:'4',noLine:true},
             ];
+               displayAry = ConstMapValue.getdisplyInfo(displayAry,this.state.plan_data,this.props.type);
 
                // 遍历
                for (var i = 0; i<displayAry.length; i++) {

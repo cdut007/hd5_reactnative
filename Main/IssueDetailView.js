@@ -569,8 +569,8 @@ startProblem(){
         reason: message
       }
       HttpRequest.post(
-        '/question/unable', 
-        params, 
+        '/question/unable',
+        params,
         (reponse) => {
           DeviceEventEmitter.emit('operate_issue','operate_issue');
           this.back();
@@ -952,6 +952,43 @@ startProblem(){
             </View>)
     }
 
+
+    onEnterClick(tag){
+        this.props.navigator.push({
+            component: CommonContentView,
+             props: {
+                 content:tag.reason,
+                 title:tag.realname,
+                }
+        })
+
+    }
+
+
+      createEnter(label,desc,tag){
+          var textColor = '#777777'
+
+          return(
+              <TouchableOpacity style={styles.statisticsflexContainer} onPress={this.onEnterClick.bind(this,tag)}>
+
+              <View style={{alignSelf:'center',flex:1,paddingLeft:10,flexDirection:'row'}}>
+
+
+                <Text numberOfLines={1} style={{color:'#444444',fontSize:14,}}>
+                  {label}
+                </Text>
+              </View>
+              <Text numberOfLines={1} style={{alignSelf:'center',flex:1.6,paddingRight:10,color:textColor,fontSize:12,}}>
+                {Global.formatFullDateDisplay(tag.createTime) +'   '+desc}
+              </Text>
+
+              <Image style={{alignSelf:'center',marginRight:10}} source={require('../images/detailsIcon.png')}></Image>
+
+              </TouchableOpacity>
+          )
+      }
+
+
     renderItem() {
                // 数组
                var itemAry = [];
@@ -990,6 +1027,11 @@ startProblem(){
                 displayAry.push({title:'工程量类别',content:this.state.data.rollingPlan.projectType,id:'b3'},);
                 displayAry.push({title:'焊口／支架',content:this.state.data.rollingPlan.weldno,id:'b4', noLine: true},);
                 displayAry.push({type:'devider'},);
+                if(this.state.data.createUser){
+                        displayAry.push({title:'提问者',content:this.state.data.createUser.realname,id:'x1'})
+                }
+
+                displayAry.push({type:'devider'},);
 
 
                // 遍历
@@ -1010,6 +1052,19 @@ startProblem(){
                             detail={displayAry[i].content?displayAry[i].content+'':''}
                             noLine={displayAry[i].noLine}
                            />
+                       );
+                   }
+               }
+
+
+
+
+               if(this.state.data.opList){
+                   for (var i = 0; i < this.state.data.opList.length; i++) {
+                       var tag = this.state.data.opList[i];
+                       itemAry.push(this.createEnter(tag.realname,tag.statusName,tag));
+                       itemAry.push(
+                          <View style={styles.divider} />
                        );
                    }
                }

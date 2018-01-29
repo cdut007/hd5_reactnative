@@ -293,6 +293,7 @@ export default class PlanDetailView extends Component {
             component: IssueReportView,
              props: {
                  data:this.state.data,
+                  type:this.props.type
                 }
         })
     }
@@ -400,6 +401,7 @@ export default class PlanDetailView extends Component {
             component: IssueReportView,
              props: {
                  data:this.state.data,
+                  type:this.props.type
                 }
         })
     }

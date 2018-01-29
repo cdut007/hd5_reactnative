@@ -103,13 +103,16 @@ module.exports = {
     },
     getdisplyInfo(displayAry,data,type ){
 
-         if(type == 'JXJH'){
-             displayAry.push({title:'工程量编号',content:data.projectNo,id:'1',noLine:true});
-               displayAry.push({title:'工程量',content:data.projectCost,id:'2',noLine:true});
+         if(type == 'GDJH'){
+             displayAry.push({title:'焊口/支架',content:data.weldno,id:'2',noLine:true});
          }else{
-             displayAry.push({title:'工程量编号',content:data.projectNo,id:'1',noLine:true});
-               displayAry.push({title:'焊口/支架',content:data.weldno,id:'2',noLine:true});
+
          }
+         displayAry.push({title:'工程量编号',content:data.projectNo,id:'1',noLine:true});
+           displayAry.push({title:'工程量',content:data.projectCost,id:'2',noLine:true});
+          displayAry.push({title:'图纸号',content:data.drawingNo,id:'x4'});
+          displayAry.push({title:'图纸版本',content:data.drawingVersion,id:'x5'});
+          displayAry.push({title:'房间号',content:data.roomNo,id:'x6'});
         return displayAry;
 
     },

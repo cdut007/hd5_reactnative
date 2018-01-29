@@ -248,6 +248,7 @@ export default class PlanWriteLastStepDetailView extends Component {
             component: IssueReportView,
              props: {
                  data:this.state.data,
+                  type:this.props.type
                 }
         })
     }
@@ -515,6 +516,7 @@ export default class PlanWriteLastStepDetailView extends Component {
             component: IssueReportView,
              props: {
                  data:this.state.data,
+                  type:this.props.type
                 }
         })
     }
