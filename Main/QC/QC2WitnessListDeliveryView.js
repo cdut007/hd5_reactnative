@@ -281,6 +281,7 @@ export default class QC2WitnessListDeliveryView extends Component {
     }
 
     onItemPress(itemData){
+        
         this.props.navigator.push({
             component: QCWitnessTeamDetailView,
              props: {

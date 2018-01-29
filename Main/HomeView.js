@@ -271,7 +271,7 @@ export default class HomeView extends Component {
             }
 
             if (data.type == 'WZGL') {
-        
+
                this.props.navigator.push({
                   component: ResourceManageView,
                    props: {
@@ -475,13 +475,12 @@ export default class HomeView extends Component {
                         }
                 })
             }else {
-                if(Global.existRoleName(Global.UserInfo)){
-                    Global.alert("当前角色无权限操作该模块，请联系管理员");
-                    return
-                }else{
-                    Global.alert("角色未知，请联系管理员，或者升级新版本试试");
-                }
-
+                // if(Global.existRoleName(Global.UserInfo)){
+                //     Global.alert("当前角色无权限操作该模块，请联系管理员");
+                //     return
+                // }else{
+                //     Global.alert("角色未知，请联系管理员，或者升级新版本试试");
+                // }
 
                 data.user = new Object();
                 data.user.id = Global.UserInfo.id;
@@ -489,15 +488,16 @@ export default class HomeView extends Component {
                 data.user.dept.name = data.title;//change later. for dept
 
 
-                // this.props.navigator.push({
-                //     component: SolverTabView,
-                //      props: {
-                //          data:data,
-                //          type:data.type,
-                //          typeStr:typeSegArr[this.state.selectedTypeIndex],
-                //          category:dayCateArr[index],
-                //         }
-                // })
+                this.props.navigator.push({
+                    component: CoordinatorView,
+                     props: {
+                         data:data,
+                         type:data.type,
+                         typeStr:typeSegArr[this.state.selectedTypeIndex],
+                         category:dayCateArr[index],
+                        }
+                })
+                
                 Global.log('unkonwn roles ....')
             }
 

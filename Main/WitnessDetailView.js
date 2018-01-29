@@ -496,6 +496,8 @@ getNoticeType(noticePoint){
 
                }else{
                    ConstMapValue.PlanDataCategoryDisplay(displayAry,this.state.data.rollingPlan,this.props.type);
+                   displayAry.push({title:'工序名／编号',content:this.state.data.workStepName,id:'0'},);
+                   displayAry.push({title:'选点类型',content:this.state.data.noticeType,id:'3'});
 
                }
 

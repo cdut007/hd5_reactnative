@@ -10,6 +10,7 @@ import {
     ActivityIndicator,
     TouchableNativeFeedback,
     TouchableHighlight,
+    DeviceEventEmitter,
 } from 'react-native';
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Dimensions from 'Dimensions';
@@ -62,10 +63,17 @@ export default class QCWitnessStatisticsView extends Component {
     }
 
     componentDidMount() {
+        QcissueDeals = DeviceEventEmitter.addListener('witness_update',(param) => {    this.executeWitnessRequest();})
+        delivery_qc = DeviceEventEmitter.addListener('delivery_qc',(param) => {    this.executeWitnessRequest();})
 
         this.executeWitnessRequest();
 
     }
+
+    componentWillUnmount(){
+        delivery_qc.remove();
+       QcissueDeals.remove();
+  }
 
     onGetDataSuccess(response){
          Global.log('onGetDataSuccess@@@@')

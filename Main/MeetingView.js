@@ -348,7 +348,7 @@ export default class MeetingView extends Component {
         return (
             <View style={styles.container}>
                 <NavBar
-                    title="会议"
+                    title="通知"
                      />
                      <ScrollView
                      style={styles.mainStyle}>

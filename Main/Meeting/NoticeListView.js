@@ -167,6 +167,38 @@ export default class NoticeListView extends Component {
 
     }
 
+    onCancelDataSuccess(response,paramBody){
+         DeviceEventEmitter.emit('operate_meeting','operate_meeting');
+            Global.showToast(response.message)
+             Global.log('onCancelDataSuccess@@@@')
+    }
+
+cancelItem(itemData){
+    var paramBody={
+        ids:itemData.id
+    }
+    HttpRequest.post('/notification_op/cancel', paramBody,this.onCancelDataSuccess.bind(this),
+         (e) => {
+
+
+             try {
+                 var errorInfo = JSON.parse(e);
+                 if (errorInfo != null) {
+                  Global.log(errorInfo)
+                 } else {
+                     Global.log(e)
+                 }
+             }
+             catch(err)
+             {
+                 Global.log(err)
+             }
+
+             Global.log('Task error:' + e)
+         })
+}
+
+
 
             onDeleteDataSuccess(response,paramBody){
                  DeviceEventEmitter.emit('operate_meeting','operate_meeting');
@@ -207,6 +239,14 @@ export default class NoticeListView extends Component {
                              {text:'取消',},
                              {text:'确认',onPress:()=> {this.deleteItem(itemData)}}
                ])
+            }else if (itemData.status == 'UNSTARTED'){
+
+                Alert.alert('','确定取消通知?',
+                          [
+                            {text:'取消',},
+                            {text:'确认',onPress:()=> {this.cancelItem(itemData)}}
+              ])
+
             }
         }
 
@@ -341,6 +381,9 @@ export default class NoticeListView extends Component {
                 color = '#0755a6'
             }else if (rowData.status == 'EXPIRED') {
                 info = '已结束'
+                color = '#888888'
+            }else if (rowData.status == 'CANCEL') {
+                info = '已取消'
                 color = '#888888'
             }else if (rowData.status == 'DRAFT') {
                 info = '草稿'

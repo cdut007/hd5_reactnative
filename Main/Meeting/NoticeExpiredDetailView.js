@@ -340,7 +340,7 @@ export default class NoticeExpiredListView extends Component {
 
                         <View style={{flexDirection:'row',alignItems:'center'}}>
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-                          文件编号：
+                          文件名称：
                         </Text>
 
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#777777',fontSize:12,marginBottom:2,}}>
@@ -348,6 +348,18 @@ export default class NoticeExpiredListView extends Component {
                         </Text>
 
                         </View>
+
+                        <View style={{flexDirection:'row',alignItems:'center'}}>
+                        <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+                          文件编号：
+                        </Text>
+
+                        <Text numberOfLines={1}  style={{marginTop:10,color:'#777777',fontSize:12,marginBottom:2,}}>
+                          {rowData.intercode}
+                        </Text>
+
+                        </View>
+
 
                         <View style={{flexDirection:'row',alignItems:'center'}}>
                         <Text numberOfLines={1}  style={{marginTop:10,color:'#1c1c1c',fontSize:12,marginBottom:2,}}>

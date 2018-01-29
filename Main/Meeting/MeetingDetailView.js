@@ -32,6 +32,7 @@ import FeedbackMessageView from './FeedbackMessageView'
 import DisplayItemView from '../../common/DisplayItemView';
 import DisplayMoreItemView from '../../common/DisplayMoreItemView';
 import FileResultView from './FileResultView'
+import CommitButton from '../../common/CommitButton'
 
 export default class MeetingDetailView extends Component {
     constructor(props) {
@@ -284,8 +285,56 @@ export default class MeetingDetailView extends Component {
                     {this.createEnter(require('../../images/enclosureIcon.png'),'附件','查看全部','attach')}
 
                 </ScrollView>
+                {this.renderFormView()}
             </View>
         )
+    }
+
+    onCancelDataSuccess(response,paramBody){
+         DeviceEventEmitter.emit('operate_meeting','operate_meeting');
+            Global.showToast(response.message)
+            Global.log('onCancelDataSuccess@@@@')
+            this.props.navigator.pop()
+
+    }
+
+cancelItem(){
+    var itemData = this.state.data;
+    var paramBody={
+        ids:itemData.id
+    }
+    HttpRequest.post('/conference_op/cancel', paramBody,this.onCancelDataSuccess.bind(this),
+         (e) => {
+
+
+             try {
+                 var errorInfo = JSON.parse(e);
+                 if (errorInfo != null) {
+                  Global.log(errorInfo)
+                 } else {
+                     Global.log(e)
+                 }
+             }
+             catch(err)
+             {
+                 Global.log(err)
+             }
+
+             Global.log('Task error:' + e)
+         })
+}
+
+
+    renderFormView(){
+            //1  fininshed retun, jsut san
+
+            if (this.state.data.status == 'UNSTARTED') {
+
+                return(<View style={{height:50,width:width}}><CommitButton title={'取消'}
+                        onPress={this.cancelItem.bind(this)}></CommitButton></View>)
+
+            }
+
     }
 
 

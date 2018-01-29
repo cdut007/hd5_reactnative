@@ -484,8 +484,8 @@ export default class PlanWriteLastStepDetailView extends Component {
                                chooseMode={true}
                                chooseData={this.state.localHankouNoMembers}
                                onVauleChanged={this.onSelectedMember.bind(this)}
-                               topic={'焊口号'}
-                               placeholder={'输入焊口号'}
+                               topic={'焊工号'}
+                               placeholder={'输入焊工号'}
                                content={this.state.displayHankouNo}
                                onChangeText={this.onSelectedMember.bind(this)}
                               />

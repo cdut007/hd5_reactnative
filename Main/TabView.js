@@ -64,7 +64,7 @@ export default class TabView extends Component
                 </TabNavigator.Item>
                 <TabNavigator.Item
                     selected={this.state.selectedTab === 'tab2'}
-                    title="会议"
+                    title="通知"
                     renderIcon={() => <Image style={{width:24,height:24,}} source={require('../images/meeting_icon.png')} />}
                     renderSelectedIcon={() => <Image style={{width:24,height:24,}} source={require('../images/meeting_icon_click.png')} />}
                     selectedTitleStyle={styles.tabBarTintColor}

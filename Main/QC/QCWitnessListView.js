@@ -56,11 +56,48 @@ export default class QCWitnessListView extends Component {
             isRefreshing:false,
             items:[],
             totalCount:0,
+            QCTeamMember:null,
 
         }
 
 
     }
+
+    onGetWitnessTeamMemberDataSuccess(response){
+      this.state.QCTeamMember = response.responseResult;
+      this.setState({QCTeamMember:  this.state.QCTeamMember})
+
+    }
+    getWitnessTeamMember(){
+            if (!Global.isQCTeam(Global.UserInfo) && !Global.isQC2Team(Global.UserInfo)) {
+                return
+            }
+        var paramBody = {
+            teamType:'WITNESS_MEMBER',
+            userId:Global.UserInfo.id,
+        }
+
+        HttpRequest.get('/team/witness', paramBody, this.onGetWitnessTeamMemberDataSuccess.bind(this),
+            (e) => {
+
+
+                try {
+                    var errorInfo = JSON.parse(e);
+                    if (errorInfo != null) {
+                     Global.log(errorInfo)
+                    } else {
+                        Global.log(e)
+                    }
+                }
+                catch(err)
+                {
+                    Global.log(err)
+                }
+
+                Global.log('Task error:' + e)
+            })
+    }
+
 
     _closeLoading() {
 		this.setState({
@@ -128,11 +165,15 @@ export default class QCWitnessListView extends Component {
     componentDidMount() {
 
     QcissueDeals = DeviceEventEmitter.addListener('witness_update',(param) => {this._onRefresh()})
+    delivery_qc = DeviceEventEmitter.addListener('delivery_qc',(param) => {this._onRefresh()})
+
     this.executePlanRequest(1);
+    this.getWitnessTeamMember();
 
     }
 
     componentWillUnmount(){
+        delivery_qc.remove();
        QcissueDeals.remove();
   }
     onGetDataSuccess(response,paramBody){
@@ -179,13 +220,27 @@ export default class QCWitnessListView extends Component {
 
     onItemPress(itemData){
     if (Global.isQCTeam(Global.UserInfo) || Global.isQC2Team(Global.UserInfo)) {
-        this.props.navigator.push({
-            component: QCWitnessResultDetailView,
-             props: {
-                 data:itemData,
-                 delivery:false,
-                }
-        })
+        if(this.props.status == 'UNHANDLED' || this.props.status == 'UNCOMPLETED')
+        {
+            this.props.navigator.push({
+                component: QCWitnessTeamDetailView,
+                props: {
+                    data:itemData,
+                    QCTeamMember:this.state.QCTeamMember,
+                    delivery:true,
+                    unassign:true,
+
+                   }
+            })
+        }else{
+            this.props.navigator.push({
+                component: QCWitnessResultDetailView,
+                 props: {
+                     data:itemData,
+                     delivery:false,
+                    }
+            })
+        }
     }else{
         if (this.props.status == 'UNQUALIFIED'||this.props.status == 'QUALIFIED') {
             this.props.navigator.push({

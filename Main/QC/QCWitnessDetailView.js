@@ -1132,6 +1132,7 @@ export default class QCWitnessDetailView extends Component {
                 ConstMapValue.PlanDataCategoryDisplay(displayAry,this.state.data.rollingPlan,this.props.type);
 
                 displayAry.push({title:'工序名／编号',content:this.state.data.workStepName,id:'b11'},);
+                displayAry.push({title:'选点类型',content:this.state.data.noticeType,id:'b12'})
 
                // 遍历
                for (var i = 0; i<displayAry.length; i++) {

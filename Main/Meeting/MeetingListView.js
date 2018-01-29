@@ -114,7 +114,6 @@ export default class MeetingListView extends Component {
 
 
     componentDidMount() {
-
         this.executeMeetingRequest(1);
         newMeetingSubscription = DeviceEventEmitter.addListener('new_meeting',(param) => {this._onRefresh()})
         operationSubscription = DeviceEventEmitter.addListener('operate_meeting',(param)=>{this._onRefresh();})
@@ -171,6 +170,36 @@ export default class MeetingListView extends Component {
 
     }
 
+    onCancelDataSuccess(response,paramBody){
+         DeviceEventEmitter.emit('operate_meeting','operate_meeting');
+            Global.showToast(response.message)
+             Global.log('onCancelDataSuccess@@@@')
+    }
+
+cancelItem(itemData){
+    var paramBody={
+        ids:itemData.id
+    }
+    HttpRequest.post('/conference_op/cancel', paramBody,this.onCancelDataSuccess.bind(this),
+         (e) => {
+
+
+             try {
+                 var errorInfo = JSON.parse(e);
+                 if (errorInfo != null) {
+                  Global.log(errorInfo)
+                 } else {
+                     Global.log(e)
+                 }
+             }
+             catch(err)
+             {
+                 Global.log(err)
+             }
+
+             Global.log('Task error:' + e)
+         })
+}
 
         onDeleteDataSuccess(response,paramBody){
              DeviceEventEmitter.emit('operate_meeting','operate_meeting');
@@ -211,7 +240,15 @@ export default class MeetingListView extends Component {
                          {text:'取消',},
                          {text:'确认',onPress:()=> {this.deleteItem(itemData)}}
            ])
-        }
+       }else if (itemData.status == 'UNSTARTED'){
+
+           Alert.alert('','确定取消会议?',
+                     [
+                       {text:'取消',},
+                       {text:'确认',onPress:()=> {this.cancelItem(itemData)}}
+         ])
+
+       }
     }
 
     onItemPress(itemData){
@@ -349,6 +386,9 @@ export default class MeetingListView extends Component {
                 color = '#0755a6'
             }else if (rowData.status == 'EXPIRED') {
                 info = '已结束'
+                color = '#888888'
+            }else if (rowData.status == 'CANCEL') {
+                info = '已取消'
                 color = '#888888'
             }else if (rowData.status == 'DRAFT') {
                 info = '草稿'

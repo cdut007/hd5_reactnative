@@ -241,9 +241,12 @@ export default class QCWitnessTeamDetailView extends Component {
             //1  fininshed retun, jsut san
 
             if (this.props.delivery) {
-
+                var label = '确认分派';
+                if(this.props.unassign){
+                    label = '确认改派';
+                }
                 return(<View style={{height:50,width:width,flexDirection:'row'}}>
-                <View style={{height:50,flex:1}}><CommitButton title={'确认分派'}
+                <View style={{height:50,flex:1}}><CommitButton title={label}
                         onPress={this.startWitness.bind(this)}></CommitButton></View>
                                 </View>)
 
