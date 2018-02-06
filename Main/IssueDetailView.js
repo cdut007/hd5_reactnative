@@ -249,6 +249,13 @@ export default class IssueDetailView extends Component {
     }
 
     getRightText(){
+
+
+     if(this.props.handle){
+         return '直接处理';
+     }
+
+
       if(this.props.directlySolve || Global.isSolverMember(Global.UserInfo) || Global.isGroup(Global.UserInfo)) return '';
       return (this.state.data.status == 'pre' && !this.state.data.designee.id) || this.state.data.status == 'unsolved'  ? '直接处理' : '';
     }

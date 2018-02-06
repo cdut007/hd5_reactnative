@@ -653,6 +653,8 @@ historyData.hseCheckTime = item['solveDate'];
 
     var displayAry = [
       {title:'问题名称',content:this.state.data.problemTitle,id:'0',noLine:true},
+       {title:'二级编码',content:this.state.data.code2Desc,id:'a1',noLine:true},
+        {title:'隐患描述',content:this.state.data.code3Desc,id:'a2',noLine:true},
       {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
       {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
       {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
@@ -719,6 +721,8 @@ historyData.hseCheckTime = item['solveDate'];
       )
 
       var displayAry = [
+          {title:'二级编码',content:this.state.data.code2Desc,id:'a1',noLine:true},
+           {title:'隐患描述',content:this.state.data.code3Desc,id:'a2',noLine:true},
         {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
         {title:'问题照片',content:problemFiles,id:'14',noLine:true,type:'img'},
         {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
@@ -781,6 +785,8 @@ historyData.hseCheckTime = item['solveDate'];
     {title:'整改描述',content:historyData.teamSolveDes,id:'9',noLine:true},
     {title:'整改照片',content:solveFiles,id:'12',noLine:true,type:'img'},
     {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
+    {title:'二级编码',content:this.state.data.code2Desc,id:'a1',noLine:true},
+     {title:'隐患描述',content:this.state.data.code3Desc,id:'a2',noLine:true},
     {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
     {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
@@ -838,6 +844,8 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
       {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
       {title:'问题照片',content:problemFiles,id:'8',noLine:true,type:'img'},
       {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
+      {title:'二级编码',content:this.state.data.code2Desc,id:'a1',noLine:true},
+       {title:'隐患描述',content:this.state.data.code3Desc,id:'a2',noLine:true},
       {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
       {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
       {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
@@ -889,6 +897,8 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
     )
 
     var displayAry = [
+        {title:'二级编码',content:this.state.data.code2Desc,id:'a1',noLine:true},
+         {title:'隐患描述',content:this.state.data.code3Desc,id:'a2',noLine:true},
       {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
       {title:'问题照片',content:problemFiles,id:'14',noLine:true,type:'img'},
       {title:'整改描述',content:historyData.teamSolveDes,id:'9',noLine:true},
@@ -957,6 +967,8 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
     {title:'问题描述',content:this.state.data.problemDescription,id:'7',noLine:true},
     {title:'问题照片',content:problemFiles,id:'12',noLine:true,type:'img'},
     {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
+    {title:'二级编码',content:this.state.data.code2Desc,id:'a1',noLine:true},
+     {title:'隐患描述',content:this.state.data.code3Desc,id:'a2',noLine:true},
     {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
     {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
@@ -1007,6 +1019,8 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
     )
 
     var displayAry = [
+        {title:'二级编码',content:this.state.data.code2Desc,id:'a1',noLine:true},
+         {title:'隐患描述',content:this.state.data.code3Desc,id:'a2',noLine:true},
       {title:'问题描述',content:this.state.data.problemDescription,id:'7',noLine:true},
       {title:'问题照片',content:problemFiles,id:'12',noLine:true,type:'img'},
       {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
@@ -1056,6 +1070,8 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
   )
 
   var displayAry = [
+      {title:'二级编码',content:this.state.data.code2Desc,id:'a1',noLine:true},
+       {title:'隐患描述',content:this.state.data.code3Desc,id:'a2',noLine:true},
     {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
     {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
     {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
@@ -1120,6 +1136,8 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
     )
 
     var displayAry = [
+        {title:'二级编码',content:this.state.data.code2Desc,id:'a1',noLine:true},
+         {title:'隐患描述',content:this.state.data.code3Desc,id:'a2',noLine:true},
       {title:'问题描述',content:this.state.data.describe,id:'6',noLine:true},
       {title:'整改描述',content:this.state.data.describe,id:'7',noLine:true},
       {title:'机组',content:this.state.data.machineType,id:'1',noLine:true},

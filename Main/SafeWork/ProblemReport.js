@@ -61,6 +61,11 @@ var DepartTypes = [];
 var TeamTypes = [];
 var selects = [];
 
+var code1 = [];
+var code2 = [];
+var code3 = [];
+var code23 = [];
+
 var TeamStoreTypes = [];
 
 String.prototype.startWith=function(str){
@@ -88,6 +93,12 @@ export  default class ProblemReport extends Component {
           TeamTypes:null,
           machineTypes:null,
           PlantTypes:null,
+          code1:'选择问题',
+          code2:'选择二级编码',
+          code3:'选择隐患描述',
+          code1data:null,
+          code2data:null,
+          code3data:null,
           RoomTypes:[],
           BgTypes:[],
           question:'',
@@ -125,11 +136,7 @@ export  default class ProblemReport extends Component {
     this.setState({
         loadingVisible: true
     });
-   var param = new FormData()
-    if (this.state.ResDepartId) {
-      param.append('responsibleDeptId',this.state.ResDepartId);
-    }
-    param.append('safe','true');
+   var param = {safe:'safe'};
 
     HttpRequest.get('/hse/v2/createUI', param, this.featchDataSuccess.bind(this),
         (e) => {
@@ -172,8 +179,13 @@ export  default class ProblemReport extends Component {
   PlantTypes = [];
   DepartTypes = [];
   TeamTypes = [];
+   code1 = [];
+   code23 = [];
+
 
     this.state.machineTypes = data.unit;
+    this.state.code1data = data.codeLevel1;
+    code23 = data.codeLevel23;
     this.state.PlantTypes = data.wrokshop;
     this.state.DepartTypes = data.responsibleDept;
     this.state.TeamTypes = data.responsibleTeam;
@@ -185,6 +197,17 @@ export  default class ProblemReport extends Component {
          machineTypes.push(item)
 
     })
+
+
+    if(this.state.code1data){
+        this.state.code1data.forEach((item) => {
+
+             code1.push(item['codeDesc'])
+
+        })
+    }
+
+
 
     this.state.PlantTypes.forEach((item) => {
 
@@ -204,6 +227,9 @@ export  default class ProblemReport extends Component {
   TeamTypes.push(item['deptName'])
 
   })
+
+
+
 
 
   if (this.state.machineType == '选择机组' && machineTypes.length > 0 ) {
@@ -229,6 +255,47 @@ export  default class ProblemReport extends Component {
 
 
   }
+
+
+  updateCode2(parentId){
+      var fliterCodes = [];
+      var tempData = [];
+
+      for (var i = 0; i < code23.length; i++) {
+          if(code23[i].parentId == parentId){
+              var item = code23[i];
+              fliterCodes.push(item);
+              tempData.push(item['codeDesc'])
+          }
+
+      }
+
+        code2 = tempData;
+       this.state.code2data = fliterCodes.sort();
+       this.setState({code2data:fliterCodes, code2:'选择二级编码'})
+
+  }
+
+  updateCode3(parentId){
+      var fliterCodes = [];
+      var tempData = [];
+
+      for (var i = 0; i < code23.length; i++) {
+          if(code23[i].parentId == parentId){
+              var item = code23[i];
+              fliterCodes.push(item);
+              tempData.push(item['codeDesc'])
+          }
+
+      }
+
+        code3 = tempData;
+
+       this.state.code3data = fliterCodes.sort();
+       this.setState({code3data:fliterCodes, code3:'选择隐患描述'})
+
+  }
+
 
   updateTeams(departmentId){
       var fliterTeamTypes = [];
@@ -326,7 +393,11 @@ export  default class ProblemReport extends Component {
 
 
     var displayAry = [
-      {title:'问题',id:'questionName',content:this.state.questionName,type:'input'},
+
+        {title:'问题',id:'choose_code1',pickerTitle:"选择问题",content:this.state.code1,data:code1,type:'choose',ref:this._selectCode1},
+         {title:'二级编码',id:'choose_code2',pickerTitle:"选择二级编码",content:this.state.code2,data:code2,type:'choose',ref:this._selectCode2},
+        {title:'隐患描述',id:'choose_code3',pickerTitle:"选择隐患描述",content:this.state.code3,data:code3,type:'choose',ref:this._selectCode3},
+
       {title:'机组',id:'choose_machiche',pickerTitle:"选择机组",content:this.state.machineType,data:machineTypes,type:'choose',ref:this._selectMachine},
       {title:'厂房',id:'choose_platHouse',pickerTitle:"选择厂房",content:this.state.plantType,data:PlantTypes,type:'choose',ref:this._selectPlant},
       {title:'房间号(选填)',id:'room_no',pickerTitle:"选择房间号",content:this.state.RoomNumber,data:this.state.RoomTypes,type:'choose',ref:this._selectRoom},
@@ -402,7 +473,34 @@ return(
    })
 
    var param = new FormData()
-   param.append('problemTitle',this.state.questionName);
+   //param.append('problemTitle',this.state.questionName);
+   var code1Id = null;
+   this.state.code1data.forEach((item) => {
+
+     if (item['codeDesc']  == this.state.code1) {
+           code1Id = item['id'];
+     }
+   })
+
+   var code2Id = null;
+   this.state.code2data.forEach((item) => {
+
+     if (item['codeDesc']  == this.state.code2) {
+           code2Id = item['id'];
+     }
+   })
+
+   var code3Id = null;
+   this.state.code3data.forEach((item) => {
+
+     if (item['codeDesc']  == this.state.code3) {
+           code3Id = item['id'];
+     }
+   })
+
+    param.append('code1Id', code1Id);
+    param.append('code2Id', code2Id);
+    param.append('code3Id', code3Id);
    param.append('unit', this.state.machineType);
    param.append('wrokshop', this.state.plantType);
    param.append('eleration', this.state.elevation);
@@ -484,9 +582,22 @@ return(
 
   onCommit() {
 
- if (!this.state.questionName.length) {
-         Global.alert("请输入问题名称");
-         return
+ // if (!this.state.questionName.length) {
+ //         Global.alert("请输入问题名称");
+ //         return
+ // }
+
+ if (this.state.code1 == '选择问题') {
+   Global.alert("请选择问题");
+   return;
+ }
+ if (this.state.machineType == '选择二级编码') {
+   Global.alert("请选择二级编码");
+   return;
+ }
+ if (this.state.machineType == '选择隐患描述') {
+   Global.alert("请选择隐患描述");
+   return;
  }
 
     if (this.state.machineType == '选择机组') {
@@ -510,10 +621,10 @@ return(
        Global.alert("请选择责任部门");
        return;
      }
-     if (!this.state.question.length) {
-      Global.alert("请输入问题描述");
-       return;
-     }
+     // if (!this.state.question.length) {
+     //  Global.alert("请输入问题描述");
+     //   return;
+     // }
      if(this.state.fileArr.length<=1){
          Global.alert('请选择至少一张问题图片');
          return;
@@ -755,6 +866,43 @@ return
           this.updateTeams(this.state.ResDepartId);
       }
         break;
+        case "choose_code1":
+        {
+            this.setState({code1:data[0]})
+            this.setState({code2:'选择二级编码'})
+            code2=[];
+            this.state.code1data.forEach((item) => {
+
+              if (item['codeDesc']  == data[0]) {
+                    this.updateCode2(item['id']);
+              }
+
+            })
+            code3=[];
+            this.setState({code3:'选择隐患描述'})
+
+
+        }
+          break;
+          case "choose_code2":
+          {
+              code3=[];
+              this.setState({code2:data[0]})
+              this.setState({code3:'选择隐患描述'})
+              this.state.code2data.forEach((item) => {
+
+                if (item['codeDesc']  == data[0]) {
+                      this.updateCode3(item['id']);
+                }
+
+              })
+          }
+            break;
+            case "choose_code3":
+            {
+                this.setState({code3:data[0]})
+            }
+              break;
         case "choose_team":
         {
         this.figureTeam(data);
@@ -764,6 +912,9 @@ return
 
       // this.setState({machineType: data[0]})
   }
+
+
+
 
   figureDes(data){
 
