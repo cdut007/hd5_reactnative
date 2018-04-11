@@ -122,6 +122,7 @@ export default class WorkStepWitnessBatchView extends Component {
 
     updateAddress(){
         var witnessAddresses = []
+
         if (this.state.witnessaddressdata) {
             witnessAddresses = this.state.witnessaddressdata.slice()
         }
@@ -132,10 +133,12 @@ export default class WorkStepWitnessBatchView extends Component {
 
 
             var hasAddress = false
-            for (var i = 0; i < witnessAddresses.length; i++) {
-                if (witnessAddresses[i] == address) {
-                     hasAddress =true
-                     break
+
+            for (var j = 0; j < witnessAddresses.length; j++) {
+                if (witnessAddresses[j] == address) {
+                     hasAddress = true;
+                    Global.log('k_witness_address_record_:'+JSON.stringify(witnessAddresses));
+                     break;
                 }
             }
             if (!hasAddress) {
@@ -153,12 +156,13 @@ export default class WorkStepWitnessBatchView extends Component {
             Global.log('save k_witness_address_record_: sucess')
 
         });
+
     }
 
     onDeliverySuccess(response){
 
 
-        this.updateAddress()
+        this.updateAddress();
 
         this.setState({
             loadingVisible: false
@@ -204,7 +208,8 @@ export default class WorkStepWitnessBatchView extends Component {
         var paramBody = {
                  jsonBody:bodyArray
             }
-
+        Global.log("workstep_opParamBody======"+JSON.stringify(paramBody));
+        // Global.showToast('onDeliverySuccess1');
         HttpRequest.post('/workstep_op/witness', paramBody, this.onDeliverySuccess.bind(this),
             (e) => {
                 this.setState({
@@ -212,10 +217,11 @@ export default class WorkStepWitnessBatchView extends Component {
                 });
                 try {
                     var errorInfo = JSON.parse(e);
+                    Global.log("workstep_opErrorInfo======"+e)
                 }
                 catch(err)
                 {
-                    Global.log("error======"+err)
+                    Global.log("workstep_opError2======"+err)
                 }
                     if (errorInfo != null) {
                         if (errorInfo.code == -1002||
