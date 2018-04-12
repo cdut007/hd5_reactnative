@@ -211,7 +211,7 @@ export default class QCWitnessDetailView extends Component {
 
    }
      onGetDataSuccess(response){
-         Global.log('onGetDataSuccess@@@@')
+         Global.log('onGetDataSuccess@@@@'+JSON.stringify(response));
          this.state.data.rollingPlan = response.responseResult
          Global.log('subWitness = ' , this.state.data.subWitness);
 
@@ -314,7 +314,7 @@ export default class QCWitnessDetailView extends Component {
         this.setState({
             loadingVisible: false
         })
-        Global.showToast(response.message)
+        Global.showToast(response.message+'shiji')
 
                 //update
         DeviceEventEmitter.emit('workstep_update','workstep_update');
@@ -452,6 +452,14 @@ export default class QCWitnessDetailView extends Component {
         })
 
         if (result == '1') {
+            if (this.state.input_dosage == null){
+                if (this.state.data.rollingPlan.dosage == null){
+
+                }else {
+                    this.state.input_dosage  = this.state.data.rollingPlan.dosage ;
+                }
+
+            }
             var param = new FormData()
             param.append('id', this.props.data.id)
             param.append('witnessaddress', this.state.choose_address)
@@ -488,6 +496,14 @@ export default class QCWitnessDetailView extends Component {
                     })
                 })
         }else{
+            if (this.state.input_dosage == null){
+                if (this.state.data.rollingPlan.dosage == null){
+
+                }else {
+                    this.state.input_dosage  = this.state.data.rollingPlan.dosage ;
+                }
+
+            }
             var paramBody = {
                      id:this.props.data.id,
                      witnessaddress:this.state.choose_address,
@@ -640,6 +656,12 @@ export default class QCWitnessDetailView extends Component {
 
         }
         Global.log(text+"content===="+keyValue);
+        if (keyValue == 'input_dosage'){
+            this.state.data.rollingPlan.dosage = text;
+        }else {
+
+        }
+
         this.state[keyValue] = text;
         this.setState({...this.state});
     }
@@ -1047,8 +1069,10 @@ export default class QCWitnessDetailView extends Component {
 
        createMaterialListItems(displayAry){
            var materialList = this.state.data.rollingPlan.materialList
+
            for (var i = 0; i < materialList.length; i++) {
                var item = materialList[i]
+               displayAry.push({title:'计划工程量',content:this.state.data.rollingPlan.projectCost,id:'b6-'+i},);
                displayAry.push({title:'物项名称',content:item.materialName,id:'b2-'+i},);
                displayAry.push({title:'物项编号',content:item.materialIdentifier,id:'b3-'+i},);
 
