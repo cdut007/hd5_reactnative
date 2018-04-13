@@ -1072,7 +1072,7 @@ export default class QCWitnessDetailView extends Component {
 
            for (var i = 0; i < materialList.length; i++) {
                var item = materialList[i]
-               displayAry.push({title:'计划工程量',content:this.state.data.rollingPlan.projectCost,id:'b6-'+i},);
+               displayAry.push({title:'工程量2',content:this.state.data.rollingPlan.projectCost2,id:'b6-'+i},);
                displayAry.push({title:'物项名称',content:item.materialName,id:'b2-'+i},);
                displayAry.push({title:'物项编号',content:item.materialIdentifier,id:'b3-'+i},);
 

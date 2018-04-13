@@ -118,6 +118,8 @@ module.exports = {
     },
     PlanDataCategoryDisplay(displayAry,data,type){
         //common
+
+        displayAry.push({title:'工程量2',content:data.projectCost2,id:'x11'})
         displayAry.push({title:'作业条目编号',content:data.workListNo,id:'x0'})
         displayAry.push({title:'点数',content:data.points,id:'x1'})
         displayAry.push({title:'机组号',content:data.unitNo,id:'x2'})
