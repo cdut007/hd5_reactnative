@@ -314,7 +314,7 @@ export default class QCWitnessDetailView extends Component {
         this.setState({
             loadingVisible: false
         })
-        Global.showToast(response.message+'shiji')
+        //Global.showToast(response.message+'shiji')
 
                 //update
         DeviceEventEmitter.emit('workstep_update','workstep_update');
