@@ -1072,7 +1072,7 @@ export default class QCWitnessDetailView extends Component {
 
            for (var i = 0; i < materialList.length; i++) {
                var item = materialList[i]
-               displayAry.push({title:'工程量2',content:this.state.data.rollingPlan.projectCost2,id:'b6-'+i},);
+
                displayAry.push({title:'物项名称',content:item.materialName,id:'b2-'+i},);
                displayAry.push({title:'物项编号',content:item.materialIdentifier,id:'b3-'+i},);
 
@@ -1154,6 +1154,7 @@ export default class QCWitnessDetailView extends Component {
 
                 if (!Global.isQC2SubMember(Global.UserInfo)&&!Global.isQC2Member(Global.UserInfo)) {
                      displayAry.push({title:'实际完成工程量',id:'input_dosage',content:this.state.data.rollingPlan.dosage, type:'input',keyboard:'numeric'});
+                    displayAry.push({title:'工程量2',content:this.state.data.rollingPlan.projectCost2,id:'b6-'+i},);
                     if (this.state.data.rollingPlan.materialList) {
                         this.createMaterialListItems(displayAry)
                     }
