@@ -560,6 +560,13 @@ startProblem(){
             }else if (this.isLeaderUnsolved()) {
                 return(
                   <View style={{height:50,width:width,flexDirection:'row'}}>
+                  <View style={{height:50,flex:1}}>
+                    <CommitButton
+                      title={'不能解决'}
+                      onPress={() => this.props.navigator.push({component:IssueReject, props:{title:'不能解决',placeholder:'请输入不能解决原因',buttonTitle:'提交至上级',callback:(message) => this.canNotDo(message)}})}
+                      containerStyle={{backgroundColor:'#ffffff'}}
+                      titleStyle={{color: '#f77935'}} />
+                  </View>
                     <View style={{height:50,flex:1}}>
                       <CommitButton
                         title={'改派'}

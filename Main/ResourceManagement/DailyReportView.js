@@ -58,6 +58,7 @@ export default class DailyReportView extends Component{
 					leftIcon = {require('../../images/back.png')}
 					leftPress = {() => this.back()} />
 				<ScrollableTabView
+				   locked={true}
 				    tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
                     tabBarBackgroundColor='#FFFFFF'
                     tabBarActiveTextColor='#f77935'
@@ -146,8 +147,8 @@ class InStoreView extends Component{
 				<View style={{width:width, height:48, flexDirection:'row', backgroundColor:'#fff', alignItems:'center'}}>
 					<Text style={{flex:1, textAlign:'center', color: color}}>{item.name}</Text>
 					<Text style={{flex:1, textAlign:'center', color: color}}>{item.specificationNo}</Text>
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.material}</Text>	
-					<Text style={{flex:1, textAlign:'center', color: color}}>{item.number}</Text>			
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.material}</Text>
+					<Text style={{flex:1, textAlign:'center', color: color}}>{item.number}</Text>
 				</View>
 			</TouchableOpacity>
 		);
@@ -194,8 +195,8 @@ class OutStoreView extends Component{
 
 	render(){
 		return(
-			<FlatList 
-				tabLabel={this.state.outStore} 
+			<FlatList
+				tabLabel={this.state.outStore}
 				style={{marginTop:10}}
 				keyExtractor={(item,index) => index}
 				contentContainerStyle={{backgroundColor:'#fff'}}
