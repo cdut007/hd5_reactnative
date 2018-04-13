@@ -99,8 +99,8 @@ android {
         applicationId "com.hd_app"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 90
-        versionName "1.1.89"
+        versionCode 93
+        versionName "1.1.93"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
