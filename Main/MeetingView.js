@@ -388,7 +388,7 @@ export default class MeetingView extends Component {
                         <Image style={{width:24,height:24,}} source={require('../images/affair_icon.png')} />
 
                         <Text style={[styles.content,{fontSize:16,color:'#444444',}]}>
-                         事物通告
+                         事务通告
                         </Text>
 
                         <TouchableOpacity onPress={this.createMeeting.bind(this,'notice')} style={{flex:1,flexDirection:'row',justifyContent:'flex-end', alignItems: 'center',}}>

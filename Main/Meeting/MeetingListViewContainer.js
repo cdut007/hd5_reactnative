@@ -69,7 +69,7 @@ export default class MeetingListViewContainer extends Component {
          }
         this.state = {
             keyword: '',
-            title: this.props.tag=='meeting'?"会议通知":"事物通告",
+            title: this.props.tag=='meeting'?"会议通知":"事务通告",
         }
 
 
