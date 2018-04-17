@@ -15,6 +15,7 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Dimensions from 'Dimensions';
 import Spinner from 'react-native-loading-spinner-overlay';
+import MemberSelectView from '../common/MemberSelectView'
 import NavBar from '../common/NavBar'
 import TabView from '../Main/TabView'
 import DeviceInfo from 'react-native-device-info'
@@ -56,6 +57,7 @@ var options = {
     }
 };
 
+var ReportPbTypes =  {"福清项目部":"1","滚动计划":"2"}
 
 export default class LoginView extends Component {
     constructor(props) {
@@ -68,10 +70,14 @@ export default class LoginView extends Component {
         passWord: '',
         loadingVisible: false,
         isTimeout:false,
+        ProductData:'',
+        currentProduct:'',
+        currentProductTitle:'当前项目部',
+
     }
 
     componentDidMount() {
-        var me = this
+        var me = this;
         AsyncStorage.getItem('k_last_login_id',function(errs,result)
         {
             if (!errs && result && result.length)
@@ -83,17 +89,75 @@ export default class LoginView extends Component {
 
             }
         });
-    }
 
+
+    }
+    onGetProductData(){
+        // this.setState({
+        //     ProductData: ReportPbTypes
+        // });
+        var paramBody = {
+            username:this.state.LoginId,
+        }
+
+        HttpRequest.post('/mineProject', paramBody, this.onGetProductDataSuccess.bind(this),
+            (e) => {
+                Global.log('onGetProductDataSuccess:2' + JSON.stringify(e))
+                this.setState({
+                    ProductData: {},
+                    currentProductTitle:'该用户不存在',
+                    currentProduct:''
+                });
+                try {
+                    var errorInfo = JSON.parse(e);
+                    if (errorInfo != null) {
+                        Global.log(errorInfo)
+                    } else {
+                        Global.log(e)
+                    }
+                }
+                catch(err)
+                {
+                    Global.log(err)
+                }
+
+                Global.log('mineProject error:' + e)
+            })
+    }
     genId(){
-    return  DeviceInfo.getUniqueID().toUpperCase();
+
+        return  DeviceInfo.getUniqueID().toUpperCase();
   }
 
 
+    onGetProductDataSuccess(response){
+
+        var  responseData = response.responseResult;
+        var  projectName =  responseData.projectName;
+        var  appWwUrl = responseData.appWwUrl;
+        var  productDic = {
+
+        }
+        if (!projectName.length){
+
+        }else {
+            productDic[projectName] = appWwUrl
+
+            Global.log('onGetProductDataSuccess:1' + JSON.stringify(productDic))
+            this.setState({
+                ProductData: productDic,
+                currentProductTitle:projectName,
+                currentProduct:projectName
+            });
+        }
+
+
+
+    }
     onLoginPress() {
 
         Global.log('LoginId:' + this.state.LoginId + '  password:' + this.state.passWord)
-
+        // Global.alert('data:'+this.state.ProductData[this.state.currentProduct]);
 
     if (this.state.LoginId && this.state.LoginId.startWith('http:')) {
                         HttpRequest.setDomain(this.state.LoginId,'本地环境')
@@ -131,35 +195,42 @@ export default class LoginView extends Component {
             Global.alert('请输入用户名或密码')
         }
         else {
-
-
-            HttpRequest.post('/authenticate', paramBody, this.onLoginSuccess.bind(this),
-                (e) => {
-                    this.setState({
-                        loadingVisible: false
-                    });
-                    try {
-                        var errorInfo = JSON.parse(e);
-                    }
-                    catch(err)
-                    {
-                        Global.log("error======"+err)
-                    }
+                // Global.alert('setDomainProductData:'+JSON.stringify(this.state.ProductData[this.state.currentProduct]))
+            if (!this.state.currentProduct.length){
+                Global.alert('当前用户不存在')
+            }else {
+                HttpRequest.setDomain(this.state.ProductData[this.state.currentProduct],this.state.currentProduct);
+                HttpRequest.post('/authenticate', paramBody, this.onLoginSuccess.bind(this),
+                    (e) => {
+                        this.setState({
+                            loadingVisible: false
+                        });
+                        try {
+                            var errorInfo = JSON.parse(e);
+                        }
+                        catch(err)
+                        {
+                            Global.log("error======"+err)
+                        }
                         if (errorInfo != null) {
                             if (errorInfo.code == -1002||
-							 errorInfo.code == -1001) {
-							Global.alert("账号或密码错误");
-						}else {
-                            Global.alert(e)
-						}
+                                errorInfo.code == -1001) {
+                                Global.alert("账号或密码错误");
+                            }else {
+                                Global.alert(e)
+                            }
 
                         } else {
                             Global.alert(e)
                         }
 
 
-                    Global.log('Login error:' + e)
-                })
+                        Global.log('Login error:' + e)
+                    })
+            }
+
+
+
         }
 
         setTimeout(() => {//logout timeout  15s
@@ -265,7 +336,56 @@ export default class LoginView extends Component {
         })
     }
 
+    _SelectProductView(name,title,datas,pickerTitle,refence){
 
+        return(
+            <View style={styles.topContainer}>
+                <Text style={styles.title}> {name} </Text>
+                {this.renderSelectProductView(title,datas,pickerTitle,refence)}
+            </View>
+        )
+
+    }
+    renderSelectProductView(title,datas,pickerTitle,refence){
+        return(
+            <View style={styles.statisticsflexContainer}>
+                <TouchableOpacity onPress={() => refence.onPickClick()} style={styles.touchStyle}>
+                    <MemberSelectView
+                        ref={(c) => refence = c}
+                        style={styles.textStyle}
+                        title={title}
+                        data={datas}
+                        pickerTitle={pickerTitle}
+                        onSelected={(data) => this.onSelectedProduct(data)}/>
+                </TouchableOpacity>
+            </View>
+        )
+
+    }
+    onSelectedProduct(data){
+
+
+                this.setState({
+                    currentProduct:data,
+                    currentProductTitle:data
+                })
+
+
+
+        // this.setState({machineType: data[0]})
+    }
+    _onPassWordChange(text){
+        // if (!text.length ){
+        //
+        // }else {
+        // }
+
+        this.setState({ passWord: text })
+    }
+    _onEndEditingLoginId(event){
+        // Global.alert('_onEndEditingLoginId:'+event.nativeEvent.text)
+        this.onGetProductData()
+    }
     render() {
         return (
 
@@ -295,6 +415,7 @@ export default class LoginView extends Component {
                         editable={true}
                         placeholderTextColor='#a4b4c4'
                         placeholder={'请输入用户名'}
+                        onEndEditing={(event) => this._onEndEditingLoginId(event)}
                         onChangeText={(text) => this.setState({ LoginId: text })}>
                     </TextInput>
                     </View>
@@ -316,11 +437,14 @@ export default class LoginView extends Component {
                         editable={true}
                         secureTextEntry={true}
                         placeholder={'请输入密码'}
-                        onChangeText={(text) => this.setState({ passWord: text })}>
+
+                        onChangeText={(text) => this._onPassWordChange(text)}>
                     </TextInput>
 
                     </View>
-
+                    <View style={styles.LoginId}>
+                    {this._SelectProductView('所在项目部：',this.state.currentProductTitle,Object.keys(this.state.ProductData),'请选择当前项目部',this.selectProduct)}
+                    </View>
                     <TouchableOpacity onPress={this.onLoginPress.bind(this)}
                         style={styles.loginButton}>
                         <Text style={styles.loginText} >
@@ -349,6 +473,37 @@ const styles = StyleSheet.create(
             width: 156,
             marginBottom:20,
             resizeMode: Image.resizeMode.contain,
+        },
+        topContainer:{
+            justifyContent:'flex-start',
+            alignItems: 'center',
+            flexDirection: 'row',
+            paddingRight:10,
+            backgroundColor:'#ffffff',
+
+        },
+        touchStyle: {
+        alignItems:'center',
+        flex:1,
+        flexDirection:'row',
+        paddingLeft:10,
+        paddingRight:10,
+        paddingTop:8,
+        paddingBottom:8,
+    },
+        title: {
+            width: width * 0.3,
+            fontSize: 16,
+            paddingLeft:10,
+            color: "#0755a6"
+        },
+        textStyle: {
+            color: '#0755a6',
+            fontSize: 15,
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            alignSelf: 'center',
         },
         container:
         {
@@ -411,6 +566,13 @@ const styles = StyleSheet.create(
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
+        },
+        statisticsflexContainer: {
+            width: width*0.5,
+            height: Platform.OS === 'android' ? 44 : 36,
+            backgroundColor: '#f2f2f2',
+            // backgroundColor: '#0755a6',
+            flexDirection: 'row',
         },
         welcome: {
     fontSize: 20,

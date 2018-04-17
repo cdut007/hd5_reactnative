@@ -1,7 +1,11 @@
 import { AsyncStorage } from 'react-native';
 import Xlog from 'react-native-xlog';
 
-var apiDomainAddr = 'http://116.236.114.61:9201' //
+ var apiDomainAddr = 'http://116.236.114.61:9201' // old
+
+// var apiDomainAddr = 'http://125.77.122.66:9201' // new
+
+// var apiDomainAddr = 'http://39.108.165.171:8080' //
 var apiAddr =  apiDomainAddr + '/hdxt/api'
 var httpToken = ''
 var Global = require('../common/globals');
@@ -153,6 +157,8 @@ post(apiName, body,successCallback, failCallback)
     {
         logind = Global.UserInfo.id;
 
+    }else {
+        // logind = 620;
     }
 
 
