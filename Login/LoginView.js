@@ -70,7 +70,7 @@ export default class LoginView extends Component {
         passWord: '',
         loadingVisible: false,
         isTimeout:false,
-        ProductData:'',
+        ProductData:{},
         currentProduct:'',
         currentProductTitle:'当前项目部',
 
@@ -409,9 +409,9 @@ export default class LoginView extends Component {
                        textAlign: 'left',}}
                        autoFocus={true}
                        showsVerticalScrollIndicator={false}
-                        underlineColorAndroid={'transparent'}
                         value={this.state.LoginId}
-                        underlineColorAndroid='transparent'
+
+                       underlineColorAndroid='transparent'
                         editable={true}
                         placeholderTextColor='#a4b4c4'
                         placeholder={'请输入用户名'}
@@ -430,9 +430,9 @@ export default class LoginView extends Component {
                         style={{alignSelf: 'stretch',
                         fontSize: 18,flex:1,
                         textAlign: 'left',}}
-                         underlineColorAndroid={'transparent'}
                         placeholderTextColor='#a4b4c4'
-                         underlineColorAndroid='transparent'
+                        underlineColorAndroid='transparent'
+
                         value={this.state.passWord}
                         editable={true}
                         secureTextEntry={true}
@@ -479,6 +479,7 @@ const styles = StyleSheet.create(
             alignItems: 'center',
             flexDirection: 'row',
             paddingRight:10,
+            borderRadius: 26,
             backgroundColor:'#ffffff',
 
         },
@@ -493,8 +494,9 @@ const styles = StyleSheet.create(
     },
         title: {
             width: width * 0.3,
-            fontSize: 16,
+            fontSize: 14,
             paddingLeft:10,
+
             color: "#0755a6"
         },
         textStyle: {
