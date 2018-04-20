@@ -151,22 +151,34 @@ export default class ProblemView extends Component {
 
          <View style={styles.cell}>
           <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-             问题编号
+             发起人
            </Text>
          </View>
 
          <View style={styles.cell}>
          <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-           机组
+           问题分类
          </Text>
          </View>
 
 
          <View style={styles.cell}>
          <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
-           状态
+           机组/子项
          </Text>
          </View>
+
+         <View style={styles.cell}>
+          <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+                    区域
+            </Text>
+          </View>
+
+          <View style={styles.cell}>
+          <Text style={{color:'#1c1c1c',fontSize:12,marginBottom:2,}}>
+                     状态
+          </Text>
+           </View>
 
          </View>
 

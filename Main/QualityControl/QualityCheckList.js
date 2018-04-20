@@ -156,7 +156,7 @@ export default class QualityCheckList extends Component {
   }
 
     onGetDataSuccess(response,paramBody){
-         console.log('onGetDataSuccess@@@@')
+         console.log('onGetDataSuccess@@@@223'+JSON.stringify(response));
     //  var query = this.state.filter;
     //  if (!query) {
     //      query = '';
@@ -339,7 +339,7 @@ this.state.insearch = true;
                         <View style={styles.cell}>
 
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.id}
+                              {rowData.createUser}
                         </Text>
 
                         </View>
@@ -347,10 +347,24 @@ this.state.insearch = true;
                         <View style={styles.cell}>
 
                         <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
-                           {rowData.unit}
+                           {rowData.type}
                         </Text>
 
                         </View>
+
+                         <View style={styles.cell}>
+                            <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                               {rowData.unit+'/'+rowData.subitem}
+                            </Text>
+
+                         </View>
+
+                          <View style={styles.cell}>
+                                 <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                                  {rowData.area}
+                                 </Text>
+
+                          </View>
 
                         <View style={styles.cell}>
 

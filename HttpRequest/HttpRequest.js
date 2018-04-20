@@ -1,9 +1,9 @@
 import { AsyncStorage } from 'react-native';
 import Xlog from 'react-native-xlog';
 
- var apiDomainAddr = 'http://116.236.114.61:9201' // old
+ var apiDomainAddr = 'http://116.236.114.61:9201' // old  k项
 
-// var apiDomainAddr = 'http://125.77.122.66:9201' // new
+// var apiDomainAddr = 'http://125.77.122.66:9201' // 福清
 
 // var apiDomainAddr = 'http://39.108.165.171:8080' //
 var apiAddr =  apiDomainAddr + '/hdxt/api'
