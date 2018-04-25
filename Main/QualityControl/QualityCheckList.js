@@ -339,7 +339,7 @@ this.state.insearch = true;
                         <View style={styles.cell}>
 
                         <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
-                              {rowData.createUser}
+                              {rowData.createUserName}
                         </Text>
 
                         </View>

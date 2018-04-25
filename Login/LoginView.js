@@ -18,6 +18,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import MemberSelectView from '../common/MemberSelectView'
 import NavBar from '../common/NavBar'
 import TabView from '../Main/TabView'
+import CheckBox from 'react-native-checkbox'
 import DeviceInfo from 'react-native-device-info'
 import ImagePicker from 'react-native-image-picker'
 var Global = require('../common/globals');
@@ -57,7 +58,9 @@ var options = {
     }
 };
 
-var ReportPbTypes =  {"福清项目部":"1","滚动计划":"2"}
+var ReportPbTypes =  {'K2/K3核电项目部':"1",'福清核电项目部':"2"}
+var innerIpArr = {'K2/K3核电项目部':"http://10.1.1.104:9201",'福清核电项目部':"http://10.2.1.54:9201"}
+var outerIpArr = {'K2/K3核电项目部':"http://116.236.114.61:9201",'福清核电项目部':"http://125.77.122.66:9201"}
 
 export default class LoginView extends Component {
     constructor(props) {
@@ -73,10 +76,127 @@ export default class LoginView extends Component {
         ProductData:{},
         currentProduct:'',
         currentProductTitle:'当前项目部',
+        isInnerIP:false,
+        isOuterNet:true,
+        curPageUrl:''
 
     }
 
+    getIpNum(ipAddress) {
+
+        /*获取IP数*/
+        var ip = ipAddress.split(".");
+        var a = parseInt(ip[0]);
+        var b = parseInt(ip[1]);
+        var c = parseInt(ip[2]);
+        var d = parseInt(ip[3]);
+        var ipNum = a * 256 * 256 * 256 + b * 256 * 256 + c * 256 + d;
+        return ipNum;
+    }
+
+    isInner(userIp,begin,end){
+        return (userIp>=begin) && (userIp<=end);
+    }
+    /*判断是否是内网IP*/
+     isInnerIPFn(){
+       // 获取当前页面url
+        var curPageUrl = '';
+         DeviceInfo.getIPAddress().then(ip => {
+             // "92.168.32.44"
+             console.log('getIPAddress-0  '+  ip);
+             this.state.curPageUrl = ip.toString();
+
+             console.log('getIPAddress-1  '+ this.state.curPageUrl);
+             this.state.curPageUrl = this.state.curPageUrl.split('.');//通过一点来划分数组
+             console.log('getIPAddress-2  '+  JSON.stringify(this.state.curPageUrl));
+             console.log(this.state.curPageUrl);
+
+
+             var ipAddress = this.state.curPageUrl[0]+'.'+this.state.curPageUrl[1]+'.'+this.state.curPageUrl[2]+'.'+this.state.curPageUrl[3];
+
+             this.state.isInnerIP = false;//默认给定IP不是内网IP
+             var ipNum = this.getIpNum(ipAddress);
+             /**
+              * 私有IP：A类  10.0.0.0    -10.255.255.255
+              *       B类  172.16.0.0  -172.31.255.255
+              *       C类  192.168.0.0 -192.168.255.255
+              *       D类   127.0.0.0   -127.255.255.255(环回地址)
+              **/
+             var aBegin = this.getIpNum("10.0.0.0");
+             var aEnd = this.getIpNum("10.255.255.255");
+             var bBegin = this.getIpNum("172.16.0.0");
+             var bEnd = this.getIpNum("172.31.255.255");
+             var cBegin = this.getIpNum("192.168.0.0");
+             var cEnd = this.getIpNum("192.168.255.255");
+             var dBegin = this.getIpNum("127.0.0.0");
+             var dEnd = this.getIpNum("127.255.255.255");
+             console.log('ipAddress:'+ipAddress);
+             console.log('ipNum:'+ipNum);
+             this.state.isInnerIP = this.isInner(ipNum,aBegin,aEnd) || this.isInner(ipNum,bBegin,bEnd) || this.isInner(ipNum,cBegin,cEnd) || this.isInner(ipNum,dBegin,dEnd);
+             this.state.isOuterNet = !this.state.isInnerIP;
+             console.log('是否是内网:'+this.state.isInnerIP);
+             console.log('是否是外网:'+this.state.isOuterNet);
+             this.getProductArr();
+
+
+
+             
+         });
+        // console.log('curPageUrl-0  '+  JSON.stringify(curPageUrl));
+
+        // var reg1 = /(http|ftp|https|www):\/\//g;//去掉前缀
+        // curPageUrl =curPageUrl.replace(reg1,'');
+        // // console.log('curPageUrl-1  '+curPageUrl);
+        //
+        // var reg2 = /\:+/g;//替换冒号为一点
+        // curPageUrl =curPageUrl.replace(reg2,'.');
+        // console.log('curPageUrl-2  '+curPageUrl);
+
+        // return this.state.isInnerIP;
+    }
+    getProductArr(){
+         this.state.ProductData = ReportPbTypes;
+
+        var me = this;
+        AsyncStorage.getItem('k_last_selectProduct',function(errs,result)
+        {
+            if (!errs && result && result.length)
+            {
+                console.log('获取k_last_selectProduct:'+result);
+                me.setState({
+                    currentProduct: result,
+                    currentProductTitle:result
+                })
+                if (me.state.isInnerIP){
+                    me.setInnerIp();
+
+                }else {
+                    me.setOuterIp();
+                }
+            }
+            else
+            {
+                console.log('获取k_last_selectProduct:'+'当前项目部');
+                me.setState({
+                    currentProduct: '',
+                    currentProductTitle:'当前项目部'
+                })
+                if (me.state.isInnerIP){
+                    me.setInnerIp();
+
+                }else {
+                    me.setOuterIp();
+                }
+            }
+        });
+    }
+    componentWillMount(){
+           this.isInnerIPFn();  //判断是否为内网
+
+    }
     componentDidMount() {
+
+
         var me = this;
         AsyncStorage.getItem('k_last_login_id',function(errs,result)
         {
@@ -92,10 +212,35 @@ export default class LoginView extends Component {
 
 
     }
+    setInnerIp(){
+        console.log('setInnerIp:'+this.state.isInnerIP);
+        if (!this.state.currentProduct.length){
+            console.log('setInnerIp1:'+this.state.isInnerIP);
+        }else {
+            console.log('setInnerIp2:'+this.state.isInnerIP);
+            HttpRequest.setDomain(innerIpArr[this.state.currentProduct],'内网环境')
+            // HttpRequest.setDomain('http://10.0.3.104:9201','内网环境')
+            console.log('当前是内网:'+this.state.isInnerIP);
+        }
+
+    }
+    setOuterIp(){
+        console.log('setOuterIp:'+this.state.isOuterNet);
+        if (!this.state.currentProduct.length){
+
+        }else {
+            HttpRequest.setDomain(outerIpArr[this.state.currentProduct],'外网环境')
+            // HttpRequest.setDomain('http://39.108.165.171:8080','外网环境')
+
+            console.log('当前是外网:'+this.state.isOuterNet);
+        }
+
+    }
     onGetProductData(){
         // this.setState({
         //     ProductData: ReportPbTypes
         // });
+
         var paramBody = {
             username:this.state.LoginId,
         }
@@ -178,9 +323,9 @@ export default class LoginView extends Component {
                 }
 
 
-        this.setState({
-            loadingVisible: true
-        });
+        // this.setState({
+        //     loadingVisible: true
+        // });
 
        var id = this.genId()
         var paramBody = {
@@ -194,12 +339,29 @@ export default class LoginView extends Component {
             });
             Global.alert('请输入用户名或密码')
         }
+        else if(!this.state.currentProduct.length){
+            this.setState({
+                loadingVisible: false
+            });
+            Global.alert('请选择所在项目部');
+        }
         else {
                 // Global.alert('setDomainProductData:'+JSON.stringify(this.state.ProductData[this.state.currentProduct]))
-            if (!this.state.currentProduct.length){
-                Global.alert('当前用户不存在')
-            }else {
-                HttpRequest.setDomain(this.state.ProductData[this.state.currentProduct],this.state.currentProduct);
+
+                 var  httpStr = HttpRequest.getDomain();
+                 // Global.alert('httpStr:'+httpStr)
+
+                // HttpRequest.setDomain(httpStr,this.state.currentProduct);
+
+                AsyncStorage.setItem('k_last_selectProduct',this.state.currentProduct, (error, result) => {
+                    if (error) {
+                        console.log('save k_last_selectProduct faild.')
+                    }
+                    console.log('k_last_selectProduct: ' + result)
+
+                });
+
+
                 HttpRequest.post('/authenticate', paramBody, this.onLoginSuccess.bind(this),
                     (e) => {
                         this.setState({
@@ -227,7 +389,7 @@ export default class LoginView extends Component {
 
                         Global.log('Login error:' + e)
                     })
-            }
+
 
 
 
@@ -363,16 +525,84 @@ export default class LoginView extends Component {
 
     }
     onSelectedProduct(data){
+        var  selectedProductStr = data[0];
+        if (this.state.isInnerIP){
+            // Global.alert(innerIpArr[data]);
+            HttpRequest.setDomain(innerIpArr[selectedProductStr],selectedProductStr);
 
-
+        }else {
+            // Global.alert(outerIpArr[data]);
+            HttpRequest.setDomain(outerIpArr[selectedProductStr],selectedProductStr);
+        }
                 this.setState({
-                    currentProduct:data,
-                    currentProductTitle:data
+                    currentProduct:selectedProductStr,
+                    currentProductTitle:selectedProductStr
                 })
+        console.log('k_last_selectProduct:1 ' + selectedProductStr);
 
 
 
         // this.setState({machineType: data[0]})
+    }
+
+    renderCheckBox() {
+        return (<View style={{flexDirection:'row',marginLeft: 30,marginRight: 30,marginTop:5,justifyContent: 'space-between'}}>
+                <CheckBox
+                    containerStyle={{}}
+                    label='外网环境'
+                    checkedImage={require('../images/choose_icon_click.png')}
+                    uncheckedImage={require('../images/choose_icon.png')}
+                    checked={this.state.isOuterNet == null ?  false:this.state.isOuterNet }
+                    onChange={(checked) => {
+                        Global.log(checked+'this.state.isOuterNet=='+this.state.isOuterNet)
+                        var selected1 = !checked
+                        if (selected1){
+                            this.setOuterIp();
+                        }else {
+                            this.setInnerIp();
+                        }
+                                this.setState({
+                                    isOuterNet:selected1,
+                                    isInnerIP:checked
+
+                                })
+
+
+
+
+                    }
+                    }
+                />
+            <CheckBox
+                containerStyle={{}}
+                label='内网环境'
+                checkedImage={require('../images/choose_icon_click.png')}
+                uncheckedImage={require('../images/choose_icon.png')}
+                checked={this.state.isInnerIP == null ?  true:this.state.isInnerIP }
+                onChange={(checked) => {
+                    Global.log(checked+'this.state.isInnerIP2=='+this.state.isInnerIP)
+                    var selected2 = !checked
+
+                    if (selected2){
+
+                        this.setInnerIp();
+                    }else {
+                        this.setOuterIp();
+                    }
+                        this.setState({
+                            isOuterNet:checked,
+                            isInnerIP:selected2,
+
+                        })
+
+
+
+                }
+                }
+            />
+        </View>
+
+        )
     }
     _onPassWordChange(text){
         // if (!text.length ){
@@ -384,7 +614,7 @@ export default class LoginView extends Component {
     }
     _onEndEditingLoginId(event){
         // Global.alert('_onEndEditingLoginId:'+event.nativeEvent.text)
-        this.onGetProductData()
+        // this.onGetProductData()
     }
     render() {
         return (
@@ -444,6 +674,9 @@ export default class LoginView extends Component {
                     </View>
                     <View style={styles.LoginId}>
                     {this._SelectProductView('所在项目部：',this.state.currentProductTitle,Object.keys(this.state.ProductData),'请选择当前项目部',this.selectProduct)}
+                    </View>
+                    <View>
+                        {this.renderCheckBox()}
                     </View>
                     <TouchableOpacity onPress={this.onLoginPress.bind(this)}
                         style={styles.loginButton}>
