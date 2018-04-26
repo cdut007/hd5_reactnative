@@ -58,9 +58,9 @@ var options = {
     }
 };
 
-var ReportPbTypes =  {'K2/K3核电项目部':"1",'福清核电项目部':"2"}
-var innerIpArr = {'K2/K3核电项目部':"http://10.1.1.104:9201",'福清核电项目部':"http://10.2.1.54:9201"}
-var outerIpArr = {'K2/K3核电项目部':"http://116.236.114.61:9201",'福清核电项目部':"http://125.77.122.66:9201"}
+var ReportPbTypes =  {'K2/K3核电项目部':"1",'福清核电项目部':"2",'海阳核电项目部':"3"}
+var innerIpArr = {'K2/K3核电项目部':"http://10.1.1.104:9201",'福清核电项目部':"http://10.2.1.54:9201",'海阳核电项目部':"http://192.168.201.20:9201"}
+var outerIpArr = {'K2/K3核电项目部':"http://116.236.114.61:9201",'福清核电项目部':"http://125.77.122.66:9201",'海阳核电项目部':"http://58.57.7.130:9201"}
 
 export default class LoginView extends Component {
     constructor(props) {
