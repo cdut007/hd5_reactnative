@@ -119,15 +119,15 @@ export default class QuestionDetail extends Component {
 renderCommitBtn(){
 
   if ( Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreQCLeaderAssign') {
-        return   this.renderWaitCommit();
+        return   this.renderWaitCommit(); //待分派
   }else if ( Global.isQC1(Global.UserInfo) && this.state.data.status == 'PreQCAssign') {
-       return this.renderQcAssign();
+       return this.renderQcAssign(); // 待指派
   }else if ((Global.isMonitor(Global.UserInfo) || Global.isGroup(Global.UserInfo)) && this.state.data.status == 'PreRenovete') {
-    return this.Commit()
+    return this.Commit()  //整改中
 }else if (!Global.isQC1(Global.UserInfo)  && !Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreUpRenovete') {
-    return this.CommitDelivery()
+    return this.CommitDelivery() //待整改
   }else if (this.state.data.status == 'PreQCverify' && Global.isQC1(Global.UserInfo)) {
-      return this.QcCheckResult();
+      return this.QcCheckResult();  //待审核
   }
 
 }
