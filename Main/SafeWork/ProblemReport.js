@@ -574,7 +574,7 @@ return(
         loadingVisible: false
     })
 
-     Global.alert(response.message)
+     // Global.alert(response.message)
      this.props.navigator.pop()
 
   }

@@ -197,7 +197,7 @@ export default  class  MyReport extends Component {
          loadingVisible: false
      })
 
-      Global.alert(response.message)
+      // Global.alert(response.message)
       this.props.navigator.popToTop()
 
    }
