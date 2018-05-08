@@ -193,6 +193,18 @@ export default class HomeView extends Component {
     onBannerSuccess(response){
         this.state.banners = response.responseResult;
         Global.log('BannerSuccess:' + JSON.stringify(response.responseResult));
+        // this.state.banners.map((item, i) => {
+        //
+        //     var imageUrl = '/banner/'+(i+1)+'.jpg';
+        //     item.image =  HttpRequest.getDomain()+imageUrl;
+        //     Global.log('bannerImageUrl'+i+':'+item.image);
+        // });
+        // this.state.banners.map((item, i) => {
+        //
+        //     var imageUrl = item.image;
+        //     item.image =  HttpRequest.getDomain()+imageUrl;
+        // });
+
         this.setState({banners:this.state.banners});
     }
 
