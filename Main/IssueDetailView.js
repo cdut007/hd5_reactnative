@@ -530,6 +530,7 @@ startProblem(){
                       <CommitButton
                         title={'不接受反馈'}
                         onPress={() => this.props.navigator.push({component:IssueReject, props:{title:'退回理由',placeholder:'请输入退回理由',buttonTitle:'确认退回',callback:(message) => this.rejectSolution(message)}})}
+                          //{/*onPress={() => this.props.navigator.push({component:IssueReject, props:{title:'退回理由',placeholder:'请输入退回理由',buttonTitle:'确认退回',questionId:this.state.data.id}})}*/}
                         containerStyle={{backgroundColor:'#ffffff'}}
                         titleStyle={{color: '#f77935'}} />
                     </View>

@@ -125,8 +125,8 @@ return( <View  tabLabel={label} style={styles.container}>
  }
  >
 
-       {this._renderQuetionView(1001,"新问题","Need_Handle")}
-       {this._renderQuetionView(1002,"待审核","Need_Check")}
+       {this._renderQuetionView(1001,"问题审核","Need_Handle")}
+       {this._renderQuetionView(1002,"整改验证","Need_Check")}
 
  </ScrollableTabView>)
 
