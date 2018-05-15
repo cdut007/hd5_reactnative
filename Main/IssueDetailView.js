@@ -322,7 +322,7 @@ answerSolution(result){
     questionId: this.state.data.id,
     answer: result,
   }
-
+        // Global.alert('questionId:'+this.state.data.id);
   HttpRequest.post('/question/answer',parma,this.onAnswerSuccess.bind(this),
                     (e) => {
                        try {
@@ -529,8 +529,8 @@ startProblem(){
                     <View style={{height:50,flex:1}}>
                       <CommitButton
                         title={'不接受反馈'}
-                        onPress={() => this.props.navigator.push({component:IssueReject, props:{title:'退回理由',placeholder:'请输入退回理由',buttonTitle:'确认退回',callback:(message) => this.rejectSolution(message)}})}
-                          //{/*onPress={() => this.props.navigator.push({component:IssueReject, props:{title:'退回理由',placeholder:'请输入退回理由',buttonTitle:'确认退回',questionId:this.state.data.id}})}*/}
+                        //onPress={() => this.props.navigator.push({component:IssueReject, props:{title:'退回理由',placeholder:'请输入退回理由',buttonTitle:'确认退回',callback:(message) => this.rejectSolution(message)}})}
+                          onPress={() => this.props.navigator.push({component:IssueReject, props:{title:'退回理由',placeholder:'请输入退回理由',buttonTitle:'确认退回',questionId:this.state.data.id}})}
                         containerStyle={{backgroundColor:'#ffffff'}}
                         titleStyle={{color: '#f77935'}} />
                     </View>
@@ -613,6 +613,9 @@ startProblem(){
                 <Text style={{fontWeight: 'bold'}}>退回理由: </Text>
                  <Text>{this.state.data.reason}</Text>
               </Text>
+              <ScrollView horizontal={true} style={{marginTop: 10, marginBottom: 10,}}>
+                  {this.renderNetImages(this.state.data.teamAnswer[0].files, true)}
+              </ScrollView>
               <View style={styles.divider} />
           </View>
         );

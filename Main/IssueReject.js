@@ -51,7 +51,7 @@ export default class IssueReject extends Component{
 	}
 
 	render(){
-	    if (this.props.title =='退回'){
+	    if (this.props.title =='退回理由'){
             return(
                 <View style = {{flex: 1, flexDirection: 'column', backgroundColor:'#f2f2f2'}}>
                     <NavBar
@@ -207,47 +207,71 @@ export default class IssueReject extends Component{
 			alert(this.props.placeholder);
 			return;
 		}
-		if(this.props.title == '不能解决') {
-            this.props.callback(this.state.message);
+        // if (!this.state.fileArr[this.state.fileArr.length-1]['fileSource']){
+        //     alert("请添加照片附件");
+        //     return;
+        // }
+		if(this.props.title == '退回理由') {
+            this.setState({
+                loadingVisible: true
+            })
+            var param = new FormData()
 
-            this.props.navigator.pop();
+            param.append('answer','unsolved');
+            param.append('reason', this.state.message)
+            param.append('questionId', this.props.questionId)
+            this.state.fileArr.map((item, i) => {
+                if (item['fileSource']) {
+                    let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
+                    param.append("file",file);   //这里的files就是后台需要的key
+                }
+            });
+            //测试代码
+            // Global.alert(JSON.stringify(param));
+            //
+            // DeviceEventEmitter.emit('operate_issue','operate_issue');
+            // this.setState({
+            //     loadingVisible: false
+            // })
+            // let destinateRoute;
+            // const routers = this.props.navigator.getCurrentRoutes();
+            // for(let i = routers.length - 1; i >= 0; i--){
+            //     if(routers[i].name == 'ModuleTabView'){
+            //         destinateRoute = routers[i];
+            //     }
+            // }
+            // if(destinateRoute){
+            //     this.props.navigator.popToRoute(destinateRoute);
+            // }else{
+            //     this.back();
+            // }
+            //测试代码
+            HttpRequest.uploadImage('/question/answer', param, this.onCommitIssueSuccess.bind(this),
+                (e) => {
+                    try {
+                        Global.alert(e)
+                    }
+                    catch (err) {
+                        Global.log(err)
+                    }
+
+                    this.setState({
+                        loadingVisible: false
+                    })
+                })
+
         }else {
             this.props.callback(this.state.message);
 
             this.props.navigator.pop();
-            // this.setState({
-            //     loadingVisible: true
-            // })
-            // var param = new FormData()
-            //
-            // param.append('answer','unsolved');
-            // param.append('reason', this.state.message)
-            // param.append('questionId', this.props.questionId)
-            // this.state.fileArr.map((item, i) => {
-            //     if (item['fileSource']) {
-            //         let file = {uri: item['fileSource'], type: 'multipart/form-data', name: item['fileName']};   //这里的key(uri和type和name)不能改变,
-            //         param.append("file",file);   //这里的files就是后台需要的key
-            //     }
-            // });
-            // HttpRequest.uploadImage(REQUST_ISSUE_COMMIT_URL, param, this.onCommitIssueSuccess.bind(this),
-            //     (e) => {
-            //         try {
-            //             Global.alert(e)
-            //         }
-            //         catch (err) {
-            //             Global.log(err)
-            //         }
-            //
-            //         this.setState({
-            //             loadingVisible: false
-            //         })
-            //     })
+
+
         }
 
 
 	}
     onCommitIssueSuccess(response){
-        Global.log('onCommitIssueSuccess:' + JSON.stringify(response))
+         // Global.log('onCommitIssueSuccess88:' + JSON.stringify(response))
         DeviceEventEmitter.emit('operate_issue','operate_issue');
         this.setState({
             loadingVisible: false
