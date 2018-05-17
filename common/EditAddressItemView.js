@@ -15,8 +15,8 @@ import {
 import Dimensions from 'Dimensions'
 var width = Dimensions.get('window').width;
 import Picker from 'react-native-picker';
-import ULTextInput from './ULEditText.js'
-
+//import ULTextInput from './ULEditText.js'
+var ULTextInput = TextInput;
  export default class EditAddressItemView extends Component
  {
      static propTypes =

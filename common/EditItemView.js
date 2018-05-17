@@ -12,8 +12,8 @@ import {
 
 import Dimensions from 'Dimensions'
 var width = Dimensions.get('window').width;
-
-import ULTextInput from './ULEditText.js'
+var ULTextInput = TextInput;
+//import ULTextInput from './ULEditText.js'
 
  export default class EditItemView extends Component
  {
