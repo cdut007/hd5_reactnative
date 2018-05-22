@@ -26,6 +26,7 @@ export default class ResourceDetailView extends Component{
 				title: '',
 				isShow: false
 			},
+            QTY_RELEASED:'',
 			outStoreData: {
 				ISSNO: this.props.item.issNo,
 				QTY_RELEASED: '',
@@ -257,22 +258,34 @@ export default class ResourceDetailView extends Component{
 			let viewArr = [];
 			switch(this.props.type){
 				case 4:
-					displayArr.push({title1:'出库量:',content1:this.props.item.number,color1:'#e82628',title2:'核实量:',content2:this.props.item.warrantyLevel,input2:true,onTextChanged2:(text) => {this.state.outStoreData.QTY_RELEASED = text}})
+					displayArr.push({title1:'出库量:',content1:this.props.item.number,color1:'#e82628',title2:'核实量:',content2:this.props.item.warrantyLevel,input2:true,onTextChanged2:(text) => {
+                        let temp1 = text.replace(/[^0-9.]/g,'');
+
+                            this.state.outStoreData.QTY_RELEASED = temp1
+                           this.state.QTY_RELEASED = temp1
+                            this.setState({...this.state})
+
+						// this.state.outStoreData.QTY_RELEASED = text;
+
+					}})
 					displayArr.push({title1:'单价(￥):',content1:this.props.item.price,title2:'总金额(￥):',content2:this.props.item.ckJe})
 					displayArr.push({title1:'保管员:',content1:this.props.item.keeper,title2:'核实日期:',content2:this.props.item.whenCnfmed})
 					viewArr = this.returnViewArr(displayArr);
 					break;
 				case 5:
 					displayArr.push({title1:'退库量:',content1:this.props.item.number,color1:'#e82628',title2:'核实量:',content2:this.props.item.warrantyLevel,input2:true,onTextChanged2:(text) => {
-						let temp = text.replace(/[^0-9]/g,'');
+						let temp = text.replace(/[^0-9.]/g,'');
 						if(!temp){
 							this.state.backStoreData.QTY_RELEASED = temp
+                            this.state.QTY_RELEASED = temp
 							this.setState({...this.state})
 						}else if(temp!=text){
 							this.state.backStoreData.QTY_RELEASED = '-' + temp
+                            this.state.QTY_RELEASED = '-' + temp
 							this.setState({...this.state})
 						}else{
 							this.state.backStoreData.QTY_RELEASED = '-' + text
+                            this.state.QTY_RELEASED = '-' + text
 							this.setState({...this.state})
 						}
 					}})
@@ -292,6 +305,7 @@ export default class ResourceDetailView extends Component{
 	}
 
 	returnViewArr(displayArr){
+		Global.log('returnViewArr:'+JSON.stringify(displayArr));
 		let viewArr = [];
 		displayArr.map( 
 			(item,i) => {
@@ -347,7 +361,7 @@ export default class ResourceDetailView extends Component{
 										style={{color:'#888',fontSize:14,flex:11}}
 										onChangeText={(text) => item.onTextChanged2(text)}
 										placeholder={'请输入'}
-										value={this.state.backStoreData.QTY_RELEASED}
+										value={this.state.QTY_RELEASED}
 										placeholderTextColor={'#6d9ee1'}
 										underlineColorAndroid={'transparent'} />
 									:
