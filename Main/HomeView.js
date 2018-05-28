@@ -558,13 +558,13 @@ export default class HomeView extends Component {
         Global.log("this.state.banners="+banners)
         if (this.state.banners.length == 0) {
             return (
-                <Image source={require('../images/banner_img.png')} style={styles.topView} resizeMode={Image.resizeMode.contain} />
+                <Image source={require('../images/banner_img1.png')} style={styles.topView} resizeMode={Image.resizeMode.contain} />
 
             )
         }else{
             return (
                 <View style={styles.rootcontainer}>
-                <Image style={[{position:'absolute',left:0,top:0,resizeMode:'stretch', alignItems:'center',},styles.topView]} source={require('../images/banner_img.png')}/>
+                <Image style={[{position:'absolute',left:0,top:0,resizeMode:'stretch', alignItems:'center',},styles.topView]} source={require('../images/banner_img1.png')}/>
 
                 <Banner
                     style={styles.topView}
