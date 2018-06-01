@@ -308,6 +308,7 @@ export default class HomeView extends Component {
             // Global.alert('在线培训');
             this.props.navigator.push({
                 component: TrainingHomeView,
+                name:'TrainingHomeView',
                 props: {
                     data:data,
                     type:data.type,

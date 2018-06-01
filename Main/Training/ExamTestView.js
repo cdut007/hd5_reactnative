@@ -24,12 +24,14 @@ import {
 import CardView from 'react-native-cardview'
 import Global from '../../common/globals'
 import NavBar from '../../common/NavBar'
+import CheckBox from 'react-native-checkbox'
 import px2dp from '../../common/util'
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import ExamRecordView from './ExamRecordView'
 import TrainingListView from './TrainingListView'
 import CommitButton from '../../common/CommitButton'
 import  ExamResultView from './ExamResultView'
+
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var moduleData = [
@@ -64,7 +66,7 @@ export default class ExamTestView extends Component{
         super(props);
 
         this.state = {
-
+            singleCheck:false
         }
     };
 
@@ -83,25 +85,66 @@ export default class ExamTestView extends Component{
 
         CardViewArr.push(
             <CardView
-                style = {{marginTop: 10, marginLeft: 10, marginRight: 10, backgroundColor: '#ffffff', height: height*0.7, flexDirection: 'row', alignItems: 'center',justifyContent:'center'}}
+                style = {{marginTop: 10, marginLeft: 10, marginRight: 10, backgroundColor: '#ffffff', height: height*0.7, flexDirection: 'row', alignItems: 'flex-start',justifyContent:'flex-start'}}
                 cardElevation = {4}
                 cornerRadius = {6}>
-                <View style = {{flexDirection:'row',alignItems: 'center'}}>
-                    <View style = {{flexDirection:'column',}}>
-                        <Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold',}}>{"考试种类:"}</Text>
-                        <Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold',marginTop:15}}>{"考试内容:"}</Text>
-                        <Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold',marginTop:15}}>{"合格标准:"}</Text>
+                <View style = {{flexDirection:'column',alignItems: 'flex-start'}}>
+                    <View style = {{flexDirection:'row',backgroundColor:'blue',borderRadius:5,borderWidth:0.5,marginLeft:10,marginTop:10,padding:3}}>
+                        <Text style={{color: '#FFFF FF', fontSize: 18, fontWeight: 'bold',}}>{"单选"}</Text>
+
                     </View>
                     <View style = {{flexDirection:'column',}}>
-                        <Text style={{color: '#444444', fontSize: 18,marginLeft:30,textAlign:'left'}}>{this.props.title}</Text>
-                        <Text style={{color: '#444444', fontSize: 18,marginLeft:30,marginTop:15,textAlign:'left'}}>{"全部"}</Text>
-                        <Text style={{color: '#444444', fontSize: 18,marginLeft:30,marginTop:15,textAlign:'left'}}>{"60分合格"}</Text>
+                        <Text style={{color: '#444444', fontSize: 18,marginLeft:10,marginRight:15,marginTop:5,textAlign:'left'}}>{"1、"+"下列哪个物质是点火源？下列哪个物质是点火源？下列哪个物质是点火源？下列哪个物质是点火源？下列哪个物质是点火源？"+'('+'5'+'分)'}</Text>
+                    </View>
+                    <View style = {{flexDirection:'column',}}>
+
+                            {this.renderCheckBoxItem()}
+
+
                     </View>
                 </View>
 
             </CardView>)
 
         return CardViewArr;
+    }
+    renderCheckBoxItem(){
+        var  checkBoxViewArr = [ ];
+        var  checkBoxArr = [ 1, 2, 3,4,5,6];
+         checkBoxArr.map((item,i) => {
+             checkBoxViewArr.push(
+                 <View>
+                     <CheckBox
+                         containerStyle={{marginLeft:30,marginTop:15}}
+                         label='A、电火花'
+                         checkedImage={require('../../images/choose_icon_click.png')}
+                         uncheckedImage={require('../../images/choose_icon.png')}
+                         checked={this.state.singleCheck == null ?  false:this.state.singleCheck }
+                         onChange={(checked) => {
+                             Global.log(checked+'this.state.singleCheck=='+this.state.singleCheck)
+                             var selected1 = !checked
+                             if (selected1){
+
+                             }else {
+
+                             }
+                             this.setState({
+                                 singleCheck:selected1,
+
+
+                             })
+
+
+
+
+                         }
+                         }
+                     />
+
+             </View>)
+         })
+
+        return checkBoxViewArr;
     }
     lastStep(){
         Global.alert('lastStep')

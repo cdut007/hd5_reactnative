@@ -132,6 +132,7 @@ export default class PlanListViewContainer extends Component {
         // Global.alert(this.props.title+'考试');
         this.props.navigator.push({
             component:ExamHomeView,
+            name:'ExamHomeView',
             props:{
                 title:this.props.title
             }

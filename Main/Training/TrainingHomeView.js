@@ -11,7 +11,8 @@ import {
     Image,
     TouchableOpacity,
     ListView,
-    Dimensions
+    Dimensions,
+    BackAndroid
 
 
 } from 'react-native';
@@ -60,8 +61,29 @@ export default class TrainingHomeView extends Component{
     };
 
     componentWillMount(){
+        var me = this;
+        BackAndroid.addEventListener('harwardBackPress', () => {
+            const routers = me.props.navigator.getCurrentRoutes();
+            if (routers.length > 1) {
+                me.props.navigator.pop();
+                return true;
+            } else {
+                if (routers[0].name == 'MainPage'||routers[0].name == 'LoginView') {
+                    BackAndroid.exitApp();
+                    return true;
+                } else {
+                    me.props.navigator.pop();
+                    return true;
+                }
+
+            }
+            return false;
+        });
+    }
 
 
+    componentWillUnmount() {
+        BackAndroid.removeEventListener('hardwareBackPress');
     }
     back(){
         this.props.navigator.pop();
@@ -117,7 +139,7 @@ export default class TrainingHomeView extends Component{
                     cardElevation = {4}
                     cornerRadius = {6}>
                     <Image
-                        style = {{width: 80, height: 80, }}
+                        style = {{marginLeft:15,width: 80, height: 80, }}
                         source = {item.image} />
                     <View>
                         <Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold',marginLeft:30}}>{item.title}</Text>

@@ -24,6 +24,7 @@ import HttpRequest from '../../HttpRequest/HttpRequest'
 import ExamRecordView from './ExamRecordView'
 import TrainingListView from './TrainingListView'
 import CommitButton from '../../common/CommitButton'
+import ExamTestView from './ExamTestView'
 var width = Dimensions.get('window').width;
 var height = Dimensions.get('window').height;
 var moduleData = [
@@ -77,17 +78,11 @@ export default class ExamResultView extends Component{
 
         CardViewArr.push(
 
-                <Image style={{width:90,height:90}} source={require('../../images/background1.png')}>
-                    <View style = {{flexDirection:'row',alignItems: 'center'}}>
-                        <View style = {{flexDirection:'column',}}>
-                            <Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold',}}>{"考试种类:"}</Text>
-                            <Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold',marginTop:15}}>{"考试内容:"}</Text>
-                            <Text style={{color: '#444444', fontSize: 18, fontWeight: 'bold',marginTop:15}}>{"合格标准:"}</Text>
-                        </View>
-                        <View style = {{flexDirection:'column',}}>
-                            <Text style={{color: '#444444', fontSize: 18,marginLeft:30,textAlign:'left'}}>{this.props.title}</Text>
-                            <Text style={{color: '#444444', fontSize: 18,marginLeft:30,marginTop:15,textAlign:'left'}}>{"全部"}</Text>
-                            <Text style={{color: '#444444', fontSize: 18,marginLeft:30,marginTop:15,textAlign:'left'}}>{"60分合格"}</Text>
+                <Image style={{width:width,height:height,flexDirection:'row',justifyContent: 'center',}} source={require('../../images/background1.png')}>
+                    <View style = {{flexDirection:'row',justifyContent: 'center',}}>
+                        <View style = {{flexDirection:'column',marginTop:65}}>
+                            <Text style={{color: '#FFFFFF', fontSize: 32,textAlign:'center'}}>{"0"}</Text>
+                            <Text style={{color: '#FFFFFF', fontSize: 32,textAlign:'center',marginTop:15}}>{"合格"}</Text>
                         </View>
                     </View>
                 </Image>
@@ -97,25 +92,51 @@ export default class ExamResultView extends Component{
 
         return CardViewArr;
     }
-    lastStep(){
-        Global.alert('lastStep')
+    reExam(){
+        Global.alert('reExam')
+        let destinateRoute;
+        const routers = this.props.navigator.getCurrentRoutes();
+        for(let i = routers.length - 1; i >= 0; i--){
+            if(routers[i].name == 'ExamHomeView'){
+
+                destinateRoute = routers[i];
+            }
+        }
+        if(destinateRoute){
+            this.props.navigator.popToRoute(destinateRoute);
+        }else{
+            this.back();
+        }
     }
-    nextStep(){
-        Global.alert('nextStep')
+    reTrain(){
+        Global.alert('reTrain')
+        let destinateRoute;
+        const routers = this.props.navigator.getCurrentRoutes();
+        for(let i = routers.length - 1; i >= 0; i--){
+            if(routers[i].name == 'TrainingHomeView'){
+
+                destinateRoute = routers[i];
+            }
+        }
+        if(destinateRoute){
+            this.props.navigator.popToRoute(destinateRoute);
+        }else{
+            this.back();
+        }
     }
     renderBottomButton(){
         if (1== 1){
             return(
-                <View style={{height:50,width:width-30,flexDirection:'row',marginLeft:15,position:'absolute',bottom:15}}>
-                    <View style={{height:50,flex:1,flexDirection:'row',alignItems: "center",justifyContent:'space-between'}}>
-                        <TouchableOpacity style={{marginLeft:15,height:40}} onPress={this.lastStep.bind(this)}>
-                            <View style={{borderColor:'orange',borderRadius:5,borderWidth:1,padding:5,width:70,alignItems:'center'}}>
-                                <Text>上一题</Text>
+                <View style={{width:width-30,flexDirection:'row',marginLeft:15,position:'absolute',bottom:50}}>
+                    <View style={{flex:1,flexDirection:'column',alignItems: "center",justifyContent:'space-between'}}>
+                        <TouchableOpacity style={{height:40,marginBottom:15}} onPress={this.reExam.bind(this)}>
+                            <View style={{borderColor:'orange',backgroundColor:'orange',borderRadius:5,borderWidth:1,padding:5,width:width-50,height:40,alignItems:'center',justifyContent:'center'}}>
+                                <Text style={{color:'#FFFFFF',fontSize:14}}>重新考试</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={{marginRight:15,height:40}} onPress={this.nextStep.bind(this)}>
-                            <View style={{borderColor:'orange',borderRadius:5,borderWidth:1,padding:5,width:70,alignItems:'center'}}>
-                                <Text>下一题</Text>
+                        <TouchableOpacity style={{height:40}} onPress={this.reTrain.bind(this)}>
+                            <View style={{borderColor:'red',backgroundColor:'red',borderRadius:5,borderWidth:1,padding:5,width:width-50,height:40,alignItems:'center',justifyContent:'center'}}>
+                                <Text style={{color:'#FFFFFF',fontSize:14}}>再次培训</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -135,18 +156,11 @@ export default class ExamResultView extends Component{
 
 
     }
-    startExam(){
 
-    }
-    endExam(){
-
-    }
     render(){
         return(<View style={{flex:1,flexDirection: 'column', backgroundColor: '#f2f2f2'}}>
             <NavBar
-                title={'考试成绩'}
-                leftIcon={require('../../images/back.png')}
-                leftPress={this.back.bind(this)} />
+                title={'考试成绩'}/>
             {this.renderCardView()}
             {this.renderBottomButton()}
 

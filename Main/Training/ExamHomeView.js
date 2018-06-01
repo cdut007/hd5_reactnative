@@ -116,6 +116,7 @@ export default class ExamHomeView extends Component{
         //开始考试
         this.props.navigator.push({
             component:ExamTestView,
+
             props:{
 
             }
