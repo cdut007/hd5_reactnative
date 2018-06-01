@@ -26,6 +26,7 @@ import QualityControlHomeView from './QualityControl/QualityControlHomeView'
 import SolverLeaderView from './Problem/SolverLeaderView'
 import CoordinatorView from './Problem/CoordinatorView'
 import ResourceManageView from './ResourceManagement/ResourceManageView'
+import TrainingHomeView from './Training/TrainingHomeView'
 
 
 const isIOS = Platform.OS == "ios"
@@ -113,6 +114,12 @@ var bottomModuleData = [
         "type": "WZGL",
         'image': require('../images/material_icon.png')
     },
+    {
+        'index': 3,
+        'title': '在线培训',
+        "type": "ZXPX",
+        'image': require('../images/training_img.png')
+    },
 
 ]
 
@@ -140,6 +147,7 @@ export default class HomeView extends Component {
         this.fetchBanner();
 
     }
+
 
     fetchBanner(){
     var paramBody ={ }
@@ -295,6 +303,19 @@ export default class HomeView extends Component {
               })
               return;
             }
+        if (data.type == 'ZXPX') {
+
+            // Global.alert('在线培训');
+            this.props.navigator.push({
+                component: TrainingHomeView,
+                props: {
+                    data:data,
+                    type:data.type,
+
+                }
+            })
+            return;
+        }
 
 
 

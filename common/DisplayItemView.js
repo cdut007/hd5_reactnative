@@ -82,10 +82,11 @@ const styles = StyleSheet.create({
     width: width,
     height: 1,
     marginLeft:10,
-},no_divider: {
-backgroundColor: '#00000000',
-width: width,
-height: 1,
-marginLeft:10,
-},
+    },
+    no_divider: {
+    backgroundColor: '#00000000',
+    width: width,
+    height: 1,
+    marginLeft:10,
+    },
 });

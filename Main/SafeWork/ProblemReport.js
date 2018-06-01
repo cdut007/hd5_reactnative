@@ -755,7 +755,8 @@ return
 
   renderImages(){
     var imageViews = [];
-    {this.state.fileArr.map( (item,i) => {
+    {
+        this.state.fileArr.map( (item,i) => {
 
        imageViews.push(
          <TouchableOpacity
