@@ -54,6 +54,212 @@ module.exports = {
       });
 
  },
+    testGet(apiName, body,successCallback, failCallback)
+    {
+        // if(!httpToken.length)
+        // {
+        //     httpToken = Global.token;
+        //
+        //     AsyncStorage.getItem('k_http_token',function(errs,result)
+        //     {
+        //         if (!errs)
+        //         {
+        //             httpToken = result
+        //             console.log('httpToken = '+httpToken)
+        //         }
+        //         else
+        //         {
+        //             console.log('get http token error:' + errs)
+        //         }
+        //     });
+        //
+        //
+        //
+        // }else{
+        //
+        // }
+
+        var url = 'http://111.231.52.72/hdxt/api' + apiName
+        var param = ""
+        //body.loginId=256
+        if (Global.UserInfo)
+        {
+            body.loginId = 596
+        }
+
+
+        for(var element in body){
+            param += element + "=" + body[element] + "&";
+        }
+
+        url =  url+"?"+param;
+
+        console.log('Get request:' + url)
+        Xlog.info('HttpRequestGet', url);
+        fetch(url, {
+            method: 'GET',})
+            .then((response) => response.text())
+            .then((responseText) => {
+                console.log("get request response:"+responseText);
+                Xlog.info('HttpRequestGetReuslt', responseText);
+                if (Global.testerDebug) {
+                    Global.showAlert(url+""+responseText)
+                }
+                var response = JSON.parse(responseText);
+                if (response.code == 1000) {
+                    successCallback(response,body);
+                }else{
+                    if (response.message) {
+                        failCallback(response.message)
+                    }else{
+                        failCallback(response.responseText)
+                    }
+
+                }
+
+            })
+            .catch(function(err){
+                failCallback(err);
+                Xlog.info('HttpRequestGetReusltErr', ""+err);
+                if (Global.testerDebug) {
+                    Global.showAlert(url+"Error:"+err)
+                }
+                if (err == 'TypeError: Network request failed') {
+                    Global.showToast('网络异常')
+                }
+
+            });
+
+    },
+    testPost(apiName, body,successCallback, failCallback)
+{
+    // if(!httpToken.length)
+    // {
+    //     httpToken = Global.token;
+
+    //     AsyncStorage.getItem('k_http_token',function(errs,result)
+    //     {
+    //         if (!errs)
+    //         {
+    //             httpToken = result
+    //             console.log('httpToken = '+httpToken)
+    //         }
+    //         else
+    //         {
+    //             console.log('get http token error:' + errs)
+    //         }
+    //     });
+    // }
+
+    var logind = '';
+    if (Global.UserInfo)
+    {
+        logind = 596;
+
+    }else {
+        // logind = 620;
+    }
+
+
+    var url = 'http://111.231.52.72/hdxt/api' + apiName +"?loginId="+logind
+
+    var param = ""
+
+    for(var element in body){
+        param += element + "=" + body[element] + "&";
+    }
+
+
+    url =  url+'&'+param;
+
+    try {
+        var tagInfo = 'Post request:' + url +":[param body]="+JSON.stringify(body)
+        console.log(tagInfo)
+        Xlog.info('HttpRequestPost', tagInfo);
+    } catch (e) {
+
+    } finally {
+
+    }
+
+    if (body.jsonBody) {
+        fetch(url, {
+            method: 'POST',
+            headers: new Headers({
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': httpToken
+            }),
+            body: JSON.stringify(body.jsonBody)})
+            .then((response) => response.text())
+            .then((responseText) => {
+                console.log(responseText);
+                Xlog.info('HttpRequestPostReuslt', responseText);
+                if (Global.testerDebug) {
+                    Global.showAlert(url+"PostResult:"+responseText)
+                }
+
+                var response = JSON.parse(responseText);
+                if (response.code == 1000) {
+                    successCallback(response,param);
+                }else{
+                    if (response.message) {
+                        failCallback(response.message)
+                        console.log('Post request error:' + url +":response.message="+response.message)
+                    }else{
+
+                        failCallback(response.responseText)
+                    }
+                }
+
+            })
+            .catch(function(err){
+                failCallback(err);
+                Xlog.info('HttpRequestPostReusltErr', ""+err);
+                if (Global.testerDebug) {
+                    Global.showAlert(url+"post Error:"+err)
+                }
+                if ((""+err).startWith('SyntaxError: JSON Parse error')) {
+                    Global.showToast('服务不可用，请稍后再试')
+                }
+            });
+    }else{
+        fetch(url, {
+            method: 'POST',})
+            .then((response) => response.text())
+            .then((responseText) => {
+                console.log(responseText);
+                Xlog.info('HttpRequestPostReuslt', responseText);
+                if (Global.testerDebug) {
+                    Global.showAlert(url+" post:"+responseText)
+                }
+                var response = JSON.parse(responseText);
+                if (response.code == 1000) {
+                    successCallback(response,body);
+                }else{
+                    if (response.message) {
+                        failCallback(response.message)
+                        console.log('Post request error:' + url +":response.message="+response.message)
+                    }else{
+
+                        failCallback(response.responseText)
+                    }
+                }
+
+            })
+            .catch(function(err){
+                Xlog.info('HttpRequestPostReusltErr', ""+err);
+                if (Global.testerDebug) {
+                    Global.showAlert(url+"post Error:"+responseText)
+                }
+                failCallback(err);
+                if ((""+err).startWith('SyntaxError: JSON Parse error')) {
+                    Global.showToast('服务不可用，请稍后再试')
+                }
+            });
+    }
+
+},
 get(apiName, body,successCallback, failCallback)
 {
     // if(!httpToken.length)

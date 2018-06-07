@@ -296,7 +296,7 @@ export default class FeedbackMessageView extends Component {
                 showsVerticalScrollIndicator={false}
                  underlineColorAndroid={'transparent'}
                  value={this.state.message}
-                 underlineColorAndroid='transparent'
+
                  editable={true}
                  placeholderTextColor='#888888'
                  placeholder={'请输入回复内容...'}

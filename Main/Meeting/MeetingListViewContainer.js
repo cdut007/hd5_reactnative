@@ -65,7 +65,7 @@ export default class MeetingListViewContainer extends Component {
         var title=this.props.data.class//队长才能取得到
          if (!title) {
              if(this.props.data.user)
-                title = this.props.data.user.dept.name//否则班长
+                title = this.props.data.user.dept.name ;//否则班长
          }
         this.state = {
             keyword: '',
