@@ -117,18 +117,23 @@ export default class QuestionDetail extends Component {
 
 
 renderCommitBtn(){
+      //质量安全管理详情状态      typeIndex = '8002'  已完成  typeIndex = '8003'  已关闭  typeIndex = '8004'  问题查阅
+    if (this.props.detailType == '8002' || this.props.detailType == '8003' || this.props.detailType == '8004' ){
 
-  if ( Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreQCLeaderAssign') {
-        return   this.renderWaitCommit(); //待分派
-  }else if ( Global.isQC1(Global.UserInfo) && this.state.data.status == 'PreQCAssign') {
-       return this.renderQcAssign(); // 待指派
-  }else if ((Global.isMonitor(Global.UserInfo) || Global.isGroup(Global.UserInfo)) && this.state.data.status == 'PreRenovete') {
-    return this.Commit()  //整改中
-}else if (!Global.isQC1(Global.UserInfo)  && !Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreUpRenovete') {
-    return this.CommitDelivery() //待整改
-  }else if (this.state.data.status == 'PreQCverify' && Global.isQC1(Global.UserInfo)) {
-      return this.QcCheckResult();  //待审核
-  }
+    }else {
+        if ( Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreQCLeaderAssign') {
+            return   this.renderWaitCommit(); //待分派
+        }else if ( Global.isQC1(Global.UserInfo) && this.state.data.status == 'PreQCAssign') {
+            return this.renderQcAssign(); // 待指派
+        }else if ((Global.isMonitor(Global.UserInfo) || Global.isGroup(Global.UserInfo)) && this.state.data.status == 'PreRenovete') {
+            return this.Commit()  //整改中
+        }else if (!Global.isQC1(Global.UserInfo)  && !Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreUpRenovete') {
+            return this.CommitDelivery() //待整改
+        }else if (this.state.data.status == 'PreQCverify' && Global.isQC1(Global.UserInfo)) {
+            return this.QcCheckResult();  //待审核
+        }
+    }
+
 
 }
 
@@ -712,32 +717,36 @@ back() {
           }
       }
 
+      if (this.props.detailType == '8002' || this.props.detailType == '8003' || this.props.detailType == '8004'  ){
+            // 质量管理 8002 已完成 或者 8003 已关闭状态 或者 8004 问题查阅   详情只能显示
+      }else {
+          if ( (Global.isMonitor(Global.UserInfo) || Global.isGroup(Global.UserInfo)) && this.state.data.status == 'PreRenovete') {
 
- if ( (Global.isMonitor(Global.UserInfo) || Global.isGroup(Global.UserInfo)) && this.state.data.status == 'PreRenovete') {
+              itemAry.push(this._questtionDescribe());
 
-           itemAry.push(this._questtionDescribe());
+              itemAry.push(this.renderNewFileView("整改照片"));
 
-             itemAry.push(this.renderNewFileView("整改照片"));
+          }
 
-}
+          if ( !Global.isQC1(Global.UserInfo)  && !Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreUpRenovete') {
 
-if ( !Global.isQC1(Global.UserInfo)  && !Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreUpRenovete') {
+              itemAry.push(this._chooseMember());
 
-          itemAry.push(this._chooseMember());
+              //    itemAry.push(this.renderNewFileView("整改照片"));
 
-        //    itemAry.push(this.renderNewFileView("整改照片"));
-
-}
+          }
 
 
 
-      if ( Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreQCLeaderAssign') {
-        itemAry.push(this.renderSelectView(this.state.qcdetail,assinList,"选择QC"))
+          if ( Global.isQCManager(Global.UserInfo) && this.state.data.status == 'PreQCLeaderAssign') {
+              itemAry.push(this.renderSelectView(this.state.qcdetail,assinList,"选择QC"))
+          }
+
+          if (this.state.data.status == 'PreQCAssign' && Global.isQC1(Global.UserInfo)) {
+              itemAry.push(this.chooseItemInfo("整改期限","choose_date",this.state.choose_date))
+          }
       }
 
-      if (this.state.data.status == 'PreQCAssign' && Global.isQC1(Global.UserInfo)) {
-        itemAry.push(this.chooseItemInfo("整改期限","choose_date",this.state.choose_date))
-      }
 
       return itemAry;
 

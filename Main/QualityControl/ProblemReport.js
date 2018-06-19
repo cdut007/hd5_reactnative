@@ -66,7 +66,7 @@ export  default class ProblemReport extends Component {
       super(props)
 
       this.state = {
-          title: "报告问题",
+          title: "问题报告",
           machineType: '选择机组',
           plantType: '选择厂房',
           pbType:'选择问题类型',
@@ -274,6 +274,10 @@ export  default class ProblemReport extends Component {
   render() {
       return (
           <View style={styles.container}>
+              <NavBar
+                  title={this.state.title}
+                  leftIcon={require('../../images/back.png')}
+                  leftPress={this.back.bind(this)}/>
                <View style={styles.content}>
                  {this._ContentView()}
                  {this._CommitButton()}

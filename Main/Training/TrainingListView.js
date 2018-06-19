@@ -229,13 +229,15 @@ export default class PlanListViewContainer extends Component {
         var learningNum = learningClass.length;
         learningClass.map((item,i) => {
             var learningClassItem = learningClass[i];
+
+            var imageUri = '';
             learningViewArr.push(
                 <TouchableOpacity style={{width:width,}} onPress={() => this.onPressToTrainDetail(learningClassItem)}>
                     <View style={{justifyContent: "flex-start",
                         alignItems: 'center',
                         flexDirection: 'row',}}>
                         <Image style={{marginLeft:15,width:36,height:36,marginTop:10,marginBottom:10,}}
-                               source={require('../../images/default_head.png')}>
+                               source={require('../../images/icon_image.png')}>
 
                         </Image>
                         <Text style={{marginLeft:15,color:'black'}}>{learningClassItem.title}</Text>

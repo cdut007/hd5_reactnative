@@ -281,6 +281,7 @@ this.state.insearch = true;
 
 
 
+
             HttpRequest.get('/qualityControl/getList', paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 

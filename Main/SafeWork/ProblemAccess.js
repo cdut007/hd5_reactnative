@@ -176,7 +176,8 @@ export  default class ProblemRectification extends Component {
     }
 
 
-   return (<QuestionList
+   return (
+       <QuestionList
       style={{alignSelf:'stretch',flex:1}}
       type={this.props.type}
       detailType={this.state.detailType}
@@ -184,7 +185,8 @@ export  default class ProblemRectification extends Component {
       probelmType={problemSolveStatus}
       navigator={this.props.navigator}
       ref={ref}
-      />)
+      />
+   )
 
 
   }

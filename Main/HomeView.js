@@ -23,10 +23,12 @@ import Banner from 'react-native-banner';
 import Badge from 'react-native-smart-badge'
 import SafeWorkHomeView from './SafeWork/SafeWorkHomeView'
 import QualityControlHomeView from './QualityControl/QualityControlHomeView'
+import QualityManagerHomeView from './QualityControl/QualityManagerHomeView'
 import SolverLeaderView from './Problem/SolverLeaderView'
 import CoordinatorView from './Problem/CoordinatorView'
 import ResourceManageView from './ResourceManagement/ResourceManageView'
 import TrainingHomeView from './Training/TrainingHomeView'
+
 
 
 const isIOS = Platform.OS == "ios"
@@ -279,7 +281,7 @@ export default class HomeView extends Component {
 
             if (data.type == 'ZLGL') {
               this.props.navigator.push({
-                  component: QualityControlHomeView,
+                  component: QualityManagerHomeView,
                    props: {
                        data:data,
                        type:data.type,

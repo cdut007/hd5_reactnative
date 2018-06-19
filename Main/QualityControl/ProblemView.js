@@ -120,13 +120,15 @@ export default class ProblemView extends Component {
 
     _renderQuetionView(label){
 
-   return( <View  tabLabel={label} style={styles.container}>
+   return(
+       <View  tabLabel={label} style={styles.container}>
 
 
      {this.renderContent()}
      {this.renderListView()}
 
-       </View>)
+       </View>
+   )
 
 
     }
