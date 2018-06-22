@@ -159,10 +159,23 @@ export  default class QualityManagerHomeView extends Component {
 
 // AlertIOS.Global.alert(item.type,item.title);
 
-        if (item.type == "WTSH" && !Global.isHSE(Global.UserInfo)) {
+        if (item.type == "WTFP" && !Global.isHSE(Global.UserInfo)) {
             Global.alert("当前用户不是HSE部门成员,无法执行该操作");
             return;
         }
+        if (item.type == "JGYZ") {
+            if (Global.isMonitor(Global.UserInfo) || Global.isGroup(Global.UserInfo)) {
+
+
+            }else if (Global.isQC1(Global.UserInfo)) {
+
+
+            }else {
+                Global.alert("当前用户无权限,无法执行该操作");
+                return;
+            }
+        }
+
 
         var Component;
 

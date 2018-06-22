@@ -97,6 +97,33 @@ var moduleData = [
 ]
 
 
+// var bottomModuleData = [
+//     {
+//         'index': 0,
+//         'title': '文明施工',
+//         "type": "WMSG",
+//         'image': require('../images/construction_icon.png')
+//     },
+//     {
+//         'index': 1,
+//         'title': '质量管理',
+//         "type": "ZLGL",
+//         'image': require('../images/quality_icon.png')
+//     },
+//     {
+//         'index': 2,
+//         'title': '物资管理',
+//         "type": "WZGL",
+//         'image': require('../images/material_icon.png')
+//     },
+//     {
+//         'index': 3,
+//         'title': '在线培训',
+//         "type": "ZXPX",
+//         'image': require('../images/training_img.png')
+//     },
+//
+// ]
 var bottomModuleData = [
     {
         'index': 0,
@@ -115,13 +142,7 @@ var bottomModuleData = [
         'title': '物资管理',
         "type": "WZGL",
         'image': require('../images/material_icon.png')
-    },
-    {
-        'index': 3,
-        'title': '在线培训',
-        "type": "ZXPX",
-        'image': require('../images/training_img.png')
-    },
+    }
 
 ]
 
