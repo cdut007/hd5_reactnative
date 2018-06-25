@@ -194,7 +194,13 @@ export default class LoginView extends Component {
         });
     }
     componentWillMount(){
-           this.isInnerIPFn();  //判断是否为内网
+            if (HttpRequest.isTestDel()){
+                console.log('isTestDel1:'+HttpRequest.isTestDel());
+            }else {
+                this.isInnerIPFn();  //判断是否为内网
+                console.log('isTestDel2:'+HttpRequest.isTestDel());
+            }
+
 
     }
     componentDidMount() {
@@ -308,7 +314,8 @@ export default class LoginView extends Component {
 //         Global.alert('data:'+this.state.ProductData[this.state.currentProduct]);
 
     if (this.state.LoginId && this.state.LoginId.startWith('http:')) {
-                        HttpRequest.setDomain(this.state.LoginId,'本地环境')
+                        HttpRequest.setDomain(this.state.LoginId,'本地环境');
+                        Global.isTestDel = true;
                         Global.showToast('本地环境设置成功=='+this.state.LoginId)
                         return
         }
@@ -343,10 +350,41 @@ export default class LoginView extends Component {
             Global.alert('请输入用户名或密码')
         }
         else if(!this.state.currentProduct.length){
-            this.setState({
-                loadingVisible: false
-            });
-            Global.alert('请选择所在项目部');
+            if (HttpRequest.isTestDel()){
+                HttpRequest.post('/authenticate', paramBody, this.onLoginSuccess.bind(this),
+                    (e) => {
+                        this.setState({
+                            loadingVisible: false
+                        });
+                        try {
+                            var errorInfo = JSON.parse(e);
+                        }
+                        catch(err)
+                        {
+                            Global.log("error======"+err)
+                        }
+                        if (errorInfo != null) {
+                            if (errorInfo.code == -1002||
+                                errorInfo.code == -1001) {
+                                Global.alert("账号或密码错误");
+                            }else {
+                                Global.alert(e)
+                            }
+
+                        } else {
+                            Global.alert(e)
+                        }
+
+
+                        Global.log('Login error:' + e)
+                    })
+            }else {
+                this.setState({
+                    loadingVisible: false
+                });
+                Global.alert('请选择所在项目部');
+            }
+
         }
         else {
                 // Global.alert('setDomainProductData:'+JSON.stringify(this.state.ProductData[this.state.currentProduct]))

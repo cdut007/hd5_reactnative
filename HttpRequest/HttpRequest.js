@@ -53,7 +53,15 @@ module.exports = {
 
       });
 
- },
+ }, isTestDel(){
+     if (Global.isTestDel){
+         return true;
+     }else {
+         return false;
+     }
+
+
+    },
     testGet(apiName, body,successCallback, failCallback)
     {
         // if(!httpToken.length)
