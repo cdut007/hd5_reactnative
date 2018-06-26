@@ -91,7 +91,7 @@ export default class IssueDetailView extends Component {
     }
 
      onGetDataSuccess(response){
-        Global.log('onGetDataSuccess@@@@')
+        Global.log('onGetDataSuccess@@@@'+JSON.stringify(response));
             var membersArray = []
             if (response.responseResult.userList) {
               this.state.memberIds = response.responseResult.userList
@@ -605,22 +605,39 @@ startProblem(){
         return this.renderHeader();
     }
 
-    renderReason(){
-      if(this.state.data.reason && this.state.data.status == 'unsolved'){
-        return(
-          <View style={{backgroundColor: 'white', paddingTop: 10, paddingRight: 6,}}>
-              <Text style={{color: '#e82628', fontSize: 14, lineHeight: 22, marginLeft: 10, marginBottom: 10}}>
-                <Text style={{fontWeight: 'bold'}}>退回理由: </Text>
-                 <Text>{this.state.data.reason}</Text>
-              </Text>
-              <ScrollView horizontal={true} style={{marginTop: 10, marginBottom: 10,}}>
-                  {this.renderNetImages(this.state.data.teamAnswer[0].files, true)}
-              </ScrollView>
-              <View style={styles.divider} />
-          </View>
-        );
-      }
-    }
+            renderReason(){
+                    var teamAnswerFiles = []
+              if(this.state.data.reason && this.state.data.status == 'unsolved'){
+                  if (this.state.data.teamAnswer){
+                      teamAnswerFile = this.state.data.teamAnswer[0].files;
+                      Global.log(JSON.stringify('renderReason1:'+this.state.data.teamAnswer))
+                      return(
+                          <View style={{backgroundColor: 'white', paddingTop: 10, paddingRight: 6,}}>
+                              <Text style={{color: '#e82628', fontSize: 14, lineHeight: 22, marginLeft: 10, marginBottom: 10}}>
+                                  <Text style={{fontWeight: 'bold'}}>退回理由: </Text>
+                                  <Text>{this.state.data.reason}</Text>
+                              </Text>
+                              <ScrollView horizontal={true} style={{marginTop: 10, marginBottom: 10,}}>
+                                  {this.renderNetImages(teamAnswerFile, true)}
+                              </ScrollView>
+                              <View style={styles.divider} />
+                          </View>
+                      );
+                  }else {
+                      Global.log(JSON.stringify('renderReason2:'+this.state.data.teamAnswer))
+                      return(
+                          <View style={{backgroundColor: 'white', paddingTop: 10, paddingRight: 6,}}>
+                              <Text style={{color: '#e82628', fontSize: 14, lineHeight: 22, marginLeft: 10, marginBottom: 10}}>
+                                  <Text style={{fontWeight: 'bold'}}>退回理由: </Text>
+                                  <Text>{this.state.data.reason}</Text>
+                              </Text>
+                              <View style={styles.divider} />
+                          </View>
+                      );
+                  }
+
+              }
+            }
 
     renderTechReason(){
       if(this.state.data.unableReason && this.state.data.status == 'unsolved'){
