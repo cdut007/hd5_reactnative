@@ -492,7 +492,7 @@ if (this.state.system_no.length) {
         loadingVisible: false
     })
 
-     Global.alert(response.message)
+     // Global.alert(response.message)
      this.props.navigator.pop()
 
   }
