@@ -177,7 +177,7 @@ module.exports = {
 
         return this.existRole(user, 'witness_member_qc1');
     },
-     isQc1ReplaceQc2(){
+     isQc1ReplaceQc2(user){
        if (!user || user.qc1ReplaceQc2==null) {
             console.log('maybe crash recycle from the memery cache, can read data again ??')
             return false
