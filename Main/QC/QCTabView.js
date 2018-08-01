@@ -109,7 +109,7 @@ export default class QCTabView extends Component
                         </TabNavigator>
                     )
 
-        }else if (Global.isQC2Member(Global.UserInfo)) {
+        }else if (Global.isQC2Member(Global.UserInfo)||Global.isQC1Member(Global.UserInfo) && Global.isQc1ReplaceQc2(Global.UserInfo)) {
             return(
                     <TabNavigator>
                         <TabNavigator.Item
