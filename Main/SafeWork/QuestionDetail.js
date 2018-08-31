@@ -97,9 +97,10 @@ export default class QuestionDetail extends Component {
     this.setState({
         loadingVisible: true
     });
-   var param = new FormData()
+   var param = {}
     if (this.state.data.responsibleDept.deptId) {
-      param.append('responsibleDeptId',this.state.data.responsibleDept.deptId);
+      param={'responsibleDeptId':this.state.data.responsibleDept.deptId}
+    //  param.append('responsibleDeptId',this.state.data.responsibleDept.deptId);
     }
 
     HttpRequest.get('/hse/createUI', param, this.featchDataSuccess.bind(this),
