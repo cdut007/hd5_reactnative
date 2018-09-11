@@ -87,12 +87,12 @@ module.exports = {
         //
         // }
 
-        var url = 'http://111.231.52.72/hdxt/api' + apiName
+        var url = apiAddr + apiName
         var param = ""
         //body.loginId=256
         if (Global.UserInfo)
         {
-            body.loginId = 596
+            body.loginId = Global.UserInfo.id;
         }
 
 
@@ -162,14 +162,14 @@ module.exports = {
     var logind = '';
     if (Global.UserInfo)
     {
-        logind = 596;
+        logind = Global.UserInfo.id;
 
     }else {
         // logind = 620;
     }
 
 
-    var url = 'http://111.231.52.72/hdxt/api' + apiName +"?loginId="+logind
+    var url = apiAddr + apiName +"?loginId="+logind
 
     var param = ""
 
