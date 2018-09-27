@@ -299,6 +299,10 @@ get(apiName, body,successCallback, failCallback)
     if (Global.UserInfo)
     {
         body.loginId = Global.UserInfo.id
+
+        if(Global.UserInfo.roles && Global.UserInfo.roles.length>0){
+          body.roleId = Global.UserInfo.roles[0].id;
+        }
     }
 
 
@@ -366,16 +370,21 @@ post(apiName, body,successCallback, failCallback)
     // }
 
     var logind = '';
+    var roleId = '';
     if (Global.UserInfo)
     {
         logind = Global.UserInfo.id;
+        if(Global.UserInfo.roles && Global.UserInfo.roles.length>0){
+          roleId = Global.UserInfo.roles[0].id;
+        }
+        
 
     }else {
         // logind = 620;
     }
 
 
-    var url = apiAddr + apiName +"?loginId="+logind
+    var url = apiAddr + apiName +"?loginId="+logind+"&roleId="+roleId
 
     var param = ""
 
