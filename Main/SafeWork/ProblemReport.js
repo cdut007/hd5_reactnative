@@ -66,6 +66,10 @@ var code2 = [];
 var code3 = [];
 var code23 = [];
 
+//add new types
+var checkTypeList = [];
+var criticalLevelList = [];
+
 var TeamStoreTypes = [];
 
 String.prototype.startWith=function(str){
@@ -753,6 +757,9 @@ return
       )
   }
 
+
+
+
   renderImages(){
     var imageViews = [];
     {
@@ -911,9 +918,9 @@ return
           break;
    }
 
-      // this.setState({machineType: data[0]})
-  }
+  // this.setState({machineType: data[0]})
 
+  }
 
 
 

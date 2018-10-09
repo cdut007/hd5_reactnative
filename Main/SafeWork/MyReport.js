@@ -49,7 +49,7 @@ export default  class  MyReport extends Component {
       this.props.navigator.pop()
   }
 
-
+//新增
   render() {
       return (
           <View style={styles.container}>

@@ -142,13 +142,15 @@ var bottomModuleData = [
         'title': '物资管理',
         "type": "WZGL",
         'image': require('../images/material_icon.png')
-    },
-       {
-          'index': 3,
-          'title': '在线培训',
-          "type": "ZXPX",
-          'image': require('../images/training_img.png')
-     }
+    }
+
+    // ,
+    //    {
+    //       'index': 3,
+    //       'title': '在线培训',
+    //       "type": "ZXPX",
+    //       'image': require('../images/training_img.png')
+    //  }
 
 ]
 

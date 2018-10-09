@@ -34,15 +34,13 @@ export default class MemberSelectView extends Component {
 
     onSelectedData(data) {
         console.log('A data has been picked: ', data);
-
         this.props.onSelected(data)
-
-
         this.setState({
             currentData: data,
             isPickerVisible: false
         })
     }
+
 
       _keyboardDidShow () {
         Picker.hide();
@@ -74,9 +72,9 @@ export default class MemberSelectView extends Component {
             return
         }
         this.setState({ isPickerVisible: true })
-
         Picker.init({
        pickerData: this.props.data,
+       pickerTextEllipsisLen:300,
        pickerTitleText:this.props.pickerTitle,
        pickerConfirmBtnText:'保存',
        pickerCancelBtnText:'取消',
@@ -110,6 +108,9 @@ export default class MemberSelectView extends Component {
     }
 
 }
+
+//字段显示菜单项过长导致显示...
+
 
 const styles = StyleSheet.create({
     container: {
