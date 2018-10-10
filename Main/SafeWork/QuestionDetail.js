@@ -60,6 +60,7 @@ var responsibleCaptains = [];
 var problemFiles = [];
 var solveFiles = [];
 var solveAgainFiles = [];
+var TeamStoreTypes = [];
 
 var width = Dimensions.get('window').width;
 var historyData = new FormData()
@@ -139,6 +140,8 @@ export default class QuestionDetail extends Component {
 
 
   this.state.responsibleCaptains = response.responseResult.responsibleDepts;
+
+    TeamStoreTypes = response.responseResult.responsibleTeams;
 
     if(this.state.responsibleCaptains){
        this.state.responsibleCaptains.forEach((item) => {
@@ -1571,12 +1574,37 @@ switch (tag) {
    if (item['deptName']  == this.state.responsibleCaptain) {
 
      this.state.responsibleCaptainId = item['deptId'];
-
+     //
+     this.updateTeams( this.state.responsibleCaptainId)
    }
 
  })
 
  }
+
+   updateTeams(departmentId){
+      var fliterTeamTypes = [];
+      var tempTeam = [];
+      if(!TeamStoreTypes){
+        return;
+      }
+
+      for (var i = 0; i < TeamStoreTypes.length; i++) {
+          if(TeamStoreTypes[i].parentDeptId == departmentId){
+              var item = TeamStoreTypes[i];
+              fliterTeamTypes.push(item);
+              tempTeam.push(item['deptName'])
+          }
+
+      }
+
+        TeamTypes = tempTeam;
+
+       this.state.TeamTypes = fliterTeamTypes.sort();
+       this.setState({TeamTypes:fliterTeamTypes, ResTeamId:null,
+        Team:'选择责任班组'})
+
+  }
 
 
 
