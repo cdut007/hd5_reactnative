@@ -56,6 +56,7 @@ var options = {
 };
 
 var teams = [];
+var responsibleCaptains = [];
 var problemFiles = [];
 var solveFiles = [];
 var solveAgainFiles = [];
@@ -78,6 +79,8 @@ export default class QuestionDetail extends Component {
        data : this.props.data,
        title: "问题详情",
        team : this.props.data.responsibleTeam ? this.props.data.responsibleTeam.deptName : null,
+       responsibleCaptain:this.props.data.responsibleDept ? this.props.data.responsibleDept.deptName : null,
+       responsibleCaptainId:this.props.data.responsibleDept ? this.props.data.responsibleDept.deptId : null,
        fileArr : images,
        time: this.props.data.time,
        recDes:"",
@@ -85,6 +88,7 @@ export default class QuestionDetail extends Component {
        choose_date:null,
        displayDate:"截止日期",
        TeamTypes:null,
+       responsibleCaptains:null,
        ResTeamId:this.props.data.responsibleTeam ? this.props.data.responsibleTeam.deptId : null,
      }
 
@@ -131,6 +135,19 @@ export default class QuestionDetail extends Component {
      teams.push(item['deptName'])
 
      })
+
+
+
+  this.state.responsibleCaptains = response.responseResult.responsibleDepts;
+
+    if(this.state.responsibleCaptains){
+       this.state.responsibleCaptains.forEach((item) => {
+
+     responsibleCaptains.push(item['deptName'])
+
+     })
+    }
+    
 
    }
 
@@ -466,10 +483,12 @@ if (status == 1) {
          });
    var  UsId = + this.state.ResTeamId;
    var  Pid = + this.state.data.id;
+   var responsibleCaptainId=this.state.responsibleCaptainId;
 
          var paramBody = {
                   'problemId' : Pid,
                   'responsibleTeamId' :  UsId,
+                   'responsibleCaptainId':responsibleCaptainId,
                   'startDate' : Global.formatDateWithChina(this.state.choose_date),
              }
 
@@ -662,7 +681,7 @@ historyData.hseCheckTime = item['solveDate'];
       {title:'厂房',content:this.state.data.wrokshop,id:'2',noLine:true},
       {title:'标高',content:this.state.data.eleration,id:'3',noLine:true},
       {title:'房间号',content:this.state.data.roomno,id:'4',noLine:true},
-      {title:'责任部门',content:this.state.data.responsibleDept ? this.state.data.responsibleDept.deptName : this.state.data.responsibleDept,id:'5',noLine:true},
+    //  {title:'责任部门',content:this.state.data.responsibleDept ? this.state.data.responsibleDept.deptName : this.state.data.responsibleDept,id:'5',noLine:true},
     ];
 
 
@@ -683,6 +702,11 @@ historyData.hseCheckTime = item['solveDate'];
             );
         }
     }
+
+      itemAry.push(
+  this._SelectDeptView("责任部门:",this.state.responsibleCaptain,responsibleCaptains,"选择部门","XZBM")
+    );
+
 
     itemAry.push(
   this._SelectView("责任班组:",this.state.team,teams,"选择班组","XZBZ")
@@ -1504,6 +1528,57 @@ switch (tag) {
    this.props.navigator.pop();
 
   }
+
+   _SelectDeptView(name,title,datas,pickerTitle,pickerType){
+
+      return(
+        <View style={styles.topContainer}>
+              <Text style={styles.title}> {name} </Text>
+              {this.renderDeptSelectView(title,datas,pickerTitle,pickerType)}
+        </View>
+      )
+
+  }
+
+    renderDeptSelectView(title,datas,pickerTitle,pickerType) {
+      return(
+        <View style={styles.borderStyle}>
+      <TouchableOpacity onPress={() => _selectD.onPickClick()} style={styles.touchStyle}>
+        <MemberSelectView
+        ref={(d) => _selectD = d}
+         style={styles.textStyle}
+         title={title}
+         data={datas}
+         type={pickerType}
+         pickerTitle={pickerTitle}
+         onSelected={(data) => this.onDeptSelectedType(data,pickerType)}/>
+        <Image style={{width:20,height:20,}} source={require('../../images/unfold.png')}/>
+     </TouchableOpacity>
+      </View>
+      )
+  }
+
+    onDeptSelectedType(data,pickerType){
+
+ this.setState({responsibleCaptain:data[0]})
+ if(!this.state.responsibleCaptains){
+
+  return
+ }
+
+ this.state.responsibleCaptains.forEach((item) => {
+
+   if (item['deptName']  == this.state.responsibleCaptain) {
+
+     this.state.responsibleCaptainId = item['deptId'];
+
+   }
+
+ })
+
+ }
+
+
 
   _SelectView(name,title,datas,pickerTitle,pickerType){
 
