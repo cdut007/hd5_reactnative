@@ -30,6 +30,7 @@ var height = Dimensions.get('window').height;
 
 import   ScrollableTabView  from 'react-native-scrollable-tab-view';
 
+var timer;
 
 export default class QuestionStaicContainer extends Component {
 
@@ -64,16 +65,24 @@ export default class QuestionStaicContainer extends Component {
 
 // alert(this.state.index);
 
-if (this.state.index == 0){
+ if (timer) {
+            clearTimeout(timer);
+        }
+        timer = setTimeout(() => {
+        
+             if (this.state.index == 0){
 
-if (this.refs.list_Renovating) {
-      this.refs.list_Renovating.onSearchChange(text);
-}
-}else {
-if (this.refs.list_finish) {
-      this.refs.list_finish.onSearchChange(text);
-}
-}
+            if (this.refs.list_Renovating) {
+                  this.refs.list_Renovating.onSearchChange(text);
+            }
+            }else {
+            if (this.refs.list_finish) {
+                  this.refs.list_finish.onSearchChange(text);
+            }
+            }
+        }, 1000);
+
+
 
 // this.refs.current_ref.onSearchChange(text);
 //    console.log(this.state.problemStatus);
@@ -82,16 +91,26 @@ if (this.refs.list_finish) {
 
   onSearchClose(){
 
-    if (this.state.index == 0){
+     if (timer) {
+            clearTimeout(timer);
+        }
+       
+        
+            timer = setTimeout(() => {
+                    if (this.state.index == 0){
 
-    if (this.refs.list_Renovating) {
-          this.refs.list_Renovating.onSearchChange('');
-    }
-    }else {
-    if (this.refs.list_finish) {
-          this.refs.list_finish.onSearchChange('');
-    }
-    }
+                    if (this.refs.list_Renovating) {
+                          this.refs.list_Renovating.onSearchChange('');
+                    }
+                    }else {
+                    if (this.refs.list_finish) {
+                          this.refs.list_finish.onSearchChange('');
+                    }
+                    }
+            }, 1000);
+        
+
+   
 
   }
 

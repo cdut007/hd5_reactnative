@@ -60,6 +60,7 @@ export default class QuestionList extends Component {
             items:[],
             totalCount:0,
             insearch:false,
+            searchKey:'',
         }
 
     }
@@ -242,26 +243,26 @@ export default class QuestionList extends Component {
 
         fileterArr(text){
 
-
+this.state.searchKey=text;
 this.state.insearch = true;
 
     if (text === '') {
+  this._onRefresh();
+ // this.setState({
+ //   dataSource:this.state.dataSource.cloneWithRows(this.state.items),
 
- this.setState({
-   dataSource:this.state.dataSource.cloneWithRows(this.state.items),
-
- })
+ // })
 
     }else {
+this._onRefresh();
+//    var a2 = this.state.items.filter(
+//       (item) => ((Global.formatDate(item.createDate).toLowerCase().indexOf(text) !== -1) || (item.createUser.toLowerCase().indexOf(text) !== -1) ||  (item.problemTitle.toLowerCase().indexOf(text) !== -1) || (this.getStatus(item.problemStatus).indexOf(text) !== -1))
+// );
 
-   var a2 = this.state.items.filter(
-      (item) => ((Global.formatDate(item.createDate).toLowerCase().indexOf(text) !== -1) || (item.createUser.toLowerCase().indexOf(text) !== -1) ||  (item.problemTitle.toLowerCase().indexOf(text) !== -1) || (this.getStatus(item.problemStatus).indexOf(text) !== -1))
-);
 
-
-     this.setState({
-         dataSource:this.state.dataSource.cloneWithRows(a2),
-     })
+//      this.setState({
+//          dataSource:this.state.dataSource.cloneWithRows(a2),
+//      })
 
     }
   }
@@ -284,9 +285,11 @@ this.state.insearch = true;
 
 
 
+
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
+                      keyword:this.state.searchKey
                      }
 
                  if (this.props.problemStatus) {
