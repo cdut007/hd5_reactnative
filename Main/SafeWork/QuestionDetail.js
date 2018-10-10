@@ -728,6 +728,7 @@ historyData.hseCheckTime = item['solveDate'];
            {title:'隐患描述',content:this.state.data.code3Desc,id:'a2',noLine:true},
              {title:'检查类型',content:this.state.data.checkType,id:'a3',noLine:true},
       {title:'隐患严重性类别',content:this.state.data.criticalLevel,id:'a4',noLine:true},
+       {title:'整改要求',content:this.state.data.requirement,id:'a5',noLine:true},
         {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
         {title:'问题照片',content:problemFiles,id:'14',noLine:true,type:'img'},
         {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
@@ -787,6 +788,7 @@ historyData.hseCheckTime = item['solveDate'];
   var displayAry = [
     {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
     {title:'问题照片',content:problemFiles,id:'10',noLine:true,type:'img'},
+    {title:'整改要求',content:this.state.data.requirement,id:'a5',noLine:true},
     {title:'整改描述',content:historyData.teamSolveDes,id:'9',noLine:true},
     {title:'整改照片',content:solveFiles,id:'12',noLine:true,type:'img'},
     {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
@@ -848,6 +850,7 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
     )
 
     var displayAry = [
+    {title:'整改要求',content:this.state.data.requirement,id:'a5',noLine:true},
       {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
       {title:'问题照片',content:problemFiles,id:'8',noLine:true,type:'img'},
       {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
@@ -912,6 +915,7 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
       {title:'隐患严重性类别',content:this.state.data.criticalLevel,id:'a4',noLine:true},
       {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
       {title:'问题照片',content:problemFiles,id:'14',noLine:true,type:'img'},
+      {title:'整改要求',content:this.state.data.requirement,id:'a5',noLine:true},
       {title:'整改描述',content:historyData.teamSolveDes,id:'9',noLine:true},
       {title:'整改照片',content:solveFiles,id:'15',noLine:true,type:'img'},
       {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
@@ -975,6 +979,7 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
   )
 
   var displayAry = [
+  {title:'整改要求',content:this.state.data.requirement,id:'a5',noLine:true},
     {title:'问题描述',content:this.state.data.problemDescription,id:'7',noLine:true},
     {title:'问题照片',content:problemFiles,id:'12',noLine:true,type:'img'},
     {title:'标题',content:this.state.data.problemTitle,id:'0',noLine:true},
@@ -1036,6 +1041,7 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
          {title:'隐患描述',content:this.state.data.code3Desc,id:'a2',noLine:true},
            {title:'检查类型',content:this.state.data.checkType,id:'a3',noLine:true},
       {title:'隐患严重性类别',content:this.state.data.criticalLevel,id:'a4',noLine:true},
+      {title:'整改要求',content:this.state.data.requirement,id:'a5',noLine:true},
       {title:'问题描述',content:this.state.data.problemDescription,id:'7',noLine:true},
       {title:'问题照片',content:problemFiles,id:'12',noLine:true,type:'img'},
       {title:'机组',content:this.state.data.unit,id:'1',noLine:true},
@@ -1096,6 +1102,7 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
     {title:'责任部门',content:this.state.data.responsibleDept?this.state.data.responsibleDept.deptName:this.state.data.responsibleDept,id:'5',noLine:true},
     {title:'责任班组',content:this.state.data.responsibleTeam?this.state.data.responsibleTeam.deptName:this.state.data.responsibleTeam,id:'6',noLine:true},
     {title:'截止日期',content:Global.formatDate(this.state.data.targetDate) ,id:'7',noLine:true},
+    {title:'整改要求',content:this.state.data.requirement,id:'a5',noLine:true},
     {title:'问题描述',content:this.state.data.problemDescription,id:'8',noLine:true},
     {title:'故障照片',content:problemFiles,id:'9',noLine:true,type:'img'},
   ];
@@ -1158,6 +1165,7 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
       {title:'检查类型',content:this.state.data.checkType,id:'a3',noLine:true},
       {title:'隐患严重性类别',content:this.state.data.criticalLevel,id:'a4',noLine:true},
       {title:'问题描述',content:this.state.data.describe,id:'6',noLine:true},
+      {title:'整改要求',content:this.state.data.requirement,id:'a5',noLine:true},
       {title:'整改描述',content:this.state.data.describe,id:'7',noLine:true},
       {title:'机组',content:this.state.data.machineType,id:'1',noLine:true},
       {title:'厂房',content:this.state.data.plantType,id:'2',noLine:true},

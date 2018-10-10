@@ -22,6 +22,8 @@ import ProblemAceess from '../SafeWork/ProblemAccess'
 import ProblemReport from '../SafeWork/ProblemReport'
 import Global from '../../common/globals'
 
+import HttpRequest from '../../HttpRequest/HttpRequest'
+
 var width = Dimensions.get('window').width;
 
 var safeModule = [
@@ -60,6 +62,24 @@ var safeModule = [
   },
 ]
 
+var safeModuleData = [
+    {
+        'index': 0,
+        'title': '隐患总数',
+        "type": "total",
+        
+    },{
+        'index': 1,
+        'title': '待整改数',
+        "type": "waitingModify",
+       
+    },{
+        'index': 2,
+        'title': '延期未整改',
+        "type": "delay",
+       
+    },]
+
 export  default class SafeWorkHomeView extends Component {
 
   constructor(props) {
@@ -70,9 +90,21 @@ export  default class SafeWorkHomeView extends Component {
       this.state = {
           title: "安全文明任务",
           dataSource: ds,
+          data:{},
       }
 
   }
+
+      onGetDataSuccess(response,paramBody){
+         Global.log('onGetDataSuccess@@@@')
+   
+
+        var data = response.responseResult;
+        if (data) {
+            this.setState({data:data})
+        }
+
+    }
 
   componentDidMount() {
 
@@ -80,6 +112,27 @@ export  default class SafeWorkHomeView extends Component {
           dataSource: this.state.dataSource.cloneWithRows(safeModule),
       });
 
+   var paramBody = {}
+   HttpRequest.get('/hse/hseStatistics3Month', paramBody, this.onGetDataSuccess.bind(this),
+       (e) => {
+
+
+           try {
+               var errorInfo = JSON.parse(e);
+               if (errorInfo != null) {
+                Global.log(errorInfo)
+               } else {
+                   Global.log(e)
+               }
+           }
+           catch(err)
+           {
+               Global.log(err)
+           }
+
+           Global.log('Task error:' + e)
+       })
+    
 
   }
 
@@ -103,10 +156,35 @@ export  default class SafeWorkHomeView extends Component {
       )
   }
 
+
+renderItems(moduleData){
+      var displayArr = []
+      for (var i = 0; i < moduleData.length; i++) {
+        var moduleDataItem = moduleData[i]
+        var count = this.state.data[moduleDataItem.type];
+        if(!count){
+          count = 0;
+        }
+
+         displayArr.push(
+         <View style={[{width:width/3}, styles.cell]}>
+             <Text style={{ fontSize: 20, color: "#282828" }}>{moduleDataItem.title}</Text>
+             <Text style={{ fontSize: 22, color: "#ff0000" }}>{count}</Text>
+         </View>)
+      }
+
+      return displayArr
+  }
+
+
   renderHeaderView(){
        return(
          <View style = {{width:width,height:200,backgroundColor:'#3CDEBA',alignItems:'center',justifyContent:'center'}}>
            <Image source={require('../../images/construction_icon.png')} style={{width:120,height:120}} resizeMode={Image.resizeMode.contain}></Image>
+         
+             <View style={styles.statisticsflexContainer}>
+                        {this.renderItems(safeModuleData)}
+                      </View>
          </View>
        );
   }
@@ -239,6 +317,20 @@ const styles = StyleSheet.create({
       alignSelf:'center',
       width: 88,
       height: 88,
+    },
+    statisticsflexContainer: {
+             height: 96,
+             backgroundColor: '#ffffff',
+             flexDirection: 'row',
+             justifyContent: "center",
+             alignItems: 'center',
+         },    cell: {
+        flex: 1,
+        height: 84,
+        width:width/3,
+        justifyContent: "center",
+        alignItems: 'center',
+         flexDirection: 'column',
     },
 
   });

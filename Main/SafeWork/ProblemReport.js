@@ -110,6 +110,7 @@ export  default class ProblemReport extends Component {
           RoomTypes:[],
           BgTypes:[],
           question:'',
+          requirement:'',
           fileArr: [{}],//装图片资源的数组
           loadingVisible:false,
           requestTime:1,
@@ -444,6 +445,7 @@ export  default class ProblemReport extends Component {
       {title:'责任部门',id:'choose_des',pickerTitle:"选择责任部门",content:this.state.ResDepart,data:DepartTypes,type:'choose',ref:this._selectDepart},
       {title:'责任班组(选填)',id:'choose_team',pickerTitle:"选择责任班组",content:this.state.ResTeam,data:TeamTypes,type:'choose',ref:this._selectTeam},
       {type:'describe'},
+      {type:'requirement'},
       {type:'file'},
 
 ];
@@ -468,6 +470,10 @@ for (var i = 0; i<displayAry.length; i++) {
  }else if (displayAry[i].type == 'describe') {
     itemAry.push(
       this._questtionDescribe()
+    )
+ }else if (displayAry[i].type == 'requirement') {
+    itemAry.push(
+      this._requirement()
     )
  }else if (displayAry[i].type == 'file') {
      itemAry.push(
@@ -563,6 +569,7 @@ return(
    param.append('eleration', this.state.elevation);
    param.append('roomno', this.state.RoomNumber);
    param.append('description', this.state.question);
+   param.append('requirement', this.state.requirement);
    param.append('responsibleDeptId', this.state.ResDepartId);
 
  if (this.state.ResTeamId) {
@@ -695,6 +702,11 @@ return(
    Global.alert("请选择隐患严重性类别");
    return;
  }
+
+  if (!this.state.requirement.length) {
+      Global.alert("请输入整改要求");
+       return;
+     }
      // if (!this.state.question.length) {
      //  Global.alert("请输入问题描述");
      //   return;
@@ -741,6 +753,20 @@ return(
   </View>
 )
 
+}
+
+_requirement(){
+  return(
+    <View style={styles.questionType}>
+      <Text style={{color: '#1c1c1c', fontSize: 14}}>整改要求:</Text>
+      <TextInput
+          style={{flex: 1, fontSize: 14, color: '#1c1c1c', padding: 5, textAlignVertical: 'top',}}
+          underlineColorAndroid ='transparent'
+          multiline = {true}
+          onChangeText={(text) => this.setState({ requirement: text })}
+          value={this.state.requirement} />
+    </View>
+  )
 }
 
 _questtionDescribe(){
