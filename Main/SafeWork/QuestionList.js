@@ -217,6 +217,7 @@ export default class QuestionList extends Component {
           component: QuestionDetail,
           props:{
             data:itemData,
+            safe:true,
             detailType:this.props.detailType,
           }
       })

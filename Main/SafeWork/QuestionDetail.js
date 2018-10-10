@@ -61,6 +61,7 @@ var problemFiles = [];
 var solveFiles = [];
 var solveAgainFiles = [];
 var TeamStoreTypes = [];
+var TeamTypes = [];
 
 var width = Dimensions.get('window').width;
 var historyData = new FormData()
@@ -108,6 +109,10 @@ export default class QuestionDetail extends Component {
     //  param.append('responsibleDeptId',this.state.data.responsibleDept.deptId);
     }
 
+    if(this.props.safe){
+      param.safe = 'safe';
+    }
+
     HttpRequest.get('/hse/createUI', param, this.featchDataSuccess.bind(this),
         (e) => {
           this.setState({
@@ -123,25 +128,38 @@ export default class QuestionDetail extends Component {
   featchDataSuccess(response){
 
   teams = [];
+  TeamTypes = [];
     this.setState({
         loadingVisible: false
     });
 
    if (response.responseResult) {
 
-  this.state.TeamTypes = response.responseResult.responsibleTeam;
-
-     this.state.TeamTypes.forEach((item) => {
+  var teamsData = response.responseResult.responsibleTeam;
+   if(teamsData){
+    this.state.TeamTypes = teamsData;
+     teamsData.forEach((item) => {
 
      teams.push(item['deptName'])
 
      })
+   }
+
+    
 
 
 
   this.state.responsibleCaptains = response.responseResult.responsibleDepts;
 
     TeamStoreTypes = response.responseResult.responsibleTeams;
+
+    if(TeamStoreTypes){
+      TeamStoreTypes.forEach((item) => {
+
+  TeamTypes.push(item['deptName'])
+
+  })
+    }
 
     if(this.state.responsibleCaptains){
        this.state.responsibleCaptains.forEach((item) => {
@@ -150,6 +168,7 @@ export default class QuestionDetail extends Component {
 
      })
     }
+
     
 
    }
@@ -1599,10 +1618,12 @@ switch (tag) {
       }
 
         TeamTypes = tempTeam;
+        teams = TeamTypes;
 
        this.state.TeamTypes = fliterTeamTypes.sort();
+       this.state.team = '选择责任班组';
        this.setState({TeamTypes:fliterTeamTypes, ResTeamId:null,
-        Team:'选择责任班组'})
+        team:'选择责任班组'})
 
   }
 
