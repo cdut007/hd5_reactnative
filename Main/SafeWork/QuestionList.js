@@ -354,6 +354,11 @@ this.state.insearch = true;
     renderRow(rowData, sectionID, rowID) {
         itemView = () => {
 
+            var textColor ='#707070';
+            if(rowData.delay){
+                 textColor ='#ff0000';
+            }
+
                 return (
 
                        <View style={styles.itemContainer}>
@@ -363,7 +368,7 @@ this.state.insearch = true;
 
                         <View style={styles.cell}>
 
-                          <Text numberOfLines={2}  style={{color:'#707070',fontSize:12,marginBottom:2,textAlign:'center'}}>
+                          <Text numberOfLines={2}  style={{color:textColor,fontSize:12,marginBottom:2,textAlign:'center'}}>
                             {Global.formatDate(rowData.createDate)}
                           </Text>
 
@@ -372,7 +377,7 @@ this.state.insearch = true;
 
                         <View style={styles.cell}>
 
-                        <Text numberOfLines={1} style={{color:'#707070',fontSize:8,marginBottom:2,}}>
+                        <Text numberOfLines={1} style={{color:textColor,fontSize:8,marginBottom:2,}}>
                               {rowData.problemTitle}
                         </Text>
 
@@ -380,7 +385,7 @@ this.state.insearch = true;
 
                         <View style={styles.cell}>
 
-                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                        <Text style={{color:textColor,fontSize:12,marginBottom:2,}}>
                            {rowData.createUser}
                         </Text>
 
@@ -388,7 +393,7 @@ this.state.insearch = true;
 
                         <View style={styles.cell}>
 
-                        <Text style={{color:'#707070',fontSize:12,marginBottom:2,}}>
+                        <Text style={{color:textColor,fontSize:12,marginBottom:2,}}>
                            {this.getStatus(rowData.problemStatus)}
                         </Text>
 

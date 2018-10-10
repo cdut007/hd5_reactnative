@@ -100,9 +100,13 @@ export  default class ProblemReport extends Component {
           code1:'选择问题',
           code2:'选择二级编码',
           code3:'选择隐患描述',
+          code4:'选择检查类型',
+          code5:'选择隐患严重性类别',
           code1data:null,
           code2data:null,
           code3data:null,
+          code4data:null,
+          code5data:null,
           RoomTypes:[],
           BgTypes:[],
           question:'',
@@ -185,6 +189,9 @@ export  default class ProblemReport extends Component {
   TeamTypes = [];
    code1 = [];
    code23 = [];
+   checkTypeList = [];
+   criticalLevelList = [];
+
 
 
     this.state.machineTypes = data.unit;
@@ -196,11 +203,35 @@ export  default class ProblemReport extends Component {
     RoomTypes = data.roomLevel;
     TeamStoreTypes = data.responsibleTeam;
 
+      this.state.code4data = data.checkTypeList;
+       this.state.code5data = data.criticalLevelList;
+
     this.state.machineTypes.forEach((item) => {
 
          machineTypes.push(item)
 
     })
+
+    if(data.checkTypeList){
+     
+        this.state.code4data.forEach((item) => {
+
+             checkTypeList.push(item['value'])
+
+        })
+    }
+
+
+    if(data.criticalLevelList){
+      
+            this.state.code5data.forEach((item) => {
+
+                 criticalLevelList.push(item['value'])
+
+            })
+        }
+
+
 
 
     if(this.state.code1data){
@@ -399,6 +430,10 @@ export  default class ProblemReport extends Component {
     var displayAry = [
 
         {title:'问题',id:'choose_code1',pickerTitle:"选择问题",content:this.state.code1,data:code1,type:'choose',ref:this._selectCode1},
+        
+      {title:'检查类型',id:'choose_checkType',pickerTitle:"选择检查类型",content:this.state.code4,data:checkTypeList,type:'choose',ref:this._selectCode4},
+        {title:'隐患严重性类别',id:'choose_criticalLevel',pickerTitle:"选择隐患严重性类别",content:this.state.code5,data:criticalLevelList,type:'choose',ref:this._selectCode5},
+
          {title:'二级编码',id:'choose_code2',pickerTitle:"选择二级编码",content:this.state.code2,data:code2,type:'choose',ref:this._selectCode2},
         {title:'隐患描述',id:'choose_code3',pickerTitle:"选择隐患描述",content:this.state.code3,data:code3,type:'choose',ref:this._selectCode3},
 
@@ -502,6 +537,24 @@ return(
      }
    })
 
+   var code4Id = null;
+   this.state.code4data.forEach((item) => {
+
+     if (item['value']  == this.state.code4) {
+           code4Id = item['key'];
+     }
+   })
+
+    var code5Id = null;
+   this.state.code5data.forEach((item) => {
+
+     if (item['value']  == this.state.code5) {
+           code5Id = item['key'];
+     }
+   })
+
+  param.append('checkType', code4Id);
+  param.append('criticalLevel', code5Id);
     param.append('code1Id', code1Id);
     param.append('code2Id', code2Id);
     param.append('code3Id', code3Id);
@@ -625,6 +678,23 @@ return(
        Global.alert("请选择责任部门");
        return;
      }
+
+     if (this.state.code2 == '选择二级编码') {
+   Global.alert("请选择二级编码");
+   return;
+ }
+ if (this.state.code3 == '选择隐患描述') {
+   Global.alert("请选择隐患描述");
+   return;
+ }
+ if (this.state.code4 == '选择检查类型') {
+   Global.alert("请选择检查类型");
+   return;
+ }
+ if (this.state.code5 == '选择隐患严重性类别') {
+   Global.alert("请选择隐患严重性类别");
+   return;
+ }
      // if (!this.state.question.length) {
      //  Global.alert("请输入问题描述");
      //   return;
@@ -911,11 +981,22 @@ return
                 this.setState({code3:data[0]})
             }
               break;
+
         case "choose_team":
         {
         this.figureTeam(data);
         }
           break;
+       case "choose_checkType":
+            {
+                this.setState({code4:data[0]})
+            }
+              break;
+       case "choose_criticalLevel":
+            {
+                this.setState({code5:data[0]})
+            }
+              break;
    }
 
   // this.setState({machineType: data[0]})
