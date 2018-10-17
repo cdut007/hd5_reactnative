@@ -27,7 +27,7 @@ import QualityManagerHomeView from './QualityControl/QualityManagerHomeView'
 import SolverLeaderView from './Problem/SolverLeaderView'
 import CoordinatorView from './Problem/CoordinatorView'
 import ResourceManageView from './ResourceManagement/ResourceManageView'
-import TrainingHomeView from './Training/TrainingHomeView'
+import TrainingHomeWebView from './Training/TrainingHomeWebView'
 
 
 
@@ -144,13 +144,13 @@ var bottomModuleData = [
         'image': require('../images/material_icon.png')
     }
 
-    // ,
-    //    {
-    //       'index': 3,
-    //       'title': '在线培训',
-    //       "type": "ZXPX",
-    //       'image': require('../images/training_img.png')
-    //  }
+    ,
+       {
+          'index': 3,
+          'title': '在线培训',
+          "type": "ZXPX",
+          'image': require('../images/training_img.png')
+     }
 
 ]
 
@@ -338,8 +338,8 @@ export default class HomeView extends Component {
 
             // Global.alert('在线培训');
             this.props.navigator.push({
-                component: TrainingHomeView,
-                name:'TrainingHomeView',
+                component: TrainingHomeWebView,
+                name:'TrainingHomeWebView',
                 props: {
                     data:data,
                     type:data.type,
