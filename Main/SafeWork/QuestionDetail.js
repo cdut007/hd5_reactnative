@@ -854,7 +854,7 @@ historyData.hseCheckTime = item['solveDate'];
 if (historyData.teamSolveAgainDes && solveAgainFiles) {
 
 displayAry.splice(4,0,{title:'再次整改描述',content:historyData.teamSolveAgainDes,id:'13',noLine:true})
-displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',noLine:true,type:'img'})
+displayAry.splice(5,0,  {title:'再次整改照片',content:solveAgainFiles,id:'14',noLine:true,type:'img'})
 
 }
 
@@ -981,7 +981,7 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',n
     if (historyData.teamSolveAgainDes && solveAgainFiles) {
 
     displayAry.splice(4,0,{title:'再次整改描述',content:historyData.teamSolveAgainDes,id:'13',noLine:true})
-    displayAry.splice(5,0,  {title:'再次整改照片',content:solveFiles,id:'14',noLine:true,type:'img'})
+    displayAry.splice(5,0,  {title:'再次整改照片',content:solveAgainFiles,id:'14',noLine:true,type:'img'})
 
     }
 
