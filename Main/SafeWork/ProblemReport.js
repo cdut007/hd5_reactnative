@@ -15,6 +15,8 @@ import {
     Alert,
     KeyboardAvoidingView,
     InteractionManager,
+    AsyncStorage,
+    DeviceEventEmitter
 
 } from 'react-native';
 
@@ -26,6 +28,8 @@ import MyReport from '../SafeWork/MyReport'
 import Spinner from 'react-native-loading-spinner-overlay'
 import HttpRequest from '../../HttpRequest/HttpRequest'
 import Global from '../../common/globals'
+import CommitButton from '../../common/CommitButton'
+import DraftQuestionList from '../SafeWork/DraftQuestionList'
 const SAFEWORK_ISSUE_COMMIT_URL = '/hse/create'
 
 const MAX_IMAGE_COUNT = 5;
@@ -114,6 +118,7 @@ export  default class ProblemReport extends Component {
           fileArr: [{}],//装图片资源的数组
           loadingVisible:false,
           requestTime:1,
+          draftData:this.props.draft,
 
       }
   }
@@ -289,7 +294,48 @@ export  default class ProblemReport extends Component {
   }
 
 
+  this.initDraft()
+  }
+  initDraft(){
+    if(this.state.draftData){
+      this.state.requirement = this.state.draftData.requirement;
+      this.state.question = this.state.draftData.describe;
+      var data=[];
+      var problem=this.state.draftData.problemTitle;
+      if(problem){
+         data.push(problem);
+        this.onSelectedType(data,'choose_code1');
+      }
 
+      if(this.state.draftData.fileArr){
+        this.state.fileArr = this.state.draftData.fileArr;
+      }
+     
+      var data2=[];
+      var code2=this.state.draftData.code2;
+      if(code2){
+         data2.push(code2);
+         this.onSelectedType(data2,'choose_code2');
+      }
+      var data3=[];
+      var code3=this.state.draftData.code3;
+      if(code3){
+        data3.push(code3);
+        this.onSelectedType(data3,'choose_code3');
+      }
+      var data4=[];
+      var code4=this.state.draftData.code4;
+      if(code4){
+         data4.push(code4);
+         this.onSelectedType(data4,'choose_checkType');
+      }
+      var data5=[];
+      var code5=this.state.draftData.code5;
+      if(code5){
+        data5.push(code5);
+        this.onSelectedType(data5,'choose_criticalLevel');
+      }
+    }
   }
 
 
@@ -398,12 +444,19 @@ export  default class ProblemReport extends Component {
           <View style={styles.container}>
               <NavBar
               title={this.state.title}
+                rightText={'草稿列表'}
+              rightPress={() => this.props.navigator.push({component:DraftQuestionList,
+              props: {
+                 data:Global.UserInfo,
+                 type:'safe_darft',
+                }})}
               leftIcon={require('../../images/back.png')}
               leftPress={this.back.bind(this)}/>
                <View style={styles.content}>
                  {this._ContentView()}
-                 {this._CommitButton()}
+                
                </View>
+                {this._CommitButton()}
                <Spinner
                    visible={this.state.loadingVisible}
                />
@@ -500,14 +553,13 @@ for (var i = 0; i<displayAry.length; i++) {
 
  _CommitButton(){
 return(
-  <TouchableOpacity
-      activeOpacity={0.8}
-      onPress={this.onCommit.bind(this)}
-      style={styles.commitButton}>
-      <Text style={{ color: '#ffffff', fontSize: 20, }} >
-          提交
-      </Text>
-  </TouchableOpacity>
+<View style={{height:50,width:width,flexDirection:'row'}}>
+      <View style={{height:50,flex:1}}><CommitButton title={'提交'}
+              onPress={this.onCommit.bind(this)} containerStyle={{backgroundColor:'#f0f0f0'}} titleStyle={{color: '#f77935'}}></CommitButton></View>
+              <View  style={{height:50,flex:1}}><CommitButton title={'保存草稿'}
+              onPress={this.onCommit.bind(this,true)}
+                      ></CommitButton></View>
+                      </View>
 )}
 
 
@@ -638,13 +690,55 @@ return(
         loadingVisible: false
     })
 
+    var me = this;
+
+        AsyncStorage.getItem('k_safework_draft_'+Global.UserInfo.id+"_"+'safe_darft',function(errs,result)
+        {
+          var datas = [];
+          var data = this.state.draftData;
+          if(!data){
+            data = {};
+          }
+            if (!errs && result && result.length)
+            {
+                 Global.log('read k_safework_draft_@@@@'+result)
+                 datas = JSON.parse(result);
+               
+            }
+
+            var findExsit = false;
+            for (var i = datas.length - 1; i >= 0; i--) {
+               if(datas[i].id == data.id && datas[i].id){
+                datas.splice(i, 1);
+                findExsit = true;
+                 break;
+               }
+            }
+
+            if(findExsit){
+               AsyncStorage.setItem('k_safework_draft_'+Global.UserInfo.id+"_"+'safe_darft', JSON.stringify(datas), (error, result) => {
+                if (error) {
+                    Global.log('save k_safework_draft_ faild.')
+                }
+                
+                DeviceEventEmitter.emit('Safe_Work','Safe_Work');
+                Global.log('save k_safework_draft_: sucess')
+
+            }); 
+            }
+
+          
+
+        });
+
+
      // Global.alert(response.message)
      this.props.navigator.pop()
 
   }
 
 
-  onCommit() {
+  onCommit(draft) {
 
  // if (!this.state.questionName.length) {
  //         Global.alert("请输入问题名称");
@@ -703,7 +797,7 @@ return(
    return;
  }
 
-  if (!this.state.requirement.length) {
+  if (!this.state.requirement || !this.state.requirement.length) {
       Global.alert("请输入整改要求");
        return;
      }
@@ -716,12 +810,78 @@ return(
          return;
      }
 
+    if(draft){
+      var me = this;
+      var timestamp1 = Date.parse(new Date()); 
+       var data = {id:timestamp1,createDate:timestamp1};
+        if(this.state.draftData){
+           data.id =this.state.draftData.id; 
+        }
 
-     Alert.alert('','确认提交?',
+        data.problemTitle = this.state.code1;
+         data.code2 = this.state.code2;
+          data.code3 = this.state.code3;
+          data.code4 = this.state.code4;
+          data.code5 = this.state.code5;
+          data.describe = this.state.question;
+          data.requirement= this.state.requirement;
+          data.fileArr = this.state.fileArr;
+
+
+        AsyncStorage.getItem('k_safework_draft_'+Global.UserInfo.id+"_"+'safe_darft',function(errs,result)
+        {
+
+           var problem = me;
+
+          var datas = [];
+            if (!errs && result && result.length)
+            {
+                 Global.log('read k_safework_draft_@@@@'+result)
+                 datas = JSON.parse(result);
+               
+            }
+
+            var findExsit = false;
+            for (var i = datas.length - 1; i >= 0; i--) {
+               if(datas[i].id == data.id && datas[i].id){
+                datas[i] = data;
+                findExsit = true;
+                 break;
+               }
+            }
+
+            if(!findExsit){
+              datas.push(data);
+            }else{
+              
+            }
+
+            AsyncStorage.setItem('k_safework_draft_'+Global.UserInfo.id+"_"+'safe_darft', JSON.stringify(datas), (error, result) => {
+                if (error) {
+                    Global.log('save k_safework_draft_ faild.')
+                }
+
+                Global.showToast('保存草稿成功！');
+              problem.props.navigator.replace({component:DraftQuestionList,
+              props: {
+                 data:Global.UserInfo,
+                 type:'safe_darft',
+                }})
+                Global.log('save k_safework_draft_: sucess')
+
+            }); 
+
+        });
+
+          }else{
+              Alert.alert('','确认提交?',
                [
                  {text:'取消',},
                  {text:'确认',onPress:()=> {this.confirmCommit()}}
-   ])
+             ])
+          }
+
+   
 
 
 
