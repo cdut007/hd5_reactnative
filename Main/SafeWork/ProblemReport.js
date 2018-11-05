@@ -86,8 +86,13 @@ export  default class ProblemReport extends Component {
   constructor(props) {
       super(props)
 
+
+      var title = '报告问题';
+      if(this.props.draft){
+        title = '编辑问题';
+      }
       this.state = {
-          title: "报告问题",
+          title: title,
           machineType: '选择机组',
           plantType: '选择厂房',
           questionName:'',
@@ -440,7 +445,26 @@ export  default class ProblemReport extends Component {
   }
 
   render() {
+
+    if(this.state.draftData){
       return (
+          <View style={styles.container}>
+              <NavBar
+              title={this.state.title}
+              leftIcon={require('../../images/back.png')}
+              leftPress={this.back.bind(this)}/>
+               <View style={styles.content}>
+                 {this._ContentView()}
+                
+               </View>
+                {this._CommitButton()}
+               <Spinner
+                   visible={this.state.loadingVisible}
+               />
+          </View>
+      )
+    }else{
+            return (
           <View style={styles.container}>
               <NavBar
               title={this.state.title}
@@ -462,6 +486,9 @@ export  default class ProblemReport extends Component {
                />
           </View>
       )
+    }
+
+
   }
 
   _ContentView(){
@@ -695,7 +722,7 @@ return(
         AsyncStorage.getItem('k_safework_draft_'+Global.UserInfo.id+"_"+'safe_darft',function(errs,result)
         {
           var datas = [];
-          var data = this.state.draftData;
+          var data = me.state.draftData;
           if(!data){
             data = {};
           }
@@ -720,6 +747,8 @@ return(
                 if (error) {
                     Global.log('save k_safework_draft_ faild.')
                 }
+
+                 Global.showToast('提交成功！');
                 
                 DeviceEventEmitter.emit('Safe_Work','Safe_Work');
                 Global.log('save k_safework_draft_: sucess')
@@ -810,7 +839,7 @@ return(
          return;
      }
 
-    if(draft){
+    if(draft && draft == true){
       var me = this;
       var timestamp1 = Date.parse(new Date()); 
        var data = {id:timestamp1,createDate:timestamp1};
@@ -853,7 +882,7 @@ return(
             if(!findExsit){
               datas.push(data);
             }else{
-              
+
             }
 
             AsyncStorage.setItem('k_safework_draft_'+Global.UserInfo.id+"_"+'safe_darft', JSON.stringify(datas), (error, result) => {
