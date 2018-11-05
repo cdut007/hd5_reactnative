@@ -132,12 +132,12 @@ export default class TrainingHomeView extends Component{
         // Global.alert(typeStr);
     }
     renderCardView(){
-
+  var  httpStr = HttpRequest.getDomain();
         if(true){
             var username = Global.UserInfo.username
             return(
                 <WebView
-                source={{uri:'http://116.236.114.61:9201/www/application/peixun/index/main.html?username='+username}}
+                source={{uri:httpStr+'/www/application/peixun/index/main.html?username='+username}}
                 style={{width:'100%',height:'100%'}}
             />)
         }

@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -445,6 +444,7 @@
 		E1B3F09345F146C3B88C318C /* UserNotifications.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		E5CEBC6D3F4B41AB92D78BAC /* libRNFetchBlob.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFetchBlob.a; sourceTree = "<group>"; };
 		F6FE8970F834479D8EA3BE02 /* CoreFoundation.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		F55A74D059874DBD9F08808E /* XLogForRN.xcodeproj */ = {isa = PBXFileReference; name = "XLogForRN.xcodeproj"; path = "../node_modules/react-native-xlog/ios/XLogForRN.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -692,6 +692,7 @@
 				12AF19A8B24648D3A5B043D2 /* RNDeviceInfo.xcodeproj */,
 				0031AB1A949A49EAB7C05134 /* RNVectorIcons.xcodeproj */,
 				D464028FE44B483A87435FE9 /* RNFetchBlob.xcodeproj */,
+				F55A74D059874DBD9F08808E /* XLogForRN.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1526,6 +1527,7 @@
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)..\node_modules\neact-native-cameraios",
+					"$(SRCROOT)\..\node_modules\react-native-xlog\ios\XLogForRN/**",
 				);
 				INFOPLIST_FILE = hd_appTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1572,6 +1574,7 @@
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)..\node_modules\neact-native-cameraios",
+					"$(SRCROOT)\..\node_modules\react-native-xlog\ios\XLogForRN/**",
 				);
 				INFOPLIST_FILE = hd_appTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1619,6 +1622,7 @@
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)..\node_modules\neact-native-cameraios",
+					"$(SRCROOT)\..\node_modules\react-native-xlog\ios\XLogForRN/**",
 				);
 				INFOPLIST_FILE = hd_app/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1651,6 +1655,7 @@
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)..\node_modules\neact-native-cameraios",
+					"$(SRCROOT)\..\node_modules\react-native-xlog\ios\XLogForRN/**",
 				);
 				INFOPLIST_FILE = hd_app/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1689,6 +1694,7 @@
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)..\node_modules\neact-native-cameraios",
+					"$(SRCROOT)\..\node_modules\react-native-xlog\ios\XLogForRN/**",
 				);
 				INFOPLIST_FILE = "hd_app-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1743,6 +1749,7 @@
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)/../node_modules/react-native-xlog/ios/XLogForRN/**",
 					"$(SRCROOT)..\node_modules\neact-native-cameraios",
+					"$(SRCROOT)\..\node_modules\react-native-xlog\ios\XLogForRN/**",
 				);
 				INFOPLIST_FILE = "hd_app-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

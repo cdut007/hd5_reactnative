@@ -20,6 +20,7 @@ import ProblemReview from '../SafeWork/ProblemReview'
 import ProblemRectification from '../SafeWork/ProbleRectification'
 import ProblemAceess from '../SafeWork/ProblemAccess'
 import ProblemReport from '../SafeWork/ProblemReport'
+import SafeWorkStatistics from '../SafeWork/SafeWorkStatistics';
 import Global from '../../common/globals'
 
 import HttpRequest from '../../HttpRequest/HttpRequest'
@@ -167,10 +168,13 @@ renderItems(moduleData){
         }
 
          displayArr.push(
+      <TouchableOpacity style={{alignSelf:'center'}}
+        onPress={this._safeWorkClick.bind(this,moduleDataItem)}>
          <View style={[{width:width/3}, styles.cell]}>
              <Text style={{ fontSize: 20, color: "#282828" }}>{moduleDataItem.title}</Text>
              <Text style={{ fontSize: 22, color: "#ff0000" }}>{count}</Text>
-         </View>)
+         </View>
+         </TouchableOpacity>)
       }
 
       return displayArr
@@ -227,6 +231,16 @@ i
 
            </View>
       )
+  }
+
+  _safeWorkClick(item){
+      this.props.navigator.push({
+        component: SafeWorkStatistics,
+         props: {
+                 data:Global.UserInfo,
+                 type:'safe',
+                }
+    })
   }
 
   _itemClick(item){
