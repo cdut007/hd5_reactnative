@@ -29,6 +29,7 @@ import CoordinatorView from './Problem/CoordinatorView'
 import ResourceManageView from './ResourceManagement/ResourceManageView'
 import TrainingHomeWebView from './Training/TrainingHomeWebView'
 
+import FileSearchListView from '../Main/Meeting/FileSearchListView';
 
 
 const isIOS = Platform.OS == "ios"
@@ -585,6 +586,15 @@ export default class HomeView extends Component {
         })
     }
 
+         enterSearchFileNotice(){
+          this.props.navigator.push({
+              component: FileSearchListView,
+               props: {
+                   type:this.props.type,
+                  }
+          })
+      }
+
     render() {
         return (
             <View style={styles.container}>
@@ -600,6 +610,25 @@ export default class HomeView extends Component {
                 <View  style={{backgroundColor:'#ffffff',flex:1,height:8}}/>
                 {this.renderToolsView()}
                 {this.renderBottomModuleView()}
+               <View style={styles.itemContainer}>
+                 <TouchableOpacity onPress={this.enterSearchFileNotice.bind(this)} style={styles.flexContainer}>
+                          <Image style={{width:24,height:24,}} source={require('../images/invalidDocumentIcon.png')} />
+
+                          <Text style={[styles.content,{fontSize:16,color:'#444444',}]}>
+                           文档变更查询
+                          </Text>
+
+                          <View style={{flex:1,flexDirection:'row',justifyContent:'flex-end', alignItems: 'center',}}>
+                          <Text style={[styles.content,{fontSize:14,color:'#777777'}]}>
+                          查看
+                          </Text>
+                          <Image style={{width:24,height:24,}} source={require('../images/detailsIcon.png')} />
+
+                          </View>
+
+
+                          </TouchableOpacity>
+                    </View>
                  </ScrollView>
             </View>
         )
@@ -753,6 +782,18 @@ const styles = StyleSheet.create({
     segmentView: {
         height: 44,
         borderColor: '#00a629'
+    },
+     itemContainer: {
+ 
+    },
+      flexContainer: {
+           height: 48,
+           width: width,
+           backgroundColor: '#ffffff',
+           // 容器需要添加direction才能变成让子元素flex
+           flexDirection: 'row',
+           alignItems: 'center',
+           padding:10,
     },
     segmentSelectedView: {
         backgroundColor: '#00a629'
