@@ -350,6 +350,10 @@ export default class FileSearchListView extends Component {
                         中文标题： {rowData.cnTitle}
                        </Text>
 
+                        <Text numberOfLines={1} style={{flex:1.4,color:'#0755a6',fontSize:14}}>
+                        状态： {rowData.status}
+                       </Text>
+
                         </View>
 
 
