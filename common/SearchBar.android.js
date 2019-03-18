@@ -41,9 +41,14 @@ class SearchBar extends React.Component {
      searchBar: this.props.searchBar ? this.props.searchBar : styles.searchBar,
      searchBarInput:this.props.searchBarInput ? this.props.searchBarInput : styles.searchBarInput,
      placeholderTextColor:"#979797",
+     placeholder:"搜索"
       }
       if (this.props.placeholderTextColor) {
            this.state.placeholderTextColor = this.props.placeholderTextColor
+      }
+
+      if(this.props.placeholder){
+        this.state.placeholder = this.props.placeholder;
       }
   }
 
@@ -71,7 +76,7 @@ class SearchBar extends React.Component {
           underlineColorAndroid={'transparent'}
           autoCorrect={false}
           onChangeText={this.props.onSearchChange}
-          placeholder="搜索"
+          placeholder={this.state.placeholder}
           placeholderTextColor={this.state.placeholderTextColor}
           onFocus={this.props.onFocus}
           style={this.state.searchBarInput}

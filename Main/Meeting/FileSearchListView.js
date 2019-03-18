@@ -23,6 +23,7 @@ import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 import NoticeExpiredDetailView from './FileSearchDetailView';
 import CardView from 'react-native-cardview'
+import CommitButton from '../../common/CommitButton'
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -55,6 +56,9 @@ export default class FileSearchListView extends Component {
             items:[],
             totalCount:0,
             keyword:'',
+            keyword0:'',
+            keyword1:'',
+            keyword2:''
 
         }
 
@@ -201,12 +205,17 @@ export default class FileSearchListView extends Component {
          isLoading: loading,
        });
 
+      if(this.state.keyword){
+        this.state.keyword0 = this.state.keyword;
+      }
 
 
                  var paramBody = {
                       pagesize:pagesize,
                       pagenum:index,
-                      fileCode:this.state.keyword,
+                      fileCode:this.state.keyword0,
+                      cnTitle:this.state.keyword1,
+                      remark:this.state.keyword2
                      }
 
 
@@ -247,12 +256,72 @@ export default class FileSearchListView extends Component {
               onSearchClose = {this.onSearchClose.bind(this)}
             leftIcon={require('../../images/back.png')}
             leftPress={this.back.bind(this)} />
+               <View style={ {alignSelf:'stretch',height:40,width:width,flexDirection: 'row',
+        justifyContent: 'space-between'}}>
+             <SearchBar
+                style={ {alignSelf:'stretch',height:40,width:width}}
+                isLoading={false}
+                placeholder={'搜索文件编码'}
+                onSearchChange={(text) => this.onSearchChanged0(text)}
+                />
+                </View>
+
+                 <View style={[{backgroundColor:"#d6d6d6",height:0.5,alignSelf:'stretch',width:width,flexDirection: 'row',
+        justifyContent: 'space-between'}]}>
+                </View>
+
+                    <View style={ {alignSelf:'stretch',height:40,width:width,flexDirection: 'row',
+        justifyContent: 'space-between'}}>
+             <SearchBar
+                style={ {alignSelf:'stretch',height:40,width:width}}
+                isLoading={false}
+                placeholder={'搜索中文标题'}
+                onSearchChange={(text) => this.onSearchChanged1(text)}
+                />
+                </View>
+  <View style={[{backgroundColor:"#d6d6d6",height:0.5,alignSelf:'stretch',width:width,flexDirection: 'row',
+        justifyContent: 'space-between'}]}>
+                </View>
+                    <View style={ {alignSelf:'stretch',height:40,width:width,flexDirection: 'row',
+        justifyContent: 'space-between'}}>
+             <SearchBar
+                style={ {alignSelf:'stretch',height:40,width:width}}
+                isLoading={false}
+                placeholder={'搜索备注'}
+                onSearchChange={(text) => this.onSearchChanged2(text)}
+                />
+                </View>
+               
+                <View style={{height:48,width:width}}><CommitButton title={'搜索'}
+                        onPress={this.startSearch.bind(this)}></CommitButton></View>
             {this.renderListView()}
             </View>
         )
     }
 
 
+
+  onSearchChanged0(text){
+   this.state.keyword0 = text;
+
+  }
+
+
+  onSearchChanged1(text){
+   this.state.keyword1 = text;
+
+  }
+
+
+  onSearchChanged2(text){
+   this.state.keyword2 = text;
+
+  }
+
+  startSearch(){
+ this._onRefresh();
+   
+ }
 
 
   onSearchChanged(text){
@@ -353,6 +422,11 @@ export default class FileSearchListView extends Component {
                         <Text numberOfLines={1} style={{flex:1.4,color:'#0755a6',fontSize:14}}>
                         状态： {rowData.status}
                        </Text>
+
+                       <Text numberOfLines={1} style={{flex:1.4,color:'#0755a6',fontSize:14}}>
+                        备注： {rowData.remark}
+                       </Text>
+
 
                         </View>
 
