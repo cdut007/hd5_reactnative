@@ -14,6 +14,7 @@ buildscript {
 }
 
 allprojects {
+   
     repositories {
         google()
         mavenLocal()
@@ -26,6 +27,8 @@ allprojects {
 }
 
 ext {
+    googlePlayServicesVersion = "16.1.0"
+    firebaseVersion = "17.6.0"
     MARS_XLOG_VERSION_NAME='1.0.4'
     MARS_XLOG_VERSION_NAME_SUFFIX = ''
 }

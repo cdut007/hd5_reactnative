@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native';
-import Xlog from 'react-native-xlog';
+//import Xlog from 'react-native-xlog';
 
   var apiDomainAddr = 'http://116.236.114.61:9201' // old  k项
 
@@ -103,13 +103,13 @@ module.exports = {
         url =  url+"?"+param;
 
         console.log('Get request:' + url)
-        Xlog.info('HttpRequestGet', url);
+       // Xlog.info('HttpRequestGet', url);
         fetch(url, {
             method: 'GET',})
             .then((response) => response.text())
             .then((responseText) => {
                 console.log("get request response:"+responseText);
-                Xlog.info('HttpRequestGetReuslt', responseText);
+               // Xlog.info('HttpRequestGetReuslt', responseText);
                 if (Global.testerDebug) {
                     Global.showAlert(url+""+responseText)
                 }
@@ -128,7 +128,7 @@ module.exports = {
             })
             .catch(function(err){
                 failCallback(err);
-                Xlog.info('HttpRequestGetReusltErr', ""+err);
+               // Xlog.info('HttpRequestGetReusltErr', ""+err);
                 if (Global.testerDebug) {
                     Global.showAlert(url+"Error:"+err)
                 }
@@ -183,7 +183,7 @@ module.exports = {
     try {
         var tagInfo = 'Post request:' + url +":[param body]="+JSON.stringify(body)
         console.log(tagInfo)
-        Xlog.info('HttpRequestPost', tagInfo);
+     //   Xlog.info('HttpRequestPost', tagInfo);
     } catch (e) {
 
     } finally {
@@ -202,7 +202,7 @@ module.exports = {
             .then((response) => response.text())
             .then((responseText) => {
                 console.log(responseText);
-                Xlog.info('HttpRequestPostReuslt', responseText);
+              //  Xlog.info('HttpRequestPostReuslt', responseText);
                 if (Global.testerDebug) {
                     Global.showAlert(url+"PostResult:"+responseText)
                 }
@@ -223,7 +223,7 @@ module.exports = {
             })
             .catch(function(err){
                 failCallback(err);
-                Xlog.info('HttpRequestPostReusltErr', ""+err);
+              //  Xlog.info('HttpRequestPostReusltErr', ""+err);
                 if (Global.testerDebug) {
                     Global.showAlert(url+"post Error:"+err)
                 }
@@ -237,7 +237,7 @@ module.exports = {
             .then((response) => response.text())
             .then((responseText) => {
                 console.log(responseText);
-                Xlog.info('HttpRequestPostReuslt', responseText);
+            //    Xlog.info('HttpRequestPostReuslt', responseText);
                 if (Global.testerDebug) {
                     Global.showAlert(url+" post:"+responseText)
                 }
@@ -256,7 +256,7 @@ module.exports = {
 
             })
             .catch(function(err){
-                Xlog.info('HttpRequestPostReusltErr', ""+err);
+           //     Xlog.info('HttpRequestPostReusltErr', ""+err);
                 if (Global.testerDebug) {
                     Global.showAlert(url+"post Error:"+responseText)
                 }
@@ -313,13 +313,13 @@ get(apiName, body,successCallback, failCallback)
     url =  url+"?"+param;
 
     console.log('Get request:' + url)
-     Xlog.info('HttpRequestGet', url);
+  //   Xlog.info('HttpRequestGet', url);
     fetch(url, {
         method: 'GET',})
       .then((response) => response.text())
       .then((responseText) => {
         console.log("get request response:"+responseText);
-         Xlog.info('HttpRequestGetReuslt', responseText);
+      //   Xlog.info('HttpRequestGetReuslt', responseText);
          if (Global.testerDebug) {
              Global.showAlert(url+""+responseText)
          }
@@ -338,7 +338,7 @@ get(apiName, body,successCallback, failCallback)
       })
       .catch(function(err){
         failCallback(err);
-          Xlog.info('HttpRequestGetReusltErr', ""+err);
+        //  Xlog.info('HttpRequestGetReusltErr', ""+err);
           if (Global.testerDebug) {
               Global.showAlert(url+"Error:"+err)
           }
@@ -398,7 +398,7 @@ post(apiName, body,successCallback, failCallback)
      try {
          var tagInfo = 'Post request:' + url +":[param body]="+JSON.stringify(body)
          console.log(tagInfo)
-         Xlog.info('HttpRequestPost', tagInfo);
+      //   Xlog.info('HttpRequestPost', tagInfo);
      } catch (e) {
 
      } finally {
@@ -417,7 +417,7 @@ if (body.jsonBody) {
           .then((response) => response.text())
           .then((responseText) => {
             console.log(responseText);
-                 Xlog.info('HttpRequestPostReuslt', responseText);
+               //  Xlog.info('HttpRequestPostReuslt', responseText);
                  if (Global.testerDebug) {
                      Global.showAlert(url+"PostResult:"+responseText)
                  }
@@ -438,7 +438,7 @@ if (body.jsonBody) {
           })
           .catch(function(err){
             failCallback(err);
-              Xlog.info('HttpRequestPostReusltErr', ""+err);
+            //  Xlog.info('HttpRequestPostReusltErr', ""+err);
               if (Global.testerDebug) {
                   Global.showAlert(url+"post Error:"+err)
               }
@@ -452,7 +452,7 @@ if (body.jsonBody) {
           .then((response) => response.text())
           .then((responseText) => {
             console.log(responseText);
-                 Xlog.info('HttpRequestPostReuslt', responseText);
+              //   Xlog.info('HttpRequestPostReuslt', responseText);
                  if (Global.testerDebug) {
                      Global.showAlert(url+" post:"+responseText)
                  }
@@ -471,7 +471,7 @@ if (body.jsonBody) {
 
           })
           .catch(function(err){
-                   Xlog.info('HttpRequestPostReusltErr', ""+err);
+                 //  Xlog.info('HttpRequestPostReusltErr', ""+err);
                    if (Global.testerDebug) {
                        Global.showAlert(url+"post Error:"+responseText)
                    }
@@ -532,7 +532,7 @@ if (body.jsonBody) {
           })
           .catch(function(err){
             console.log("uploadInfo- error---->:"+err);
-              Xlog.info('HttpRequestPostReusltErrUpload', ""+err);
+           //   Xlog.info('HttpRequestPostReusltErrUpload', ""+err);
               if (Global.testerDebug) {
                   Global.showAlert(url+ "upload Error:"+err)
               }

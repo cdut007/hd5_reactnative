@@ -4,9 +4,9 @@ import android.app.Application;
 import android.os.Environment;
 
 import com.beefe.picker.PickerViewPackage;
-import com.engsshi.xlog.XLogModule;
-import com.engsshi.xlog.XLogPackage;
-import com.engsshi.xlog.XLogSetting;
+// import com.engsshi.xlog.XLogModule;
+// import com.engsshi.xlog.XLogPackage;
+// import com.engsshi.xlog.XLogSetting;
 import com.facebook.react.ReactApplication;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
@@ -24,13 +24,14 @@ import com.hd_app.view.edittext.EditTextReactPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.reactlibrary.RNCardViewPackage;
 import com.tencent.bugly.Bugly;
+import android.support.multidex.MultiDexApplication;
 import com.tencent.bugly.beta.Beta;
 
 import cn.jpush.reactnativejpush.JPushPackage;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainApplication extends Application implements ReactApplication {
+public class MainApplication extends MultiDexApplication implements ReactApplication {
     private boolean SHUTDOWN_TOAST = true;
        private boolean SHUTDOWN_LOG = false;
 
@@ -51,7 +52,7 @@ public class MainApplication extends Application implements ReactApplication {
             new FilePickerPackage(),
             new VectorIconsPackage(),
             new RNDeviceInfo(),
-                    new XLogPackage(),
+                  //  new XLogPackage(),
                     new PickerViewPackage(),
                     new ImagePickerPackage(),
                     new RNCardViewPackage(),
@@ -74,20 +75,20 @@ public class MainApplication extends Application implements ReactApplication {
         Beta.initDelay = 5 * 1000;
         Bugly.init(getApplicationContext(), "8627b7cc8e", false);
 
-        final String appName = this.getString(R.string.app_name);
-        final String logPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/log";
+        // final String appName = this.getString(R.string.app_name);
+        // final String logPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + appName + "/log";
 
-        XLogSetting xLogSetting = XLogSetting.builder()
-                .setLevel(XLogSetting.LEVEL_DEBUG)
-                .setPath(logPath)
-                .setCacheDir("")
-                .setAppenderMode(XLogSetting.APPENDER_MODE_ASYNC)
-                .setNamePrefix(appName)
-                .setOpenConsoleLog(true)
-                .build();
-        //XLogModule.init(xLogSetting)
-        XLogModule.initWithNativeCrashInclude(xLogSetting, this);
-        XLogModule.open(); //optional, for this, you can log before into RNView
+        // XLogSetting xLogSetting = XLogSetting.builder()
+        //         .setLevel(XLogSetting.LEVEL_DEBUG)
+        //         .setPath(logPath)
+        //         .setCacheDir("")
+        //         .setAppenderMode(XLogSetting.APPENDER_MODE_ASYNC)
+        //         .setNamePrefix(appName)
+        //         .setOpenConsoleLog(true)
+        //         .build();
+        // //XLogModule.init(xLogSetting)
+        // XLogModule.initWithNativeCrashInclude(xLogSetting, this);
+        // XLogModule.open(); //optional, for this, you can log before into RNView
 
         // TODO Auto-generated method stub
 
