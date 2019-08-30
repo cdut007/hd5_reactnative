@@ -18,6 +18,7 @@ import QuestionStaicContainer from '../SafeWork/QuestionStaicContainer'
 import Global from '../../common/globals'
 import   ScrollableTabView  from 'react-native-scrollable-tab-view';
 import SearchBar from '../../common/SearchBar';
+
 import QuestionList from '../SafeWork/QuestionList';
 
 
@@ -90,6 +91,9 @@ export  default class ProblemRectification extends Component {
 
 
   }
+ 
+
+
 
   renderSearchBar(){
 

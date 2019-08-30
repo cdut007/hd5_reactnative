@@ -185,7 +185,9 @@ renderItems(moduleData){
        return(
          <View style = {{width:width,height:200,backgroundColor:'#3CDEBA',alignItems:'center',justifyContent:'center'}}>
            <Image source={require('../../images/construction_icon.png')} style={{width:120,height:120}} resizeMode={Image.resizeMode.contain}></Image>
-         
+           <View >
+             <Text style={{ fontSize: 20, color: "#282828" }}>{this.state.data.day90agoTips}</Text>
+                      </View>
              <View style={styles.statisticsflexContainer}>
                         {this.renderItems(safeModuleData)}
                       </View>

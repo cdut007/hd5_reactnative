@@ -26,6 +26,7 @@ import Global from '../../common/globals.js';
 import QuestionDetail from '../SafeWork/QuestionDetail'
 import LoadEmptyView from '../../common/LoadEmptyView'
 
+import SearchItemFilter from '../../common/SearchItemFilter';
 
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
@@ -308,6 +309,17 @@ this._onRefresh();
                 if (this.props.problemSolveStatus) {
                       paramBody.problemSolveStatus = this.props.problemSolveStatus
               }
+                if (this.state.problemStatus) {
+                      paramBody.problemStatus = this.state.problemStatus
+              }
+
+                if (this.state.createTime) {
+                      paramBody.createTime = this.state.createTime
+              }
+                if (this.state.targetTime) {
+                      paramBody.targetTime = this.state.targetTime
+              }
+              
 
 
             HttpRequest.get('/hse/problemList', paramBody, this.onGetDataSuccess.bind(this),
@@ -338,10 +350,40 @@ this._onRefresh();
     }
 
 
+ renderSearchItemFilter(){
+   return(
+               <SearchItemFilter
+                
+               onSearchFilterChange={(createTime,targetTime,problemStatus) =>
+               (
+               this.renderFilter(createTime,targetTime,problemStatus)
+              )}
+               />
+
+
+     )
+}
+
+  renderFilter(createTime,targetTime,problemStatus){
+    if(createTime){
+                this.state.createTime = createTime+'0';
+               }
+                if(targetTime){
+                this.state.targetTime = targetTime+'0';
+               }
+                if(problemStatus){
+                 this.state.problemStatus = problemStatus;
+               }
+                this._onRefresh()
+  }
 
     render() {
         return (
+
             <View style={styles.container}>
+             <View style={styles.searchFliterflexContainer}>
+            {this.renderSearchItemFilter()}
+            </View>
             {this.renderListView()}
             <LoadingView showLoading={ this.state.isLoading } closeLoading={ this._closeLoading.bind(this)}></LoadingView>
             </View>
@@ -510,11 +552,17 @@ this._onRefresh();
 const styles = StyleSheet.create({
     container: {
         flex:1,
+         width: width
     },
     topView: {
         height: 150,
         width: width,
     },
+     searchFliterflexContainer: {
+              height: 64,
+              backgroundColor: '#ffffff',
+              flexDirection: 'row',
+          },
     list:
     {
         flex: 1,
