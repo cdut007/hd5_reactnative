@@ -319,10 +319,17 @@ this._onRefresh();
                 if (this.state.targetTime) {
                       paramBody.targetTime = this.state.targetTime
               }
+
+              var url = '/hse/problemList';
+              if(this.props.type == 'dept_scan'){
+                paramBody.oneOf3Type = this.props.oneOf3Type;
+                  paramBody.responsibleDept = this.props.deptId;
+                  url = '/hse/problemList3m';
+              }
               
 
 
-            HttpRequest.get('/hse/problemList', paramBody, this.onGetDataSuccess.bind(this),
+            HttpRequest.get(url, paramBody, this.onGetDataSuccess.bind(this),
                 (e) => {
 
 

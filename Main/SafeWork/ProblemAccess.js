@@ -24,23 +24,6 @@ import QuestionList from '../SafeWork/QuestionList';
 
 var width = Dimensions.get('window').width;
 
-var safeModule = [
-  {
-    'title':"待处理",
-    'image': require('../../images/construction_icon.png'),
-    'index': 0,
-    "type":"DCL",
-    "detailType":"1006",
-  },
-  {
-    'title':"已完成",
-    'image': require('../../images/construction_icon.png'),
-    'index': 1,
-    "type":"YWC",
-    "detailType":"1007",
-  },
-
-]
 
 export  default class ProblemRectification extends Component {
 
@@ -56,11 +39,39 @@ export  default class ProblemRectification extends Component {
 
       }
 
+      if(this.props.type == 'dept_scan'){
+        var name = this.props.deptName+'问题查阅';
+         this.state = {
+          title: name,
+          detailType:"1003",
+          index:0,
+
+      }
+      }
+
   }
 
   rendTabs(){
 
-    return( <ScrollableTabView locked={true}
+  if(this.props.type == 'dept_scan'){
+     return( <ScrollableTabView locked={true}
+        tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
+           tabBarBackgroundColor='#FFFFFF'
+           tabBarActiveTextColor='#f77935'
+           tabBarInactiveTextColor='#777777'
+           onChangeTab={(obj) => {
+       this.state.index = obj.i ;
+}
+}
+  >
+
+      {this._renderQuetionView("隐患总数","total")}
+      {this._renderQuetionView("待整改数","waitingModify")}
+       {this._renderQuetionView("超期未整改数","delay")}
+
+  </ScrollableTabView>)
+  }else{
+     return( <ScrollableTabView locked={true}
         tabBarUnderlineStyle={{backgroundColor: '#f77935'}}
            tabBarBackgroundColor='#FFFFFF'
            tabBarActiveTextColor='#f77935'
@@ -75,8 +86,12 @@ export  default class ProblemRectification extends Component {
       {this._renderQuetionView("所有问题","all")}
 
   </ScrollableTabView>)
+  }
+
+   
 
   }
+
 
   _renderQuetionView(label,problemSolveStatus){
 
@@ -165,22 +180,48 @@ export  default class ProblemRectification extends Component {
   renderQuestionList(problemSolveStatus){
 
     var userId = '';
-
+    var ref;
     if (problemSolveStatus == 'mine') {
 
           ref="list_Renovating";
-    }else {
+    }else if(problemSolveStatus == 'all'){
 
          ref = "list_finish";
 
+    }else if(problemSolveStatus == 'total'){
+
+         ref = "list_total";
+
+    }else if(problemSolveStatus == 'waitingModify'){
+
+         ref = "list_waitingModify";
+
+    }else if(problemSolveStatus == 'delay'){
+
+         ref = "list_delay";
+
     }
+
+
 
     if (Global.UserInfo.id) {
         userId = Global.UserInfo.id;
     }
-
-
-   return (
+ if(this.props.type == 'dept_scan'){
+  return (
+       <QuestionList
+      style={{alignSelf:'stretch',flex:1}}
+      type={this.props.type}
+      detailType={this.state.detailType}
+      oneOf3Type={problemSolveStatus}
+      deptId={this.props.deptId}
+      userId={userId}
+      navigator={this.props.navigator}
+      ref={ref}
+      />
+   )
+ }else{
+  return (
        <QuestionList
       style={{alignSelf:'stretch',flex:1}}
       type={this.props.type}
@@ -191,6 +232,9 @@ export  default class ProblemRectification extends Component {
       ref={ref}
       />
    )
+ }
+
+   
 
 
   }
@@ -219,16 +263,28 @@ export  default class ProblemRectification extends Component {
 
 // alert(this.state.index);
 
-if (this.state.index == 0){
+  if(this.props.type == 'dept_scan'){
+    if(this.state.index == 0){
+      this.refs.list_total.onSearchChange(text);
+    }else if(this.state.index == 1){
+      this.refs.list_waitingModify.onSearchChange(text);
+    }else if(this.state.index == 2){
+      this.refs.list_delay.onSearchChange(text);
+    }
+  }else{
+    if (this.state.index == 0){
 
-if (this.refs.list_Renovating) {
-      this.refs.list_Renovating.onSearchChange(text);
-}
-}else {
-if (this.refs.list_finish) {
-      this.refs.list_finish.onSearchChange(text);
-}
-}
+    if (this.refs.list_Renovating) {
+          this.refs.list_Renovating.onSearchChange(text);
+    }
+    }else {
+    if (this.refs.list_finish) {
+          this.refs.list_finish.onSearchChange(text);
+    }
+    }
+  }
+
+
 
 // this.refs.current_ref.onSearchChange(text);
 //    console.log(this.state.problemStatus);
@@ -236,7 +292,15 @@ if (this.refs.list_finish) {
   }
 
   onSearchClose(){
-
+ if(this.props.type == 'dept_scan'){
+ if(this.state.index == 0){
+      this.refs.list_total.onSearchChange('');
+    }else if(this.state.index == 1){
+      this.refs.list_waitingModify.onSearchChange('');
+    }else if(this.state.index == 2){
+      this.refs.list_delay.onSearchChange('');
+    }
+ }else{
     if (this.state.index == 0){
 
     if (this.refs.list_Renovating) {
@@ -247,6 +311,8 @@ if (this.refs.list_finish) {
           this.refs.list_finish.onSearchChange('');
     }
     }
+ }
+  
 
   }
 

@@ -21,6 +21,8 @@ import px2dp from '../../common/util'
 import SearchBar from '../../common/SearchBar';
 import dateformat from 'dateformat'
 
+import ProblemAceess from '../SafeWork/ProblemAccess'
+
 const isIOS = Platform.OS == "ios"
 var width = Dimensions.get('window').width;
 var pagesize = 10;
@@ -119,7 +121,15 @@ export default class SafeWorkStatistics extends Component {
     }
 
     onItemPress(itemData){
-      
+       this.props.navigator.push({
+        component: ProblemAceess,
+            props: {
+                           data:Global.UserInfo,
+                           type:'dept_scan',
+                           deptId:itemData.deptId,
+                           deptName:itemData.deptName
+                          }
+    })
     }
 
 
