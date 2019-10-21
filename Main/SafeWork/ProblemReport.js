@@ -312,6 +312,39 @@ export  default class ProblemReport extends Component {
         this.onSelectedType(data,'choose_code1');
       }
 
+      this.state.RoomNumber = this.state.draftData.RoomNumber;
+      var dataRoomNumber=[];
+      var RoomNumber=this.state.draftData.RoomNumber;
+      if(RoomNumber){
+         dataRoomNumber.push(RoomNumber);
+        this.onSelectedType(dataRoomNumber,'room_no');
+      }
+
+      this.state.ResDepart = this.state.draftData.ResDepart;
+      var dataResDepart=[];
+      var ResDepart=this.state.draftData.ResDepart;
+      if(ResDepart){
+         dataResDepart.push(ResDepart);
+        this.onSelectedType(dataResDepart,'choose_des');
+      }
+
+      this.state.ResTeam = this.state.draftData.ResTeam;
+      var dataResTeam=[];
+      var ResTeam=this.state.draftData.ResTeam;
+      if(ResTeam){
+         dataResTeam.push(ResTeam);
+        this.onSelectedType(dataResTeam,'choose_team');
+      }
+
+     var dataElevation=[];
+       var choose_elevation=this.state.draftData.elevation;
+      if(choose_elevation){
+         dataElevation.push(choose_elevation);
+        this.onSelectedType(dataElevation,'elevation');
+      }
+
+         
+
       if(this.state.draftData.fileArr){
         this.state.fileArr = this.state.draftData.fileArr;
       }
@@ -804,6 +837,10 @@ return(
       this.state.elevation = '';
     }
 
+    if(this.state.ResTeam =='选择责任班组'){
+      this.state.ResTeam='';
+    }
+
      if (!this.state.ResDepartId) {
        Global.alert("请选择责任部门");
        return;
@@ -855,7 +892,12 @@ return(
           data.describe = this.state.question;
           data.requirement= this.state.requirement;
           data.fileArr = this.state.fileArr;
-
+          data.RoomNumber = this.state.RoomNumber;
+          data.elevation = this.state.elevation;
+          data.ResTeam = this.state.ResTeam;
+          data.ResDepart = this.state.ResDepart;
+          data.ResDepartId = this.state.ResDepartId;
+          data.ResTeamId = this.state.ResTeamId;
 
         AsyncStorage.getItem('k_safework_draft_'+Global.UserInfo.id+"_"+'safe_darft',function(errs,result)
         {
