@@ -493,6 +493,8 @@ this._onRefresh();
          return '已完成'
      }else if(status == 'None'){
          return '不需处理'
+     }else if(status == 'Need_A_Check'){
+         return '待编制审查'
      }else {
        return status
      }

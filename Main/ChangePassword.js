@@ -80,7 +80,7 @@ export default class ChangePassword extends Component {
             }
 
             var myReg= /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{4,16}$/
-            if (!myreg.test(this.state.newPassword)) {
+            if (!myReg.test(this.state.newPassword)) {
               Global.alert('密码范围16个字符以内，须满足至少1个大写字母，1个小写字母和1个数字')
                 return
             }

@@ -241,7 +241,10 @@ export default class QuestionDetail extends Component {
 
     if (this.state.data.problemStatus == "Need_Handle" && this.props.detailType !== '1003') {
    return this.renderNewCommit();
- }else if (this.state.data.problemStatus == "Need_Check" && this.props.detailType !== '1003') {
+ }else if ((this.state.data.problemStatus == "Need_Check")&& this.props.detailType !== '1003') {
+      return this.renderModeratedCommit();
+ }else if ((this.state.data.problemStatus == "Need_A_Check")&&this.state.data.createUserId==Global.UserInfo.id) {
+
       return this.renderModeratedCommit();
  }else if (this.state.data.problemStatus == "Renovating" && this.props.detailType !== '1003') {
     return this.renderWaitCommit();
@@ -253,15 +256,69 @@ export default class QuestionDetail extends Component {
   renderWaitCommit(){
 
 return(
+
     <View style={{height:50,width:width,flexDirection:'row'}}>
+     <View style={{height:50,flex:1}}>
     <CommitButton title={'提交整改结果'}
     onPress={this.commit.bind(this)}
       >
     </CommitButton>
+     </View>
+     <View style={{height:50,flex:1}}><CommitButton title={'退回'} containerStyle={{backgroundColor:'#ffffff'}} titleStyle={{color: '#f77935'}}
+                                onPress={this.rollback.bind(this)}></CommitButton></View>
     </View>
 )
 
   }
+
+   rollback(){
+   
+    Alert.alert('','确认退回?',
+              [
+                {text:'取消',},
+                {text:'确认',onPress:()=> {this.rollbackCall()}}
+  ])
+
+  }
+
+  rollbackCall(){
+this.setState({
+        loadingVisible: true
+   })
+   var paramBody = {
+            'problemId' : this.props.data.id,
+       }
+
+
+   HttpRequest.post('/hse/returnToEditor', paramBody, this.onDeliverySuccess.bind(this),
+       (e) => {
+         this.setState({
+             loadingVisible: false
+         });
+         try {
+             var errorInfo = JSON.parse(e);
+         }
+         catch(err)
+         {
+             console.log("error======"+err)
+         }
+             if (errorInfo != null) {
+                 if (errorInfo.code == -1002||
+                  errorInfo.code == -1001) {
+                 Global.showToast(errorInfo.message);
+             }else {
+               Global.showToast(e)
+             }
+
+             } else {
+                 Global.showToast(e)
+             }
+
+         console.log('Login error:' + e)
+
+       })
+
+ }
 
   commit(){
 
@@ -379,8 +436,11 @@ if (status == 1) {
             'problemId' : this.props.data.id,
             'checkResult' :  status,
        }
-
-   HttpRequest.post('/hse/checkRenovateResult', paramBody, this.onDeliverySuccess.bind(this),
+   var url = '/hse/checkRenovateResult';
+if(this.state.data.problemStatus == "Need_A_Check"){
+        url = '/hse/checkProducerResult';
+}
+   HttpRequest.post(url, paramBody, this.onDeliverySuccess.bind(this),
        (e) => {
          this.setState({
              loadingVisible: false
@@ -1294,6 +1354,14 @@ displayAry.splice(5,0,  {title:'再次整改照片',content:solveAgainFiles,id:'
 
 
    }else if (this.state.data.problemStatus == "Need_Check") {
+
+     if (this.props.detailType == "1003") {
+     return this.Need_HandleQuery()
+     }else {
+    return this.Moderated()
+     }
+
+  }else if (this.state.data.problemStatus == "Need_A_Check") {
 
      if (this.props.detailType == "1003") {
      return this.Need_HandleQuery()
