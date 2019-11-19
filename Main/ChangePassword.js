@@ -18,6 +18,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import NavBar from '../common/NavBar'
 import TabView from '../Main/TabView'
 import DeviceInfo from 'react-native-device-info'
+import MD5 from "react-native-md5"
 import ImagePicker from 'react-native-image-picker'
 var Global = require('../common/globals');
 
@@ -78,16 +79,21 @@ export default class ChangePassword extends Component {
                 return
             }
 
+            var myReg= /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{4,16}$/
+            if (!myreg.test(this.state.newPassword)) {
+              Global.alert('密码范围16个字符以内，须满足至少1个大写字母，1个小写字母和1个数字')
+                return
+            }
             this.setState({
                 loadingVisible: true
             });
             var paramBody = {
-                    'newPassword': this.state.newPassword,
-                    'password': this.state.passWord,
+                    'newPassword': MD5.hex_md5(this.state.newPassword),
+                    'password': MD5.hex_md5(this.state.passWord),
 
                 }
 
-            HttpRequest.post('/password', paramBody, this.onSuccess.bind(this),
+            HttpRequest.post('/password2', paramBody, this.onSuccess.bind(this),
                 (e) => {
                     this.setState({
                         loadingVisible: false

@@ -21,6 +21,7 @@ import TabView from '../Main/TabView'
 import CheckBox from 'react-native-checkbox'
 import DeviceInfo from 'react-native-device-info'
 import ImagePicker from 'react-native-image-picker'
+import MD5 from "react-native-md5"
 var Global = require('../common/globals');
 
 var width = Dimensions.get('window').width;
@@ -60,8 +61,8 @@ var options = {
 
 var ReportPbTypes =  {'K2/K3核电项目部':"1",'福清核电项目部':"2",'海阳核电项目部':"3","霞浦核电项目部":"4","三门核电项目部":"5"}
 
-    var innerIpArr = {'K2/K3核电项目部':"http://10.7.1.6:9201",'福清核电项目部':"http://10.1.1.137:8008",'海阳核电项目部':"http://192.168.201.20:9201",'霞浦核电项目部':"http://10.8.1.12:9201",'三门核电项目部':"http://172.23.0.211:9201"}
-var outerIpArr = {'K2/K3核电项目部':"http://209.150.148.49:9201",'福清核电项目部':"http://hdapp.cnec5.com",'海阳核电项目部':"http://58.57.7.130:9201",'霞浦核电项目部':"http://117.26.159.43:9201",'三门核电项目部':"http://60.191.184.234:9201"}
+    var innerIpArr = {'K2/K3核电项目部':"http://10.7.1.6:9201",'福清核电项目部':"http://10.1.1.137:8008",'海阳核电项目部':"http://192.168.201.20:9201",'霞浦核电项目部':"http://10.1.1.137:8028",'三门核电项目部':"http://172.23.0.211:9201"}
+var outerIpArr = {'K2/K3核电项目部':"http://209.150.148.49:9201",'福清核电项目部':"http://hdapp.cnec5.com",'海阳核电项目部':"http://58.57.7.130:9201",'霞浦核电项目部':"http://xphdapp.cnec5.com",'三门核电项目部':"http://60.191.184.234:9201"}
 // var innerIpArr = {'K2/K3核电项目部':"http://10.1.1.104:9201",'福清核电项目部':"http://10.2.1.54:9201",'海阳核电项目部':"http://192.168.201.20:9201"}
 // var outerIpArr = {'K2/K3核电项目部':"http://116.236.114.61:9201",'福清核电项目部':"http://125.77.122.66:9201",'海阳核电项目部':"http://58.57.7.130:9201"}
 
@@ -340,7 +341,7 @@ export default class LoginView extends Component {
        var id = this.genId()
         var paramBody = {
                 'username': this.state.LoginId,
-                'password': this.state.passWord,
+                'password': MD5.hex_md5(this.state.passWord),
                 'uuid': id
             }
         if (!this.state.LoginId.length || !this.state.passWord.length) {
@@ -350,8 +351,9 @@ export default class LoginView extends Component {
             Global.alert('请输入用户名或密码')
         }
         else if(!this.state.currentProduct.length){
+
             if (HttpRequest.isTestDel()){
-                HttpRequest.post('/authenticate', paramBody, this.onLoginSuccess.bind(this),
+                HttpRequest.post('/authenticate2', paramBody, this.onLoginSuccess.bind(this),
                     (e) => {
                         this.setState({
                             loadingVisible: false
@@ -402,8 +404,7 @@ export default class LoginView extends Component {
 
                 });
 
-
-                HttpRequest.post('/authenticate', paramBody, this.onLoginSuccess.bind(this),
+                HttpRequest.post('/authenticate2', paramBody, this.onLoginSuccess.bind(this),
                     (e) => {
                         this.setState({
                             loadingVisible: false
@@ -463,6 +464,11 @@ export default class LoginView extends Component {
         // }
 
         var user = response.responseResult;
+
+        if(user.isUpdatePwd){
+             Global.showAlert(''+user.updatePwdDesc)
+        }
+
         if (user.roles && user.roles.length>1) {
             //must choose one of role type.
             var rolesButtons = [];
