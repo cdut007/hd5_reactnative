@@ -116,9 +116,9 @@ android {
         applicationId "com.hd_app"
         minSdkVersion 21
         targetSdkVersion 22
-        versionCode 127
+        versionCode 129
         multiDexEnabled true
-        versionName "1.1.127"
+        versionName "1.1.129"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
